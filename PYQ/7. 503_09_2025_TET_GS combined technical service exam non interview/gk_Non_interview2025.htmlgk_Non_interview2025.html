@@ -1,0 +1,1695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CTSNI503GS/2025 – Questions 101–200 | Bilingual Quiz</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Tamil:wght@400;600;700&family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&display=swap');
+
+  :root {
+    --bg: #0d0f14;
+    --surface: #161a22;
+    --surface2: #1e2330;
+    --border: #2c3347;
+    --accent: #c9a84c;
+    --accent2: #7eb8d4;
+    --green: #4caf82;
+    --red: #e05b5b;
+    --text: #e8e4d9;
+    --muted: #8a8f9e;
+    --tamil: #d4a857;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 20%, rgba(201,168,76,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(126,184,212,0.05) 0%, transparent 60%);
+  }
+
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+  }
+
+  .header-left h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: var(--accent);
+    letter-spacing: 0.5px;
+  }
+
+  .header-left p {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 2px;
+    font-family: 'Noto Serif Tamil', serif;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  #scoreboard {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-size: 0.85rem;
+    display: flex;
+    gap: 20px;
+  }
+
+  .score-item { text-align: center; }
+  .score-num { font-size: 1.4rem; font-weight: 700; font-family: 'Playfair Display', serif; }
+  .score-num.correct { color: var(--green); }
+  .score-num.wrong { color: var(--red); }
+  .score-num.total { color: var(--accent); }
+  .score-label { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+  #progress-bar-wrap {
+    width: 100%;
+    height: 3px;
+    background: var(--border);
+    position: sticky;
+    top: 82px;
+    z-index: 99;
+  }
+
+  #progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  .question-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 28px;
+    transition: box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .question-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .question-card.answered::before { opacity: 1; }
+  .question-card.correct-card::before { background: linear-gradient(90deg, var(--green), transparent); }
+  .question-card.wrong-card::before { background: linear-gradient(90deg, var(--red), transparent); }
+
+  .q-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .q-num {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--accent);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .q-text-wrap { flex: 1; }
+
+  .q-en {
+    font-size: 1.02rem;
+    line-height: 1.65;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+
+  .q-ta {
+    font-family: 'Noto Serif Tamil', serif;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: var(--tamil);
+    background: rgba(201,168,76,0.05);
+    border-left: 2px solid var(--accent);
+    padding: 8px 12px;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  @media (max-width: 600px) {
+    .options { grid-template-columns: 1fr; }
+    header { padding: 16px; }
+    main { padding: 20px 12px 60px; }
+    .question-card { padding: 20px; }
+  }
+
+  .opt-btn {
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s ease;
+    color: var(--text);
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .opt-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: rgba(201,168,76,0.08);
+    transform: translateY(-1px);
+  }
+
+  .opt-btn:disabled { cursor: default; }
+
+  .opt-btn.correct-opt {
+    border-color: var(--green);
+    background: rgba(76,175,130,0.12);
+    color: #a8f0cc;
+  }
+
+  .opt-btn.wrong-opt {
+    border-color: var(--red);
+    background: rgba(224,91,91,0.1);
+    color: #f0a8a8;
+  }
+
+  .opt-btn.reveal-opt {
+    border-color: var(--green);
+    background: rgba(76,175,130,0.08);
+    color: #a8f0cc;
+    opacity: 0.7;
+  }
+
+  .opt-key {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.85rem;
+    color: var(--accent);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .opt-ta {
+    font-family: 'Noto Serif Tamil', serif;
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-top: 4px;
+    display: block;
+  }
+
+  .feedback {
+    margin-top: 16px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    display: none;
+  }
+
+  .feedback.correct-fb {
+    background: rgba(76,175,130,0.1);
+    border: 1px solid rgba(76,175,130,0.3);
+    color: #a8f0cc;
+    display: block;
+  }
+
+  .feedback.wrong-fb {
+    background: rgba(224,91,91,0.1);
+    border: 1px solid rgba(224,91,91,0.3);
+    color: #f0a8a8;
+    display: block;
+  }
+
+  .feedback .correct-ans {
+    color: var(--green);
+    font-weight: 600;
+  }
+
+  #final-result {
+    display: none;
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    border-radius: 20px;
+    padding: 48px 32px;
+    text-align: center;
+    margin-top: 40px;
+  }
+
+  #final-result h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  #final-result .big-score {
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    margin: 20px 0;
+  }
+
+  #final-result .grade-label {
+    font-size: 1rem;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  #final-result .restart-btn {
+    background: linear-gradient(135deg, var(--accent), #a87830);
+    color: #0d0f14;
+    border: none;
+    border-radius: 10px;
+    padding: 14px 36px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Source Serif 4', serif;
+    transition: opacity 0.2s;
+  }
+
+  #final-result .restart-btn:hover { opacity: 0.85; }
+
+  .lang-toggle {
+    display: flex;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 0.78rem;
+  }
+
+  .lang-toggle button {
+    background: none;
+    border: none;
+    color: var(--muted);
+    padding: 7px 14px;
+    cursor: pointer;
+    font-family: 'Source Serif 4', serif;
+    transition: all 0.15s;
+  }
+
+  .lang-toggle button.active {
+    background: var(--accent);
+    color: #0d0f14;
+    font-weight: 700;
+  }
+
+  body.en-only .q-ta,
+  body.en-only .opt-ta { display: none !important; }
+
+  body.ta-only .q-en { display: none !important; }
+  body.ta-only .opt-ta { display: block !important; color: var(--text) !important; font-size: 0.88rem !important; }
+  body.ta-only .opt-btn > span:first-child + span:not(.opt-ta) { display: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <h1>CTSNI503GS/2025 — Questions 101–200</h1>
+    <p>பொது அறிவு மற்றும் திறனறிவு · Part-B & Part-C</p>
+  </div>
+  <div class="header-right">
+    <div class="lang-toggle">
+      <button onclick="setLang('both')" class="active" id="btn-both">EN+தமிழ்</button>
+      <button onclick="setLang('en')" id="btn-en">EN</button>
+      <button onclick="setLang('ta')" id="btn-ta">தமிழ்</button>
+    </div>
+    <div id="scoreboard">
+      <div class="score-item">
+        <div class="score-num correct" id="sc-correct">0</div>
+        <div class="score-label">Correct</div>
+      </div>
+      <div class="score-item">
+        <div class="score-num wrong" id="sc-wrong">0</div>
+        <div class="score-label">Wrong</div>
+      </div>
+      <div class="score-item">
+        <div class="score-num total" id="sc-total">0/100</div>
+        <div class="score-label">Attempted</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div id="progress-bar-wrap"><div id="progress-bar"></div></div>
+
+<main id="quiz-container"></main>
+
+<script>
+const questions = [
+  {
+    num: 101,
+    en: "Considering HIV type I and II, which statement is correct?\n(a) Infects mainly CD4+ T cells and macrophages\n(b) Lyses CD4+ T cells; breaks the macrophages persistently\n(c) Infects long lived cells, establishing reservoir for persistent infection\n(d) Infected monocytes spread to brain causing dementia",
+    ta: "HIV வகை I மற்றும் II யை கருத்தில் கொண்டு பின்வரும் நான்கில் சரியானவற்றை தேர்ந்தெடுக்கவும்.",
+    opts: [
+      { key: "A", en: "(a), (c) and (d)", ta: "(a), (c) மற்றும் (d)" },
+      { key: "B", en: "(a), (b) and (d)", ta: "(a), (b) மற்றும் (d)" },
+      { key: "C", en: "(a), (b), (c) and (d)", ta: "(a), (b), (c) மற்றும் (d)" },
+      { key: "D", en: "(b), (c) and (d)", ta: "(b), (c) மற்றும் (d)" }
+    ],
+    ans: "C"
+  },
+  {
+    num: 102,
+    en: "Theme for Earth Day 2020 is",
+    ta: "2020 ம் ஆண்டில் பூமி தினத்தின் கருப்பொருள்",
+    opts: [
+      { key: "A", en: "Climate action", ta: "பருவநிலை செயல்" },
+      { key: "B", en: "Protect our species", ta: "நமது உயிரினங்களைக் காத்தல்" },
+      { key: "C", en: "End plastic pollution", ta: "பிளாஸ்டிக் மாசின் முடிவு" },
+      { key: "D", en: "Climate literacy", ta: "பருவநிலை குறித்த கல்வியறிவு" }
+    ],
+    ans: "A"
+  },
+  {
+    num: 103,
+    en: "What is 3E?",
+    ta: "3E என்பதன் விளக்கம் என்ன?",
+    opts: [
+      { key: "A", en: "Reduce, reuse, recycle", ta: "குறைத்தல், திரும்பப்பயன்படுத்துதல், மறுசுழற்சி" },
+      { key: "B", en: "Energy, economy and envision", ta: "ஆற்றல், பொருளாதாரம், கற்பனை" },
+      { key: "C", en: "Ergonomics, evolution and economy", ta: "பணிச்சூழலியல், மதிப்பீடு, பொருளாதாரம்" },
+      { key: "D", en: "Energy, economy and environment", ta: "ஆற்றல், பொருளாதாரம், சுற்றுச்சூழல்" }
+    ],
+    ans: "D"
+  },
+  {
+    num: 104,
+    en: "Which of the following statements are true about tropical thorn and tropical desert type?\n(i) These are associated with semi-deserts and deserts\n(ii) These are associated with the coastal region of Tamil Nadu and Andhrapradesh\n(iii) These are found in the inner Himalayas",
+    ta: "வெப்பமண்டல முள் மற்றும் வெப்பமண்டல பாலைவன வகைகளைப் பற்றி பின்வரும் கூற்றுகளில் எது உண்மை?",
+    opts: [
+      { key: "A", en: "(i) only", ta: "(i) மட்டும்" },
+      { key: "B", en: "(i) and (iii) only", ta: "(i) மற்றும் (iii) மட்டும்" },
+      { key: "C", en: "(i) and (ii) only", ta: "(i) மற்றும் (ii) மட்டும்" },
+      { key: "D", en: "(ii) and (iii) only", ta: "(ii) மற்றும் (iii) மட்டும்" }
+    ],
+    ans: "A"
+  },
+  {
+    num: 105,
+    en: "Match the Padma Shri Awardees, 2025 with their respective field:\n(a) Purisai Kannappa Sambandan – (b) R. Ashwin – (c) Seeni Viswanathan – (d) R.G. Chandramogan",
+    ta: "2025 ம் ஆண்டிற்கான பத்ம ஸ்ரீ விருது பெற்றவர்களை அவர்களுடைய துறையோடு சரியாக பொருத்தவும்.",
+    opts: [
+      { key: "A", en: "a-1, b-3, c-2, d-4", ta: "a-1, b-3, c-2, d-4" },
+      { key: "B", en: "a-2, b-1, c-3, d-4", ta: "a-2, b-1, c-3, d-4" },
+      { key: "C", en: "a-4, b-2, c-3, d-1", ta: "a-4, b-2, c-3, d-1" },
+      { key: "D", en: "a-4, b-2, c-1, d-3", ta: "a-4, b-2, c-1, d-3" }
+    ],
+    ans: "C"
+  },
+  {
+    num: 106,
+    en: "How did the Drain of Wealth theory of the British affect India?\n(i) Poverty and Famine  (ii) Stagnant Economic Development  (iii) Decreased Tax Burden",
+    ta: "பிரிட்டிஷரின் செல்வச் சுரண்டல் கோட்பாடு இந்தியாவை எவ்வாறு பாதித்தது?",
+    opts: [
+      { key: "A", en: "(i) only", ta: "(i) மட்டும்" },
+      { key: "B", en: "(i) and (ii) only", ta: "(i) மற்றும் (ii) மட்டும்" },
+      { key: "C", en: "(iii) only", ta: "(iii) மட்டும்" },
+      { key: "D", en: "(i) and (iii) only", ta: "(i) மற்றும் (iii) மட்டும்" }
+    ],
+    ans: "B"
+  },
+  {
+    num: 107,
+    en: "(i) Shambhu is another title of this god.\n(ii) Vedic god Rudra is identified with him.\nWhich god is described in the above statements?",
+    ta: "(i) சம்பு இந்துக் கடவுளின் மற்றொரு பெயராகும். (ii) இவர் வேதகால கடவுளான ருத்ரனோடு அடையாளப்படுத்தப்படுகிறார். மேற்கூறிய இக்கூற்றுகள் எந்தக் கடவுளைப் பற்றி விவரிக்கிறது?",
+    opts: [
+      { key: "A", en: "Brahma", ta: "பிரம்மன்" },
+      { key: "B", en: "Muruga", ta: "முருகன்" },
+      { key: "C", en: "Shiva", ta: "சிவன்" },
+      { key: "D", en: "Vishnu", ta: "விஷ்ணு" }
+    ],
+    ans: "C"
+  },
+  {
+    num: 108,
+    en: "Nizam Shahi kingdom of Ahmadnagar was founded by",
+    ta: "அகமது நகரின் நிஜாம் ஷாஹி அரசினைத் தோற்றுவித்தவர்",
+    opts: [
+      { key: "A", en: "Hasan Shah", ta: "ஹஸன் ஷா" },
+      { key: "B", en: "Malik Ahmad", ta: "மாலிக் அகமது" },
+      { key: "C", en: "Muhammad Shah", ta: "முகம்மது ஷா" },
+      { key: "D", en: "Nizam-ul-Mulk", ta: "நிஜாம்-உல்-முல்க்" }
+    ],
+    ans: "B"
+  },
+  {
+    num: 109,
+    en: "Match the following:\n(a) Abolition of Jizya – (b) Abolition of Pilgrimage Tax – (c) Abolition of Enslaving war prisoner – (d) Fall of Bairam Khan",
+    ta: "பொருத்துக: (a) ஜிஸியாவை ஒழித்தல் – (b) புனிதப் பயண வரியை ஒழித்தல் – (c) போர்க் கைதிகளை அடிமைகளாக வைத்திருத்தலை ஒழித்தல் – (d) பைராம் கான் வீழ்க்சி",
+    opts: [
+      { key: "A", en: "a-2, b-1, c-3, d-4", ta: "a-2, b-1, c-3, d-4" },
+      { key: "B", en: "a-4, b-1, c-3, d-2", ta: "a-4, b-1, c-3, d-2" },
+      { key: "C", en: "a-1, b-2, c-3, d-4", ta: "a-1, b-2, c-3, d-4" },
+      { key: "D", en: "a-3, b-4, c-2, d-1", ta: "a-3, b-4, c-2, d-1" }
+    ],
+    ans: "A"
+  },
+  {
+    num: 110,
+    en: "Assertion [A]: Human Right is a Legal Right.\nReason [R]: While Human Being have rights, the State has a corresponding duty to protect the rights.",
+    ta: "கூற்று [A]: மனித உரிமைகள் என்பது சட்ட உரிமைகள் ஆகும். காரணம் [R]: மனித உயிர்கள் உரிமைகள் கொண்டிருக்கும் பொழுது, அரசு, அதற்குரிய உரிமைகளை பாதுகாக்க வேண்டிய கடமைகளை கொண்டிருக்கிறது.",
+    opts: [
+      { key: "A", en: "[A] and [R] are correct; [R] is the correct explanation of [A]", ta: "[A] மற்றும் [R] இரண்டும் சரி; [R] என்பது [A]க்கு சரியான விளக்கம்" },
+      { key: "B", en: "[A] and [R] are correct; [R] is not correct explanation of [A]", ta: "[A] மற்றும் [R] இரண்டும் சரி; [R] என்பது [A]க்கு சரியான விளக்கமல்ல" },
+      { key: "C", en: "[A] is true; [R] is false", ta: "[A] என்பது சரி [R] என்பது தவறு" },
+      { key: "D", en: "[R] is true; [A] is false", ta: "[R] என்பது சரி [A] என்பது தவறு" }
+    ],
+    ans: "A"
+  },
+  {
+    num: 111,
+    en: "The power to increase the number of Judges in the Supreme Court of India is vested with",
+    ta: "இந்திய உச்சநீதிமன்றத்தில் நீதிபதிகளின் எண்ணிக்கையை அதிகரிக்கும் அதிகாரம் யாரால் வழங்கப்படுகிறது?",
+    opts: [
+      { key: "A", en: "The President of India", ta: "இந்திய குடியரசு தலைவர்" },
+      { key: "B", en: "The Chief Justice of India", ta: "உச்சநீதிமன்ற தலைமை நீதிபதி" },
+      { key: "C", en: "The Parliament", ta: "பாராளுமன்றம்" },
+      { key: "D", en: "The Law Minister", ta: "சட்ட அமைச்சர்" }
+    ],
+    ans: "C"
+  },
+  {
+    num: 112,
+    en: "Choose the correct matches – Constituent Assembly Committees and Chairman:\n(1) Committee in the rules of Procedure – Dr. Rajendra Prasad\n(2) Union Constitution Committee – J.B. Kripalani\n(3) Advisory Committee on Fundamental Rights – Vallabhbhai Patel\n(4) States Committee – H.C. Mookerjee",
+    ta: "பொருத்தமான இணையைத் தேர்ந்தெடுக்கவும் – அரசமைப்பு நிர்ணயசபைக் குழுக்கள் மற்றும் தலைவர்கள்",
+    opts: [
+      { key: "A", en: "(1) and (2) are correct", ta: "(1) மற்றும் (2) சரி" },
+      { key: "B", en: "(2) and (3) are correct", ta: "(2) மற்றும் (3) சரி" },
+      { key: "C", en: "(2) and (4) are correct", ta: "(2) மற்றும் (4) சரி" },
+      { key: "D", en: "(1) and (3) are correct", ta: "(1) மற்றும் (3) சரி" }
+    ],
+    ans: "D"
+  },
+  {
+    num: 113,
+    en: "Choose the State that has the highest number of seats in the House of people?",
+    ta: "மக்களவையில் அதிக இடங்களைக் கொண்ட மாநிலம் எது?",
+    opts: [
+      { key: "A", en: "Madhya Pradesh", ta: "மத்தியப் பிரதேசம்" },
+      { key: "B", en: "Gujarat", ta: "குஜராத்" },
+      { key: "C", en: "Karnataka", ta: "கர்நாடகா" },
+      { key: "D", en: "Odisha", ta: "ஒடிசா" }
+    ],
+    ans: "A"
+  },
+  {
+    num: 114,
+    en: "The joint-sittings of the two houses of the Indian Parliament take place in the",
+    ta: "இந்திய நாடாளுமன்றத்தின் இரு அவைகளின் கூட்டுக்கூட்டம் எங்கு நடைபெறுகின்றன?",
+    opts: [
+      { key: "A", en: "Lok Sabha", ta: "மக்களவை" },
+      { key: "B", en: "Rajya Sabha", ta: "மாநிலங்களவை" },
+      { key: "C", en: "Central Hall of Parliament", ta: "நாடாளுமன்ற மைய மண்டபம்" },
+      { key: "D", en: "Library Hall of Parliament", ta: "நாடாளுமன்ற நூலக மண்டபம்" }
+    ],
+    ans: "C"
+  },
+  {
+    num: 115,
+    en: "The Chancellor of Germany designate, Friedrich Merz belongs to",
+    ta: "ஜெர்மனியின் புதிய அதிபராக விரைவில் பொறுப்பேற்கவுள்ள ஃப்ரெட்ரிக் மெர்ஸ் எக்கட்சியை சேர்ந்தவர்?",
+    opts: [
+      { key: "A", en: "Nazi Party", ta: "நாஜிக் கட்சி" },
+      { key: "B", en: "Social Democratic Party", ta: "சமூக ஜனநாயக கட்சி" },
+      { key: "C", en: "Christian Democratic Union Party", ta: "கிருத்துவ ஜனநாயக ஐக்கிய கட்சி" },
+      { key: "D", en: "Communist Party", ta: "கம்யூனிஸ்ட் கட்சி" }
+    ],
+    ans: "C"
+  },
+  {
+    num: 116,
+    en: "The president shall not be a member of either house of Parliament, or of a house of any State legislature is a condition for President's office under",
+    ta: "குடியரசத் தலைவர் பாராளுமன்ற உறுப்பினராகவோ அல்லது மாநில அவையின் சட்டமன்ற உறுப்பினராகவோ இருக்கக்கூடாது என்று எந்த அரசியல் சாசன விதி கூறுகிறது?",
+    opts: [
+      { key: "A", en: "Article 56", ta: "விதி 56" },
+      { key: "B", en: "Article 57", ta: "விதி 57" },
+      { key: "C", en: "Article 58", ta: "விதி 58" },
+      { key: "D", en: "Article 59", ta: "விதி 59" }
+    ],
+    ans: "D"
+  },
+  {
+    num: 117,
+    en: "In the following categories of the people, who can acquire Indian citizenship by registration?\n(1) Citizen of Common Wealth Countries (2) Minor children of Indian parents (3) Women married to Indian citizen (4) People of Indian origin",
+    ta: "பின்வரும் வகைகளில் உள்ள மக்களில் தங்கள் இந்திய குடியுரிமையை யாரெல்லாம் பதிவு செய்து கொள்ளலாம்?",
+    opts: [
+      { key: "A", en: "(1) and (2) only", ta: "(1) மற்றும் (2) மட்டும்" },
+      { key: "B", en: "(1) and (3) only", ta: "(1) மற்றும் (3) மட்டும்" },
+      { key: "C", en: "(1) and (4) only", ta: "(1) மற்றும் (4) மட்டும்" },
+      { key: "D", en: "All of the above", ta: "இவையனைத்தும்" }
+    ],
+    ans: "D"
+  },
+  {
+    num: 118,
+    en: "Which among the following statements is/are true to Justice Party?\n(I) The Justice Party is the foundation head of the non-brahmin movement in India.\n(II) The Justice Party rule established the staff selection board for the selection of government officials.\n(III) The Justice Party proposed home rule movement all over India.\n(IV) The Justice Party introduced Hindu Religious Endownment Act",
+    ta: "பின்வரும் கூற்றுகளில் எவை நீதிக்கட்சியைப் பற்றி உண்மையானவை?",
+    opts: [
+      { key: "A", en: "(I) and (II) only", ta: "(I) மற்றும் (II) மட்டும்" },
+      { key: "B", en: "(I) and (IV) only", ta: "(I) மற்றும் (IV) மட்டும்" },
+      { key: "C", en: "(I), (II) and (III) only", ta: "(I), (II) மற்றும் (III) மட்டும்" },
+      { key: "D", en: "(I), (II) and (IV) only", ta: "(I), (II) மற்றும் (IV) மட்டும்" }
+    ],
+    ans: "D"
+  },
+  {
+    num: 119,
+    en: "Arrange the following health programmes in chronological order:\n(1) National Malaria Eradication programme\n(2) National Filaria Control Programme\n(3) National Family Planning Programme\n(4) National Smallpox Eradication Programme",
+    ta: "பின்வரும் சுகாதாரத் திட்டங்களை கால வரிசைப்படி வரிசைப்படுத்துக:",
+    opts: [
+      { key: "A", en: "(2), (1), (4), (3)", ta: "(2), (1), (4), (3)" },
+      { key: "B", en: "(3), (2), (1), (4)", ta: "(3), (2), (1), (4)" },
+      { key: "C", en: "(2), (3), (4), (1)", ta: "(2), (3), (4), (1)" },
+      { key: "D", en: "(3), (4), (1), (2)", ta: "(3), (4), (1), (2)" }
+    ],
+    ans: "B"
+  },
+  {
+    num: 120,
+    en: "Match the welfare scheme with its aims:\n(a) ICDS – (b) NULM – (c) HRIDAY – (d) NSAP",
+    ta: "பின்வரும் நலத்திட்டங்களை அதன் நோக்கத்துடன், சரியாக பொருத்தவும்: (a) ICDS – (b) NULM – (c) HRIDAY – (d) NSAP",
+    opts: [
+      { key: "A", en: "a-3, b-4, c-2, d-1", ta: "a-3, b-4, c-2, d-1" },
+      { key: "B", en: "a-1, b-2, c-3, d-4", ta: "a-1, b-2, c-3, d-4" },
+      { key: "C", en: "a-2, b-1, c-4, d-3", ta: "a-2, b-1, c-4, d-3" },
+      { key: "D", en: "a-4, b-3, c-1, d-2", ta: "a-4, b-3, c-1, d-2" }
+    ],
+    ans: "C"
+  },
+  {
+    num: 121,
+    en: "Assertion [A]: Statistically speaking, the unemployment rate is low in India.\nReason [R]: Indian Economy generates enough quality jobs to sustain its huge population",
+    ta: "கூற்று [A]: புள்ளி விவரப்படி இந்தியாவில் வேலையின்மையின் விகிதம் குறைவாக உள்ளது. காரணம் [R]: இந்திய பொருளாதாரம் அதன் மிகப்பெரிய மக்கள் தொகையைப் பராமரிக்க போதுமான தரமான வேலைகளை உருவாக்குகிறது.",
+    opts: [
+      { key: "A", en: "[A] is true but [R] is false", ta: "கூற்று [A] சரி ஆனால் காரணம் [R] தவறு" },
+      { key: "B", en: "[A] is false but [R] is true", ta: "கூற்று [A] தவறு ஆனால் காரணம் [R] சரி" },
+      { key: "C", en: "Both [A] and [R] are true, and [R] is the correct explanation of [A]", ta: "கூற்று [A] மற்றும் காரணம் [R] இரண்டும் சரி, காரணம் [R] கூற்றிற்கான சரியான விளக்கமாகும்" },
+      { key: "D", en: "Both [A] and [R] are not true", ta: "கூற்று [A] மற்றும் காரணம் [R] இரண்டும் தவறு" }
+    ],
+    ans: "D"
+  },
+  {
+    num: 122,
+    en: "Which of the following statements are true about grants-in-aid?\n(1) Grants in aid are governed by Union Government.\n(2) Grants under Art. 275 are given to the states in need of assistance and their quantum is decided by Finance Commission.\n(3) The distribution of grants under Art. 275 is concerned the second Finance Commission formulated a number of principles.",
+    ta: "மானிய உதவிகள் பற்றிய பின்வரும் கூற்றுகளில் எது உண்மை?",
+    opts: [
+      { key: "A", en: "(2) only", ta: "(2) சரி" },
+      { key: "B", en: "(1) and (2) only", ta: "(1) மற்றும் (2) சரி" },
+      { key: "C", en: "(1), (2) and (3) only", ta: "(1), (2) மற்றும் (3) சரி" },
+      { key: "D", en: "(1) and (3) only", ta: "(1) மற்றும் (3) சரி" }
+    ],
+    ans: "A"
+  },
+  {
+    num: 123,
+    en: "Which of the following statements are correct with respect to 'Equitable growth across Tamil Nadu'?\n(i) 50% of states GDP is spread over 25%\n(ii) Tamil Nadu accounts for 6% of the country's population\n(iii) Tamil Nadu's per capita income is 1.75 times higher compared to the National average",
+    ta: "'தமிழ்நாடு முழுவதும் நேர்மையான வளர்ச்சி' தொடர்பாகப் பின்வரும் கூற்றுகளில் எது சரியானது?",
+    opts: [
+      { key: "A", en: "(i) only", ta: "(i) மட்டும்" },
+      { key: "B", en: "(i) and (iii) only", ta: "(i) மற்றும் (iii) மட்டும்" },
+      { key: "C", en: "(ii) and (iii) only", ta: "(ii) மற்றும் (iii) மட்டும்" },
+      { key: "D", en: "(i) and (ii) only", ta: "(i) மற்றும் (ii) மட்டும்" }
+    ],
+    ans: "B"
+  },
+  {
+    num: 124,
+    en: "Which of the following is TRUE about NITI Aayog?\n(i) The power to impose policies.\n(ii) The power to allocate funds.\n(iii) Policies are formed and then the states are consulted",
+    ta: "பின்வருவனவற்றில் நிதி ஆயோக் பற்றி எது உண்மை?",
+    opts: [
+      { key: "A", en: "(i) only", ta: "(i) மட்டும்" },
+      { key: "B", en: "(i) and (ii) only", ta: "(i) மற்றும் (ii) மட்டும்" },
+      { key: "C", en: "(iii) only", ta: "(iii) மட்டும்" },
+      { key: "D", en: "(i) and (iii) only", ta: "(i) மற்றும் (iii) மட்டும்" }
+    ],
+    ans: "C"
+  },
+  {
+    num: 125,
+    en: "Which of the following year was the LPG model for attaining Economic Development introduced?",
+    ta: "பொருளாதார வளர்ச்சி அடைய எந்த ஆண்டில் LPG மாதிரி அறிமுகப்படுத்தப்பட்டது?",
+    opts: [
+      { key: "A", en: "1891", ta: "1891" },
+      { key: "B", en: "1991", ta: "1991" },
+      { key: "C", en: "2021", ta: "2021" },
+      { key: "D", en: "2022", ta: "2022" }
+    ],
+    ans: "B"
+  },
+  {
+    num: 126,
+    en: "Find out the correct statement.\n(a) Ayothidas Pandithar started a weekly journal called 'Oru Paisa Thamizhan'\n(b) The Serampore missionaries were the second Evangelical Baptist Missionaries in India\n(c) The Rahnumai Mazdayasnan Sabha was founded in 1851 by the Buddhist",
+    ta: "சரியான கூற்றினைத் தேர்வு செய்க.",
+    opts: [
+      { key: "A", en: "(a) only", ta: "(a) மட்டும்" },
+      { key: "B", en: "(a) and (b) only", ta: "(a) மற்றும் (b) மட்டும்" },
+      { key: "C", en: "(a) and (c) only", ta: "(a) மற்றும் (c) மட்டும்" },
+      { key: "D", en: "(c) only", ta: "(c) மட்டும்" }
+    ],
+    ans: "A"
+  },
+  {
+    num: 127,
+    en: "Which of the following statements are true about Madasamy?\n(i) He was the right hand of V.O.C\n(ii) He escaped to Germany\n(iii) He participated in the Non Cooperation Movement",
+    ta: "கீழ்கண்டவற்றுள் மாடசாமி பற்றிய உண்மையான கூற்றினை கூறு.",
+    opts: [
+      { key: "A", en: "(i) and (ii) only", ta: "(i) ம (ii) ம சரி" },
+      { key: "B", en: "(i) only", ta: "(i) மட்டும் சரி" },
+      { key: "C", en: "(i) and (iii) only", ta: "(i) ம (iii) ம சரி" },
+      { key: "D", en: "(ii) and (iii) only", ta: "(ii) ம (iii) ம சரி" }
+    ],
+    ans: "A"
+  },
+  {
+    num: 128,
+    en: "Among the following writer who stated, 'The Indus Valley people were peace loving and unwarlike'?",
+    ta: "பின்வரும் எழுத்தாளர்களில் 'சிந்து சமவெளி மக்கள் அமைதியை விரும்புபவர்கள் மற்றும் போர்க்குணமற்றவர்கள்' என்று கூறுகிறார்.",
+    opts: [
+      { key: "A", en: "Mackey", ta: "மேக்கி" },
+      { key: "B", en: "A.D. Pusalker", ta: "ஏ.டி. புசல்கர்" },
+      { key: "C", en: "R.C. Majumdar", ta: "ஆர்.சி. மஜீம்தார்" },
+      { key: "D", en: "Vincent Smith", ta: "வின்செண்ட் ஸ்மித்" }
+    ],
+    ans: "A"
+  },
+  {
+    num: 129,
+    en: "Arrange the following events (Rulers) in chronological order:\n1. Rajaraja - I  2. Vikrama Chola  3. Kulottunga - I  4. Kulottunga - II",
+    ta: "கொடுக்கப்பட்ட நிகழ்வுகளை (அரசர்களை) காலவரிசைப்படி வரிசைப்படுத்துக:\n1. முதலாம் ராஜராஜன்  2. விக்கிரம சோழன்  3. முதலாம் குலோத்துங்கன்  4. இரண்டாம் குலோத்துங்கன்",
+    opts: [
+      { key: "A", en: "2, 3, 4, 1", ta: "2, 3, 4, 1" },
+      { key: "B", en: "1, 2, 3, 4", ta: "1, 2, 3, 4" },
+      { key: "C", en: "1, 3, 2, 4", ta: "1, 3, 2, 4" },
+      { key: "D", en: "3, 1, 4, 2", ta: "3, 1, 4, 2" }
+    ],
+    ans: "C"
+  },
+  {
+    num: 130,
+    en: "Match correctly the Gupta Ministers of Central Administration:\n(a) Mahadandanayaka – (b) Dandopashika – (c) Mahasandhivigrahika – (d) Mahakshapatalika",
+    ta: "மத்திய அரசின் குப்தா அமைச்சர்களுடன் சரியாகப் பொருத்துக:\n(a) மகாதண்டநாயக்கா – (b) தண்டோபாஷிகா – (c) மகாசாந்தி விக்ரஹிகா – (d) மஹாக்ஷபதாலிகா",
+    opts: [
+      { key: "A", en: "a-3, b-4, c-2, d-1", ta: "a-3, b-4, c-2, d-1" },
+      { key: "B", en: "a-3, b-4, c-1, d-2", ta: "a-3, b-4, c-1, d-2" },
+      { key: "C", en: "a-2, b-3, c-1, d-4", ta: "a-2, b-3, c-1, d-4" },
+      { key: "D", en: "a-2, b-1, c-4, d-3", ta: "a-2, b-1, c-4, d-3" }
+    ],
+    ans: "B"
+  },
+  {
+    num: 131,
+    en: "What does Valluvar mention as causing suffering?\n(i) Arayathu kollum natpu (Unrequited Friendship)\n(ii) Arayinthu thelinthavanitam iyappadudhal (Doubts about a friend who has clarified)\n(iii) Anbudaiavarahairuthal (Being loving)\n(iv) Nani nakariham potruthal (Admiring the subtle civilization)",
+    ta: "'இடும்பை' தருவனவாக வள்ளுவர் எவற்றைக் குறிப்பிடுகிறார்?",
+    opts: [
+      { key: "A", en: "(i) only", ta: "(i) மட்டும்" },
+      { key: "B", en: "(ii), (iii) only", ta: "(ii), (iii) மட்டும்" },
+      { key: "C", en: "(i), (ii) only", ta: "(i), (ii) மட்டும்" },
+      { key: "D", en: "(iii), (iv) only", ta: "(iii), (iv) மட்டும்" }
+    ],
+    ans: "C"
+  },
+  {
+    num: 132,
+    en: "'Addressing the learned without extensive study is like' – The above Thirukkural statement most related to",
+    ta: "'அறிவை நிரப்பிக்கொள்வதற்கேற்ற நூல்களைக் கற்று அறிவைத் திரட்டிக்கொள்ளாமல் ஒருவன் அவையின்கண் ஒருபொருள் பற்றிப் பேசுவது' என்ற கருத்து எந்தத் திருக்குறல் உவமையோடு பொருந்துகிறது என்பதைக் கூறுக.",
+    opts: [
+      { key: "A", en: "As between mankind and animal", ta: "விலங்கொடு மக்களனையர்" },
+      { key: "B", en: "A breastless woman's longing for sex", ta: "பயவாக்-களர் அனையர்" },
+      { key: "C", en: "The beauty of a doll made of clay", ta: "எழில் நலம் மண்மாண் புனைபாவை யற்றே" },
+      { key: "D", en: "Playing dice without a board", ta: "அரங்கின்றி வட்டாடி யற்றே" }
+    ],
+    ans: "D"
+  },
+  {
+    num: 133,
+    en: "To arrange the following concepts by Thiruvalluvar:\n1. Protection  2. Creation  3. Production  4. Planning",
+    ta: "பின்வருவனவற்றை வள்ளுவர் வழி வரிசைப்படுத்துவும்:\n1. காத்தல்  2. இயற்றல்  3. ஈட்டல்  4. காத்த வகுத்தல்",
+    opts: [
+      { key: "A", en: "3, 1, 2, 4", ta: "3, 1, 2, 4" },
+      { key: "B", en: "2, 3, 1, 4", ta: "2, 3, 1, 4" },
+      { key: "C", en: "1, 2, 4, 3", ta: "1, 2, 4, 3" },
+      { key: "D", en: "4, 1, 3, 2", ta: "4, 1, 3, 2" }
+    ],
+    ans: "B"
+  },
+  {
+    num: 134,
+    en: "Who is the author of the short story 'Anbalippu'?",
+    ta: "\"அன்பளிப்பு\" என்ற சிறுகதை நூலின் ஆசிரியர்",
+    opts: [
+      { key: "A", en: "T. Janagiraman", ta: "தி. ஜானகிராமன்" },
+      { key: "B", en: "Rajamkrishnan", ta: "ராஜம்கிருஷ்ணன்" },
+      { key: "C", en: "Thilagavathi", ta: "திலகவதி" },
+      { key: "D", en: "K. Alagirisamy", ta: "கு. அழகிரிசாமி" }
+    ],
+    ans: "D"
+  },
+  {
+    num: 135,
+    en: "Match correctly the Excavation sites and Archaeologists:\n(a) Boombuhar – (b) Vellalur – (c) Kodumanal – (d) Karur Excavation",
+    ta: "அகழாய்வு இடங்களையும் அகழாய்வாளர்களையும் சரியாகப் பொருத்துக: (a) பூம்புகார் – (b) வெள்ளலூர் – (c) கொடுமணல் – (d) கரூர்",
+    opts: [
+      { key: "A", en: "a-2, b-4, c-1, d-3", ta: "a-2, b-4, c-1, d-3" },
+      { key: "B", en: "a-4, b-2, c-3, d-1", ta: "a-4, b-2, c-3, d-1" },
+      { key: "C", en: "a-3, b-4, c-1, d-2", ta: "a-3, b-4, c-1, d-2" },
+      { key: "D", en: "a-1, b-2, c-3, d-4", ta: "a-1, b-2, c-3, d-4" }
+    ],
+    ans: "A"
+  },
+  {
+    num: 136,
+    en: "Mukesh takes twice as much time as Suresh to complete a work and Ramesh does it in the same time as Mukesh and Suresh together. If all three working together can finish the work in 9 days then the time taken by Mukesh to finish the work is",
+    ta: "முகேஷ் வேலையை முடிக்க சுரேஷை விட இரண்டு மடங்கு அதிக நேரம் எடுத்துக்கொள்கிறார். மேலும் ரமேஷ் அதை முகேஷ் மற்றும் சுரேஷ் ஒன்றாகச் செய்யும் அதே நேரத்தில் செய்கிறார். மூவரும் சேர்ந்து வேலையை 9 நாட்களில் முடிக்க முடிந்தால், முகேஷ் வேலையை முடிக்க எடுக்கும் நேரம்",
+    opts: [
+      { key: "A", en: "27 days", ta: "27 நாட்கள்" },
+      { key: "B", en: "54 days", ta: "54 நாட்கள்" },
+      { key: "C", en: "9 days", ta: "9 நாட்கள்" },
+      { key: "D", en: "18 days", ta: "18 நாட்கள்" }
+    ],
+    ans: "B"
+  },
+  {
+    num: 137,
+    en: "If 3 men or 9 boys can finish a piece of work in 21 days, in how many days can 5 men and 6 boys together do the same piece of work?",
+    ta: "3 ஆண்கள் அல்லது 9 சிறுவர்கள் ஒரு வேலையை 21 நாட்களில் முடிக்கின்றனர். அதே வேலையை 5 ஆண்கள் மற்றும் 6 சிறுவர்கள் சேர்ந்து எத்தனை நாட்களில் முடிப்பர்?",
+    opts: [
+      { key: "A", en: "8 days", ta: "8 நாட்கள்" },
+      { key: "B", en: "12 days", ta: "12 நாட்கள்" },
+      { key: "C", en: "14 days", ta: "14 நாட்கள்" },
+      { key: "D", en: "9 days", ta: "9 நாட்கள்" }
+    ],
+    ans: "D"
+  },
+  {
+    num: 138,
+    en: "Find the area of the trapezium if its height is 5.9 cm and the sides are 7 cm and 6 cm.",
+    ta: "ஒரு சரிவகத்தின் உயரம் = 5.9 செ.மீ, சரிவகத்தின் பக்கங்கள் முறையே 7 செ.மீ, 6 செ.மீ எனில், சரிவகத்தின் பரப்பளவு என்ன?",
+    opts: [
+      { key: "A", en: "37.35 sq. cm", ta: "37.35 ச. செ.மீ" },
+      { key: "B", en: "38.35 sq. cm", ta: "38.35 ச. செ.மீ" },
+      { key: "C", en: "35.38 sq. cm", ta: "35.38 ச. செ.மீ" },
+      { key: "D", en: "38.53 sq. cm", ta: "38.53 ச. செ.மீ" }
+    ],
+    ans: "B"
+  },
+  {
+    num: 139,
+    en: "In how many years will Rs. 6,600 become Rs. 6,930 at 10% p.a. if the interest compounded half yearly?",
+    ta: "10% ஆண்டு வட்டியில் அரையாண்டுக்கொருமுறை வட்டி கணக்கிடப்பட்டால் எத்தனை ஆண்டுகளில் ரூ. 6,600 ஆனது ரூ. 6,930 ஆக மாறும்?",
+    opts: [
+      { key: "A", en: "3 months", ta: "3 மாதங்கள்" },
+      { key: "B", en: "6 months", ta: "6 மாதங்கள்" },
+      { key: "C", en: "9 months", ta: "9 மாதங்கள்" },
+      { key: "D", en: "1 year", ta: "1 ஆண்டு" }
+    ],
+    ans: "B"
+  },
+  {
+    num: 140,
+    en: "Find the simple interest on Rs. 45,000 at 10% per annum for 5 years.",
+    ta: "ரூ. 45,000 திற்கு 10% வட்டி வீதம் எனில் 5 ஆண்டுகளுக்குத் தனிவட்டி காண்க.",
+    opts: [
+      { key: "A", en: "Rs. 9,000", ta: "ரூ. 9,000" },
+      { key: "B", en: "Rs. 22,500", ta: "ரூ. 22,500" },
+      { key: "C", en: "Rs. 4,500", ta: "ரூ. 4,500" },
+      { key: "D", en: "Rs. 20,500", ta: "ரூ. 20,500" }
+    ],
+    ans: "B"
+  },
+  {
+    num: 141,
+    en: "The ratio 20 : 15 is equivalent to",
+    ta: "20 : 15 என்ற விகிதம் _________ க்குச் சமானமானது.",
+    opts: [
+      { key: "A", en: "4 : 3", ta: "4 : 3" },
+      { key: "B", en: "3 : 4", ta: "3 : 4" },
+      { key: "C", en: "5 : 3", ta: "5 : 3" },
+      { key: "D", en: "10 : 5", ta: "10 : 5" }
+    ],
+    ans: "A"
+  },
+  {
+    num: 142,
+    en: "Find the ratio of the HCF and LCM of the numbers 18 and 30.",
+    ta: "18 மற்றும் 30 ஆகிய எண்களின் மீ.பொ.கா மற்றும் மீ.சி.ம – வின் விகிதத்தைக் காண்க.",
+    opts: [
+      { key: "A", en: "1 : 15", ta: "1 : 15" },
+      { key: "B", en: "2 : 15", ta: "2 : 15" },
+      { key: "C", en: "3 : 5", ta: "3 : 5" },
+      { key: "D", en: "7 : 9", ta: "7 : 9" }
+    ],
+    ans: "A"
+  },
+  {
+    num: 143,
+    en: "Two numbers are in the ratio of 2 : 3. If their HCF is 15 find the numbers.",
+    ta: "இரு எண்கள் 2 : 3 என்ற விகிதத்தில் காணப்படுகின்றன. அவைகளின் மீ.பொ.வ. 15 எனில், அவ்வெவெண்களைக் காண்க.",
+    opts: [
+      { key: "A", en: "30 and 15", ta: "30 மற்றும் 15" },
+      { key: "B", en: "15 and 30", ta: "15 மற்றும் 30" },
+      { key: "C", en: "45 and 30", ta: "45 மற்றும் 30" },
+      { key: "D", en: "30 and 45", ta: "30 மற்றும் 45" }
+    ],
+    ans: "D"
+  },
+  {
+    num: 144,
+    en: "If the difference between 80% of a number and 60% of the same number is 1200, then find 25% of that number",
+    ta: "ஒர் எண்ணின் 80% க்கும் அதே எண்ணின் 60% க்கும் இடையேயுள்ள வித்தியாசம் 1200 எனில் அந்த எண்ணின் 25% ஐ காண்க.",
+    opts: [
+      { key: "A", en: "1400", ta: "1400" },
+      { key: "B", en: "1450", ta: "1450" },
+      { key: "C", en: "1500", ta: "1500" },
+      { key: "D", en: "1550", ta: "1550" }
+    ],
+    ans: "C"
+  },
+  {
+    num: 145,
+    en: "Find the missing number: 8, 24, 12, 36, 18, 54, ___",
+    ta: "விடுபட்ட எண்ணைக் காண்க: 8, 24, 12, 36, 18, 54, ___",
+    opts: [
+      { key: "A", en: "108", ta: "108" },
+      { key: "B", en: "27", ta: "27" },
+      { key: "C", en: "72", ta: "72" },
+      { key: "D", en: "68", ta: "68" }
+    ],
+    ans: "B"
+  },
+  {
+    num: 146,
+    en: "The next term in the given sequence is: 5, 24, 99, 378, ___",
+    ta: "கீழே கொடுக்கப்பட்டுள்ள தொடர் வரிசையில் அடுத்து வரும் உறுப்பு: 5, 24, 99, 378, ___",
+    opts: [
+      { key: "A", en: "1380", ta: "1380" },
+      { key: "B", en: "1387", ta: "1387" },
+      { key: "C", en: "1384", ta: "1384" },
+      { key: "D", en: "1377", ta: "1377" }
+    ],
+    ans: "D"
+  },
+  {
+    num: 147,
+    en: "R E 5 D A P $ 3 T I Q 7 9 B # 2 K % U 1 M W 4 * J 8 N\nWhich of the following is exactly in the middle between 3 and 1, in the above arrangement?",
+    ta: "R E 5 D A P $ 3 T I Q 7 9 B # 2 K % U 1 M W 4 * J 8 N\nமேலே கொடுக்கப்பட்ட உறுப்புகளில் 3 க்கும் 1 க்கும் இடைப்பட்ட சரியான உறுப்பு",
+    opts: [
+      { key: "A", en: "B", ta: "B" },
+      { key: "B", en: "K", ta: "K" },
+      { key: "C", en: "9", ta: "9" },
+      { key: "D", en: "#", ta: "#" }
+    ],
+    ans: "A"
+  },
+  {
+    num: 148,
+    en: "* E 7 O & 6 ^ 4 Z 5 * 3 9 T ! D # 2 $ U\nIf all the digits are dropped, which of the following is third to the right of the eleventh from the right end?",
+    ta: "* E 7 O & 6 ^ 4 Z 5 * 3 9 T ! D # 2 $ U\nகீழே உள்ளவற்றில் அனைத்து இலக்கங்களையும் நீக்கிய பின் பின்வருவனவற்றில் எது வலது முனையிலிருந்து பதினொன்றாவது எண்ணின் வலது புறத்தில் மூன்றாவதாக உள்ளது?",
+    opts: [
+      { key: "A", en: "^", ta: "^" },
+      { key: "B", en: "8", ta: "8" },
+      { key: "C", en: "Z", ta: "Z" },
+      { key: "D", en: "T", ta: "T" }
+    ],
+    ans: "C"
+  },
+  {
+    num: 149,
+    en: "Traditional energy sources that are used for different purposes are called",
+    ta: "பல்வேறு உபயோகங்களுக்கு பயன்படும் நமது பாரம்பரிய ஆற்றல் வளங்கள் __________ என்று அழைக்கப்படுகிறது.",
+    opts: [
+      { key: "A", en: "Renewable sources of energy", ta: "புதுப்பிக்கத்தக்க ஆற்றல் மூலங்கள்" },
+      { key: "B", en: "Non-renewable sources of energy", ta: "புதுப்பிக்கவியலா ஆற்றல் மூலங்கள்" },
+      { key: "C", en: "Conventional sources of energy", ta: "மரபுசார் ஆற்றல் மூலங்கள்" },
+      { key: "D", en: "Non-Conventional sources of energy", ta: "மரபு சாரா ஆற்றல் மூலங்கள்" }
+    ],
+    ans: "C"
+  },
+  {
+    num: 150,
+    en: "Assertion: Polytene Chromosome contain about 1000 DNA molecules caused by duplication of chromosomes.\nReason: They are found in the growing oocytes of most animals except mammals",
+    ta: "கூற்று: பாலிடீன் குரோமோசோம் 1000 டி.என்.ஏ மூலக்கூறுகளை கொண்டவை. குரோமோசோம்கள் இரட்டிப்படைதலினால் ஏற்படுகிறது.\nகாரணம்: பாலூட்டிகளைத் தவிர, இவை பெரும்பாலான வளர்கின்ற விலங்குகளின் முட்டைகளில் காணப்படுகிறது.",
+    opts: [
+      { key: "A", en: "Assertion and Reason are correct", ta: "கூற்று மற்றும் காரணம் சரி" },
+      { key: "B", en: "Assertion is correct but Reason is wrong", ta: "கூற்று சரி, ஆனால் காரணம் தவறு" },
+      { key: "C", en: "Assertion and Reason are wrong", ta: "கூற்று மற்றும் காரணம் தவறு" },
+      { key: "D", en: "Assertion is correct but Reason is not the correct explanation", ta: "கூற்று சரி ஆனால் காரணம் சரியான விளக்கமல்ல" }
+    ],
+    ans: "B"
+  },
+  {
+    num: 151,
+    en: "The pesticide which is banned in Kerala and Karnataka is",
+    ta: "கேரளா மற்றும் கர்நாடகா மாநிலங்களில் முற்றிலும் தடை செய்யப்பட்டுள்ள பூச்சிக்கொல்லி எது?",
+    opts: [
+      { key: "A", en: "Gammexane", ta: "காமாக்சேன்" },
+      { key: "B", en: "Naphthalene", ta: "நாப்தலீன்" },
+      { key: "C", en: "Endosulphan", ta: "எண்டோசல்பான்" },
+      { key: "D", en: "Ethylene dibromide", ta: "எத்திலீன் டைப்ரோமைடு" }
+    ],
+    ans: "C"
+  },
+  {
+    num: 152,
+    en: "Man-made sources of pollutants are called as",
+    ta: "மனிதனால் உருவாக்கப்படும் மாசுக்கள் எவ்வாறு அழைக்கப்படுகிறது?",
+    opts: [
+      { key: "A", en: "Anthropogenic pollutants", ta: "மானுடவியல் மாசுக்கள்" },
+      { key: "B", en: "Industrial pollutants", ta: "தொழிற்சாலை மாசுக்கள்" },
+      { key: "C", en: "Leather Industry pollutants", ta: "தோல் தொழிற்சாலை மாசுக்கள்" },
+      { key: "D", en: "Cement Industry pollutants", ta: "சிமெண்ட் தொழிற்சாலை மாசுக்கள்" }
+    ],
+    ans: "A"
+  },
+  {
+    num: 153,
+    en: "Match the following lakes with their belonging states:\n(a) Kolleru Lake – (b) Loktak Lake – (c) Sambhar Lake – (d) Sasthamkotta Lake",
+    ta: "பின்வரும் ஏரிகளை அவற்றின் மாநிலங்களுடன் பொருத்துக: (a) கொல்லேரு ஏரி – (b) லோக்டாக் ஏரி – (c) சாம்பார் ஏரி – (d) சாஸ்தம் கோட்டா ஏரி",
+    opts: [
+      { key: "A", en: "a-4, b-1, c-3, d-2", ta: "a-4, b-1, c-3, d-2" },
+      { key: "B", en: "a-3, b-4, c-2, d-1", ta: "a-3, b-4, c-2, d-1" },
+      { key: "C", en: "a-4, b-3, c-1, d-2", ta: "a-4, b-3, c-1, d-2" },
+      { key: "D", en: "a-2, b-4, c-3, d-1", ta: "a-2, b-4, c-3, d-1" }
+    ],
+    ans: "C"
+  },
+  {
+    num: 154,
+    en: "Match the following railway zones with their Headquarters:\n(a) South eastern – (b) South central – (c) East Coast – (d) West central",
+    ta: "பின்வரும் ரயில்வே மண்டலங்களை அவற்றின் தலைமையகத்துடன் பொருத்தவும்: (a) தென்கிழக்கு – (b) தெற்கு மத்திய – (c) கிழக்கு கடற்கரை – (d) மேற்கு மத்திய",
+    opts: [
+      { key: "A", en: "a-3, b-4, c-1, d-2", ta: "a-3, b-4, c-1, d-2" },
+      { key: "B", en: "a-2, b-3, c-1, d-4", ta: "a-2, b-3, c-1, d-4" },
+      { key: "C", en: "a-3, b-2, c-1, d-4", ta: "a-3, b-2, c-1, d-4" },
+      { key: "D", en: "a-4, b-3, c-2, d-1", ta: "a-4, b-3, c-2, d-1" }
+    ],
+    ans: "A"
+  },
+  {
+    num: 155,
+    en: "Which of the following statements are true about Indian National Congress?\n(i) Credit for giving INC the concrete and final shape goes to A.O. Hume.\n(ii) The First session of the Indian National Congress at Calcutta in December 1885\n(iii) It was presided over by W.C. Banerjee",
+    ta: "இந்திய தேசிய காங்கிரஸ் பற்றிய பின்வரும் கூற்றுகளில் எவை சரியானவை?",
+    opts: [
+      { key: "A", en: "(i) only", ta: "(i) மட்டும்" },
+      { key: "B", en: "(i) and (iii)", ta: "(i) மற்றும் (iii)" },
+      { key: "C", en: "(i) and (ii)", ta: "(i) மற்றும் (ii)" },
+      { key: "D", en: "(ii) and (iii)", ta: "(ii) மற்றும் (iii)" }
+    ],
+    ans: "B"
+  },
+  {
+    num: 156,
+    en: "Match: (1) Radhakanta Deb – First president of the British Indian Association; (2) Gazulu Lakshminarasu Chetty – Founder of the Madras Native Association; (3) Surendranath Banerjee – Founder of the Indian Association\nWhich of the above pair is/are correctly matched?",
+    ta: "மேலே கொடுக்கப்பட்டுள்ள இணைகளில் சரியான(து)/வை எவை?",
+    opts: [
+      { key: "A", en: "(1) only", ta: "(1) மட்டும் சரி" },
+      { key: "B", en: "(1) and (3) only", ta: "(1) மற்றும் (3) மட்டும் சரி" },
+      { key: "C", en: "(2) and (3) only", ta: "(2) மற்றும் (3) மட்டும் சரி" },
+      { key: "D", en: "(1), (2) and (3)", ta: "(1), (2) மற்றும் (3) அனைத்தும் சரி" }
+    ],
+    ans: "C"
+  },
+  {
+    num: 157,
+    en: "Assertion [A]: Roberto-de-Nobili, whose linguistic ability enabled him to write extensively in Tamil and Sanskrit. He was considered the father of Tamil prose.\nReason [R]: Portuguese sent their Roman catholic priests who converted thousands of fishermen to the catholic religion.",
+    ta: "கூற்று [A]: இராபர்டோ டி நொபிலியின் மொழித்திறன் தமிழிலும், சமஸ்கிருதத்திலும் விரிவாக எழுத உதவியது. இவர் தமிழ் உரைநடையின் தந்தையெனக் கருதப்படுகிறார்.\nகாரணம் [R]: போர்த்துகீசியர் தங்களது ரோமன் கத்தோலிக்க குருமார்களை கீழே நாடுகளுக்கு அனுப்பி ஆயிரக்கணக்கான பரதவர்களை கத்தோலிக்க கிறித்தவ மதம் ஏற்கச் செய்தனர்.",
+    opts: [
+      { key: "A", en: "[A] is true but [R] is false", ta: "[A] சரி ஆனால் [R] தவறு" },
+      { key: "B", en: "Both [A] and [R] are true, and [R] is the correct explanation of [A]", ta: "[A] மற்றும் [R] இரண்டும் சரி மற்றும் [R], [A]க்கான சரியான விளக்கம்" },
+      { key: "C", en: "[A] is false [R] is true", ta: "[A] தவறு [R] சரி" },
+      { key: "D", en: "Both [A] and [R] are true, but [R] is not the correct explanation of [A]", ta: "[A] மற்றும் [R] இரண்டும் சரி ஆனால் [R], [A]க்கான சரியான விளக்கமல்ல" }
+    ],
+    ans: "A"
+  },
+  {
+    num: 158,
+    en: "Which one of the book tells us the clear distinction between Amatyas and Ministers in Gupta Empire?",
+    ta: "குப்தர்களின் ஆட்சிகாலத்தில் அமாத்யாக்களுக்கும், மந்திரிகளுக்கும் இடையிலான தெளிவான வேறுபாட்டை பின்வருவனவற்றில் எந்த நூல் கூறுகிறது?",
+    opts: [
+      { key: "A", en: "Kamandaka Niti Shastra", ta: "கமண்டக நிதி சாஸ்திரம்" },
+      { key: "B", en: "Katyayana Smriti", ta: "கட்டயானா ஸ்மிருதி" },
+      { key: "C", en: "Narasingha Purana", ta: "நரசிங்க புராணம்" },
+      { key: "D", en: "Markandeya Purana", ta: "மார்கண்டேய புராணம்" }
+    ],
+    ans: "A"
+  },
+  {
+    num: 159,
+    en: "Match the following Indus Valley sites:\n(a) Daimabad – (b) Bhagatray – (c) Ropar – (d) Kalibangan",
+    ta: "பின்வரும் சிந்து சமவெளி தளங்களை சரியாகப் பொருத்துக: (a) டைமாபாத் – (b) பகத்ரே – (c) ருபார் – (d) காளிபங்கன்",
+    opts: [
+      { key: "A", en: "a-4, b-2, c-1, d-3", ta: "a-4, b-2, c-1, d-3" },
+      { key: "B", en: "a-3, b-1, c-4, d-2", ta: "a-3, b-1, c-4, d-2" },
+      { key: "C", en: "a-3, b-2, c-1, d-4", ta: "a-3, b-2, c-1, d-4" },
+      { key: "D", en: "a-2, b-4, c-3, d-1", ta: "a-2, b-4, c-3, d-1" }
+    ],
+    ans: "B"
+  },
+  {
+    num: 160,
+    en: "Which of the following propositions were laid down by the Supreme Court with respect to the doctrine of prospective over ruling?\n(i) It can be invoked only in matters arising under the Constitution.\n(ii) It can be applied only by the Supreme Court.\n(iii) It overrules an old precedent retrospectively.",
+    ta: "பின்னது இயங்குதல் நிராகரித்தல் கோட்பாட்டின்படி உச்சநீதிமன்றம் விதித்துள்ள பின்வரும் கூற்றுகளில் எவை சரியானது?",
+    opts: [
+      { key: "A", en: "(i) only", ta: "(i) மட்டும்" },
+      { key: "B", en: "(i) and (iii) only", ta: "(i) மற்றும் (iii) மட்டும்" },
+      { key: "C", en: "(i) and (ii) only", ta: "(i) மற்றும் (ii) மட்டும்" },
+      { key: "D", en: "(ii) and (iii) only", ta: "(ii) மற்றும் (iii) மட்டும்" }
+    ],
+    ans: "C"
+  },
+  {
+    num: 161,
+    en: "'Of all checks on Democracy, federalism has been the most efficacious and the most congenial…' This was said by",
+    ta: "\"மக்களாட்சியின் மீதான அனைத்து கட்டுப்பாடு முறைகளிலும், கூட்டாட்சி மிகவும் பயனுள்ளதாகவும், இணக்கமாகவும் இருந்து வருகிறது...\" எனக் கூறியவர்.",
+    opts: [
+      { key: "A", en: "Lord Bryce", ta: "பிரைஸ் பிரபு" },
+      { key: "B", en: "Lord Acton", ta: "ஆக்டன் பிரபு" },
+      { key: "C", en: "A.V. Dicey", ta: "A.V. டைசி" },
+      { key: "D", en: "K.C. Wheare", ta: "K.C. வியர்" }
+    ],
+    ans: "B"
+  },
+  {
+    num: 162,
+    en: "Match the correct answer:\n(a) Article 243-D – (b) Article 243-E – (c) Article 243-J – (d) Article 243-K",
+    ta: "சரியானவற்றைப் பொருத்துக: (a) உறுப்பு 243-D – (b) உறுப்பு 243-E – (c) உறுப்பு 243-J – (d) உறுப்பு 243-K",
+    opts: [
+      { key: "A", en: "a-3, b-4, c-1, d-2", ta: "a-3, b-4, c-1, d-2" },
+      { key: "B", en: "a-2, b-4, c-1, d-3", ta: "a-2, b-4, c-1, d-3" },
+      { key: "C", en: "a-4, b-2, c-1, d-3", ta: "a-4, b-2, c-1, d-3" },
+      { key: "D", en: "a-1, b-4, c-3, d-2", ta: "a-1, b-4, c-3, d-2" }
+    ],
+    ans: "A"
+  },
+  {
+    num: 163,
+    en: "Consider the following statements, choose the correct statement.\n(i) The governor is neither directly elected by the people, nor indirectly elected by electoral college\n(ii) Office of the governor is the independent constitutional office\n(iii) The governor is the chief executive head of the government\n(iv) The advocate general of the state is the part of the state judiciary",
+    ta: "கீழ்கண்ட வாக்கியங்களை கருதுக, சரியான விடையை தேர்ந்தெடுக்க.",
+    opts: [
+      { key: "A", en: "(i) and (ii) only correct", ta: "(i) மற்றும் (ii) மட்டும் சரி" },
+      { key: "B", en: "(ii) and (iii) only correct", ta: "(ii) மற்றும் (iii) மட்டும் சரி" },
+      { key: "C", en: "(i) and (iii) only correct", ta: "(i) மற்றும் (iii) மட்டும் சரி" },
+      { key: "D", en: "(iii) and (iv) only correct", ta: "(iii) மற்றும் (iv) மட்டும் சரி" }
+    ],
+    ans: "A"
+  },
+  {
+    num: 164,
+    en: "Which among the following is correct, considering the Fundamental Rights given under the Indian Constitution?\n(i) It acts as limitations upon the Powers of the Executive and Legislature.\n(ii) It Confers Powers upon the Executive and Legislature.\n(iii) Fundamental Rights originates from the Judiciary.",
+    ta: "அரசியலமைப்புச் சட்டத்திலுள்ள அடிப்படை உரிமைகள் குறித்து கீழ்கண்டவற்றுள் எது/எவை சரி?",
+    opts: [
+      { key: "A", en: "(i) only", ta: "(i) மட்டும்" },
+      { key: "B", en: "(i) and (iii) only", ta: "(i) மற்றும் (iii) மட்டும்" },
+      { key: "C", en: "(i) and (ii) only", ta: "(i) மற்றும் (ii) மட்டும்" },
+      { key: "D", en: "(ii) and (iii) only", ta: "(ii) மற்றும் (iii) மட்டும்" }
+    ],
+    ans: "A"
+  },
+  {
+    num: 165,
+    en: "Which of the following Articles deal with Directive principles of State Policy?",
+    ta: "பின்வரும் விதிகளில் அரசின் வழிகாட்டு நெறிமுறைகளை எந்த விதிகள் விவரிக்கிறது?",
+    opts: [
+      { key: "A", en: "Articles 51 to 76", ta: "விதிகள் 51 லிருந்து 76" },
+      { key: "B", en: "Articles 52 to 55", ta: "விதிகள் 52 லிருந்து 55" },
+      { key: "C", en: "Articles 38 to 51", ta: "விதிகள் 38 லிருந்து 51" },
+      { key: "D", en: "Articles 36 to 51", ta: "விதிகள் 36 லிருந்து 51" }
+    ],
+    ans: "D"
+  },
+  {
+    num: 166,
+    en: "The words secular, socialist, integrity were added in the preamble through which of the following amendments?",
+    ta: "முன்னுரையில் காணப்படும் 'மதசார்பற்ற', 'சோசலிச', 'ஒருமைப்பாடு' போன்ற சொற்கள் எத்தனையாவது அரசியலமைப்பு சட்டத்திருத்தத்தில் சேர்க்கப்பட்டுள்ளது.",
+    opts: [
+      { key: "A", en: "42nd Amendment", ta: "42 வது அரசியலமைப்பு சட்டதிருத்தம்" },
+      { key: "B", en: "44th Amendment", ta: "44 வது அரசியலமைப்பு சட்டதிருத்தம்" },
+      { key: "C", en: "105th Amendment", ta: "105 வது அரசியலமைப்பு சட்டதிருத்தம்" },
+      { key: "D", en: "88th Amendment", ta: "88 வது அரசியலமைப்பு சட்டதிருத்தம்" }
+    ],
+    ans: "A"
+  },
+  {
+    num: 167,
+    en: "Justice party was formed in the year",
+    ta: "நீதிக்கட்சி உருவான ஆண்டு",
+    opts: [
+      { key: "A", en: "1911", ta: "1911" },
+      { key: "B", en: "1912", ta: "1912" },
+      { key: "C", en: "1916", ta: "1916" },
+      { key: "D", en: "1922", ta: "1922" }
+    ],
+    ans: "C"
+  },
+  {
+    num: 168,
+    en: "The first Scheduled Caste leader from Tamil Nadu to represent Tamils in the Legislative council in 1920 was",
+    ta: "1920ல் தமிழ்நாடு சட்டமன்ற மேலவையில் தமிழர்களைப் பிரதிநிதித்துவப்படுத்திய முதல் பட்டியலினத் தலைவர்",
+    opts: [
+      { key: "A", en: "M.C. Rajah", ta: "எம்.சி. ராஜா" },
+      { key: "B", en: "R. Veeraiyan", ta: "ஆர். வீரையன்" },
+      { key: "C", en: "Chinnaswamy", ta: "சின்னசாமி" },
+      { key: "D", en: "Dr. Subbarayan", ta: "டாக்டர். சுப்பராயன்" }
+    ],
+    ans: "A"
+  },
+  {
+    num: 169,
+    en: "Which Article of Indian Constitution prohibits the employment of children in any factory or mine or in any other hazardous occupation?",
+    ta: "இந்திய அரசியல் சட்டத்தின் எந்த சரத்து குழந்தைகளைத் தொழிற்சாலை, சுரங்கம் அல்லது எந்த ஆபத்தான தொழிலிலும் பணி அமர்த்தக் கூடாது எனக் கூறுகிறது?",
+    opts: [
+      { key: "A", en: "Article 14", ta: "சட்டப்பிரிவு 14" },
+      { key: "B", en: "Article 39", ta: "சட்டப்பிரிவு 39" },
+      { key: "C", en: "Article 20", ta: "சட்டப்பிரிவு 20" },
+      { key: "D", en: "Article 24", ta: "சட்டப்பிரிவு 24" }
+    ],
+    ans: "D"
+  },
+  {
+    num: 170,
+    en: "The United Nations General Assembly adopted the Declaration on the Rights of Persons belonging to National (or) Ethnic, Religious and Linguistic Minorities on",
+    ta: "ஐக்கிய நாடுகளின் பொதுச்சபை தேசிய அல்லது இனம், மதம் மற்றும் மொழி சார்ந்த சிறுபான்மையினரின் உரிமைகள் குறித்த பிரகடனத்தை ________ அன்று ஏற்றுக்கொண்டது.",
+    opts: [
+      { key: "A", en: "December 18, 1991", ta: "டிசம்பர் 18, 1991" },
+      { key: "B", en: "December 18, 1992", ta: "டிசம்பர் 18, 1992" },
+      { key: "C", en: "December 18, 1993", ta: "டிசம்பர் 18, 1993" },
+      { key: "D", en: "December 18, 1994", ta: "டிசம்பர் 18, 1994" }
+    ],
+    ans: "B"
+  },
+  {
+    num: 171,
+    en: "Consider the following statements about 'The Protection of Children from Sexual Offences Act 2012'. Which among the following statement is correct?",
+    ta: "குழந்தைகளை பாலியல் குற்றங்களிலிருந்து பாதுகாக்கும் சட்டம் 2012 (POCSO) குறித்து பின்வரும் அறிக்கைகளை கருத்தில் கொள்ளுங்கள். பின்வரும் எந்த அறிக்கை சரியானது?",
+    opts: [
+      { key: "A", en: "Punishment for pornographic offences shall not be less than 3 years", ta: "அசம்பாவிதமான புகைப்பட குற்றங்களுக்கான தண்டனை குறைந்தது 3 ஆண்டுகள்" },
+      { key: "B", en: "Punishment for failure to report an offence is imprisonment upto 6 months with fine or both", ta: "குற்றம் தொடர்பாக அறிக்கையிடத் தவறுவதற்கான தண்டனை 6 மாதங்கள் வரை சிறை மற்றும் அபராதம் அல்லது இரண்டும்" },
+      { key: "C", en: "Punishment for abetment of an offence is 5 years", ta: "குற்றத்திற்கு உதவியதற்கான தண்டனை 5 ஆண்டுகள்" },
+      { key: "D", en: "Punishment for penetrative assault is 7 years", ta: "ஊடுருவும் பாலியல் தாக்குதலுக்கான தண்டனை 7 ஆண்டுகள்" }
+    ],
+    ans: "B"
+  },
+  {
+    num: 172,
+    en: "Arrange the following stage of demographic transition in chronological order:\n(1) Low birth rate and low death rate\n(2) High birth rate and high death rate\n(3) High birth rate and low death rate",
+    ta: "காலவரிசைப்படி, மக்கள்தொகை மாறுபாட்டின் பின்வரும் கட்டத்தை ஒழுங்குபடுத்துவும்.",
+    opts: [
+      { key: "A", en: "(1), (2), (3)", ta: "(1), (2), (3)" },
+      { key: "B", en: "(3), (2), (1)", ta: "(3), (2), (1)" },
+      { key: "C", en: "(2), (3), (1)", ta: "(2), (3), (1)" },
+      { key: "D", en: "(1), (3), (2)", ta: "(1), (3), (2)" }
+    ],
+    ans: "C"
+  },
+  {
+    num: 173,
+    en: "Name the state known as the Yarn Bowl of India.",
+    ta: "இந்தியாவின் நூல் கிண்ணம் என்று அழைக்கப்படும் மாநிலத்தின் பெயர்",
+    opts: [
+      { key: "A", en: "Tamil Nadu", ta: "தமிழ்நாடு" },
+      { key: "B", en: "Gujarat", ta: "குஜராத்" },
+      { key: "C", en: "Rajasthan", ta: "ராஜஸ்தான்" },
+      { key: "D", en: "Madhya Pradesh", ta: "மத்திய பிரதேஷ்" }
+    ],
+    ans: "A"
+  },
+  {
+    num: 174,
+    en: "Sampoorna Grameen Roz-Gar Yojana (SGRY) is not relevant to",
+    ta: "சம்பூர்ணா ஊரக வேலை வாய்ப்புத் திட்டம் கீழ்காணும் எவற்றுள் பொருந்தாது?",
+    opts: [
+      { key: "A", en: "It was launched in 2001", ta: "2001-ஆம் ஆண்டு தொடங்கப்பட்டது" },
+      { key: "B", en: "It provides employment exclusively to women", ta: "இது பெண்களுக்கு பிரத்தியேகமாக வேலை வாய்ப்பை வழங்குகிறது" },
+      { key: "C", en: "It provides wage employment to rural masses", ta: "ஊரக மக்களுக்கு வேலை வாய்ப்பை அளிப்பது" },
+      { key: "D", en: "It is a central government scheme", ta: "நடுவண் அரசின் திட்டம்" }
+    ],
+    ans: "B"
+  },
+  {
+    num: 175,
+    en: "Which soil types of the south zone of Tamil Nadu?",
+    ta: "தமிழ்நாட்டின் தென்மண்டலத்தில் எந்த வகையான மண் வகைகள் உள்ளன?",
+    opts: [
+      { key: "A", en: "Coastal Alluvial and deep red soil", ta: "கடலோர வண்டல் மண் மற்றும் நல்ல சிகப்பு மண்" },
+      { key: "B", en: "Non-calcareous brown and calcareous black", ta: "சுண்ணாம்பு இல்லாத பழுப்பு மற்றும் சுண்ணாம்பு கருப்பு மண்" },
+      { key: "C", en: "Deep red soil and non calcareous red", ta: "நல்ல சிகப்பு மண் மற்றும் சுண்ணாம்பு இல்லாத சிகப்பு மண்" },
+      { key: "D", en: "Clay loam and red sandy loam", ta: "களிமண் மற்றும் செம்மண் கலந்த மணல்" }
+    ],
+    ans: "A"
+  },
+  {
+    num: 176,
+    en: "By which of the following is minimum support prices determined?",
+    ta: "பின்வருவனவற்றின் எதன் மூலம் குறைந்தபட்ச ஆதரவு விலை நிர்ணயிக்கப்படுகிறது?",
+    opts: [
+      { key: "A", en: "National Food Security Act (NFSA)", ta: "தேசிய உணவு பாதுகாப்பு சட்டம்" },
+      { key: "B", en: "Commission on Agriculture Costs and Prices (CACP)", ta: "விவசாய செலவுகள் மற்றும் விலைகள் மீதான ஆணையம்" },
+      { key: "C", en: "Agriculture Infrastructure Fund (AIF)", ta: "விவசாய உள்கட்டமைப்பு நிதி" },
+      { key: "D", en: "National Academy of Agri. Sciences (NAAS)", ta: "தேசிய வேளாண் அறிவியல் கல்வி நிலையம்" }
+    ],
+    ans: "B"
+  },
+  {
+    num: 177,
+    en: "Arrange the following in the chronological order:\n(1) PQLI – Physical Quality Life Index\n(2) MDGs – Millennium Development Goals\n(3) HDI – Human Development Index\n(4) SDGs – Sustainable Development Goals",
+    ta: "பின்வருவனவற்றைக் காலவரிசைப்படி ஒழுங்குபடுத்துவும்:\n(1) PQLI – உடல் வாழ்க்கை தர குறியீடு\n(2) MDGs – புத்தாயிரமாண்டு வளர்ச்சி இலக்குகள்\n(3) HDI – மனித வளர்ச்சிக் குறியீடு\n(4) SDGs – நிலையான வளர்ச்சி இலக்குகள்",
+    opts: [
+      { key: "A", en: "(1), (2), (3), (4)", ta: "(1), (2), (3), (4)" },
+      { key: "B", en: "(1), (4), (3), (2)", ta: "(1), (4), (3), (2)" },
+      { key: "C", en: "(1), (3), (2), (4)", ta: "(1), (3), (2), (4)" },
+      { key: "D", en: "(4), (3), (2), (1)", ta: "(4), (3), (2), (1)" }
+    ],
+    ans: "C"
+  },
+  {
+    num: 178,
+    en: "Match the following Finance Commission Chairmen:\n(a) The Fourth Finance Commission Chairman of India\n(b) The Sixth Finance Commission Chairman of India\n(c) The Ninth Finance Commission Chairman of India\n(d) The Twelfth Finance Commission Chairman of India",
+    ta: "பின்வருவனவற்றைப் பொருத்துக: (a) இந்தியாவின் நான்காவது நிதிக்குழுத் தலைவர் – (b) ஆறாவது – (c) ஒன்பதாவது – (d) பன்னிரெண்டாவது",
+    opts: [
+      { key: "A", en: "a-2, b-4, c-1, d-3", ta: "a-2, b-4, c-1, d-3" },
+      { key: "B", en: "a-4, b-3, c-2, d-1", ta: "a-4, b-3, c-2, d-1" },
+      { key: "C", en: "a-3, b-4, c-1, d-2", ta: "a-3, b-4, c-1, d-2" },
+      { key: "D", en: "a-1, b-4, c-3, d-2", ta: "a-1, b-4, c-3, d-2" }
+    ],
+    ans: "C"
+  },
+  {
+    num: 179,
+    en: "'My Experience as a legislator' was written by",
+    ta: "\"ஒரு சட்டமன்ற உறுப்பினராக எனது அனுபவம்\" என்ற நூலை எழுதியவர்",
+    opts: [
+      { key: "A", en: "Raja Gopalachariar", ta: "இராஜ கோபாலாசாரியார்" },
+      { key: "B", en: "Dr. Muthulakshmi Reddy", ta: "டாக்டர். முத்துலட்சுமி ரெட்டி" },
+      { key: "C", en: "E.V.Ramaswamy", ta: "ஈ.வி. ராமசாமி" },
+      { key: "D", en: "Annadurai", ta: "அண்ணாதுரை" }
+    ],
+    ans: "B"
+  },
+  {
+    num: 180,
+    en: "Name the person who delivered speech in Tamil Firstly at the Third session of the Indian National Congress held at Madras.",
+    ta: "பின்வருவனவற்றுள் சென்னையில் நடைபெற்ற இந்திய தேசிய காங்கிரசின் மூன்றாவது கூட்டத்தில் தமிழில் முதன்முதலாக பேசியவர் யார்?",
+    opts: [
+      { key: "A", en: "Thanjai R. Ramaswami Pillai", ta: "தஞ்சை ஆர். இராமசாமி பிள்ளை" },
+      { key: "B", en: "G. Subramania Iyer", ta: "ஜி. சுப்ரமணிய ஐயர்" },
+      { key: "C", en: "M. Viraraghavachariar", ta: "எம். வீரராகவாச்சாரியார்" },
+      { key: "D", en: "Rao Saheb Mukkananchari", ta: "ராவ் சாகிப் முக்கானன்சாரி" }
+    ],
+    ans: "D"
+  },
+  {
+    num: 181,
+    en: "Assertion [A]: TamilNadu has long resisted the imposition of Hindi in Government schools hence refused to join the Prime Minister Schools for Rising India (PMSRI). Hence Union Government has withheld funds under the Samagra Shiksha Scheme (SSS).\nReason [R]: Though the Union government rightly acknowledged government of Tamil Nadu's Two language policy and its impact on National Level yet through New Education Policy of 2020 it wants to have its say on the subjects of concurrent List.",
+    ta: "கூற்று [A]: அரசு பள்ளிகளில் இந்தி திணிப்பை தமிழ்நாடு நீண்ட காலமாக எதிர்த்து வருகிறது. மேலும் எழுச்சி பெறும் இந்தியாவிற்கான பிரதம மந்திரி பள்ளிகளில் இணைய மறுத்துவிட்டது. எனவே ஒன்றிய அரசு சமகர சிக்ஷா திட்டத்தின் கீழ் நிதியை நிறுத்தி வைத்துள்ளது.\nகாரணம் [R]: தமிழக அரசின் இரு மொழி கொள்கையையும் மற்றும் அதை ஏற்படுத்தியிருக்கும் தாக்கத்தையும் மத்திய அரசு சரியாக அங்கீகரித்தாலும், 2020 ஆம் ஆண்டின் புதிய கல்விக் கொள்கையின் மூலம் அது பொது பட்டியலில் பங்களிப்பை வலும் விரும்புகிறது.",
+    opts: [
+      { key: "A", en: "[A] is true but [R] is false", ta: "கூற்று சரி ஆனால் காரணம் தவறு" },
+      { key: "B", en: "Both [A] and [R] are true; and [R] is the correct explanation of [A]", ta: "கூற்றும் காரணமும் சரி, காரணமே கூற்றிற்கான சரியான விளக்கம்" },
+      { key: "C", en: "[A] is false, [R] is true", ta: "கூற்று தவறு, காரணம் சரி" },
+      { key: "D", en: "Both [A] and [R] are true, but [R] is not the correct explanation of [A]", ta: "கூற்றும் காரணமும் சரி ஆயினும் காரணம் கூற்றிற்கான சரியான விளக்கமல்ல" }
+    ],
+    ans: "B"
+  },
+  {
+    num: 182,
+    en: "Which of the following statements are true about the Vellore mutiny?\n1. Sir John Crawdock was the commander-in-chief of the Chennai Army.\n2. Sir George Barlow was the Governor of Chennai.\n3. Lord William Bending was the Governor General of India.\n4. Major Payers was appointed as the Discipline trainer for the soldiers.",
+    ta: "வேலூர் கலகத்தைப் பற்றி பின்வரும் கூற்றுகளில் எவை உண்மை?",
+    opts: [
+      { key: "A", en: "1, 4 is true", ta: "1, 4 சரி" },
+      { key: "B", en: "1, 2 is true", ta: "1, 2 சரி" },
+      { key: "C", en: "1, 2, 3 is true", ta: "1, 2, 3 சரி" },
+      { key: "D", en: "1, 3 is true", ta: "1, 3 சரி" }
+    ],
+    ans: "A"
+  },
+  {
+    num: 183,
+    en: "'Think first and then venture on an act\nTo venture and then think is a fault'\nAs per the above Thirukkural, how should we enter an action?\n(i) Act after a mature thought  (ii) Act after accumulating enormous wealth  (iii) Act at an appropriate time",
+    ta: "\"எண்ணித் துணிக கருமம் துணிந்தபின் எண்ணுவம் என்பது இழுக்கு\". இக்குறளில் ஒரு செயலில் எவ்வாறு ஈடுபட வேண்டும் எனத் திருவள்ளுவர் அறிவுறுத்துகிறார்?",
+    opts: [
+      { key: "A", en: "(i) only", ta: "(i) மட்டும்" },
+      { key: "B", en: "(i) and (ii) only", ta: "(i) மற்றும் (ii) மட்டும்" },
+      { key: "C", en: "(i) and (iii) only", ta: "(i) மற்றும் (iii) மட்டும்" },
+      { key: "D", en: "(ii) and (iii) only", ta: "(ii) மற்றும் (iii) மட்டும்" }
+    ],
+    ans: "A"
+  },
+  {
+    num: 184,
+    en: "The Thirukkural mentions the following as qualifications for a king.\n(i) An army, people  (ii) Guards the realm justly and maintains justice  (iii) Wealth creation, wealth builts  (iv) As a king like a robber",
+    ta: "அரசருக்குரிய தகுதிப் பேறுகளாக திருக்குறள் எவற்றைக் குறிப்பிடுகின்றன?",
+    opts: [
+      { key: "A", en: "(i) only", ta: "(i) மட்டும்" },
+      { key: "B", en: "(i), (ii) and (iii)", ta: "(i), (ii) மற்றும் (iii)" },
+      { key: "C", en: "(i), (iv) only", ta: "(i), (iv) மட்டும்" },
+      { key: "D", en: "(iv) only", ta: "(iv) மட்டும்" }
+    ],
+    ans: "B"
+  },
+  {
+    num: 185,
+    en: "'Kadukai thulaithaezh kadalaip pukatik kuruga thariththa kural' – who said this?",
+    ta: "\"கடுகைத் துளைத்தேழ் கடலைப் புகட்டிக் குருகத் தரித்த குறல்\" – எனப்பாடியவர் யார்?",
+    opts: [
+      { key: "A", en: "Avaiyar", ta: "ஔவையார்" },
+      { key: "B", en: "Nakkeerar", ta: "நக்கீரர்" },
+      { key: "C", en: "Eadaikkadar", ta: "இடைக்காடர்" },
+      { key: "D", en: "Arisilkizhar", ta: "அரிசில்கிழார்" }
+    ],
+    ans: "C"
+  },
+  {
+    num: 186,
+    en: "Match:\n(a) K. Vellaivaranar – (b) K. Kanagasabapathy Pillai – (c) N. Subramaniyan – (d) S. Vaiyapuri Pillai",
+    ta: "பொருத்துக: (a) க. வெள்ளைவாரணர் – (b) கே. கனகசபாபதி பிள்ளை – (c) என். சுப்பிரமணியன் – (d) எஸ். வையாபுரிப் பிள்ளை",
+    opts: [
+      { key: "A", en: "a-2, b-4, c-1, d-3", ta: "a-2, b-4, c-1, d-3" },
+      { key: "B", en: "a-4, b-2, c-3, d-1", ta: "a-4, b-2, c-3, d-1" },
+      { key: "C", en: "a-3, b-1, c-2, d-4", ta: "a-3, b-1, c-2, d-4" },
+      { key: "D", en: "a-1, b-3, c-4, d-2", ta: "a-1, b-3, c-4, d-2" }
+    ],
+    ans: "A"
+  },
+  {
+    num: 187,
+    en: "Who is called as 'Vedam Tamil Seitha Maaran'?",
+    ta: "\"வேதம் தமிழ் செய்த மாறன்\" – யார்?",
+    opts: [
+      { key: "A", en: "Periyazhvar", ta: "பெரியாழ்வார்" },
+      { key: "B", en: "Nammazhvar", ta: "நம்மாழ்வார்" },
+      { key: "C", en: "Thirumangaiazhvar", ta: "திருமங்கையாழ்வார்" },
+      { key: "D", en: "Aandal", ta: "ஆண்டாள்" }
+    ],
+    ans: "B"
+  },
+  {
+    num: 188,
+    en: "Assertion [A]: Jainism books Kiliviruthum, Eliviruthum, Nari Viruthum written in 5th century A.C.\nReason [R]: The Books proclaims 'Yaakai Nilayammai and Selvam Nilayammai'.",
+    ta: "கூற்று [A]: கி.பி. 5ம் நூற்றாண்டில் கிளிவிருத்தம், எலிவிருத்தம், நரிவிருத்தம் முதலிய சமணசமய நூல்கள் இயற்றப்பட்டன.\nகாரணம் [R]: இவை யாக்கை நிலையாமையையும் செல்வம் நிலையாமையையும் எடுத்துரைத்தன",
+    opts: [
+      { key: "A", en: "[A] is true but [R] is false", ta: "[A] சரியானது ஆனால் [R] தவறானது" },
+      { key: "B", en: "Both [A] and [R] are true; and [R] is correct explanation of [A]", ta: "[A] மற்றும் [R] இரண்டும் சரியானது. மேலும் [R] ஆனது [A]விற்கான சரியான விளக்கம்" },
+      { key: "C", en: "[A] is false, [R] is true", ta: "[A] தவறானது [R] சரியானது" },
+      { key: "D", en: "Both [A] and [R] are true. Aelanl [R] is not correct explanation of [A]", ta: "[A] மற்றும் [R] இரண்டும் சரியானது. ஆனால் [R] ஆனது [A]விற்கான சரியான விளக்கமல்ல" }
+    ],
+    ans: "B"
+  },
+  {
+    num: 189,
+    en: "A, B, C completed a work costing Rs. 1,800. A worked for 6 days, B for 4 days and C for 9 days. If their daily wages are in the ratio 5 : 6 : 4. The amount received by A is",
+    ta: "A, B, மற்றும் C ஆகிய மூவரும் ஒரு வேலையை ரூ. 1,800 க்கு முடிக்கின்றனர். A அந்த வேலையை 6 நாட்களிலும், B - 4 நாட்களிலும் மற்றும் C - 9 நாட்களிலும் வேலை செய்கிறார்கள். அவர்களுடைய தினக்கூலிகளின் விகிதம் 5 : 6 : 4, எனில், A பெற்ற தொகை",
+    opts: [
+      { key: "A", en: "Rs. 700", ta: "ரூ. 700" },
+      { key: "B", en: "Rs. 800", ta: "ரூ. 800" },
+      { key: "C", en: "Rs. 600", ta: "ரூ. 600" },
+      { key: "D", en: "Rs. 900", ta: "ரூ. 900" }
+    ],
+    ans: "C"
+  },
+  {
+    num: 190,
+    en: "The volume of a solid right circular cone is 11088 cm². If its height is 24 cm, then find the radius of the cone.",
+    ta: "ஒரு நேர் வட்டக்கூம்பின் கனஅளவு 11088 ச.செ.மீ. ஆகும். கூம்பின் உயரம் 24 செ.மீ, எனில், அதன் ஆரம் காண்க.",
+    opts: [
+      { key: "A", en: "23 cm", ta: "23 செ.மீ" },
+      { key: "B", en: "20 cm", ta: "20 செ.மீ" },
+      { key: "C", en: "22 cm", ta: "22 செ.மீ" },
+      { key: "D", en: "21 cm", ta: "21 செ.மீ" }
+    ],
+    ans: "D"
+  },
+  {
+    num: 191,
+    en: "Find the principal if the difference between C.I and S.I on it at 8% p.a. for 2 years is Rs. 240",
+    ta: "8% ஆண்டு வட்டியில் 2 ஆண்டுகளுக்கு கிடைக்கும் கூட்டு வட்டிக்கும் தனிவட்டிக்கும் இடையேயுள்ள வித்தியாசம் ரூ. 240 எனில் அசலைக் காண்க.",
+    opts: [
+      { key: "A", en: "Rs. 48,400", ta: "ரூ. 48,400" },
+      { key: "B", en: "Rs. 37,500", ta: "ரூ. 37,500" },
+      { key: "C", en: "Rs. 41,300", ta: "ரூ. 41,300" },
+      { key: "D", en: "Rs. 27,500", ta: "ரூ. 27,500" }
+    ],
+    ans: "B"
+  },
+  {
+    num: 192,
+    en: "At what time will Rs. 17,000 will increase Rs. 18,200 at 7% per annum?",
+    ta: "எத்தனை ஆண்டுகளில் ரூ. 17,000 ஆனது 7% தனிவட்டி வீதத்தில் ரூ. 18,200 ஆக உயரும்?",
+    opts: [
+      { key: "A", en: "1 1/117 years", ta: "1 1/117 ஆண்டுகள்" },
+      { key: "B", en: "1 1/118 years", ta: "1 1/118 ஆண்டுகள்" },
+      { key: "C", en: "1 1/119 years", ta: "1 1/119 ஆண்டுகள்" },
+      { key: "D", en: "1 101/119 years", ta: "1 101/119 ஆண்டுகள்" }
+    ],
+    ans: "C"
+  },
+  {
+    num: 193,
+    en: "Find the L.C.M of the given expression: 27 l m²n, 81 m²n², 9 l³m⁴",
+    ta: "27 l m²n, 81 m²n² மற்றும் 9 l³m⁴ ஆகிய கோவைகளின் மீ.பொ.ம காண்க",
+    opts: [
+      { key: "A", en: "27l m²n", ta: "27l m²n" },
+      { key: "B", en: "81 l³m⁴n²", ta: "81 l³m⁴n²" },
+      { key: "C", en: "81 l³m²n", ta: "81 l³m²n" },
+      { key: "D", en: "9l²m³n", ta: "9l²m³n" }
+    ],
+    ans: "B"
+  },
+  {
+    num: 194,
+    en: "What is the greatest possible volume of a vessel that can be used to measure exactly the volume of milk in cans in full capacity of 80 litres, 100 litres and 120 litres?",
+    ta: "முழுவதுமாக நிரப்பப்பட்டுள்ள 80 லிட்டர், 100 லிட்டர் மற்றும் 120 லிட்டர் கொள்ளளவு உள்ள கலன்களில் பாலினைச் சரியாக அளக்கக்கூடிய பாத்திரத்தின் அதிகபட்சக் கொள்ளளவு என்ன?",
+    opts: [
+      { key: "A", en: "40 litres", ta: "40 லிட்டர்" },
+      { key: "B", en: "30 litres", ta: "30 லிட்டர்" },
+      { key: "C", en: "10 litres", ta: "10 லிட்டர்" },
+      { key: "D", en: "20 litres", ta: "20 லிட்டர்" }
+    ],
+    ans: "D"
+  },
+  {
+    num: 195,
+    en: "Find the missing letters in the series: KJI, MLK, ONM, ? SRQ, UTS",
+    ta: "கொடுக்கப்பட்டுள்ள தொடரில் விடுபட்ட எழுத்துகளைக் காண்க: KJI, MLK, ONM, ? SRQ, UTS",
+    opts: [
+      { key: "A", en: "PQR", ta: "PQR" },
+      { key: "B", en: "QOP", ta: "QOP" },
+      { key: "C", en: "QPO", ta: "QPO" },
+      { key: "D", en: "ONP", ta: "ONP" }
+    ],
+    ans: "C"
+  },
+  {
+    num: 196,
+    en: "Find out the missing number in the series given below: 1, 5/2, 10/3, 17/4, ___",
+    ta: "பின்வரும் தொடரில் உள்ள விடுபட்ட எண்ணைக் காண்க: 1, 5/2, 10/3, 17/4, ___",
+    opts: [
+      { key: "A", en: "26/5", ta: "26/5" },
+      { key: "B", en: "24/5", ta: "24/5" },
+      { key: "C", en: "21/5", ta: "21/5" },
+      { key: "D", en: "5", ta: "5" }
+    ],
+    ans: "A"
+  },
+  {
+    num: 197,
+    en: "What is the probability that a leap year selected at random will contain 53 Sundays?",
+    ta: "ஒரு நெட்டாண்டில் 53 ஞாயிற்றுகிழமைகள் கிடைப்பதற்கான நிகழ்தகவு காண்க.",
+    opts: [
+      { key: "A", en: "2/7", ta: "2/7" },
+      { key: "B", en: "4/7", ta: "4/7" },
+      { key: "C", en: "3/7", ta: "3/7" },
+      { key: "D", en: "1/7", ta: "1/7" }
+    ],
+    ans: "A"
+  },
+  {
+    num: 198,
+    en: "How many days of the week start with 'T'?",
+    ta: "வாரத்தின் நாட்களை ஆங்கிலத்தில் சொல்லும் பொழுது எத்தனை நாட்கள் 'T' என்ற எழுத்தில் ஆரம்பிக்கும்?",
+    opts: [
+      { key: "A", en: "2", ta: "2" },
+      { key: "B", en: "3", ta: "3" },
+      { key: "C", en: "4", ta: "4" },
+      { key: "D", en: "1", ta: "1" }
+    ],
+    ans: "A"
+  },
+  {
+    num: 199,
+    en: "AUDIO, ARISE, AWAKE, VIDEO – Find the Odd one?",
+    ta: "AUDIO, ARISE, AWAKE, VIDEO இவற்றில் பொருத்தமற்றது எது?",
+    opts: [
+      { key: "A", en: "AUDIO", ta: "AUDIO" },
+      { key: "B", en: "ARISE", ta: "ARISE" },
+      { key: "C", en: "AWAKE", ta: "AWAKE" },
+      { key: "D", en: "VIDEO", ta: "VIDEO" }
+    ],
+    ans: "C"
+  },
+  {
+    num: 200,
+    en: "Find the missing element in the series given below: ACE ? MOQ, SUW",
+    ta: "விடுபட்ட உறுப்பைக் காண்க: ACE ? MOQ, SUW",
+    opts: [
+      { key: "A", en: "GIK", ta: "GIK" },
+      { key: "B", en: "FHJ", ta: "FHJ" },
+      { key: "C", en: "GHJ", ta: "GHJ" },
+      { key: "D", en: "GIL", ta: "GIL" }
+    ],
+    ans: "A"
+  }
+];
+
+let scores = { correct: 0, wrong: 0, attempted: 0 };
+
+function setLang(lang) {
+  document.body.classList.remove('en-only', 'ta-only');
+  ['btn-both','btn-en','btn-ta'].forEach(id => document.getElementById(id).classList.remove('active'));
+  if (lang === 'en') { document.body.classList.add('en-only'); document.getElementById('btn-en').classList.add('active'); }
+  else if (lang === 'ta') { document.body.classList.add('ta-only'); document.getElementById('btn-ta').classList.add('active'); }
+  else { document.getElementById('btn-both').classList.add('active'); }
+}
+
+function updateScoreboard() {
+  document.getElementById('sc-correct').textContent = scores.correct;
+  document.getElementById('sc-wrong').textContent = scores.wrong;
+  document.getElementById('sc-total').textContent = scores.attempted + '/100';
+  document.getElementById('progress-bar').style.width = (scores.attempted) + '%';
+  if (scores.attempted === 100) showFinalResult();
+}
+
+function handleAnswer(qIndex, selectedKey, correctKey, cardEl) {
+  if (cardEl.dataset.answered) return;
+  cardEl.dataset.answered = '1';
+
+  const buttons = cardEl.querySelectorAll('.opt-btn');
+  buttons.forEach(btn => {
+    btn.disabled = true;
+    const k = btn.dataset.key;
+    if (k === correctKey) btn.classList.add('reveal-opt');
+    if (k === selectedKey && selectedKey !== correctKey) btn.classList.add('wrong-opt');
+    if (k === selectedKey && selectedKey === correctKey) btn.classList.add('correct-opt');
+  });
+
+  const feedback = cardEl.querySelector('.feedback');
+  if (selectedKey === correctKey) {
+    scores.correct++;
+    cardEl.classList.add('answered', 'correct-card');
+    feedback.textContent = '✓ Correct! சரியான விடை!';
+    feedback.classList.add('correct-fb');
+  } else {
+    scores.wrong++;
+    cardEl.classList.add('answered', 'wrong-card');
+    const correctOpt = questions[qIndex].opts.find(o => o.key === correctKey);
+    feedback.innerHTML = `✗ Wrong. Correct answer: <span class="correct-ans">(${correctKey}) ${correctOpt.en}</span>`;
+    feedback.classList.add('wrong-fb');
+  }
+
+  scores.attempted++;
+  updateScoreboard();
+}
+
+function renderQuiz() {
+  const container = document.getElementById('quiz-container');
+  questions.forEach((q, i) => {
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    card.id = 'q' + q.num;
+
+    const optsHtml = q.opts.map(opt => `
+      <button class="opt-btn" data-key="${opt.key}" onclick="handleAnswer(${i}, '${opt.key}', '${q.ans}', document.getElementById('q${q.num}'))">
+        <span class="opt-key">${opt.key}.</span>
+        <span>${opt.en}<span class="opt-ta">${opt.ta}</span></span>
+      </button>
+    `).join('');
+
+    card.innerHTML = `
+      <div class="q-header">
+        <div class="q-num">Q.${q.num}</div>
+        <div class="q-text-wrap">
+          <div class="q-en">${q.en.replace(/\n/g,'<br>')}</div>
+          <div class="q-ta">${q.ta}</div>
+        </div>
+      </div>
+      <div class="options">${optsHtml}</div>
+      <div class="feedback"></div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function showFinalResult() {
+  const pct = Math.round((scores.correct / 100) * 100);
+  let grade = pct >= 80 ? '🏆 Excellent!' : pct >= 60 ? '👍 Good' : pct >= 40 ? '📚 Keep Studying' : '💪 Try Again';
+  const div = document.getElementById('final-result');
+  div.style.display = 'block';
+  div.innerHTML = `
+    <h2>Quiz Complete! · வினாடி வினா முடிந்தது!</h2>
+    <div class="big-score">${scores.correct}/100</div>
+    <div class="grade-label">${grade} · ${pct}% Score</div>
+    <p style="color:var(--muted);margin-bottom:24px">Correct: ${scores.correct} &nbsp;|&nbsp; Wrong: ${scores.wrong}</p>
+    <button class="restart-btn" onclick="location.reload()">Restart Quiz · மீண்டும் தொடங்கு</button>
+  `;
+  div.scrollIntoView({ behavior: 'smooth' });
+}
+
+renderQuiz();
+const finalDiv = document.createElement('div');
+finalDiv.id = 'final-result';
+document.getElementById('quiz-container').appendChild(finalDiv);
+</script>
+</body>
+</html>
