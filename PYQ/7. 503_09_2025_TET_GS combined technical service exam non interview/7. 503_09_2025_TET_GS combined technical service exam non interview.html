@@ -2,23 +2,70 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Exam Details</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mains 2025 Details</title>
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 50px; }
-        .btn-container { display: flex; justify-content: center; gap: 20px; margin-top: 30px; }
-        .btn { padding: 20px 40px; font-size: 20px; cursor: pointer; color: white; border: none; border-radius: 8px; text-decoration: none; }
-        .gk { background: #dc3545; }
-        .gt { background: #ffc107; color: black; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 50px;
+            margin: 0;
+        }
+        h2 {
+            color: #2c3e50;
+            text-align: center;
+            max-width: 600px;
+            margin-bottom: 40px;
+        }
+        .button-container {
+            display: flex;
+            gap: 20px;
+        }
+        .btn {
+            background-color: #e67e22;
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            min-width: 100px;
+            text-align: center;
+        }
+        .btn:hover {
+            background-color: #d35400;
+            transform: scale(1.05);
+        }
+        .btn-gt {
+            background-color: #9b59b6;
+        }
+        .btn-gt:hover {
+            background-color: #8e44ad;
+        }
+        .back-link {
+            margin-top: 30px;
+            color: #7f8c8d;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
-    <h1>7. 503_09_2025_TET_GS combined technical service exam non interview</h1>
+
+    <h2>7. 503_09_2025_TET_GS combined technical service exam non interview</h2>
     
-    <div class="btn-container">
-        <a href="gk_Non_interview2025.html" class="btn gk">GK</a>
-        <a href="gt_content.html" class="btn gt">GT</a>
+    <div class="button-container">
+        <a href="gk_Non_interview2025.html" class="btn">GK</a>
+        <a href="#" class="btn btn-gt">GT</a>
     </div>
-    <br><br>
-    <a href="previous_year_questions.html" style="color: #666;">← Back</a>
+
+    <a href="previous_years.html" class="back-link">← Back to Previous Page</a>
+
 </body>
 </html>
