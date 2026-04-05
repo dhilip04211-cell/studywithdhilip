@@ -2667,128 +2667,112 @@
     </div>
     <div class="explanation" id="exp-q155">✅ சரியான விடை: <strong>என் + உள்ளம்</strong></div>
   </div>
-<Script>
-let score = {
-        total: 0,
-        correct: 0,
-        wrong: 0
+<script>
+    // Configuration: Answers Key
+    const correctAnswers = {
+        q1: 'B', q2: 'B', q3: 'B', q4: 'B', q5: 'A', q31: 'B'
     };
 
-    const totalQuestions = Object.keys(answers).length;
-    document.getElementById('s-total').innerText = totalQuestions;
+    let stats = {
+        total: Object.keys(correctAnswers).length,
+        correct: 0,
+        wrong: 0,
+        answered: 0
+    };
 
-    function ans(btn, qId, selectedOpt) {
-        const card = document.getElementById(qId);
-        const options = card.querySelectorAll('.opt');
-        const correctOpt = answers[qId];
-        const explanation = document.getElementById('exp-' + qId);
+    // Initialize display
+    document.getElementById('s-total').innerText = stats.total;
 
-        // Prevent multiple clicks on the same question
-        if (card.classList.contains('answered')) return;
-        card.classList.add('answered');
+    function ans(btn, qId, choice) {
+        const parent = document.getElementById(qId);
+        const options = parent.querySelectorAll('.opt');
+        const correctChoice = correctAnswers[qId];
+        const exp = document.getElementById('exp-' + qId);
 
-        // Disable all buttons in this card
+        // Prevent double clicking
+        if (parent.classList.contains('done')) return;
+        parent.classList.add('done');
+        stats.answered++;
+
         options.forEach(opt => opt.disabled = true);
 
-        if (selectedOpt === correctOpt) {
-            // Correct Answer Logic
+        if (choice === correctChoice) {
             btn.classList.add('correct');
-            card.classList.add('flash-correct');
-            score.correct++;
+            btn.parentElement.parentElement.classList.add('flash-correct');
+            stats.correct++;
         } else {
-            // Wrong Answer Logic
             btn.classList.add('wrong');
-            card.classList.add('flash-wrong');
-            score.wrong++;
-            
-            // Highlight the correct answer for the user
+            btn.parentElement.parentElement.classList.add('flash-wrong');
+            stats.wrong++;
+            // Highlight correct one
             options.forEach(opt => {
-                if (opt.innerText.includes(getTamilLabel(correctOpt))) {
+                if (opt.onclick.toString().includes(`'${correctChoice}'`)) {
                     opt.classList.add('reveal');
                 }
             });
         }
 
-        // Show Explanation
-        if (explanation) explanation.classList.add('show');
+        // Show explanation
+        if (exp) exp.classList.add('show');
 
         updateStats();
     }
 
-    function getTamilLabel(optLetter) {
-        const labels = { 'A': 'அ', 'B': 'ஆ', 'C': 'இ', 'D': 'ஈ' };
-        return labels[optLetter];
-    }
-
     function updateStats() {
-        const answeredCount = score.correct + score.wrong;
-        const pct = Math.round((score.correct / answeredCount) * 100) || 0;
-
-        document.getElementById('s-correct').innerText = score.correct;
-        document.getElementById('s-wrong').innerText = score.wrong;
-        document.getElementById('s-pct').innerText = pct + '%';
-
-        // Update Progress Bar
-        const progress = (answeredCount / totalQuestions) * 100;
+        document.getElementById('s-correct').innerText = stats.correct;
+        document.getElementById('s-wrong').innerText = stats.wrong;
+        
+        const pct = Math.round((stats.correct / stats.answered) * 100);
+        document.getElementById('s-pct').innerText = (pct || 0) + '%';
+        
+        const progress = (stats.answered / stats.total) * 100;
         document.getElementById('prog-fill').style.width = progress + '%';
 
-        // Show result card if finished
-        if (answeredCount === totalQuestions) {
-            showFinalResults(pct);
+        if (stats.answered === stats.total) {
+            showFinalResult();
         }
     }
 
-    function showFinalResults(pct) {
-        const resultCard = document.getElementById('final-result');
-        if (!resultCard) return;
+    function showFinalResult() {
+        const card = document.getElementById('resultCard');
+        card.style.display = 'block';
+        document.getElementById('finalScore').innerText = `${stats.correct} / ${stats.total}`;
         
-        resultCard.style.display = 'block';
-        scrollTo('#final-result');
+        const pct = (stats.correct / stats.total) * 100;
+        const msg = document.getElementById('resultMsg');
+        if (pct === 100) msg.innerText = "அற்புதம்! முழு மதிப்பெண்கள்!";
+        else if (pct > 70) msg.innerText = "மிக நன்று! உங்கள் பயிற்சி தொடரட்டும்.";
+        else msg.innerText = "மீண்டும் ஒருமுறை பயிற்சி செய்யவும்.";
+        
+        card.scrollIntoView({ behavior: 'smooth' });
     }
 
-    function scrollTo(selector) {
-        const element = document.querySelector(selector);
-        if (element) {
+    function scrollTo(id) {
+        const el = document.querySelector(id);
+        if (el) {
+            const offset = 80; // for sticky header
+            const bodyRect = document.body.getBoundingClientRect().top;
+            const elementRect = el.getBoundingClientRect().top;
+            const elementPosition = elementRect - bodyRect;
+            const offsetPosition = elementPosition - offset;
+
             window.scrollTo({
-                top: element.offsetTop - 100,
-                behavior: 'smooth'
+                top: offsetPosition,
+                behavior: "smooth"
             });
         }
     }
 
-    // Scroll to Top visibility
+    // Scroll Top Button Logic
     window.onscroll = function() {
         const btn = document.getElementById("scrollTopBtn");
-        if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+        if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) {
             btn.classList.add("visible");
         } else {
             btn.classList.remove("visible");
         }
     };
-
-    function topFunction() {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
 </script>
-
-<div class="section" id="final-result" style="display:none;">
-    <div class="result-card">
-        <div class="result-emoji">🏆</div>
-        <div class="result-score" id="final-score-val">100%</div>
-        <div class="result-msg">வாழ்த்துகள்! நீங்கள் தேர்வை வெற்றிகரமாக முடித்துவிட்டீர்கள்.</div>
-        <div class="btn-group" style="justify-content: center;">
-            <button class="btn btn-primary" onclick="location.reload()">மீண்டும் முயற்சி செய்</button>
-            <a href="Tamil.html" class="btn btn-secondary">முகப்பு பக்கம்</a>
-        </div>
-    </div>
-</div>
-
-<button class="scroll-top" id="scrollTopBtn" onclick="topFunction()" title="Go to top">▲</button>
-
-<footer style="text-align: center; padding: 40px; color: var(--muted); border-top: 1px solid var(--border); margin-top: 60px;">
-    <p>© 2026 TAF IAS Academy. வடிவமைக்கப்பட்டது மாணவர்களின் வெற்றிக்காக.</p>
-    <p style="font-size: 0.8rem; margin-top: 10px;">இந்த தளம் கல்வி நோக்கத்திற்காக மட்டுமே உருவாக்கப்பட்டது.</p>
-</footer>
 
 </body>
 </html>
