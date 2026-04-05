@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RE/GS2AM/2026 – Group 2A Paper II Quiz</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2e3350;
+    --accent: #6c8eff;
+    --accent2: #a78bfa;
+    --correct: #22c55e;
+    --wrong: #ef4444;
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --tamil: #f0c060;
+    --gold: #fbbf24;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+  /* HEADER */
+  .header { background: linear-gradient(135deg, #1a1d27 0%, #0f1117 100%); border-bottom: 2px solid var(--border); padding: 20px 24px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+  .header h1 { font-size: 1.3rem; color: var(--accent); letter-spacing: 1px; }
+  .header p { font-size: 0.8rem; color: var(--text2); margin-top: 4px; }
+  .progress-bar { width: 100%; height: 4px; background: var(--border); border-radius: 2px; margin-top: 12px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 2px; transition: width 0.4s ease; }
+  .stats { display: flex; justify-content: center; gap: 24px; margin-top: 10px; }
+  .stat { font-size: 0.75rem; color: var(--text2); }
+  .stat span { color: var(--accent); font-weight: 700; }
+
+  /* MAIN */
+  .container { max-width: 820px; margin: 0 auto; padding: 20px 16px 100px; }
+
+  /* QUESTION CARD */
+  .question-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 24px; overflow: hidden; transition: border-color 0.3s; }
+  .question-card.answered { border-color: var(--border); }
+  .question-card.correct-card { border-color: var(--correct); }
+  .question-card.wrong-card { border-color: var(--wrong); }
+
+  .q-header { background: var(--surface2); padding: 14px 18px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); }
+  .q-num { background: var(--accent); color: #fff; border-radius: 6px; font-size: 0.8rem; font-weight: 700; padding: 3px 10px; min-width: 36px; text-align: center; }
+  .q-section { font-size: 0.7rem; color: var(--accent2); }
+  .q-status { margin-left: auto; font-size: 1.2rem; }
+
+  .q-body { padding: 18px; }
+  .q-english { font-size: 0.97rem; line-height: 1.6; color: var(--text); margin-bottom: 12px; }
+  .q-tamil { font-size: 0.92rem; line-height: 1.7; color: var(--tamil); margin-bottom: 14px; font-style: italic; border-left: 3px solid var(--gold); padding-left: 10px; }
+
+  /* OPTIONS */
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .option { display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; transition: all 0.2s; background: var(--surface2); }
+  .option:hover:not(.disabled) { border-color: var(--accent); background: rgba(108,142,255,0.08); }
+  .option.selected { border-color: var(--accent); background: rgba(108,142,255,0.15); }
+  .option.correct { border-color: var(--correct); background: rgba(34,197,94,0.12); }
+  .option.wrong { border-color: var(--wrong); background: rgba(239,68,68,0.12); }
+  .option.disabled { cursor: default; }
+  .opt-label { font-weight: 700; color: var(--accent); min-width: 22px; font-size: 0.85rem; margin-top: 1px; }
+  .opt-text { font-size: 0.9rem; line-height: 1.5; }
+  .opt-text .tam { display: block; color: var(--tamil); font-size: 0.83rem; margin-top: 3px; }
+
+  /* FEEDBACK */
+  .feedback { margin-top: 12px; padding: 10px 14px; border-radius: 8px; font-size: 0.85rem; display: none; }
+  .feedback.show { display: block; }
+  .feedback.correct { background: rgba(34,197,94,0.12); color: var(--correct); border: 1px solid rgba(34,197,94,0.3); }
+  .feedback.wrong { background: rgba(239,68,68,0.12); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
+
+  /* RESULT PANEL */
+  .result-panel { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 200; align-items: center; justify-content: center; padding: 20px; }
+  .result-panel.show { display: flex; }
+  .result-box { background: var(--surface); border: 2px solid var(--accent); border-radius: 20px; padding: 40px 32px; max-width: 480px; width: 100%; text-align: center; }
+  .result-title { font-size: 2rem; font-weight: 800; color: var(--accent); }
+  .result-score { font-size: 4rem; font-weight: 900; margin: 16px 0; }
+  .result-score.excellent { color: var(--correct); }
+  .result-score.good { color: var(--gold); }
+  .result-score.average { color: #fb923c; }
+  .result-score.poor { color: var(--wrong); }
+  .result-details { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 20px 0; }
+  .result-stat { background: var(--surface2); border-radius: 10px; padding: 12px 8px; }
+  .result-stat .num { font-size: 1.5rem; font-weight: 800; }
+  .result-stat .lbl { font-size: 0.72rem; color: var(--text2); }
+  .result-msg { color: var(--text2); font-size: 0.9rem; margin-bottom: 20px; }
+  .btn { display: inline-block; padding: 12px 28px; border-radius: 8px; border: none; cursor: pointer; font-size: 0.95rem; font-weight: 700; transition: all 0.2s; }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: #5a7de8; transform: translateY(-1px); }
+  .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); margin-left: 10px; }
+
+  /* SUBMIT BTN */
+  .submit-area { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border); padding: 14px 20px; display: flex; justify-content: center; align-items: center; gap: 16px; z-index: 100; }
+  .submit-btn { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; padding: 13px 40px; border-radius: 10px; border: none; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+  .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(108,142,255,0.4); }
+  .submit-btn:disabled { opacity: 0.5; cursor: default; transform: none; }
+  .answered-count { color: var(--text2); font-size: 0.85rem; }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .q-english { font-size: 0.9rem; }
+    .opt-text { font-size: 0.83rem; }
+    .result-score { font-size: 3rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📋 RE/GS2AM/2026 — Group 2A Paper II</h1>
+  <p>பகுதி-அ & பகுதி-ஆ | Part-A & Part-B | Questions 1–100</p>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  <div class="stats">
+    <div class="stat">Answered: <span id="answeredCount">0</span>/100</div>
+    <div class="stat">Correct: <span id="correctCount" style="color:var(--correct)">0</span></div>
+    <div class="stat">Wrong: <span id="wrongCount" style="color:var(--wrong)">0</span></div>
+  </div>
+</div>
+
+<div class="container" id="quizContainer"></div>
+
+<div class="submit-area">
+  <span class="answered-count" id="bottomCount">0 / 100 answered</span>
+  <button class="submit-btn" id="submitBtn" onclick="submitQuiz()">Submit Quiz</button>
+</div>
+
+<!-- Result Panel -->
+<div class="result-panel" id="resultPanel">
+  <div class="result-box">
+    <div class="result-title">🎯 Results</div>
+    <div class="result-score" id="resultScore"></div>
+    <div class="result-details">
+      <div class="result-stat"><div class="num" id="resCorrect" style="color:var(--correct)">0</div><div class="lbl">✅ Correct</div></div>
+      <div class="result-stat"><div class="num" id="resWrong" style="color:var(--wrong)">0</div><div class="lbl">❌ Wrong</div></div>
+      <div class="result-stat"><div class="num" id="resSkipped" style="color:var(--text2)">0</div><div class="lbl">⏭ Skipped</div></div>
+    </div>
+    <p class="result-msg" id="resMsg"></p>
+    <button class="btn btn-primary" onclick="retryQuiz()">🔁 Retry</button>
+    <button class="btn btn-secondary" onclick="closeResult()">📖 Review</button>
+  </div>
+</div>
+
+<script>
+const questions = [
+  {
+    n:1,
+    en:"Which of the following statement/s is/are true about Papa Umanath of Tamil Nadu?\n(1) She was the first woman in South India to have been arrested by the British for Salt Sathyagraha.\n(2) She organised a Peasant movement in Thuvariman Village.\n(3) She became part of the Ponmalai Women's Association.\n(4) She joined the Congress Party in 1945.",
+    ta:"கீழ்க்காண்பவற்றுள் தமிழ்நாட்டில் பாப்பா உமாநாத் பற்றிய உண்மையான கூற்றுகள் யாவை?\n(1) உப்புச் சத்தியாகிரகத்திற்காக ஆங்கிலேயரால் கைது செய்யப்பட்ட முதல் தென்னிந்தியப் பெண்மணி\n(2) துவரிமான் கிராமத்தில் ஒரு குடியானவர் இயக்கத்தினை நிறுவினார்.\n(3) பொன்மலை பெண்கள் கூட்டமைப்பில் ஒரு அங்கமானார்.\n(4) 1945-ல் காங்கிரஸ் கட்சியில் இணைந்தார்.",
+    opts:["(A) (1) and (2) are true / (1) மற்றும் (2) சரியானவை","(B) (2) and (4) are true / (2) மற்றும் (4) சரியானவை","(C) (1) and (4) are true / (1) மற்றும் (4) சரியானவை","(D) (2) and (3) are true / (2) மற்றும் (3) சரியானவை","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:3
+  },
+  {
+    n:2,
+    en:"Which is/are the following facts about Thomas Munroe correct?\n(i) He introduced Ryotwari system.\n(ii) He donated a big vessel to Tirupathi Tirumala temple.\n(iii) He replaced pagoda with rupee.",
+    ta:"பின்வரும் கூற்றுகளில் தாமஸ் மன்றோ குறித்து எது/எவை சரியானவை?\n(i) இரயத்துவாரி முறையை அறிமுகப்படுத்தினார்.\n(ii) திருமலை திருப்பதி கோயிலுக்குப் பெரிய கொப்பரை ஒன்றை அன்பளிப்பாக வழங்கினார்.\n(iii) பகோடா நாணயங்களுக்குப் பதிலாக ரூபாய் நாணயங்களை இடம்பெறச் செய்தார்.",
+    opts:["(A) (i) only / (i) மட்டும்","(B) (ii) and (iii) only / (ii) மற்றும் (iii) மட்டும்","(C) (i) and (ii) only / (i) மற்றும் (ii) மட்டும்","(D) (i) and (iii) only / (i) மற்றும் (iii) மட்டும்","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:2
+  },
+  {
+    n:3,
+    en:"\"Speaking bitterly when sweet words prevail, is eating the sour for ripe fruits\" — in this couplet, which of the following human values is stressed for human good relations?",
+    ta:"\"இனிய உளவாக இன்னாத கூறல் கனியிருப்பக் காய்கவர்ந்தற்று\" என்ற குறட்பாவில் மனித உறவுகள் இனிமையாகத் திகழ வலியுறுத்தப்படும் பண்பு எது?",
+    opts:["(A) Not to use harsh words / கடுமையான சொற்களைப் பயன்படுத்தாமை","(B) Not to speak meaningless words / பயனற்ற சொற்களைக் கூறாமை","(C) Not to speak untruthful words / உண்மையற்ற சொற்களைப் பேசாமை","(D) Not to use unknowledgeable words / அறிவின் வழி வாராச் சொற்களைச் சொல்லாமை","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:0
+  },
+  {
+    n:4,
+    en:"According to Valluvar to whom poverty will be pondered?",
+    ta:"யாருடைய வறுமை நினைக்கப்படும் என்று வள்ளுவர் கூறுகிறார்?",
+    opts:["(A) Righteous / நேர்மையானவர்","(B) Thieves / திருடர்","(C) Baseness / கயவர்","(D) Evil friends / தீ நட்பு","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:1
+  },
+  {
+    n:5,
+    en:"Choose the correct matches from the given matches:\n(1) Chera King – Vanji–Thondi\n(2) Chola King – Madurai–Korkai\n(3) Pandiya king – Uraiyur–Poombugar\n(4) King Ashoka – Samba Inscription",
+    ta:"சரியாகப் பொருந்தியுள்ளவற்றைத் தேர்வு செய்க.\n(1) சேர அரசர் – வஞ்சி–தொண்டி\n(2) சோழ அரசர் – மதுரை–கொற்கை\n(3) பாண்டிய அரசர் – உறையூர்–பூம்புகார்\n(4) அசோக மன்னன் – சம்பா கல்வெட்டு",
+    opts:["(A) (3) and (4) only / (3) மற்றும் (4) மட்டும்","(B) (1) and (4) only / (1) மற்றும் (4) மட்டும்","(C) (2) and (3) only / (2) மற்றும் (3) மட்டும்","(D) (4) and (2) only / (4) மற்றும் (2) மட்டும்","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:1
+  },
+  {
+    n:6,
+    en:"Match the Sangam books published by U.V.SA. with the years they were published:\n(a) Pathupattu  1. 1903\n(b) Purananuru   2. 1889\n(c) Ingurunuru   3. 1904\n(d) Pathitrupathu 4. 1894",
+    ta:"உ.வே.சா. பதிப்பித்த சங்க நூல்களை அதன் ஆண்டுகளோடு பொருத்துக.\n(a) பத்துப்பாட்டு 1. 1903 | (b) புறநானூறு 2. 1889 | (c) ஐங்குறுநூறு 3. 1904 | (d) பதிற்றுப்பத்து 4. 1894",
+    opts:["(A) a-4, b-1, c-2, d-3","(B) a-2, b-4, c-1, d-3","(C) a-3, b-2, c-4, d-1","(D) a-1, b-4, c-3, d-2","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:1
+  },
+  {
+    n:7,
+    en:"People living in BC 6th century were literate. Because,\n(1) The pot found at the Keezhadi has Tamizhi scripts engraved on it.\n(2) Most of the pots found at the Keezhadi were inscribed with letters after the pot had dried.\n(3) The black and red coloured pots found in Keezhadi have the image of God engraved on them.\n(4) The letter written on the pot were in the same script.",
+    ta:"கி.மு 6-ஆம் நூற்றாண்டில் மக்கள் எழுத்தறிவு பெற்றவர்களாக விளங்கினர். காரணம்:\n(1) கீழடியில் கிடைத்த பானையில் 'தமிழி எழுத்துகள்' பொறிக்கப்பட்டுள்ளன.\n(2) கீழடியில் கிடைத்த பெரும்பாலான பானைகளில் பானை உலர்ந்த பின்னர் எழுத்துகள் பொறிக்கப்பட்டுள்ளன.\n(3) கீழடியில் கிடைத்த கருப்பு, சிவப்பு நிறப் பானைகளில் கடவுள் உருவம் பொறிக்கப்பட்டிருந்தன.\n(4) பானையில் எழுதப்பட்ட எழுத்துகள் ஒரே எழுத்தமைதியில் இருந்தன.",
+    opts:["(A) (1) only correct / (1) மட்டும் சரி","(B) (2) only correct / (2) மட்டும் சரி","(C) (3) and (4) are correct / (3) மற்றும் (4) சரி","(D) (1) and (2) are correct / (1) மற்றும் (2) சரி","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:3
+  },
+  {
+    n:8,
+    en:"Consider the following statements and find the correct statements. During Peraringnar Anna's rule, preferences were given to Tamil language. Many steps were taken by him to incorporate Tamil in different fields.\n(i) Removed 'Satyameva Jayate' from the Government Motto and incorporated the Tamil words 'Vaimaye Vellum' in it.\n(ii) The name board 'Tamilaga Arasu Thalaimai Cheiyalakam' was opened in St. George Fort for the first time.\n(iii) Measures were taken to write Thirukkural verses on Tamil Nadu Government buses.",
+    ta:"கீழ்க்கண்ட கூற்றுகளை ஆராய்ந்து சரியான கூற்றுகளை தேர்ந்தெடுக்க. பேரறிஞர் அண்ணா ஆட்சியில் தமிழ் மொழிக்கு முன்னுரிமை அளிக்கப்பட்டது.\n(i) 'சத்யமேவ ஜயதே' என்ற சொற்கள் அரசு இலச்சினையில் இருந்து நீக்கப்பட்டு, 'வாய்மையே வெல்லும்' என்னும் தமிழ் சொற்கள் சேர்க்கப்பட்டன.\n(ii) சேயின்ட் ஜார்ஜ் கோட்டையில் முதன் முறையாக 'தமிழக அரசு தலைமைச் செயலகம்' என்ற பெயர்ப் பலகை திறக்கப்பட்டது.\n(iii) தமிழக அரசுப் பேருந்துகளில் திருக்குறள் வசனங்கள் எழுதி வைக்க நடவடிக்கை எடுக்கப்பட்டது.",
+    opts:["(A) (i) only / (i) மட்டும்","(B) (i) and (iii) only / (i) மற்றும் (iii) மட்டும்","(C) (i) and (ii) only / (i) மற்றும் (ii) மட்டும்","(D) (i), (ii) and (iii) / (i), (ii) மற்றும் (iii)","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:3
+  },
+  {
+    n:9,
+    en:"Consider the following statements:\nAssertion [A]: Lokmanya Tilak preferred to replace Swaraj and redesigned it as Home Rule.\nReason [R]: The British Government was quite allergic to the term Swaraj and considered it seditious.",
+    ta:"பின்வரும் அறிக்கைகளை கவனியுங்கள்:\nகூற்று [A]: லோக்மானிய திலகர் 'சுயராஜ்' இயக்கத்தை தன்னாட்சி இயக்கம் என மறு உருவம் கொடுத்து மாற்றி அமைத்தார்.\nகாரணம் [R]: சுயராஜ் என்ற சொல் ஆங்கிலேய அரசிற்கு முற்றிலும் விரும்பத்தகாத சொல்லாக இருந்தது. மேலும், இது ஒரு துரோகச் சொல்லாகக் கருதினர்.",
+    opts:["(A) [A] is true but [R] is false / [A] சரியானது, ஆனால் [R] தவறான காரணம்","(B) [A] is false but [R] is true / [A] தவறானது, ஆனால் [R] சரியான காரணம்","(C) Both [A] and [R] are true, but [R] is not the correct explanation of [A]","(D) Both [A] and [R] are true; and [R] is the correct explanation of [A]","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:3
+  },
+  {
+    n:10,
+    en:"Choose the correctly matched pairs from the following:\n(1) Dharmalayam – V.V. Subramaniam\n(2) Bharata Mata Sangam – Neelakanta Bramachari\n(3) Bharathi Ashramam – V.O. Chidambaram\n(4) Swadeshi Steam Navigation Company – Subramania Siva",
+    ta:"பின்வருவனவற்றிலிருந்து சரியாகப் பொருந்திய இணைகளைத் தேர்ந்தெடுக்க:\n(1) தர்மாலயம் – வி.வி சுப்பிரமணியம் | (2) பாரதமாதா சங்கம் – நீலகண்ட பிரம்மச்சாரி\n(3) பாரதி ஆஷிரமம் – வ.உ. சிதம்பரம் | (4) சுதேசி கப்பல் கம்பெனி – சுப்பிரமணிய சிவா",
+    opts:["(A) (1) and (3) are correct / (1) மற்றும் (3) சரியானது","(B) (1) and (2) are correct / (1) மற்றும் (2) சரியானது","(C) (2) and (3) are correct / (2) மற்றும் (3) சரியானது","(D) (3) and (4) are correct / (3) மற்றும் (4) சரியானது","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:1
+  },
+  {
+    n:11,
+    en:"Arrange the following Governors of Madras Presidency in chronological order.\n(1) Lushington\n(2) Thomas Munroe\n(3) Huge Elliot\n(4) George Barlow",
+    ta:"கீழ்க்காண் சென்னை மாகாண ஆளுநர்களை காலடிப்படையில் வரிசைப்படுத்துக.\n(1) லூஷிங்டன் | (2) தாமஸ் மன்றோ | (3) ஹியூஜ் எலியட் | (4) ஜார்ஜ் பார்லோ",
+    opts:["(A) (4), (3), (1), (2)","(B) (3), (2), (1), (4)","(C) (4), (3), (2), (1)","(D) (1), (2), (3), (4)","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:2
+  },
+  {
+    n:12,
+    en:"The Ramakrishna Mission upholds Vedanta Doctrine:\n(i) To protect ancient culture of India.\n(ii) To develop highest spirituality inherent in man.\n(iii) To believe in the truth of Hindu religion only.",
+    ta:"ராமகிருஷ்ணா மிஷன் வேதாந்தக் கோட்பாட்டை உயர்த்திப் பிடிக்கிறது:\n(i) இந்தியாவின் பண்டைய கலாச்சாரத்தை பாதுகாக்கிறது.\n(ii) மனிதனில் உள்ளாா்ந்த மிக உயர்ந்த ஆன்மீகத்தை வெளர்க்கிறது.\n(iii) இந்து மதத்தின் உண்மையை மட்டுமே நம்ப வேண்டும் என கூறுகிறது.",
+    opts:["(A) (i) and (ii) only / (i) மற்றும் (ii)","(B) (i) only / (i) மட்டுமே","(C) (ii) and (iii) only / (ii) மற்றும் (iii)","(D) (i) and (iii) only / (i) மற்றும் (iii)","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:0
+  },
+  {
+    n:13,
+    en:"Arrange the following events with regard to South Indian Rebellion in chronological order.\n(1) Tirunelveli confederacy\n(2) Dindugal confederacy\n(3) Peninsular confederacy\n(4) Regional leagues",
+    ta:"தென்னிந்தியப் புரட்சியின் போது நடந்த நிகழ்வுகளை காலமுறைப்படி வரிசைப்படுத்துக.\n(1) திருநெல்வேலி கூட்டமைப்பு | (2) திண்டுக்கல் கூட்டமைப்பு | (3) தென்னிந்திய கூட்டமைப்பு | (4) பிராந்திய கூட்டமைப்பு",
+    opts:["(A) (3), (1), (2), (4)","(B) (2), (4), (1), (3)","(C) (4), (1), (2), (3)","(D) (4), (3), (2), (1)","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:2
+  },
+  {
+    n:14,
+    en:"Choose the right matches among the following Settlements/Headquarters:\n(1) Santhome – The Portuguese\n(2) Port Nova – The Dutch\n(3) Tranquebar – The English\n(4) Devanampattinam – The French",
+    ta:"கீழ்க்காண் குடியேற்றங்கள்/தலைமையிடங்களில் சரியான இணைகளைத் தெரிக.\n(1) சாந்தோம் – போர்ச்சுகீசியர்கள் | (2) போர்ட் நோவா – டச்சுக்காரர்கள் | (3) தரங்கம்பாடி – ஆங்கிலேயர்கள் | (4) தேவனாம்பட்டினம் – பிரெஞ்சுக்காரர்கள்",
+    opts:["(A) (1) and (3) are correct / (1) மற்றும் (3) சரியானவை","(B) (1) and (2) are correct / (1) மற்றும் (2) சரியானவை","(C) (2) and (3) are correct / (2) மற்றும் (3) சரியானவை","(D) (3) and (4) are correct / (3) மற்றும் (4) சரியானவை","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:1
+  },
+  {
+    n:15,
+    en:"Which of the following is incorrectly paired?\n(1) Namakku Naame Thittam – Bus shelters\n(2) Thozhi – Monthly allowance of Rs. 1,000\n(3) Namma Ooru Superu – Anganwadis\n(4) Pudhumai Penn Scheme – Hostel scheme for women",
+    ta:"பின்வருவனவற்றில் எது தவறாக இணைக்கப்பட்டுள்ளது?\n(1) நமக்கு நாமே திட்டம் – பயணிகள் நிழற்குடைகள் | (2) தோழி – மாதாந்திர உதவித்தொகை ரூ. 1,000 | (3) நம்ம ஊரு சூப்பர் – அங்கன்வாடி மையங்கள் | (4) புதுமைப் பெண் திட்டம் – பெண்களுக்கான விடுதித் திட்டம்",
+    opts:["(A) (1) and (3) / (1) மற்றும் (3)","(B) (2) and (4) / (2) மற்றும் (4)","(C) (1) and (2) / (1) மற்றும் (2)","(D) (3) and (4) / (3) மற்றும் (4)","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:1
+  },
+  {
+    n:16,
+    en:"Identify the correct statements about Dr. Dharmambal Ammaiyar Ninaivu Widow Remarriage Assistance Scheme.\n(i) There is an income ceiling and educational qualification prescribed to avail benefit under the scheme.\n(ii) The degree/diploma holders are given 50,000, out of which 30,000 through ECS and 20,000 given as National Savings Certificate.\n(iii) The degree/diploma holders are also given 8 gram 22 carat gold coin.",
+    ta:"Dr. தர்மாம்பாள் அம்மையார் நினைவு விதவை மறுமண உதவித் திட்டம் தொடர்பான சரியான கூற்றினைக் கண்டறிக.\n(i) இத்திட்டத்தில் பலனடைவதற்கு வருவாய் வரம்பு மற்றும் கல்வித் தகுதி வரையறுக்கப்பட்டுள்ளது.\n(ii) பட்டம்/பட்டயப் படிப்பு முடித்தவர்களுக்கு ரூபாய் 50,000 வழங்கப்படுவதுடன் அதில் ரூபாய் 30,000 வங்கிக் கணக்கிலும் 20,000 தேசிய சேமிப்புப் பத்திரமாகவும் வழங்கப்படுகிறது.\n(iii) இவ்வாறு பட்டம்/பட்டயப் படிப்பு முடித்தவர்களுக்கு 8 கிராம் 22 காரட் தங்க நாணயம் வழங்கப்படுகிறது.",
+    opts:["(A) (i) only / (i) மட்டும்","(B) (i) and (ii) only / (i) மற்றும் (ii) மட்டும்","(C) (i) and (iii) only / (i) மற்றும் (iii) மட்டும்","(D) (ii) and (iii) only / (ii) மற்றும் (iii) மட்டும்","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:3
+  },
+  {
+    n:17,
+    en:"Match correctly the Tamilnadu State Public Sector undertakings with their corresponding established year:\n(a) Tamilnadu Industrial Investment Corporation – 1. 1949\n(b) Tamilnadu Civil Supplies Corporation – 2. 1965\n(c) Tamilnadu Industrial Development Corporation – 3. 1971\n(d) State Industries Promotion Corporation of Tamilnadu – 4. 1972",
+    ta:"தமிழ்நாடு மாநில பொதுத்துறை நிறுவனங்கள் நிறுவப்பட்ட ஆண்டுடன் சரியாகப் பொருத்தவும்.\n(a) தமிழ்நாடு தொழில் முதலீட்டுக் கழகம் 1. 1949 | (b) தமிழ்நாடு நுகர்பொருள் வாணிபக் கழகம் 2. 1965 | (c) தமிழ்நாடு தொழில் வளர்ச்சிக் கழகம் 3. 1971 | (d) தமிழ்நாடு மாநில தொழில் மேம்பாட்டுக் கழகம் 4. 1972",
+    opts:["(A) a-1, b-2, c-3, d-4","(B) a-1, b-4, c-3, d-2","(C) a-4, b-3, c-2, d-1","(D) a-1, b-4, c-2, d-3","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:3
+  },
+  {
+    n:18,
+    en:"Consider the following statements, choose the correct answer:\n(i) Kasturba Gandhi Balika Vidyalaya located in Chennai and Thoothukudi District.\n(ii) EMIS - is the Grievance Redressal Mechanisms for the TN Government Employees.\n(iii) Chief Minister's \"Nutritive Vegetable Garden Schemes\" aimed towards \"House wives\".\n(iv) The Nutritive Vegetable Garden Scheme is for the people living in the Urban areas.",
+    ta:"கீழ்கண்ட வாக்கியங்களில், சரியான விடையை தேர்ந்தெடுக்க:\n(i) கஸ்தூரிபா காந்தி பெண் குழந்தைகள் கல்வி நிலையங்கள் சென்னை மற்றும் தூத்துக்குடியில் அமைந்துள்ளது.\n(ii) \"எமிஸ்\" - என்பது தமிழக அரசு ஊழியர்களின் குறைத்தீர்க்கும் இணைய தளமாகும்.\n(iii) முதலமைச்சரின் \"ஊட்டச்சத்து மிக்க காய்கறிகள் தோட்டத் திட்டமானது\" \"இல்லத்தரசிகளை\" நோக்கமாகக் கொண்டு உருவாக்கப்பட்டதால்\n(iv) ஊட்டச்சத்துமிக்க காய்கறிகள் தோட்டத் திட்டமானது நகர்புறப் பகுதிகளுக்கானது மட்டுமாகும்.",
+    opts:["(A) (i) and (ii) only correct / (i) மற்றும் (ii) மட்டும் சரி","(B) (ii) and (iii) only correct / (ii) மற்றும் (iii) மட்டும் சரி","(C) (iii) and (iv) only correct / (iii) மற்றும் (iv) மட்டும் சரி","(D) (iv) and (i) only correct / (iv) மற்றும் (i) மட்டும் சரி","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:2
+  },
+  {
+    n:19,
+    en:"Choose the right matches from the following:\n(1) SiTN – Simplify TN\n(2) SeMT – State e-Mission Team\n(3) ARIVU – Natural Language Processing Chatbot jointly developed by TNeGA and Anna University\n(4) CEET – Centre for Emerging Electronic Technologies",
+    ta:"கீழ்வருவனவற்றுள் சரியான இணைகளைத் தேர்வு செய்க.\n(1) SiTN – எளிய தமிழகம் | (2) SeMT – மாநில மின் குறிக்கோள் குழு | (3) ARIVU – தமிழ்நாடு மின் ஆளுகை முகமை மற்றும் அண்ணா பல்கலைக்கழகம் இணைந்து உருவாக்கிய தமிழ் இயற்கை மொழி செயலாக்க வழி திறன்மிகு உரையாடல் | (4) CEET – வளர்ந்து வரும் மின்னணுத் தொழில்நுட்பங்களுக்கான மையம்",
+    opts:["(A) (1) and (2) only / (1) மற்றும் (2) மட்டும்","(B) (1) and (3) only / (1) மற்றும் (3) மட்டும்","(C) (2) and (3) only / (2) மற்றும் (3) மட்டும்","(D) (3) and (4) only / (3) மற்றும் (4) மட்டும்","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:0
+  },
+  {
+    n:20,
+    en:"Consider the following statements:\nAssertion [A]: The word 'Tahsildar' is derived from the Mughal word 'tahsil', meaning 'revenue-generating area'.\nReason [R]: Since the 'Tahsil' were renamed as taluks, The Tahsildars were called Taluk Officers.",
+    ta:"பின்வரும் அறிக்கைகளை கவனியுங்கள்:\nகூற்று [A]: 'தாசில்தார்' என்ற சொல் முகலாயர் பயன்படுத்திய 'தாசில்' என்னும் சொல்லினடியாக உருவானது. அதாவது 'வருவாய் ஈட்டும் பகுதி' எனப் பொருள்படும்.\nகாரணம் [R]: தாலுகாக்கள், வட்டங்கள் என மறுபெயரிடப்பட்டதால், தாசில்தார்கள், வட்டாட்சியர்கள் என்று அழைக்கப்பட்டனர்.",
+    opts:["(A) [A] is true but [R] is false / [A] சரி ஆனால் [R] தவறு","(B) Both [A] and [R] are true; and [R] is the correct explanation of [A]","(C) [A] is false, [R] is true / [A] தவறு, [R] சரி","(D) Both [A] and [R] are true, but [R] is not the correct explanation of [A]","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:3
+  },
+  {
+    n:21,
+    en:"Tamilnadu Government Service Rules are made under the provision of power confered by Indian Constitution provides in",
+    ta:"இந்திய அரசியலமைப்புச் சட்டத்தின் எந்தப் பிரிவின் கீழ் தமிழ்நாடு அரசுப் பணியாளர் பணிவிதிகள் உருவாக்கப்பட்டுள்ளன?",
+    opts:["(A) Article 360 / பிரிவு 360","(B) Article 365 / பிரிவு 365","(C) Article 309 / பிரிவு 309","(D) Article 311 / பிரிவு 311","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:2
+  },
+  {
+    n:22,
+    en:"Which of the following are related to evolution of Tamilnadu Administration is incorrectly paired?\n(1) 1800 – Political Department\n(2) 1751 – Ecclesiastical Department\n(3) 1843 – Public Works Department\n(4) 1809 – Post of Chief Secretary",
+    ta:"தமிழ்நாடு நிர்வாகத்தின் பரிணாம வளர்ச்சி தொடர்பான கீழ்க்கண்டவற்றுள் சரியாகப் பொருத்தப்படாத இணை எது?\n(1) 1800 – அரசியல் துறை | (2) 1751 – திருச்சபைத் துறை | (3) 1843 – பொதுப்பணித்துறை | (4) 1809 – தலைமைச் செயலாளர் பதவி",
+    opts:["(A) (1) and (3) / (1) மற்றும் (3)","(B) (2) and (4) / (2) மற்றும் (4)","(C) (2) and (3) / (2) மற்றும் (3)","(D) (3) and (4) / (3) மற்றும் (4)","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:1
+  },
+  {
+    n:23,
+    en:"Which of the following is incorrectly paired with regard to educating children with special needs?\n(1) PECS – Picture Exchange Communication System\n(2) ADHD – Attention Disorder and Hyperactivity Deficit\n(3) ABA – Applied Behaviour Analysis\n(4) ASD – Autism Spectrum Deficiency",
+    ta:"சிறப்பு தேவைகள் உள்ள குழந்தைகளுக்கு கல்வி கற்பிப்பது தொடர்பாக பின்வருவனவற்றில் எது தவறாக இணைக்கப்பட்டுள்ளது?\n(1) PECS – படமாற்ற செய்தி தொடர்பு முறை | (2) ADHD – கவன இருப்பு செயலிழப்பு குறைபாடு மற்றும் அதி ஊக்க செயற்பாடு குறைபாடு | (3) ABA – நடைமுறை நடத்தையில் பகுப்பாய்வு | (4) ASD – மன இறுக்கம்/மதியிறுக்க நரம்பியல் கோளாறு குறைபாடு",
+    opts:["(A) (1) and (3) / (1) மற்றும் (3)","(B) (2) and (4) / (2) மற்றும் (4)","(C) (2) and (3) / (2) மற்றும் (3)","(D) (1) and (4) / (1) மற்றும் (4)","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:1
+  },
+  {
+    n:24,
+    en:"Match the following Space Station/Centre with Place:\n(a) Vikram Sarabai Space Centre – 1. Andaman Islands–Port Blair\n(b) Satish Dhawan Space Centre – 2. Dehradun\n(c) Indian Institute of Remote Sensing – 3. Sriharikota\n(d) Down Range Station – 4. Thiruvananthapuram",
+    ta:"கீழ்கண்டவற்றை பொருத்துக:\n(a) விக்ரம் சாராபாய் விண்வெளி மையம் | (b) சதீஷ் தவான் விண்வெளி மையம் | (c) இந்திய தொலைதூர உணர்வு நிறுவனம் | (d) கீழ் எல்லை நிலையம்",
+    opts:["(A) a-4, b-3, c-2, d-1","(B) a-3, b-2, c-4, d-1","(C) a-2, b-3, c-1, d-4","(D) a-2, b-4, c-3, d-1","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:0
+  },
+  {
+    n:25,
+    en:"Consider the following statements and choose the correct answer:\n(1) Public procurement in India reached upto 20-25% of the GDP\n(2) Government e-Market place (GeM) was conceptualised as a special purpose vehicle.\n(3) Government e-Market promotes inclusive development, corruption-free governance.\n(4) Government e-Market place in the digital portal was set up in August 2006.",
+    ta:"கீழ்க்காணும் கூற்றுகளைக் கருதுக மற்றும் சரியான விடையைத் தேர்ந்தெடுக்க.\n(1) பொது கொள்முதல் இந்தியாவில், அதன் மொத்த உள்நாட்டு உற்பத்தியில் 20–25% ஐ அடைந்தது. | (2) அரசாங்கத்தின் மின்-சந்தை இடம், ஒரு குறிப்பான நோக்கத்தை அடைவதற்கான வாகனமாக உருவகப்படுத்தப்படுகிறது. | (3) அரசாங்கத்தின் மின்-சந்தை இடமானது, அனைத்தும் உள்ளடக்கிய வளர்ச்சி மற்றும் ஊழல் இல்லா நல்லாட்சியை ஊக்குவிக்கிறது. | (4) அரசாங்க மின் சந்தை இடமானது, ஒர் எண்ணிலைக்கத் தொகுப்பாகும், 2006 ஆம் ஆண்டு நிறுவப்பட்டது.",
+    opts:["(A) (1) and (2) are correct / (1) மற்றும் (2) மட்டும் சரி","(B) (3), (2) and (1) are correct / (3), (2) மற்றும் (1) மட்டும் சரி","(C) (3) and (4) only correct / (3) மற்றும் (4) மட்டும் சரி","(D) (1) only correct / (1) மட்டும் சரி","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:1
+  },
+  {
+    n:26,
+    en:"Match the following Article Provision with Subject:\n(a) Article 243 A – 1. Gram Sabha\n(b) Article 243 I – 2. State Finance Commission\n(c) Article 243 K – 3. State Election Commission\n(d) Article 243 O – 4. Bar to interference by Courts",
+    ta:"கீழ்வருவனவற்றைப் பொருத்துக.\n(a) விதி 243 A – 1. கிராம சபை | (b) விதி 243 I – 2. மாநில நிதி குழு | (c) விதி 243 K – 3. மாநில தேர்தல் ஆணையம் | (d) விதி 243 O – 4. நீதிமன்றத் தலையீடு தடை",
+    opts:["(A) a-1, b-2, c-3, d-4","(B) a-2, b-3, c-1, d-4","(C) a-1, b-3, c-2, d-4","(D) a-3, b-1, c-2, d-4","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:0
+  },
+  {
+    n:27,
+    en:"Match the following given below:\n(a) Dhar Commission – 1. Panchayat Raj\n(b) Mandal Commission – 2. Fundamental Duties\n(c) Swaran Singh Committee – 3. States–Reorganisation\n(d) Ashok Mehta Committee – 4. Reservation",
+    ta:"கீழே கொடுக்கப்பட்டுள்ளவைகளைப் பொருத்துக.\n(a) தார் ஆணையம் – 1. பஞ்சாயத்து ராஜ் | (b) மண்டல் ஆணையம் – 2. அடிப்படைக் கடமைகள் | (c) ஸ்வரண் சிங் குழு – 3. மாநிலங்களின் மறுசீரமைப்பு | (d) அசோக் மேத்தா குழு – 4. இட ஒதுக்கீடு",
+    opts:["(A) a-3, b-4, c-2, d-1","(B) a-1, b-3, c-4, d-2","(C) a-2, b-1, c-3, d-4","(D) a-4, b-2, c-1, d-3","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:0
+  },
+  {
+    n:28,
+    en:"Match the following Articles of the Indian Constitution with the Provisions concerned:\n(a) Article 178 – 1. Power of Deputy Speaker to perform the duties of Speaker\n(b) Article 180 – 2. The Speaker and Deputy Speaker of the Legislative Assembly\n(c) Article 182 – 3. Power of Deputy Chairman to perform the duties of Chairman\n(d) Article 184 – 4. The Chairman and Deputy Chairman of the Legislative Council",
+    ta:"கீழ்க்கண்ட இந்திய அரசமைப்பின் சட்டப்பிரிவுகளை அவற்றுடன் தொடர்புடைய அம்சங்களுடன் பொருத்துக.\n(a) சட்டப்பிரிவு 178 | (b) சட்டப்பிரிவு 180 | (c) சட்டப்பிரிவு 182 | (d) சட்டப்பிரிவு 184",
+    opts:["(A) a-3, b-4, c-1, d-2","(B) a-2, b-4, c-1, d-3","(C) a-2, b-1, c-4, d-3","(D) a-1, b-4, c-3, d-2","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:2
+  },
+  {
+    n:29,
+    en:"Which of the following feature for amending Indian Constitution requires ratification by not less than half of the State legislatures?\n(i) Addition of a new principle\n(ii) Abolition of Fundamental Rights\n(iii) Amendment is the power of the Supreme Court\n(iv) Change in the powers of the States",
+    ta:"இந்திய அரசியலமைப்பை திருத்துவதற்கு, எந்த அம்சத்திற்கு குறைந்தது பாதிக்கும் மேற்பட்ட மாநில சட்டமன்றங்களின் ஒப்புதல் அளிக்க வேண்டும்?\n(i) புதிய வழிகாட்டுதல் கொள்கையை சேர்த்தல் | (ii) அடிப்படை உரிமைகளை நீக்குதல் | (iii) உச்ச நீதிமன்ற அதிகாரங்களில் திருத்தம் | (iv) மாநிலங்களின் அதிகாரங்களில் மாற்றம்",
+    opts:["(A) (i) and (iii) only / (i) மற்றும் (iii) மட்டும்","(B) (i) and (ii) only / (i) மற்றும் (ii) மட்டும்","(C) (ii) and (iii) only / (ii) மற்றும் (iii) மட்டும்","(D) (iii) and (iv) only / (iii) மற்றும் (iv) மட்டும்","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:3
+  },
+  {
+    n:30,
+    en:"Reason and Assertion type:\nAssertion [A]: The Prime Minister is not responsible for the appointment of the Ministers and allocation of work among them.\nReason [R]: The Prime Minister is the leader of the majority party in the Lok-Sabha and also he is the Head of the Council of Ministers.",
+    ta:"காரணங்கள், கூற்று வகை:\nகூற்று [A]: அமைச்சர்களை நியமிப்பதிலும் அவர்களுக்கான பணிகளை ஒதுக்கீடு செய்வதிலும் பிரதம மந்திரிக்கு எவ்வித பொறுப்பும் இல்லை.\nகாரணம் [R]: பிரதம மந்திரி மக்களவையில் பெரும்பான்மை பெற்ற கட்சியின் தலைவராக இருப்புடன் அவர் அமைச்சரவையின் தலைவராகவும் இருப்பார்.",
+    opts:["(A) [A] is true, but [R] is false / [A] சரி ஆனால் [R] தவறு.","(B) [A] is false, but [R] is true / [A] தவறு, ஆனால் [R] சரி.","(C) Both [A] and [R] are true and [R] is the correct explanation of [A].","(D) Both [A] and [R] are true, but [R] is not the correct explanation of [A].","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:1
+  },
+  {
+    n:31,
+    en:"Under Indian Constitution which of the following is/are not a Fundamental Duties?\n(a) To protect and improve the natural environment.\n(b) To safeguard public property and to abjure violence.\n(c) To promote International peace and security.",
+    ta:"இந்திய அரசியலமைப்புச் சட்டத்தின் கீழ் கீழ்க்கண்ட எது/எவை அடிப்படைக் கடமைகளில் இல்லை.\n(a) இயற்கை சூழலைப் பாதுகாப்பதும் மேம்படுத்துவதும்.\n(b) பொது சொத்துகளைப் பாதுகாப்பதும் வன்முறையைக் கைவிடுவதும்.\n(c) சர்வதேச அமைதி மற்றும் பாதுகாப்பை மேம்படுத்துவது.",
+    opts:["(A) (a) only / (a) மட்டும்","(B) (a) and (b) / (a) மற்றும் (b)","(C) (c) only / (c) மட்டும்","(D) (b) and (c) / (b) மற்றும் (c)","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:2
+  },
+  {
+    n:32,
+    en:"Consider the following statements:\nAssertion [A]: Religions instruction shall be provided in any educational institution wholly provided by the State funds.\nReason [R]: A State should maintains a neutral and impartial attitude towards all religions.",
+    ta:"பின்வரும் அறிக்கைகளை கவனியுங்கள்:\nகூற்று [A]: மாநில நிதியினால் முழுமையாக வழங்கப்படும் எந்தக் கல்வி நிறுவனத்திலும் மத போதனைகள் வழங்கப்படலாம்.\nகாரணம் [R]: ஒர் அரசு அனைத்து மதங்கள் மீதும் நடுநிலை மற்றும் பாரபட்சமற்ற அணுகுமுறையைக் கடைப்பிடிக்க வேண்டும்.",
+    opts:["(A) [A] is true but [R] is false / கூற்று [A] சரி ஆனால் காரணம் [R] தவறு","(B) Both [A] and [R] are true; and [R] is the correct explanation of [A]","(C) [A] is false, [R] is true / கூற்று [A] தவறு, காரணம் [R] சரி","(D) Both [A] and [R] are true, but [R] is not the correct explanation of [A] is correct","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:2
+  },
+  {
+    n:33,
+    en:"In case, a member of the Tamilnadu Cabinet wants to resign his/her Ministerial post; to whom he/she may submit the resignation letter?",
+    ta:"அமைச்சர் ஒருவர் தமிழக அமைச்சரவையில் இருந்து பதவி விலக முடிவெடுத்தால் யாரிடம் தனது பதவி விலகல் கடிதத்தைக் கொடுக்க வேண்டும்?",
+    opts:["(A) To the Chief Minister / முதலமைச்சரிடம்","(B) To the Governor / ஆளுநரிடம்","(C) To the Speaker of the Legislative Assembly / சட்டமன்றப் பேரவைத் தலைவரிடம்","(D) To the President of his/her political party / தான் சார்ந்திருக்கும் அரசியல் கட்சியின் தலைவரிடம்","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:1
+  },
+  {
+    n:34,
+    en:"The ways of losing citizenship under the Constitution of India are:\n(1) When an Indian citizen voluntarily acquires the citizenship of another country.\n(2) The citizen has been ordinarily resident out of India for seven years continuously.\n(3) The citizen has been imprisoned in any country for two years.",
+    ta:"இந்திய அரசமைப்பின்படி குடியுரிமை இழப்பானது கீழ்க்கண்டவற்றின் வழி ஏற்படுகிறது.\n(1) இந்திய குடியுரிமையை பெற்றிருக்கும் ஒருவர் தானாக முன்வந்து பிற நாட்டின் குடியுரிமையை பெறுதல். | (2) இந்திய குடிமகனாக இருக்கும் ஒருவர் தொடர்ச்சியாக ஏழு ஆண்டுகள் அயல்நாட்டில் தங்கியிருத்தல். | (3) இந்திய குடிமகனாக இருக்கும் ஒருவர் இரண்டாண்டுகளுக்கு குறைவில்லாமல் பிற நாட்டில் தண்டனை பெற்றிருந்தால்.",
+    opts:["(A) (1) and (2) only / (1) மற்றும் (2) மட்டும்","(B) (2) and (3) only / (2) மற்றும் (3) மட்டும்","(C) (2) only / (2) மட்டும்","(D) (1), (2) and (3) / (1), (2), (3) ஆகிய அனைத்தும்","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:3
+  },
+  {
+    n:35,
+    en:"Choose the right matches.\n(1) UK – Bicameral Legislature\n(2) USSR – Independent Judiciary\n(3) Australia – Five Year Plan\n(4) US – Removal of Supreme Court and High Court Judges",
+    ta:"சரியான பொருத்தத்தைத் தெரிவு செய்க.\n(1) இங்கிலாந்து – ஈரவை | (2) சோவியத் ரஷ்யா – சுதந்திரமான நீதிமன்றம் | (3) ஆஸ்திரேலியா – ஐந்தாண்டுத் திட்டங்கள் | (4) அமெரிக்கா – உயர்நீதிமன்றம் மற்றும் உச்சநீதிமன்ற நீதிபதிகளை நீக்குதல்",
+    opts:["(A) (1) and (3) / (1) மற்றும் (3)","(B) (2) and (3) / (2) மற்றும் (3)","(C) (1) and (4) / (1) மற்றும் (4)","(D) (4) and (2) / (4) மற்றும் (2)","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:2
+  },
+  {
+    n:36,
+    en:"Choose the right matches:\n(1) Quasi-Federal – K.C. Wheare\n(2) Bargaining Federalism – C.R. Dass\n(3) Co-operative Federalism – Granville Austin\n(4) Federation with a Centralising Tendency – Jawaharlal Nehru",
+    ta:"சரியான பொருத்தத்தை தேர்வு செய்க.\n(1) அரைகுறை கூட்டாட்சி – கே.சி. வேர் | (2) பேரம்பேசும் கூட்டாட்சி வாதம் – சி.ஆர். தாஸ் | (3) கூட்டுறவு கூட்டாட்சி வாதம் – கிரான்வில்லே ஆஸ்டின் | (4) மையப்படுத்தும் போக்கு கொண்ட கூட்டாட்சி – ஜவஹர்லால் நேரு",
+    opts:["(A) (1) and (3) only / (1) மற்றும் (3) மட்டும்","(B) (1) and (2) only / (1) மற்றும் (2) மட்டும்","(C) (2) and (3) only / (2) மற்றும் (3) மட்டும்","(D) (3) and (4) only / (3) மற்றும் (4) மட்டும்","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:0
+  },
+  {
+    n:37,
+    en:"Arrange the following events in chronological order based on geographical area:\n(1) WAN\n(2) PAN\n(3) MAN\n(4) LAN",
+    ta:"பின்வரும் நிகழ்வுகளை புவியியல் பகுதியின் அடிப்படையில் காலவரிசைப்படி வரிசைப்படுத்தவும்.\n(1) WAN | (2) PAN | (3) MAN | (4) LAN",
+    opts:["(A) (1), (2), (3), (4)","(B) (2), (4), (3), (1)","(C) (2), (3), (4), (1)","(D) (3), (4), (2), (1)","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:1
+  },
+  {
+    n:38,
+    en:"Consider the following statements:\nAssertion [A]: In relational database a foreign key in one table is used to reference the primary key in another table.\nReason [R]: Foreign key is used to ensure the referential integrity between table.",
+    ta:"பின்வரும் அறிக்கைகளை கவனியுங்கள்:\nகூற்று [A]: தொடர்புடைய தரவுத்தளத்தில் ஒரு அட்டவணையில் உள்ள வெளிநாட்டு விசை மற்றொரு அட்டவணையில் உள்ள முதன்மை விசையை குறிப்பிடப் பயன்படுத்தப்படுகிறது.\nகாரணம் [R]: அட்டவணைகளுக்கு இடையே உள்ள ஒருமைப்பாட்டை உறுதிப்படுத்த Foreign key பயன்படுத்தப்படுகிறது.",
+    opts:["(A) [A] is true but [R] is false / [A] சரி ஆனால் [R] தவறு","(B) Both [A] and [R] are true / [A] மற்றும் [R] இரண்டும் சரி","(C) Both [A] and [R] are false / [A] மற்றும் [R] இரண்டும் தவறு","(D) [A] is false but [R] is true / [A] தவறு ஆனால் [R] சரி","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:1
+  },
+  {
+    n:39,
+    en:"Choose the incorrect matches:\n(1) Albert Bruce Sabin – Live Polio Vaccine\n(2) Max Theiler – BCG Vaccine\n(3) Jonas Salk – Killed Polio Vaccine\n(4) Albert Calmette – Yellow Fever Vaccine",
+    ta:"தவறான பொருத்தங்களைத் தேர்வு செய்க.\n(1) ஆல்பர்ட் புரூஸ் சபின் – உயிருள்ள போலியோ தடுப்பூசி | (2) மேக்ஸ் தெய்லர் – BCG தடுப்பூசி | (3) ஜோனாஸ் சால்க் – கொல்லப்பட்ட போலியோ தடுப்பூசி | (4) ஆல்பர்ட் கால்மெட் – மஞ்சள் காய்ச்சல் தடுப்பூசி",
+    opts:["(A) (1) and (3) / (1) மற்றும் (3)","(B) (1) and (2) / (1) மற்றும் (2)","(C) (2) and (4) / (2) மற்றும் (4)","(D) (3) and (4) / (3) மற்றும் (4)","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:2
+  },
+  {
+    n:40,
+    en:"Which of the following statements are true about M.S. Swaminathan?\n(i) He was the Father of Green Revolution in India\n(ii) He was an Agronomist and Plant Geneticist\n(iii) He wrote the book \"Cotton\"\n(iv) He was a Pioneer in mutation plant breeding",
+    ta:"எம்.எஸ் சுவாமிநாதனைப் பற்றிய பின்வரும் கூற்றுகளில் எவை சரியானவை?\n(i) அவர் இந்தியப் பசுமைப் புரட்சியின் தந்தை ஆவார் | (ii) அவர் ஒரு வேளாண் விஞ்ஞானி மற்றும் தாவர மரபியல் நிபுணர் | (iii) அவர் \"பருத்தி\" எனும் புத்தகத்தை எழுதினார் | (iv) அவர் சடி மாற்றப் பயிர்ப் பெருக்கத்தின் ஒரு முன்னோடியாவார்",
+    opts:["(A) (i), (ii) and (iii) only / (i), (ii) மற்றும் (iii) மட்டும்","(B) (i) and (iii) only / (i) மற்றும் (iii) மட்டும்","(C) (i), (ii) and (iv) only / (i), (ii) மற்றும் (iv) மட்டும்","(D) (ii) and (iii) only / (ii) மற்றும் (iii) மட்டும்","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:2
+  },
+  {
+    n:41,
+    en:"Mention the tool used for detecting specific DNA sequences in molecular diagnostics.",
+    ta:"மூலக்கூறு நோயறிதலில் குறிப்பிட்ட டி.என்.ஏ வரிசைகளைக் கண்டறிய பயன்படும் கருவியைக் குறிப்பிடவும்.",
+    opts:["(A) Southern Blotting / தெற்கு ப்ளாட்டிங் (சதன் ப்ளாட்டிங்)","(B) ELISA","(C) PCR","(D) Flow cytometry / ப்ளோ சைட்டோமெட்ரி","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:2
+  },
+  {
+    n:42,
+    en:"Choose the correct answer:\n(1) Natural Polymer – DNA\n(2) Synthetic Polymer – PVC\n(3) Addition Polymerisation – Loss of H₂O, HCl, NH₃\n(4) Condensation Polymerisation – Monomer Addition",
+    ta:"சரியான விடையைத் தேர்ந்தெடு:\n(1) இயற்கை பாலிமர் – DNA | (2) செயற்கை பாலிமர் – PVC | (3) சேர்க்கை பல்படியாக்கல் – H₂O, HCl, NH₃ விடுபடல் | (4) குறுக்க பல்படியாக்கல் – மோனோமர் சேர்க்கை",
+    opts:["(A) (1) and (4) are correct / (1) மற்றும் (4) சரியானது","(B) (2) and (3) are correct / (2) மற்றும் (3) சரியானது","(C) (1) and (2) are correct / (1) மற்றும் (2) சரியானது","(D) (4) and (3) are correct / (4) மற்றும் (3) சரியானது","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:2
+  },
+  {
+    n:43,
+    en:"Match correctly the gaseous fuels with their corresponding calorific values:\n(a) Oil gas – 1. 12,000 to 14,000 K.cal/m³\n(b) Natural gas – 2. 4,500 to 5,400 K.cal/m³\n(c) Producer gas – 3. 27,800 K.cal/m³\n(d) Liquefied petroleum gas – 4. 1,300 K.cal/m³",
+    ta:"வாயு எரிபொருட்களை அவற்றோடு தொடர்புடைய கலோரிப் பெறுமானத்துடன் சரியாகப் பொருத்தவும்:\n(a) எண்ணெய் வாயு | (b) இயற்கை வாயு | (c) உற்பத்தி வாயு | (d) திரவ பெட்ரோலிய வாயு",
+    opts:["(A) a-2, b-1, c-4, d-3","(B) a-2, b-3, c-4, d-1","(C) a-4, b-1, c-2, d-3","(D) a-4, b-2, c-1, d-3","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:0
+  },
+  {
+    n:44,
+    en:"The most important use of Schmitt trigger circuit is to convert",
+    ta:"இதனை மாற்றுவதற்கு ஷிமிட் துண்டுதல் சுற்று முக்கியமாக உபயோகிக்கப்படுகிறது.",
+    opts:["(A) A very slowly varying input voltage into an output having an abrupt waveform / மிதமாக மாறுபடும் உள்ளீட்டை திடீர் என்று மாறுபடும் வெளியீடு அலைவடிவமாக மாற்றுவதற்கு","(B) Steady input into a steady output waveform / மாறா உள்ளீட்டை மாறா வெளியீடாக மாற்றுவதற்கு","(C) Abrupt input into a very slowly varying output / திடீர் என்று மாறுபடும் உள்ளீட்டை மிதமாக மாறுபடும் வெளியீடாக மாற்றுவதற்கு","(D) A Sawtooth waveform to a square waveform / ரம்பப்பல் போன்ற அலைவடிவத்தை ஒரு சதுர அலைவடிவமாக மாற்றுவதற்கு","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:3
+  },
+  {
+    n:45,
+    en:"Which of the following statement(s) is/are true about the techniques used for nanomaterial synthesis?\n(i) Ordered structural organisation of molecules occur when the system is in equilibrium without dissipating energy which is called static self assembly.\n(ii) Electron beam Lithography uses beam of electromagnetic wave to generate patterns for integrated circuits at nanoscale.\n(iii) Atomic force microscope tips can be used as a nanoscale write head to deposit chemicals on a surface.",
+    ta:"நானோபொருட்கள் தொகுப்பாக்கத்தின் நுட்பம் தொடர்பாக கீழ்காணும் கூற்றுகளில் எது/எவை சரியானது/(வை)?\n(i) ஒர் அமைப்பு சமநிலையில் உள்ளபோது ஆற்றல் கசிவின்றி நிகழும் மூலக்கூறுகளின் ஒழுங்கு அமைப்பாண்மையை நிலை சுய அமைப்பாக்கம் எனலாம்.\n(ii) மின் அயனிக்கற்றை கல் அச்சு கலையில் மின் காந்த அலைக் கற்றையைக் கொண்டு நானோ அளவீடுகளில் தொகுப்புச்சுற்று வடிவம் உருவாக்கப்படுகிறது.\n(iii) ஒரு மேற்தளத்தில் வேதிப்பொருள்படிவிற்குரிய நானோ அளவீட்டு எழுதுமுனையாக அணு விசை நுண்ணோக்கி முனைகள் பயன்படுகின்றன.",
+    opts:["(A) (i) and (ii) only / (i) மற்றும் (ii) மட்டும்","(B) (i) and (iii) only / (i) மற்றும் (iii) மட்டும்","(C) (ii) and (iii) only / (ii) மற்றும் (iii) மட்டும்","(D) (ii) only / (ii) மட்டும்","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:1
+  },
+  {
+    n:46,
+    en:"Which of the following statements are true about \"SWAVALAMBAN\"?\n(i) Empower the women in Gandhian way of Self-reliance\n(ii) Market led vocational skill building initiative\n(iii) Initiated in the year 2001",
+    ta:"\"ஸ்வவலம்பன்\" பற்றிய பின்வரும் கூற்றுகளில் எது உண்மை?\n(i) காந்திய வழியில் பெண்கள் தன்னம்பிக்கையுடன் முன்னேற அதிகாரமளித்தல்.\n(ii) சந்தை தலைமையிலான தொழில்திறன் மேம்பாட்டு முயற்சி.\n(iii) 2001 ஆம் ஆண்டு தொடங்கப்பட்டது.",
+    opts:["(A) (i) only / (i) மட்டும்","(B) (i) and (ii) only / (i) மற்றும் (ii) மட்டும்","(C) (ii) and (iii) only / (ii) மற்றும் (iii) மட்டும்","(D) (i) and (iii) only / (i) மற்றும் (iii) மட்டும்","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:0
+  },
+  {
+    n:47,
+    en:"Arrange the following in chronological order:\n(1) Scheduled Castes Development Corporations (SCDCs).\n(2) Rajiv Gandhi National Fellowship Scheme for SC students.\n(3) National Scheduled Castes Finance and Development Corporation.\n(4) Scheduled Castes Sub-Plan.",
+    ta:"பின்வருவனவற்றை காலவரிசைப்படி ஒழுங்குபடுத்துக:\n(1) பட்டியல் சாதிகள் மேம்பாட்டுக் கழகம் (SCDCs) | (2) தாழ்த்தப்பட்ட (SC) மாணவர்களுக்கான ராஜீவ் காந்தி தேசிய உதவித்தொகை திட்டம் | (3) தேசிய பட்டியல் சாதிகள் நிதி மற்றும் மேம்பாட்டுக் கழகம் | (4) பட்டியல் சாதிகள் துணைத் திட்டம்",
+    opts:["(A) (4), (3), (2), (1)","(B) (1), (4), (3), (2)","(C) (3), (2), (4), (1)","(D) (4), (3), (1), (2)","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:1
+  },
+  {
+    n:48,
+    en:"Which of the following are incorrectly paired?\n(1) SCDC – South Asian Countries Development Corporation\n(2) TRIFED – The Tribal Cooperative Marketing Development Federation of India\n(3) NSFDC – The National Scheduled Castes Fortune Development Corporation\n(4) LAMS – Large Area Multi-Purpose Societies",
+    ta:"கீழ்கண்டவற்றில் எவை தவறாகப் பொருந்தியுள்ளது?\n(1) SCDC – தெற்காசிய நாடுகள் மேம்பாட்டு கூட்டமைப்பு | (2) TRIFED – இந்தியாவின் பழங்குடி கூட்டுறவு சந்தைப்படுத்துதல் மேம்பாட்டுக் கூட்டமைப்பு | (3) NSFDC – தேசிய பட்டியல் சாதிகள் செல்வள மேம்பாட்டு ஆணையம் | (4) LAMS – பெரிய பகுதி பல்நோக்கு சங்கங்கள்",
+    opts:["(A) (1) and (3) are incorrect / (1) மற்றும் (3) தவறானவை","(B) (1) and (2) are incorrect / (1) மற்றும் (2) தவறானவை","(C) (2) and (3) are incorrect / (2) மற்றும் (3) தவறானவை","(D) (3) and (4) are incorrect / (3) மற்றும் (4) தவறானவை","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:0
+  },
+  {
+    n:49,
+    en:"Which is/are the aim(s) of the National Medical Commission Bill, 2019?\n(i) to improve access to quality and affordable medical education and high quality medical professionals in all parts of the country.\n(ii) to improve access, research and development and adoption of latest scientific advancement.\n(iii) to establish 75 New medical colleges.",
+    ta:"தேசிய மருத்துவ ஆணைய மசோதா 2019-ன் குறிக்கோள் எது/எவை?\n(i) நாட்டின் அனைத்துப் பகுதிகளிலும் தரமான மற்றும் மலிவான மருத்துவக்கல்வி மற்றும் உயர்தர மருத்துவ நிபுணர்களுக்கான தரத்தை மேம்படுத்துதல். | (ii) அணுகல், ஆராய்ச்சி மற்றும் மேம்பாடு மற்றும் சமீபத்திய அறிவியல் முன்னேற்றங்களை ஏற்றுக்கொள்வதை மேம்படுத்துதல். | (iii) 75 புதிய மருத்துவ கல்லூரிகளை துவக்குதல்.",
+    opts:["(A) (i) only / (i) மட்டும்","(B) (ii) and (iii) only / (ii) மற்றும் (iii) மட்டும்","(C) (i) and (ii) only / (i) மற்றும் (ii) மட்டும்","(D) (i) and (iii) only / (i) மற்றும் (iii) மட்டும்","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:3
+  },
+  {
+    n:50,
+    en:"Which of the following statements are true about Child Bonded Labourers in Tamil Nadu?\n(i) Out of the total number of bonded labourers in Tamil Nadu, 8.7% are found to be children.\n(ii) Most of them were found as Domestic Workers.\n(iii) Governments of Tamil Nadu allots Rs.1.25 crore every year towards payment of immediate assistance to the rescued bonded labourers.",
+    ta:"தமிழ்நாட்டில் குழந்தைக் கொத்தடிமைத் தொழிலாளர் பற்றிய பின்வரும் கூற்றுகளில் எவை உண்மை?\n(i) தமிழ்நாட்டில் மொத்த கொத்தடிமை தொழிலாளர்களில் 8.7% பேர் குழந்தைகள் எனக் கண்டறியப்பட்டுள்ளது. | (ii) அவர்களில் பெரும்பாலோர் வீட்டு வேலை செய்பவர்களாகக் காணப்பட்டனர். | (iii) மீட்கப்பட்ட கொத்தடிமைத் தொழிலாளர்களுக்கு உடனடி உதவி தொகையாக தமிழக அரசு ஆண்டுதோறும் 1.25 கோடி ரூபாய் ஒதுக்குகிறது.",
+    opts:["(A) (i) only / (i) மட்டும்","(B) (i) and (iii) only / (i) மற்றும் (iii) மட்டும்","(C) (i) and (ii) only / (i) மற்றும் (ii) மட்டும்","(D) (ii) and (iii) only / (ii) மற்றும் (iii) மட்டும்","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:1
+  },
+  {
+    n:51,
+    en:"Consider the following statements:\nAssertion [A]: A large part of our Social and Technical skills are acquired through deliberate instruction.\nReason [R]: For imparting Education, Govt. of India allocates Rs. 1.29 lakh crores in 2025-26.",
+    ta:"பின்வரும் அறிக்கைகளை கவனியுங்கள்:\nகூற்று [A]: நமது சமூக மற்றும் தொழில்நுட்பத் திறன்களில் பெரும்பகுதி கவனமாக வழங்கப்பெறும் அறிவுறுத்தல்கள் மூலம் பெறப்படுகிறது.\nகாரணம் [R]: கல்வியை வழங்குவதற்காக இந்திய அரசாங்மானது 2025-26 ஆம் ஆண்டில் ரூ. 1.29 இலட்சம் கோடி நிதியினை ஒதுக்குகிறது.",
+    opts:["(A) [A] is true but [R] is false / [A] சரி ஆனால் [R] தவறு","(B) Both [A] and [R] are true and [R] is the correct explanation of [A]","(C) [A] is false [R] is true / [A] தவறு [R] சரி","(D) Both [A] and [R] are true but [R] is not the correct explanation of [A]","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:3
+  },
+  {
+    n:52,
+    en:"Which among the following statements are true about Vetri Nichayam scheme?\n(i) This scheme has been introduced to upskill the unemployed youth.\n(ii) This scheme targets all the students aged 18-35 years.\n(iii) This scheme includes school dropouts also as beneficiaries.",
+    ta:"வெற்றி நிச்சயம் திட்டம் பற்றிய பின்வரும் கூற்றுகளில் எது உண்மை?\n(i) வேலையற்ற இளைஞர்களின் திறன்களை மேம்படுத்துவதற்காக இத்திட்டம் அறிமுகப்படுத்தப்பட்டுள்ளது | (ii) இத்திட்டம் 18-35 வயதுடைய அனைத்து மாணவர்களையும் இலக்காகக் கொண்டுள்ளது. | (iii) இத்திட்டத்தில் பள்ளிப்படிப்பை பாதியில் நிறுத்தியவர்களும் பயனடைவார்கள்.",
+    opts:["(A) (i) and (ii) only / (i) மற்றும் (ii) மட்டும்","(B) (ii) and (iii) only / (ii) மற்றும் (iii) மட்டும்","(C) (i) and (iii) only / (i) மற்றும் (iii) மட்டும்","(D) (i), (ii) and (iii) all / (i), (ii) மற்றும் (iii) அனைத்தும்","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:3
+  },
+  {
+    n:53,
+    en:"Arrange the following states having the population in the age group of 60 and above as per 2011 census with ascending order.\n(1) West Bengal (2) Andhra Pradesh (3) Bihar (4) Maharashtra (5) Uttar Pradesh (6) Tamil Nadu",
+    ta:"2011 மக்கள்தொகைக் கணக்கெடுப்பின்படி, 60 வயது மற்றும் அதற்கு மேற்பட்ட மக்கள் தொகை கொண்ட மாநிலங்களை ஏறுவரிசையில் அடுக்கவும்.\n(1) மேற்கு வங்கம் (2) ஆந்திர பிரதேஷ் (3) பீகார் (4) மகாராஷ்டிரா (5) உத்திர பிரதேசம் (6) தமிழ்நாடு",
+    opts:["(A) (1), (4), (6), (3), (2), (5)","(B) (5), (1), (2), (4), (6), (3)","(C) (4), (2), (3), (1), (5), (6)","(D) (3), (5), (2), (1), (4), (6)","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:3
+  },
+  {
+    n:54,
+    en:"Which scheme transformed as the \"Moovalur Ramamirtham Ammaiyar Higher Education Assurance scheme\"?",
+    ta:"மாநில அரசின் எந்த திட்டம் மூவலூர் இராமாமிர்தம் அம்மையார் உயர்கல்வி உறுதித் திட்டம் என்று மாற்றம் பெற்றுள்ளது?",
+    opts:["(A) Magalir Urimai Thogai Scheme / மகளிர் உரிமை தொகை திட்டம்","(B) Moovalur Ramamirtham Ammaiyar Marriage Assistance Scheme / மூவலூர் இராமாமிர்தம் அம்மையார் நினைவு திருமண உதவி திட்டம்","(C) Annai Theresa Ninaivu Marriage Assistance Scheme for orphan girls / அன்னை தெரசா நினைவு அனாதை பெண்களுக்கான திருமண உதவி திட்டம்","(D) Dr. Muthulakshmi Reddy Ninaivu Inter Caste Marriage Assistance Scheme / Dr. முதுலட்சமி ரெட்டி நினைவு இடை சாதி திருமண உதவி திட்டம்","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:1
+  },
+  {
+    n:55,
+    en:"Consider the following statements:\nAssertion [A]: Unemployment is the major social problems causing sickness, personal, family and community disorganization.\nReason [R]: Social provisions for financial aid to those who face economic disabilities alleviates the suffering which unemployed entails.",
+    ta:"பின்வரும் அறிக்கைகளை கவனியுங்கள்.\nகூற்று [A]: வேலையின்மை என்பது நோய், தனிப்பட்ட, குடும்பம் மற்றும் சமூக சீர்குலைவை ஏற்படுத்தும் முக்கிய சமூகப் பிரச்சனையாகும்.\nகாரணம் [R]: பொருளாதார குறைபாடுகளை எதிர்கொள்பவர்களுக்கு நிதி உதவிக்கான சமூக ஏற்பாடுகள் வேலையில்லாதவர்கள், அனுபவிக்கும் துன்பங்களை குறைக்கிறது.",
+    opts:["(A) Both [A] and [R] are true, but [R] is not correct explanation of [A]","(B) [A] is true; but [R] is false / [A] உண்மை ஆனால் [R] தவறு","(C) Both [A] and [R] are true and [R] is the correct explanation of [A]","(D) [A] is false ; [R] is true / [A] தவறு ஆனால் [R] உண்மை","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:0
+  },
+  {
+    n:56,
+    en:"Choose the Right Matches:\n(1) Grains Portal – To Access Food Grains\n(2) Jack Mission – Promotes Production of Jack Fruit\n(3) Moringa Mission – Export Zones for Health Benefiting crops\n(4) Uzhavar Aluvalar Thodarbu Thittam – To create farmers Database",
+    ta:"சரியானதைத் தேர்வு செய்யவும்.\n(1) GRAINS பக்கம் – உணவு தானியங்களைப் பெறுதல் | (2) ஜேக் இயக்கம் – பலாப்பழ உற்பத்தியை அதிகரிக்க | (3) மோரிங்கா இயக்கம் – ஆரோக்கிய நலம் பயக்கும் பயிர்களுக்கு ஏற்றுமதி மண்டலங்கள் | (4) உழவர் அலுவலர் தொடர்பு திட்டம் – விவசாயிகள் தரவுகளை உருவாக்க",
+    opts:["(A) (1) and (3) are correct / (1) மற்றும் (3) சரி","(B) (1) and (2) are correct / (1) மற்றும் (2) சரி","(C) (2) and (3) are correct / (2) மற்றும் (3) சரி","(D) (3) and (4) are correct / (3) மற்றும் (4) சரி","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:2
+  },
+  {
+    n:57,
+    en:"Arrange the following in chronological order:\n(i) TIIC\n(ii) TANSI\n(iii) SIDCO\n(iv) SIPCOT",
+    ta:"பின்வருவனவற்றை காலவரிசைப்படி நிரல்படுத்துக:\n(i) TIIC | (ii) TANSI | (iii) SIDCO | (iv) SIPCOT",
+    opts:["(A) (iv), (ii), (iii), (i)","(B) (iii), (ii), (iv), (i)","(C) (ii), (iii), (iv), (i)","(D) (i), (ii), (iii), (iv)","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:3
+  },
+  {
+    n:58,
+    en:"How many Coastal Districts of Tamilnadu are involved in the TN-SHORE (Neithal Meetchi Iyakkam) Project?",
+    ta:"தமிழ்நாட்டின் எத்தனை கடலோர மாவட்டங்கள் TN-SHORE (நெய்தல் மீட்சி இயக்கம்) திட்டத்தில் ஈடுபட்டுள்ளன?",
+    opts:["(A) 14","(B) 12","(C) 08","(D) 20","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:0
+  },
+  {
+    n:59,
+    en:"Which of the following schemes is correctly matched?\n(i) Kalaignar Women's Rights Grant Scheme – 2023\n(ii) Chief Minister's Thayumanavar Scheme – 2025\n(iii) Chief Minister's Breakfast Scheme – 2021",
+    ta:"பின்வரும் திட்டங்களில் எது சரியாகப் பொருந்துகிறது?\n(i) கலைஞர் மகளிர் உரிமைத் திட்டம் – 2023 | (ii) முதலமைச்சரின் தாயுமானவர் திட்டம் – 2025 | (iii) முதலமைச்சரின் காலை உணவுத் திட்டம் – 2021",
+    opts:["(A) (iii) only / (iii) மட்டும்","(B) (ii) and (iii) only / (ii) மற்றும் (iii) மட்டும்","(C) (i) and (iii) only / (i) மற்றும் (iii) மட்டும்","(D) (i) and (ii) only / (i) மற்றும் (ii) மட்டும்","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:3
+  },
+  {
+    n:60,
+    en:"Choose the right matches from the following:\nI. Revenue expenditure – Money spent by the Government\nII. Capital receipts – Social Services\nIII. Non-tax revenue – Interest receipts from State Government\nIV. States own tax revenue – Sale of goods",
+    ta:"கீழ்கண்டவற்றில் சரியான பொருத்தங்களை தேர்வு செய்க.\nI. வருமான செலவு – அரசு செலவு செய்தது | II. மூலதன வருமானம் – சமூக சேவைகள் | III. வரியில்லா வருமானம் – மாநில அரசுகள் பெற்ற கடனுக்கான வட்டி வருவாய் | IV. மாநில அரசின் வரி வருமானம் – பொருட்களை விற்பனை செய்வது",
+    opts:["(A) I and II only / I மற்றும் II மட்டும்","(B) I and III only / I மற்றும் III மட்டும்","(C) I and IV only / I மற்றும் IV மட்டும்","(D) II and IV only / II மற்றும் IV மட்டும்","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:2
+  },
+  {
+    n:61,
+    en:"A hurricane's low pressure centre of relative calm is called the eye (of the storm) and the radius of the eye is",
+    ta:"சூறாவளி என்பது நிலையான அமைதியின் குறைந்த (பலராலும் ஏற்றுக்கொள்ள இயலாத – eye of the storm) அழுத்த மையம். இந்த மையத்தின் சுற்றளவு எவ்வாறு இருக்கும்?",
+    opts:["(A) 10-25 km / 10-25 கி.மீ.","(B) 30-65 km / 30-65 கி.மீ.","(C) 20-55 km / 20-55 கி.மீ.","(D) 40-50 km / 40-50 கி.மீ.","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:0
+  },
+  {
+    n:62,
+    en:"Consider the following statements:\nAssertion [A]: The eastern coast of India is affected by the tropical cyclones more than the western coast of India.\nReason [R]: Tropical cyclones forms only in the Bay of Bengal.",
+    ta:"பின்வரும் அறிக்கைகளை கவனியுங்கள்.\nவலியுறுத்தல் [A]: இந்தியாவின் மேற்கு கடற்கரை விட கிழக்கு கடற்கரை புயலால் அதிகம் பாதிக்கப்படுகிறது.\nகாரணம் [R]: கிழக்கு கடற்கரையில் மட்டும் புயல் உருவாகிறது.",
+    opts:["(A) Both [A] and [R] are true; and [R] is the correct explanation of [A]","(B) Both [A] and [R] are true; but [R] is not correct explanation of [A]","(C) [A] is true, but [R] is false / [A] சரி, ஆனால் [R] தவறு","(D) [A] is false, but [R] is true / [A] தவறு, ஆனால் [R] சரி","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:2
+  },
+  {
+    n:63,
+    en:"The sustainable development has three main aspects namely",
+    ta:"நிலையான வளர்ச்சி எந்த மூன்று முக்கிய அம்சங்களைக் கொண்டுள்ளது?",
+    opts:["(A) Social, Environment, Natural Resources Management / சமூகம், சுற்றுச்சூழல், இயற்கைவள மேலாண்மை","(B) Social, Environment, Economy / சமூகம், சுற்றுச்சூழல், பொருளாதாரம்","(C) Social, Environment, Pollution Control / சமூகம், சுற்றுச்சூழல், மாசுகட்டுப்பாடு","(D) Social, Environment, Technology / சமூகம், சுற்றுச்சூழல், தொழில்நுட்பம்","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:1
+  },
+  {
+    n:64,
+    en:"The National Environment Tribunal Act was passed in the year",
+    ta:"தேசிய சுற்றுச்சூழல் நிர்வாகத் தீர்ப்பாயச் சட்டம் இயற்றப்பட்ட ஆண்டு",
+    opts:["(A) 1994","(B) 1975","(C) 1995","(D) 1974","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:2
+  },
+  {
+    n:65,
+    en:"Match the following:\n(a) Institute of Veterinary preventive medicine – 1. Madhavaram\n(b) Livestock research station – 2. Ranipet\n(c) Tamilnadu Veterinary and animal sciences university – 3. Nandanam\n(d) Tamilnadu livestock development corporation – 4. Kattupakkam",
+    ta:"பின்வருவனவற்றைப் பொருத்துக.\n(a) கால்நடை நோய்த்தடுப்பு மருத்துவ நிறுவனம் – 1. மாதவரம் | (b) கால்நடை ஆராய்ச்சி நிலையம் – 2. இராணிபேட்டை | (c) தமிழ்நாடு கால்நடை மருத்துவ அறிவியல் பல்கலைக்கழகம் – 3. நந்தனம் | (d) தமிழ்நாடு கால்நடை அபிவிருத்திக் கழகம் – 4. காட்டுப்பாக்கம்",
+    opts:["(A) a-4, b-3, c-2, d-1","(B) a-1, b-4, c-3, d-2","(C) a-2, b-3, c-1, d-4","(D) a-3, b-1, c-4, d-2","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:1
+  },
+  {
+    n:66,
+    en:"Match Column-I with Column-II and select the correct answer using answer codes:\nColumn-I: (a) Corundum (b) Vanadium (c) Titanium (d) Lead\nColumn-II: 1. Gasoline 2. Abrasives 3. Alloys 4. Pigments",
+    ta:"நெடுவரிசை-I ஐ நெடுவரிசை-II உடன் பொருத்தி, விடை குறியீடுகளைப் பயன்படுத்தி சரியான விடையைத் தேர்ந்தெடுக்கவும்:\nநெடுவரிசை-I: (a) கோருண்டம் (b) வேனேடியம் (c) டைட்டானியம் (d) ஈயம்\nநெடுவரிசை-II: 1. கேசோலின் 2. சிராய்ப்பிகள் 3. அலோகங்கள் 4. நிறமிகள்",
+    opts:["(A) a-4, b-2, c-1, d-3","(B) a-2, b-3, c-4, d-1","(C) a-3, b-4, c-1, d-2","(D) a-4, b-1, c-3, d-2","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:1
+  },
+  {
+    n:67,
+    en:"_______ is declared as small port of Tiruvallur district which is closer to Ennore major port.",
+    ta:"எண்ணூர் என்னும் முக்கியத் துறைமுகத்திற்கு அருகில் திருவள்ளூர் மாவட்டத்தில் உள்ள _________ சிறிய துறைமுகமாக அறிவிக்கப்பட்டுள்ளது.",
+    opts:["(A) Kulaichal / குளச்சல்","(B) Manapaddu / மணப்பாடு","(C) Kattupalli / காட்டுப்பள்ளி","(D) Thiruchopuram / திருச்சோபுரம்","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:2
+  },
+  {
+    n:68,
+    en:"Arrange the following industries in chronological order based on their Establishment Years:\n(1) TANSI – Tamil Nadu Small Industries Corporation Ltd.\n(2) TANMAG – Tamil Nadu Magnesite Limited\n(3) TAMIN – Tamil Nadu Minerals Limited\n(4) TANCEM – Tamil Nadu Cement Corporation",
+    ta:"கீழ்கண்டவற்றை வருட அடிப்படையின் கீழ் ஆரம்பிக்கப்பட்ட தொழிற்சாலைகளை காலவரிசைப்படி ஒழுங்குபடுத்துவும்:\n(1) TANSI – தமிழ்நாட்டின் சிறுதொழில் வளர்ச்சிக் கழகம் | (2) TANMAG – தமிழக மேக்னசைட் உற்பத்தி அமைப்பு | (3) TAMIN – தமிழக கனிமப் பொருள் உற்பத்திக் கழகம் | (4) TANCEM – தமிழக சிமெண்ட் உற்பத்திக் கழகம்",
+    opts:["(A) (1), (4), (3), (2)","(B) (1), (2), (3), (4)","(C) (1), (3), (4), (2)","(D) (1), (2), (4), (3)","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:0
+  },
+  {
+    n:69,
+    en:"Choose the incorrect statement about Tank irrigation in Tamil Nadu:\n(i) Tamil Nadu has an area of 589 thousand hectares of tank irrigation.\n(ii) It covers three fourth of the country's area.\n(iii) There are about 24,000 tanks in Tamil Nadu.",
+    ta:"கீழ்வரும் கூற்றுகளுள் தமிழ்நாட்டில் தொட்டிப்பாசனத்தின் எந்த கூற்றுத் தவறானது?\n(i) தமிழ்நாட்டில் தொட்டி நீர்ப்பாசனம் 589 ஆயிரம் ஹெக்டேர் பரப்பினைக் கொண்டது. | (ii) இது நாட்டின் மொத்த தொட்டிப்பாசனத்தில் நான்கில் மூன்று பங்கினைக் கொண்டது. | (iii) தமிழ்நாட்டில் சுமார் 24,000 தொட்டி நீர்ப்பாசனம் உள்ளது.",
+    opts:["(A) (i) only / (i) மட்டுமே","(B) (i) and (ii) only / (i) மற்றும் (ii) மட்டும்","(C) (ii) only / (ii) மட்டுமே","(D) (ii) and (iii) / (ii) மற்றும் (iii)","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:2
+  },
+  {
+    n:70,
+    en:"Which of the following statements are true about tropical evergreen rain forest biome?\n(i) The tropical evergreen rain forest biome has the largest plant and animal species.\n(ii) The average annual rainfall is 25 cm to 50 cm.\n(iii) These forests are dense and has tall trees.",
+    ta:"வெப்பமண்டல பசுமைமாறா மழைக்காடு உயிர்த்தொகுதி பற்றிய கூற்றுகளில் எவை உண்மையாகும்?\n(i) வெப்பமண்டல பசுமைமாறா மழைக்காடு உயிர்த்தொகுதி என்பது மிகப்பெரிய தாவர மற்றும் விலங்கு இனங்களைக் கொண்டுள்ளது. | (ii) சராசரி ஆண்டு மழைப்பொழிவு சுமார் 25 செ.மீ. – 50 செ.மீ. ஆகும். | (iii) இங்கு அடர்த்தியான மற்றும் உயரமான மரங்கள் உண்டு.",
+    opts:["(A) (i) and (iii) are correct / (i) மற்றும் (iii) சரி","(B) (ii) and (iii) are correct / (ii) மற்றும் (iii) சரி","(C) (i) and (ii) are correct / (i) மற்றும் (ii) சரி","(D) (ii) only is correct / (ii) மட்டும் சரி","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:0
+  },
+  {
+    n:71,
+    en:"Which of the following is presently called as Island Grounds?",
+    ta:"பின்வருவனவற்றில் எது தற்போழுது தீவுத்திடல் என்றழைக்கப்படுகிறது?",
+    opts:["(A) Elambore river Island / எலம்போர் தீவுத்திடல்","(B) Ennore Island / எண்ணூர் தீவுத்திடல்","(C) Quibble Island / க்யூப்பல் தீவுத்திடல்","(D) Tivukottai Island / தீவுக்கோட்டை தீவுத்திடல்","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:0
+  },
+  {
+    n:72,
+    en:"Agrometeorological Advisory Service is related to",
+    ta:"வேளாண் வானிலை ஆலோசனை சேவை பின்வருவனவற்றுள் எதனுடன் தொடர்புடையது?",
+    opts:["(A) Weather forecasting / வானிலை முன்னறிவிப்பு","(B) Cyclone forecasting / புயல் முன்னறிவிப்பு","(C) Crop forecasting / பயிர் முன்னறிவிப்பு","(D) Crop-weather forecasting / பயிர்-வானிலை முன்னறிவிப்பு","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:3
+  },
+  {
+    n:73,
+    en:"The Union Government unveiled the green credits programme on ________.",
+    ta:"பசுமை கடன் திட்டத்தை ஒன்றிய அரசு எப்போது வெளியிட்டது?",
+    opts:["(A) October, 2024 / அக்டோபர், 2024","(B) October, 2023 / அக்டோபர், 2023","(C) July, 2023 / ஜூலை, 2023","(D) January, 2024 / ஜனவரி 2024","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:1
+  },
+  {
+    n:74,
+    en:"Which of the following species has been recently (2025) focused on conserving lesser-known endangered species by the Government of Tamilnadu?\n(i) Lion Tailed Macaque and Madras Hedgehog\n(ii) Gharial and Hawksbill Sea Turtle\n(iii) Striped Hyena and hump-Headed Mahseer Fish\n(iv) Pygmy Hog and Malabar Civet",
+    ta:"தமிழ்நாடு அரசாங்கத்தால் குறைவாக அறியப்பட்ட அழிந்துவரும் உயிரினங்களைப் பாதுகாப்பதில், பின்வரும் எந்த இனத்தின் மீது சமீபத்தில் (2025) கவனம் செலுத்துகிறது?\n(i) சிங்கவால் மக்காக் (குரங்கு) மற்றும் மெட்ராஸ் ஹெட்ஜ்ஹாக் (முள்ளம்பன்றி) | (ii) கரியால் மற்றும் ஹாக்ஸ்பில் கடல் ஆமை | (iii) வரி கழுதைப்புலி மற்றும் திமில்-தலை கொண்ட மஹ்சீர் மீன் | (iv) பிக்மி ஹாக் (குள்ள காட்டு பன்றி) மற்றும் மலபார் சிவெட் (குனுகு பூனை)",
+    opts:["(A) (i) only / (i) மட்டும்","(B) (ii) and (iii) only / (ii) மற்றும் (iii) மட்டும்","(C) (i) and (iv) only / (i) மற்றும் (iv) மட்டும்","(D) (i) and (iii) only / (i) மற்றும் (iii) மட்டும்","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:3
+  },
+  {
+    n:75,
+    en:"What will be there in the place of question mark in the following series?\nEG 35, IK 99, __?__, QS 323, UW 483",
+    ta:"கேள்விக்குறி (?) இடப்பட்டுள்ள இடத்தில் விடுபட்டவற்றைக் காண:\nEG 35, IK 99, __?__, QS 323, UW 483",
+    opts:["(A) NS 173","(B) MP 165","(C) MO 195","(D) NQ 195","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:2
+  },
+  {
+    n:76,
+    en:"Find the missing letters.\nPTVX, AEGI, LPRT, _________ HLNP",
+    ta:"விடுபட்ட எழுத்துக்களைக் கண்டறிக:\nPTVX, AEGI, LPRT, _________ HLNP",
+    opts:["(A) WACE","(B) KNQT","(C) KPQS","(D) HKLO","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:0
+  },
+  {
+    n:77,
+    en:"Which of the following diagrams best represents the relationship among classes given below: Red, Blue, Green",
+    ta:"கீழே கொடுக்கப்பட்டுள்ள வகுப்புகளுக்கு இடையே உள்ள தொடர்பை பின்வரும் வரைபடங்களில் எது குறிக்கிறது? சிவப்பு, நீலம், பச்சை",
+    opts:["(A) Three overlapping circles (Venn) / மூன்று ஒன்றோடொன்று அடங்கிய வட்டங்கள்","(B) Three linked circles (chain) / மூன்று தொடர் வட்டங்கள்","(C) Concentric circles / ஒரே மையம் கொண்ட வட்டங்கள்","(D) Three separate circles / மூன்று தனித்தனி வட்டங்கள்","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:3
+  },
+  {
+    n:78,
+    en:"Below are depicted the three different positions of a dice. Find the number of dots on the face opposite to the face with one dot.",
+    ta:"கீழே ஒரு பகடையின் மூன்று வெவ்வேறு நிலைகள் சித்தரிக்கப்பட்டுள்ளன. ஒரு புள்ளியுடைய முகத்திற்கு எதிரே உள்ள முகத்தில் உள்ள புள்ளிகளின் எண்ணிக்கையைக் கண்டறிக.",
+    opts:["(A) 2","(B) 3","(C) 4","(D) 6","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:3
+  },
+  {
+    n:79,
+    en:"Which of the following option is wrong?",
+    ta:"கீழே கொடுக்கப்பட்டவைகளில் எது தவறானது?",
+    opts:["(A) P(A) > 1","(B) 0 ≤ P(A) ≤ 1","(C) P(φ) = 0","(D) P(A) + P(Ā) = 1","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:0
+  },
+  {
+    n:80,
+    en:"A sales representative plans to visit each of six companies M, N, P, Q, R and S exactly once during the course of one day. Conditions: (1) She must visit M before N and R. (2) She must visit N before Q. (3) The third company she visits must be P. If the sales representative visits Q immediately before R and immediately after S, when must she visit Q?",
+    ta:"ஒரு விற்பனை பிரதிநிதி M, N, P, Q, R, S ஆகிய ஆறு நிறுவனங்களையும் ஒரு நாளுக்கு ஒரு முறை சந்திக்க விரும்புகின்றார். கீழாணும் முறையில் தன் பணியைத் திட்டமிடுகிறார். (1) N, Rக்கு முன்பு M ஐ சந்திக்க வேண்டும் (2) Q க்கு முன்பு N ஐ சந்திக்க வேண்டும் (3) மூன்றாவதாக P ஐத் தான் சந்திக்க வேண்டும் விற்பனை பிரதிநிதி R ஐ சந்திப்பதற்கு முன்பும் S ஐ சந்தித்த உடனேயும் Q வை சந்தித்தால், Q வை எப்பொழுது சந்திப்பார்?",
+    opts:["(A) First / முதலாவதாக","(B) Second / இரண்டாவதாக","(C) Fourth / நான்காவதாக","(D) Fifth / ஐந்தாவதாக","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:3
+  },
+  {
+    n:81,
+    en:"Pointing to a boy, Veena said 'He is the only son of my grandmother's only child'. How is the boy related to Veena?",
+    ta:"ஒரு பையனைக் காட்டி, வீணா, 'அவன் என் பாட்டியின் ஒரே குழந்தையின் ஒரே மகன்' எனக் கூறினாள். அந்த பையன் வீணாவுக்கு என்ன உறவு?",
+    opts:["(A) Son / மகன்","(B) Brother / சகோதரன்","(C) Uncle / மாமா","(D) Father / தந்தை","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:1
+  },
+  {
+    n:82,
+    en:"Column I: VIOLET = a b c p q r | CLEAR = t u s q p | VOWEL = p c q d r\nDecode the language and choose the correct code for the word 'WRITE'",
+    ta:"நிரல் I: VIOLET = a b c p q r | CLEAR = t u s q p | VOWEL = p c q d r\nசாதாரண மொழியில் மாற்றி 'WRITE' என்ற சொல்லின் சரியான குறியீட்டைத் தேர்ந்தெடுக்கவும்.",
+    opts:["(A) d s a b p","(B) a r b q d","(C) s r b a q","(D) t s r c b","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:0
+  },
+  {
+    n:83,
+    en:"The columns and rows of Matrix I are numbered from 0 to 4 and Matrix II from 5 to 9. A letter from these matrices can be represented first by its row and then column number. Identify the correct set for the word ROAD.\nMatrix I (rows 0-4, cols 0-4): F O M S R / S R F O M / O M S R F / R F O M S / M S R F O\nMatrix II (rows 5-9, cols 5-9): A T D I P / I P A T D / T D I P A / P A T D I / D I P A T",
+    ta:"மேட்ரிக்சின் I நெடுவரிசைகள் மற்றும் வரிசைகள் 0 முதல் 4 வரையிலும் மேட்ரிக்சின் II 5 முதல் 9 வரையிலும் எண்ணப்படுகின்றன. இந்த மேட்ரிக்சில் இருந்து ஒரு வார்த்தை முதலில் அதன் வரிசையையும் பின்னர் நெடுவரிசை எண்ணையும் குறிக்கலாம் என்றால், ROAD என்ற வார்த்தையின் சரியான தொகுப்பைக் கண்டறியவும்.",
+    opts:["(A) 42, 32, 79, 58","(B) 23, 32, 98, 99","(C) 11, 13, 67, 69","(D) 04, 20, 55, 78","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:2
+  },
+  {
+    n:84,
+    en:"Choose the number pair/group which is different from others:\n(A) 17, 187 | (B) 15, 165 | (C) 14, 134 | (D) 12, 132",
+    ta:"கீழ்காணும் எண்களில் வேறுபட்ட இணையைத் தேர்ந்தெடுக்க:\n(A) 17, 187 | (B) 15, 165 | (C) 14, 134 | (D) 12, 132",
+    opts:["(A) 17, 187","(B) 15, 165","(C) 14, 134","(D) 12, 132","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:2
+  },
+  {
+    n:85,
+    en:"Choose the number which is different from others in the group:\n225 | 125 | 64 | 216",
+    ta:"பின்வரும் எண்கள் தொகுதியில் வேறுபட்ட எண்ணைத் தேர்ந்தெடுக்க:\n225 | 125 | 64 | 216",
+    opts:["(A) 225","(B) 125","(C) 64","(D) 216","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:0
+  },
+  {
+    n:86,
+    en:"Choose the odd pair of words.\n(A) Odometer : Current | (B) Barometer : Pressure | (C) Seismograph : Earthquakes | (D) Thermometer : Temperature",
+    ta:"பொருந்தாத இணையைத் தேர்ந்தெடுக்க.\n(A) ஓடோமீட்டர் : மின்னோட்டம் | (B) பாராமீட்டர் : அழுத்தம் | (C) சீஸ்மோகிராப் : நிலநடுக்கம் | (D) தொர்மோமீட்டர் : வெப்பநிலை",
+    opts:["(A) Odometer : Current / ஓடோமீட்டர் : மின்னோட்டம்","(B) Barometer : Pressure / பாராமீட்டர் : அழுத்தம்","(C) Seismograph : Earthquakes / சீஸ்மோகிராப் : நிலநடுக்கம்","(D) Thermometer : Temperature / தொர்மோமீட்டர் : வெப்பநிலை","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:0
+  },
+  {
+    n:87,
+    en:"________ is to race as slow is to ________",
+    ta:"_______ என்பது ஓட்டப்பந்தயம் அதேபோல் மெதுவாக என்பது _________",
+    opts:["(A) Rapid : Stop / விரைவு : நிறுத்து","(B) Rapid : Stroll / விரைவு : உலா","(C) Gallop : Fast / பாய்ந்து : வேகமாக","(D) Run : Fast / ஓடு : வேகமாக","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:1
+  },
+  {
+    n:88,
+    en:"'Kilogram' is related to 'Mass' in the same way as 'Newton' is related to _______",
+    ta:"'கிலோகிராம்' உடன் தொடர்புடையது 'நிறை' எனில் 'நியூட்டன்' உடன் தொடர்புடையது _________",
+    opts:["(A) Energy / ஆற்றல்","(B) Volume / கன அளவு","(C) Pressure / அழுத்தம்","(D) Force / விசை","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:3
+  },
+  {
+    n:89,
+    en:"Complete the analysis pair.\nPulp : Paper : : Hemp : ?",
+    ta:"கீழ்க்காணும் இணைக்கு சொல்லைக் காண்க.\nகூழ் : காகிதம் : : சணல் : ?",
+    opts:["(A) Basket / கூடை","(B) Yarn / நூல்","(C) Rope / கயிறு","(D) Cotton / பருத்தி","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:2
+  },
+  {
+    n:90,
+    en:"If a mirror is placed on line MN, which is the correct image? [The original figure shows diagonal arrows crossing]",
+    ta:"ஒரு கண்ணாடி, MN கோட்டில் அமைந்தால் அதன் பிம்பம் என்ன? [மூல வடிவம் குறுக்காக சாய்வு அம்புகள் கொண்டது]",
+    opts:["(A) Image A (arrows pointing upper-left) / பிம்பம் A","(B) Image B (arrows pointing upper-right, mirrored) / பிம்பம் B","(C) Image C (arrows pointing lower-left) / பிம்பம் C","(D) Image D (arrows pointing lower-right) / பிம்பம் D","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:1
+  },
+  {
+    n:91,
+    en:"Consider the following statements:\nStatement: Drinking habit is one of those human weaknesses which tend to test the will power of the drunkards to the edge.\nConclusions I: It is very difficult for the drunkards to give up drinking even if they want to do so.\nII: Human beings have other weaknesses as well.",
+    ta:"பின்வரும் அறிக்கைகளை கவனியுங்கள்:\nகூற்று: குடிகாரர்களின் மன உறுதியை விளிம்பு வரை சோதிக்கும் மனித பலவீனங்களில் ஒன்று தான் குடிப்பழக்கம் என்பது.\nமுடிவுகள் I: குடிகாரர்கள், குடிப்பழக்கத்தை விட வேண்டும் என்று நினைத்தாலும், அது மிகவும் கடினமான ஒன்று ஆகும்.\nII: மனிதர்களுக்கு இதுபோல வேறு பலவீனங்களும் உள்ளன.",
+    opts:["(A) I follows / I தொடரத்தகது","(B) II follows / II தொடரத்தகது","(C) Both I and II follows / I மற்றும் II இரண்டும் தொடரத்தகது","(D) Either I or II follows / I அல்லது II தொடரத்தகது","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:2
+  },
+  {
+    n:92,
+    en:"The total of ages of 4 persons is 86 years. What was their average age, 4 year ago?",
+    ta:"4 நபர்களின் மொத்த வயது 86 வருடம். 4 வருடங்களுக்கு முன் அவர்களுடைய சராசரி வயது எவ்வளவு?",
+    opts:["(A) 20.5 yr / 20.5 வருடம்","(B) 19.5 yr / 19.5 வருடம்","(C) 20 yr / 20 வருடம்","(D) 17.5 yr / 17.5 வருடம்","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:3
+  },
+  {
+    n:93,
+    en:"If L stands for ×, M stands for +, N stands for – and P stands for ÷, then what 15 L 10 M 33 P 11 N 8 = is?",
+    ta:"L என்பது ×, M என்பது +, N என்பது –, மேலும் P என்பது ÷ குறிக்கும் என்றால் 15 L 10 M 33 P 11 N 8 என்பதின் மதிப்பைக் கண்டுபிடி.",
+    opts:["(A) 150","(B) 170","(C) 145","(D) 120","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:2
+  },
+  {
+    n:94,
+    en:"Consider the following statements:\nStatement: Without the active co-operation between the proprietor and the employees of the company, it cannot remain a profitable concern for long.\nCourses of Action I: The company should be closed down.\nII: The workers should be asked to cooperate with the owner.\nIII: The owner should be asked to cooperate with the employees.",
+    ta:"பின்வரும் அறிக்கைகளை கவனியுங்கள்:\nகூற்று: ஒரு நிறுவனத்தின் முதலாளிக்கும், தொழிலாளர்களுக்கும் இடையே முழுமையான ஒத்துழைப்பு இல்லையென்றால், அந்த நிறுவனம் நீண்ட காலத்திற்கு லாபகரமானதாக இருக்க முடியாது.\nதொடர் நடவடிக்கை I: அந்த நிறுவனத்தை மூட வேண்டும். II: தொழிலாளர்களை, முதலாளியோடு ஒத்துப்போகச் சொல்ல வேண்டும். III: முதலாளியைத் தொழிலாளர்களோடு ஒத்துப்போகச் சொல்ல வேண்டும்.",
+    opts:["(A) Only I and II follows / I மற்றும் II மட்டும் தொடரத்தகது","(B) Only II and III follows / II மற்றும் III மட்டும் தொடரத்தகது","(C) Only I and III follows / I மற்றும் III மட்டும் தொடரத்தகது","(D) All follows / அனைத்தும் தொடரத்தகது","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:1
+  },
+  {
+    n:95,
+    en:"Find the missing character from among the given alternatives.\n[Grid: 4/15-26-3/10 | 6/10-8-4/8 | 7/12-?-3/5]",
+    ta:"மேலே கொடுக்கப்பட்டவற்றுள் விடுபட்ட இடத்தில் சரியான விடையைத் தேர்ந்தெடுக்க.\n[அட்டவணை: 4/15-26-3/10 | 6/10-8-4/8 | 7/12-?-3/5]",
+    opts:["(A) 85","(B) 65","(C) 50","(D) 60","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:1
+  },
+  {
+    n:96,
+    en:"Out of 5 consonants and 5 vowels, how many strings of 2 consonants and 3 vowels can be formed?",
+    ta:"5 மெய்யெழுத்துகள் மற்றும் 5 உயிரெழுத்துகளில் இருந்து 2 மெய்யெழுத்துகள் மற்றும் 3 உயிரெழுத்துகள் உள்ள எழுத்துச் சரங்கள் எத்தனை உருவாக்கலாம்?",
+    opts:["(A) 1200","(B) 12500","(C) 12000","(D) 25000","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:2
+  },
+  {
+    n:97,
+    en:"What is the value of 100 C₉₈ – 100C₀?",
+    ta:"100 C₉₈ – 100C₀ ன் மதிப்பு என்ன?",
+    opts:["(A) 4550","(B) 4950","(C) 4955","(D) 4949","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:3
+  },
+  {
+    n:98,
+    en:"Select the option in which the numbers share the same relationship as that shared by the given pair of numbers 30 : 42.",
+    ta:"கொடுக்கப்பட்ட எண் ஜோடி 30 : 42 க்கு உள்ள தொடர்பைப் போன்ற எண் ஜோடியினைத் தேர்வு செய்க.",
+    opts:["(A) 12 : 20","(B) 25 : 57","(C) 19 : 33","(D) 34 : 31","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:0
+  },
+  {
+    n:99,
+    en:"A tree always has which of the following",
+    ta:"ஒரு மரம் எப்போதும் பின்வருவனவற்றில் எதைக் கொண்டு இருக்கும்?",
+    opts:["(A) Branches / கிளைகள்","(B) Leaves / இலைகள்","(C) Fruits / பழங்கள்","(D) Roots / வேர்கள்","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:3
+  },
+  {
+    n:100,
+    en:"The main function of Rajya Sabha is to implement the law. [True/False]",
+    ta:"ராஜ்ய சபாவின் முக்கிய செயல்பாடானது சட்டங்களை நிறைவேற்றுவது ஆகும். [உண்மையா/பொய்யா]",
+    opts:["(A) Never / எப்போழுதும் இல்லை","(B) Sometimes / சில சமயங்களில்","(C) Often / அடிக்கடி","(D) Always / எப்போதும்","(E) Answer not known / விடை தெரியவில்லை"],
+    ans:0
+  }
+];
+
+// State
+let userAnswers = new Array(100).fill(-1);
+let submitted = false;
+
+function renderQuiz() {
+  const container = document.getElementById('quizContainer');
+  container.innerHTML = '';
+  questions.forEach((q, idx) => {
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    card.id = `q${idx}`;
+    const secLabel = q.n <= 100 ? (q.n <= 60 ? 'Part-A' : 'Part-B') : '';
+    card.innerHTML = `
+      <div class="q-header">
+        <span class="q-num">Q${q.n}</span>
+        <span class="q-section">${secLabel}</span>
+        <span class="q-status" id="status-${idx}">⬜</span>
+      </div>
+      <div class="q-body">
+        <div class="q-english">${q.en.replace(/\n/g,'<br>')}</div>
+        <div class="q-tamil">${q.ta.replace(/\n/g,'<br>')}</div>
+        <div class="options" id="opts-${idx}">
+          ${q.opts.map((opt,oi)=>`
+            <div class="option" id="opt-${idx}-${oi}" onclick="selectOption(${idx},${oi})">
+              <span class="opt-label">${String.fromCharCode(65+oi)}</span>
+              <span class="opt-text">${opt}</span>
+            </div>
+          `).join('')}
+        </div>
+        <div class="feedback" id="fb-${idx}"></div>
+      </div>`;
+    container.appendChild(card);
+  });
+  updateStats();
+}
+
+function selectOption(qIdx, optIdx) {
+  if(submitted) return;
+  userAnswers[qIdx] = optIdx;
+  const opts = document.querySelectorAll(`#opts-${qIdx} .option`);
+  opts.forEach((o,i) => {
+    o.classList.remove('selected');
+    if(i === optIdx) o.classList.add('selected');
+  });
+  document.getElementById(`status-${qIdx}`).textContent = '✏️';
+  updateStats();
+}
+
+function updateStats() {
+  const answered = userAnswers.filter(a => a !== -1).length;
+  document.getElementById('answeredCount').textContent = answered;
+  document.getElementById('bottomCount').textContent = `${answered} / 100 answered`;
+  document.getElementById('progressFill').style.width = `${answered}%`;
+  if(!submitted) {
+    let c=0,w=0;
+    userAnswers.forEach((a,i) => { if(a!==-1){if(a===questions[i].ans)c++;else w++;} });
+    document.getElementById('correctCount').textContent = c;
+    document.getElementById('wrongCount').textContent = w;
+  }
+}
+
+function submitQuiz() {
+  if(submitted) return;
+  submitted = true;
+  let correct=0, wrong=0, skipped=0;
+  questions.forEach((q,i) => {
+    const ua = userAnswers[i];
+    const card = document.getElementById(`q${i}`);
+    const opts = document.querySelectorAll(`#opts-${i} .option`);
+    const fb = document.getElementById(`fb-${i}`);
+    opts.forEach(o => o.classList.add('disabled'));
+    if(ua === -1){
+      skipped++;
+      document.getElementById(`status-${i}`).textContent = '⏭';
+      opts[q.ans].classList.add('correct');
+      fb.className = 'feedback show wrong';
+      fb.innerHTML = `⏭ Skipped! Correct: <strong>${String.fromCharCode(65+q.ans)}</strong>`;
+    } else if(ua === q.ans){
+      correct++;
+      card.classList.add('correct-card');
+      opts[ua].classList.add('correct');
+      document.getElementById(`status-${i}`).textContent = '✅';
+      fb.className = 'feedback show correct';
+      fb.innerHTML = `✅ Correct! / சரியான விடை!`;
+    } else {
+      wrong++;
+      card.classList.add('wrong-card');
+      opts[ua].classList.add('wrong');
+      opts[q.ans].classList.add('correct');
+      document.getElementById(`status-${i}`).textContent = '❌';
+      fb.className = 'feedback show wrong';
+      fb.innerHTML = `❌ Wrong! Correct answer: <strong>${String.fromCharCode(65+q.ans)}</strong> — ${q.opts[q.ans]}`;
+    }
+  });
+  document.getElementById('correctCount').textContent = correct;
+  document.getElementById('wrongCount').textContent = wrong;
+  const pct = Math.round((correct/100)*100);
+  document.getElementById('resultScore').textContent = `${pct}%`;
+  const cls = pct>=75?'excellent':pct>=50?'good':pct>=35?'average':'poor';
+  document.getElementById('resultScore').className = `result-score ${cls}`;
+  document.getElementById('resCorrect').textContent = correct;
+  document.getElementById('resWrong').textContent = wrong;
+  document.getElementById('resSkipped').textContent = skipped;
+  const msgs = pct>=75?'🎉 Excellent! You are well-prepared! | நீங்கள் நன்றாக தயாரிப்பு செய்துள்ளீர்கள்!':
+    pct>=50?'👍 Good effort! Keep practicing! | நல்ல முயற்சி! தொடர்ந்து பயிற்சி செய்யுங்கள்!':
+    pct>=35?'📚 Keep studying! You can do better! | தொடர்ந்து படியுங்கள்!':
+    '💪 More practice needed. Don\'t give up! | மேலும் பயிற்சி தேவை!';
+  document.getElementById('resMsg').innerHTML = msgs;
+  document.getElementById('resultPanel').classList.add('show');
+  document.getElementById('submitBtn').disabled = true;
+}
+
+function retryQuiz() {
+  submitted = false;
+  userAnswers = new Array(100).fill(-1);
+  document.getElementById('resultPanel').classList.remove('show');
+  document.getElementById('submitBtn').disabled = false;
+  renderQuiz();
+  window.scrollTo(0,0);
+}
+
+function closeResult() {
+  document.getElementById('resultPanel').classList.remove('show');
+}
+
+renderQuiz();
+</script>
+</body>
+</html>
