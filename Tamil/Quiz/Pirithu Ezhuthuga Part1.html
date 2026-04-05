@@ -1,0 +1,2794 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>பிரித்து எழுதுதல் - TAF IAS Academy வினாடி வினா</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@300;400;600;700;900&family=Cinzel+Decorative:wght@700&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c9933a;
+    --gold-light: #f0c060;
+    --deep: #0a0a14;
+    --surface: #11112a;
+    --card: #181830;
+    --card2: #1e1e40;
+    --accent: #7c5cbf;
+    --accent2: #4fa8d5;
+    --correct: #2ecc71;
+    --wrong: #e74c3c;
+    --text: #e8e0f5;
+    --muted: #9090b8;
+    --border: rgba(201,147,58,0.25);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans Tamil', sans-serif;
+    background: var(--deep);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 10%, rgba(124,92,191,0.13) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 80% 80%, rgba(79,168,213,0.10) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 50% 50%, rgba(201,147,58,0.05) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 48px 24px 36px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(201,147,58,0.07) 0%, transparent 100%);
+  }
+
+  .academy-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, rgba(201,147,58,0.18), rgba(201,147,58,0.05));
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    padding: 8px 20px;
+    font-size: 0.78rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+
+  .academy-badge::before { content: '⭐'; }
+
+  h1.main-title {
+    font-family: 'Noto Sans Tamil', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold), #ff9f43);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    text-shadow: none;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 1rem;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    padding: 20px 24px;
+    background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .stat-val {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  .stat-label {
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* Progress bar */
+  .progress-wrap {
+    width: 100%;
+    max-width: 600px;
+    height: 4px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 0 auto;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--gold));
+    border-radius: 4px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  /* ── SECTION ── */
+  .section {
+    position: relative;
+    z-index: 5;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-num {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent), #5a3f9a);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    box-shadow: 0 4px 16px rgba(124,92,191,0.4);
+  }
+
+  .section-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--gold-light);
+  }
+
+  .section-count {
+    margin-left: auto;
+    font-size: 0.8rem;
+    color: var(--muted);
+    background: rgba(255,255,255,0.05);
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+  }
+
+  /* ── QUESTION CARD ── */
+  .q-card {
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 16px;
+    transition: border-color 0.2s, transform 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .q-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: linear-gradient(180deg, var(--accent), var(--accent2));
+    border-radius: 2px 0 0 2px;
+    opacity: 0.4;
+    transition: opacity 0.2s;
+  }
+
+  .q-card:hover { border-color: rgba(201,147,58,0.2); transform: translateY(-1px); }
+  .q-card:hover::before { opacity: 1; }
+
+  .q-num {
+    font-size: 0.72rem;
+    color: var(--accent2);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+
+  .q-text {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+
+  .q-text .word {
+    color: var(--gold-light);
+    font-size: 1.25rem;
+  }
+
+  /* Options */
+  .options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  @media (max-width: 500px) {
+    .options { grid-template-columns: 1fr; }
+  }
+
+  .opt {
+    background: rgba(255,255,255,0.04);
+    border: 1.5px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 11px 16px;
+    cursor: pointer;
+    font-family: 'Noto Sans Tamil', sans-serif;
+    font-size: 0.95rem;
+    color: var(--text);
+    text-align: left;
+    transition: all 0.15s ease;
+    position: relative;
+  }
+
+  .opt:hover:not(:disabled) {
+    background: rgba(124,92,191,0.15);
+    border-color: var(--accent);
+    color: #fff;
+    transform: translateX(3px);
+  }
+
+  .opt:disabled { cursor: default; }
+
+  .opt.correct {
+    background: rgba(46,204,113,0.15);
+    border-color: var(--correct);
+    color: var(--correct);
+    font-weight: 700;
+  }
+
+  .opt.wrong {
+    background: rgba(231,76,60,0.12);
+    border-color: var(--wrong);
+    color: var(--wrong);
+  }
+
+  .opt.reveal {
+    background: rgba(46,204,113,0.08);
+    border-color: rgba(46,204,113,0.3);
+    color: var(--correct);
+  }
+
+  .opt-label {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.07);
+    text-align: center;
+    line-height: 22px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-right: 8px;
+    font-family: monospace;
+    color: var(--gold);
+  }
+
+  /* Explanation */
+  .explanation {
+    display: none;
+    margin-top: 14px;
+    padding: 12px 16px;
+    background: rgba(46,204,113,0.07);
+    border-left: 3px solid var(--correct);
+    border-radius: 0 8px 8px 0;
+    font-size: 0.9rem;
+    color: #a8f5c5;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .explanation.show { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── FILL-IN TABLE SECTION ── */
+  .fill-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+
+  .fill-table th {
+    background: rgba(201,147,58,0.12);
+    color: var(--gold);
+    font-size: 0.82rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .fill-table td {
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 0.95rem;
+    vertical-align: middle;
+  }
+
+  .fill-table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+  .fill-table .word-col {
+    color: var(--gold-light);
+    font-weight: 700;
+    font-size: 1rem;
+  }
+
+  .fill-table .answer-col {
+    color: var(--muted);
+  }
+
+  .fill-table .answer-col.revealed {
+    color: var(--correct);
+    font-weight: 600;
+  }
+
+  .fill-input {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 6px;
+    padding: 6px 12px;
+    color: var(--text);
+    font-family: 'Noto Sans Tamil', sans-serif;
+    font-size: 0.9rem;
+    width: 100%;
+    min-width: 200px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .fill-input:focus { border-color: var(--accent); }
+
+  .fill-input.correct-input { border-color: var(--correct); color: var(--correct); }
+  .fill-input.wrong-input { border-color: var(--wrong); color: var(--wrong); }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Noto Sans Tamil', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--gold), #e0a030);
+    color: #1a0e00;
+  }
+
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(201,147,58,0.4); }
+
+  .btn-secondary {
+    background: rgba(124,92,191,0.2);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+  }
+
+  .btn-secondary:hover { background: rgba(124,92,191,0.35); }
+
+  .btn-sm {
+    padding: 8px 16px;
+    font-size: 0.82rem;
+    border-radius: 8px;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+
+  /* ── RESULT CARD ── */
+  .result-card {
+    display: none;
+    text-align: center;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 40px 32px;
+    margin: 32px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .result-card::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,147,58,0.12), transparent 70%);
+  }
+
+  .result-emoji { font-size: 3.5rem; margin-bottom: 16px; }
+  .result-score { font-size: 3rem; font-weight: 900; color: var(--gold); }
+  .result-msg { color: var(--muted); margin-top: 8px; font-size: 1rem; }
+
+  /* ── TNPSC SECTION SPECIAL ── */
+  .tnpsc-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, rgba(231,76,60,0.15), rgba(231,76,60,0.05));
+    border: 1px solid rgba(231,76,60,0.3);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 0.78rem;
+    letter-spacing: 1px;
+    color: #ff8a7a;
+    margin-bottom: 16px;
+    font-weight: 600;
+  }
+
+  /* ── DIVIDER ── */
+  .section-divider {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 8px 0 40px;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--deep); }
+  ::-webkit-scrollbar-thumb { background: rgba(201,147,58,0.3); border-radius: 3px; }
+
+  /* ── FLASH ── */
+  @keyframes pulse-correct {
+    0% { box-shadow: 0 0 0 0 rgba(46,204,113,0.5); }
+    70% { box-shadow: 0 0 0 10px rgba(46,204,113,0); }
+    100% { box-shadow: 0 0 0 0 rgba(46,204,113,0); }
+  }
+
+  @keyframes pulse-wrong {
+    0% { box-shadow: 0 0 0 0 rgba(231,76,60,0.5); }
+    70% { box-shadow: 0 0 0 10px rgba(231,76,60,0); }
+    100% { box-shadow: 0 0 0 0 rgba(231,76,60,0); }
+  }
+
+  .flash-correct { animation: pulse-correct 0.5s ease; }
+  .flash-wrong { animation: pulse-wrong 0.5s ease; }
+
+  /* Instruction box */
+  .info-box {
+    background: rgba(79,168,213,0.07);
+    border: 1px solid rgba(79,168,213,0.2);
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 0.88rem;
+    color: #a8d8f5;
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+
+  .info-box strong { color: var(--accent2); }
+
+  /* Table of contents */
+  .toc {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px;
+    margin: 24px 0 40px;
+  }
+
+  .toc-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+
+  .toc-item:hover {
+    border-color: var(--gold);
+    background: rgba(201,147,58,0.07);
+    transform: translateY(-2px);
+  }
+
+  .toc-item .toc-num {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  .toc-item .toc-name {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* scroll to top */
+  .scroll-top {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--gold));
+    border: none;
+    color: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .scroll-top.visible { opacity: 1; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="academy-badge">TAF IAS Academy · பொதுத்தமிழ் · புதிய பாடத்திட்டம்</div>
+  <h1 class="main-title">பிரித்து எழுதுதல்</h1>
+  <p class="subtitle">Tamil Word Splitting — Complete Quiz Bank · All Pages 13–34</p>
+</header>
+
+<!-- STICKY STATS -->
+<div class="stats-bar">
+  <div class="stat">
+    <div class="stat-val" id="s-total">0</div>
+    <div class="stat-label">மொத்தம்</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val" id="s-correct" style="color:var(--correct)">0</div>
+    <div class="stat-label">சரி</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val" id="s-wrong" style="color:var(--wrong)">0</div>
+    <div class="stat-label">தவறு</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val" id="s-pct">0%</div>
+    <div class="stat-label">மதிப்பெண்</div>
+  </div>
+  <div style="width:100%;max-width:600px;margin:0 auto;">
+    <div class="progress-wrap"><div class="progress-fill" id="prog-fill"></div></div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="section">
+
+  <!-- TABLE OF CONTENTS -->
+  <div class="section-header" style="margin-bottom:16px;">
+    <div class="section-num">📚</div>
+    <div class="section-title">வினா பிரிவுகள்</div>
+  </div>
+  <div class="toc">
+    <div class="toc-item" onclick="scrollTo('#sec1')"><div class="toc-num">1</div><div class="toc-name">பக்கம் 13–14<br>அடிப்படை வினாக்கள்</div></div>
+    <div class="toc-item" onclick="scrollTo('#sec2')"><div class="toc-num">2</div><div class="toc-name">பக்கம் 15–16<br>நடுத்தர வினாக்கள்</div></div>
+    <div class="toc-item" onclick="scrollTo('#sec3')"><div class="toc-num">3</div><div class="toc-name">பக்கம் 17–20<br>மேம்பட்ட வினாக்கள்</div></div>
+    <div class="toc-item" onclick="scrollTo('#sec4')"><div class="toc-num">4</div><div class="toc-name">பக்கம் 21–23<br>கூட்டு சொற்கள்</div></div>
+    <div class="toc-item" onclick="scrollTo('#sec5')"><div class="toc-num">5</div><div class="toc-name">பக்கம் 24–26<br>6–12 வகுப்பு</div></div>
+    <div class="toc-item" onclick="scrollTo('#sec6')"><div class="toc-num">6</div><div class="toc-name">பக்கம் 27–32<br>பழைய & புதிய</div></div>
+    <div class="toc-item" onclick="scrollTo('#sec7')"><div class="toc-num">7</div><div class="toc-name">பக்கம் 33–34<br>TNPSC அசல் வினாக்கள்</div></div>
+  </div>
+
+  <div class="info-box">
+    <strong>கவனிக்கவும்:</strong> ஒவ்வொரு வினாவிலும் சரியான விடையைத் தேர்ந்தெடுக்கவும். <strong>விடை உடனடியாக காட்டப்படும்.</strong> மேலே உள்ள மதிப்பெண் பலகையில் உங்கள் முன்னேற்றம் தெரியும். அனைத்து வினாக்களும் TAF IAS Academy புத்தகத்தில் இருந்து எடுக்கப்பட்டவை.
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 1 — Pages 13–14 Basic Questions
+  ════════════════════════════════════════════ -->
+  <div id="sec1"></div>
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <div class="section-title">அடிப்படை பிரித்து எழுதுதல் — பக்கம் 13–14</div>
+    <div class="section-count">வினாக்கள் 1–30</div>
+  </div>
+
+  <!-- Q1 -->
+  <div class="q-card" id="q1">
+    <div class="q-num">வினா 1</div>
+    <div class="q-text">"<span class="word">முடிவிலா</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q1','A')"><span class="opt-label">அ</span>முடி + விலா</button>
+      <button class="opt" onclick="ans(this,'q1','B')"><span class="opt-label">ஆ</span>முடிவு + இலா</button>
+      <button class="opt" onclick="ans(this,'q1','C')"><span class="opt-label">இ</span>முடி + இலா</button>
+      <button class="opt" onclick="ans(this,'q1','D')"><span class="opt-label">ஈ</span>முடி + வலா</button>
+    </div>
+    <div class="explanation" id="exp-q1">✅ சரியான விடை: <strong>முடிவு + இலா</strong> — 'முடிவு' என்ற பெயர்ச்சொல்லுடன் 'இலா' என்ற இடைச்சொல் சேர்வதால் உகரம் கெட்டு முடிவிலா ஆகும்.</div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-card" id="q2">
+    <div class="q-num">வினா 2</div>
+    <div class="q-text">"<span class="word">இரவெல்லாம்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q2','A')"><span class="opt-label">அ</span>இர + வெல்லாம்</button>
+      <button class="opt" onclick="ans(this,'q2','B')"><span class="opt-label">ஆ</span>இரவு + எல்லாம்</button>
+      <button class="opt" onclick="ans(this,'q2','C')"><span class="opt-label">இ</span>இரவ் + எல்லாம்</button>
+      <button class="opt" onclick="ans(this,'q2','D')"><span class="opt-label">ஈ</span>இர + எல்லாம்</button>
+    </div>
+    <div class="explanation" id="exp-q2">✅ சரியான விடை: <strong>இரவு + எல்லாம்</strong> — 'இரவு' என்ற சொல்லில் உகரம் கெட்டு 'எல்லாம்' சேரும்போது இரவெல்லாம் ஆகும்.</div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="q-card" id="q3">
+    <div class="q-num">வினா 3</div>
+    <div class="q-text">"<span class="word">காப்பாற்றென்று</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q3','A')"><span class="opt-label">அ</span>காப்பு + ஆற்று + என்று</button>
+      <button class="opt" onclick="ans(this,'q3','B')"><span class="opt-label">ஆ</span>காப்பாற்று + என்று</button>
+      <button class="opt" onclick="ans(this,'q3','C')"><span class="opt-label">இ</span>காப்பு + என்று</button>
+      <button class="opt" onclick="ans(this,'q3','D')"><span class="opt-label">ஈ</span>காப்பா + என்று</button>
+    </div>
+    <div class="explanation" id="exp-q3">✅ சரியான விடை: <strong>காப்பாற்று + என்று</strong></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="q-card" id="q4">
+    <div class="q-num">வினா 4</div>
+    <div class="q-text">"<span class="word">வேங்கடமாமலை</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q4','A')"><span class="opt-label">அ</span>வேங்கடம் + மலை</button>
+      <button class="opt" onclick="ans(this,'q4','B')"><span class="opt-label">ஆ</span>வேங்கடம் + மா + மலை</button>
+      <button class="opt" onclick="ans(this,'q4','C')"><span class="opt-label">இ</span>வேங்கட + மலை</button>
+      <button class="opt" onclick="ans(this,'q4','D')"><span class="opt-label">ஈ</span>வேங்கட + மா + மலை</button>
+    </div>
+    <div class="explanation" id="exp-q4">✅ சரியான விடை: <strong>வேங்கடம் + மா + மலை</strong> — மூன்று சொற்கள் சேர்ந்து வரும் தொடர்மொழி.</div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="q-card" id="q5">
+    <div class="q-num">வினா 5</div>
+    <div class="q-text">"<span class="word">வீட்டிருந்து</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q5','A')"><span class="opt-label">அ</span>வீட்டு + இருந்து</button>
+      <button class="opt" onclick="ans(this,'q5','B')"><span class="opt-label">ஆ</span>வீட்டி + ருந்து</button>
+      <button class="opt" onclick="ans(this,'q5','C')"><span class="opt-label">இ</span>வீடு + இருந்து</button>
+      <button class="opt" onclick="ans(this,'q5','D')"><span class="opt-label">ஈ</span>வீட் + திருந்து</button>
+    </div>
+    <div class="explanation" id="exp-q5">✅ சரியான விடை: <strong>வீடு + இருந்து</strong></div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="q-card" id="q6">
+    <div class="q-num">வினா 6</div>
+    <div class="q-text">"<span class="word">இணரெரி</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q6','A')"><span class="opt-label">அ</span>இணர் + ஏரி</button>
+      <button class="opt" onclick="ans(this,'q6','B')"><span class="opt-label">ஆ</span>இணர் + எரி</button>
+      <button class="opt" onclick="ans(this,'q6','C')"><span class="opt-label">இ</span>இண + ரெரி</button>
+      <button class="opt" onclick="ans(this,'q6','D')"><span class="opt-label">ஈ</span>இணரெ + ரி</button>
+    </div>
+    <div class="explanation" id="exp-q6">✅ சரியான விடை: <strong>இணர் + எரி</strong></div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="q-card" id="q7">
+    <div class="q-num">வினா 7</div>
+    <div class="q-text">"<span class="word">உயர்வுள்ளல்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q7','A')"><span class="opt-label">அ</span>உயர் + வுள்ளல்</button>
+      <button class="opt" onclick="ans(this,'q7','B')"><span class="opt-label">ஆ</span>உயர்வு + உள்ளல்</button>
+      <button class="opt" onclick="ans(this,'q7','C')"><span class="opt-label">இ</span>உயர் + உள்ளல்</button>
+      <button class="opt" onclick="ans(this,'q7','D')"><span class="opt-label">ஈ</span>உயர்ந்து + உள்ளல்</button>
+    </div>
+    <div class="explanation" id="exp-q7">✅ சரியான விடை: <strong>உயர்வு + உள்ளல்</strong></div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="q-card" id="q8">
+    <div class="q-num">வினா 8</div>
+    <div class="q-text">"<span class="word">நல்வினை</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q8','A')"><span class="opt-label">அ</span>நல் + வினை</button>
+      <button class="opt" onclick="ans(this,'q8','B')"><span class="opt-label">ஆ</span>நல்ல + வினை</button>
+      <button class="opt" onclick="ans(this,'q8','C')"><span class="opt-label">இ</span>நன்மை + வினை</button>
+      <button class="opt" onclick="ans(this,'q8','D')"><span class="opt-label">ஈ</span>நன் + வினை</button>
+    </div>
+    <div class="explanation" id="exp-q8">✅ சரியான விடை: <strong>நன்மை + வினை</strong> — 'நன்மை' என்பது திரிந்து 'நல்' ஆகி வல்லொற்று மிகும்போது 'நல்வினை' ஆகும்.</div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="q-card" id="q9">
+    <div class="q-num">வினா 9</div>
+    <div class="q-text">"<span class="word">பேயென்றாள்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q9','A')"><span class="opt-label">அ</span>பேய் + அன்றாள்</button>
+      <button class="opt" onclick="ans(this,'q9','B')"><span class="opt-label">ஆ</span>பே + என்றாள்</button>
+      <button class="opt" onclick="ans(this,'q9','C')"><span class="opt-label">இ</span>பேய் + என்றாள்</button>
+      <button class="opt" onclick="ans(this,'q9','D')"><span class="opt-label">ஈ</span>பேய் + ஆண்றாள்</button>
+    </div>
+    <div class="explanation" id="exp-q9">✅ சரியான விடை: <strong>பேய் + என்றாள்</strong></div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="q-card" id="q10">
+    <div class="q-num">வினா 10</div>
+    <div class="q-text">"<span class="word">ஒட்டலரிது</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q10','A')"><span class="opt-label">அ</span>ஒட்டல் + இரிது</button>
+      <button class="opt" onclick="ans(this,'q10','B')"><span class="opt-label">ஆ</span>ஒட்ட + லரிது</button>
+      <button class="opt" onclick="ans(this,'q10','C')"><span class="opt-label">இ</span>ஒட்டல் + அரிது</button>
+      <button class="opt" onclick="ans(this,'q10','D')"><span class="opt-label">ஈ</span>ஒட் + அரிது</button>
+    </div>
+    <div class="explanation" id="exp-q10">✅ சரியான விடை: <strong>ஒட்டல் + அரிது</strong></div>
+  </div>
+
+  <!-- Q11 -->
+  <div class="q-card" id="q11">
+    <div class="q-num">வினா 11</div>
+    <div class="q-text">"<span class="word">நீயென்றேன்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q11','A')"><span class="opt-label">அ</span>நீய் + என்றேன்</button>
+      <button class="opt" onclick="ans(this,'q11','B')"><span class="opt-label">ஆ</span>நீயென் + றேன்</button>
+      <button class="opt" onclick="ans(this,'q11','C')"><span class="opt-label">இ</span>நீ + என்றேன்</button>
+      <button class="opt" onclick="ans(this,'q11','D')"><span class="opt-label">ஈ</span>நீ + ஏன்றேன்</button>
+    </div>
+    <div class="explanation" id="exp-q11">✅ சரியான விடை: <strong>நீ + என்றேன்</strong></div>
+  </div>
+
+  <!-- Q12 -->
+  <div class="q-card" id="q12">
+    <div class="q-num">வினா 12</div>
+    <div class="q-text">"<span class="word">ஊக்கமுடையான்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q12','A')"><span class="opt-label">அ</span>ஊக்க + முடையான்</button>
+      <button class="opt" onclick="ans(this,'q12','B')"><span class="opt-label">ஆ</span>ஊக்கம் + உடையான்</button>
+      <button class="opt" onclick="ans(this,'q12','C')"><span class="opt-label">இ</span>ஊக்க + உடையான்</button>
+      <button class="opt" onclick="ans(this,'q12','D')"><span class="opt-label">ஈ</span>ஊக்கம் + ஒடையான்</button>
+    </div>
+    <div class="explanation" id="exp-q12">✅ சரியான விடை: <strong>ஊக்கம் + உடையான்</strong></div>
+  </div>
+
+  <!-- Q13 -->
+  <div class="q-card" id="q13">
+    <div class="q-num">வினா 13</div>
+    <div class="q-text">"<span class="word">நல்குரவொழிய</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q13','A')"><span class="opt-label">அ</span>நல் + குரவொழிய</button>
+      <button class="opt" onclick="ans(this,'q13','B')"><span class="opt-label">ஆ</span>நல்குரவு + ஒழிய</button>
+      <button class="opt" onclick="ans(this,'q13','C')"><span class="opt-label">இ</span>நல்குர + அவொழிய</button>
+      <button class="opt" onclick="ans(this,'q13','D')"><span class="opt-label">ஈ</span>நன்மை + குரவு + ஒழிய</button>
+    </div>
+    <div class="explanation" id="exp-q13">✅ சரியான விடை: <strong>நல்குரவு + ஒழிய</strong></div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="q-card" id="q14">
+    <div class="q-num">வினா 14</div>
+    <div class="q-text">"<span class="word">அரும்பொருள்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q14','A')"><span class="opt-label">அ</span>அரும் + பொருள்</button>
+      <button class="opt" onclick="ans(this,'q14','B')"><span class="opt-label">ஆ</span>அருமை + பொருள்</button>
+      <button class="opt" onclick="ans(this,'q14','C')"><span class="opt-label">இ</span>அர் + உம்பொருள்</button>
+      <button class="opt" onclick="ans(this,'q14','D')"><span class="opt-label">ஈ</span>அரும் + பொருட்கள்</button>
+    </div>
+    <div class="explanation" id="exp-q14">✅ சரியான விடை: <strong>அருமை + பொருள்</strong> — 'அருமை' திரிந்து 'அரும்' ஆகும்.</div>
+  </div>
+
+  <!-- Q15 -->
+  <div class="q-card" id="q15">
+    <div class="q-num">வினா 15</div>
+    <div class="q-text">"<span class="word">காராண்மை</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q15','A')"><span class="opt-label">அ</span>கார + ஆண்மை</button>
+      <button class="opt" onclick="ans(this,'q15','B')"><span class="opt-label">ஆ</span>கார் + ஆண்மை</button>
+      <button class="opt" onclick="ans(this,'q15','C')"><span class="opt-label">இ</span>கா + ராண்மை</button>
+      <button class="opt" onclick="ans(this,'q15','D')"><span class="opt-label">ஈ</span>காரா + ண்மை</button>
+    </div>
+    <div class="explanation" id="exp-q15">✅ சரியான விடை: <strong>கார் + ஆண்மை</strong></div>
+  </div>
+
+  <!-- Q16 -->
+  <div class="q-card" id="q16">
+    <div class="q-num">வினா 16</div>
+    <div class="q-text">"<span class="word">திருவருள்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q16','A')"><span class="opt-label">அ</span>திருவ + அருள்</button>
+      <button class="opt" onclick="ans(this,'q16','B')"><span class="opt-label">ஆ</span>திருவு + அருள்</button>
+      <button class="opt" onclick="ans(this,'q16','C')"><span class="opt-label">இ</span>திரு + அருள்</button>
+      <button class="opt" onclick="ans(this,'q16','D')"><span class="opt-label">ஈ</span>திர் + உவருள்</button>
+    </div>
+    <div class="explanation" id="exp-q16">✅ சரியான விடை: <strong>திரு + அருள்</strong></div>
+  </div>
+
+  <!-- Q17 -->
+  <div class="q-card" id="q17">
+    <div class="q-num">வினா 17</div>
+    <div class="q-text">"<span class="word">வெள்ளத்தனைய</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q17','A')"><span class="opt-label">அ</span>வெள்ளம் + தனைய</button>
+      <button class="opt" onclick="ans(this,'q17','B')"><span class="opt-label">ஆ</span>வெள்ளம் + அத்து + அனைய</button>
+      <button class="opt" onclick="ans(this,'q17','C')"><span class="opt-label">இ</span>வெள்ளத்து + அனைய</button>
+      <button class="opt" onclick="ans(this,'q17','D')"><span class="opt-label">ஈ</span>வெள்ள + தனைய</button>
+    </div>
+    <div class="explanation" id="exp-q17">✅ சரியான விடை: <strong>வெள்ளம் + அத்து + அனைய</strong> — மூன்று சொற்கள் சேர்ந்த தொடர்மொழி.</div>
+  </div>
+
+  <!-- Q18 -->
+  <div class="q-card" id="q18">
+    <div class="q-num">வினா 18</div>
+    <div class="q-text">"<span class="word">நரியென்றாள்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q18','A')"><span class="opt-label">அ</span>நரி + யென்றாள்</button>
+      <button class="opt" onclick="ans(this,'q18','B')"><span class="opt-label">ஆ</span>நரி என்றாள்</button>
+      <button class="opt" onclick="ans(this,'q18','C')"><span class="opt-label">இ</span>நரி + அன்றாள்</button>
+      <button class="opt" onclick="ans(this,'q18','D')"><span class="opt-label">ஈ</span>நரிய + என்றாள்</button>
+    </div>
+    <div class="explanation" id="exp-q18">✅ சரியான விடை: <strong>நரி என்றாள்</strong></div>
+  </div>
+
+  <!-- Q19 -->
+  <div class="q-card" id="q19">
+    <div class="q-num">வினா 19</div>
+    <div class="q-text">"<span class="word">உலகத்துயர்ந்த</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q19','A')"><span class="opt-label">அ</span>உலகம் + உயர்ந்த</button>
+      <button class="opt" onclick="ans(this,'q19','B')"><span class="opt-label">ஆ</span>உலகத்து + உயர்ந்த</button>
+      <button class="opt" onclick="ans(this,'q19','C')"><span class="opt-label">இ</span>உலகத்தில் + உயர்ந்த</button>
+      <button class="opt" onclick="ans(this,'q19','D')"><span class="opt-label">ஈ</span>உலக + உயர்ந்த</button>
+    </div>
+    <div class="explanation" id="exp-q19">✅ சரியான விடை: <strong>உலகத்து + உயர்ந்த</strong></div>
+  </div>
+
+  <!-- Q20 -->
+  <div class="q-card" id="q20">
+    <div class="q-num">வினா 20</div>
+    <div class="q-text">"<span class="word">பொற்கோட்டுமேரு</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q20','A')"><span class="opt-label">அ</span>பொற்கோட்டு + மேரு</button>
+      <button class="opt" onclick="ans(this,'q20','B')"><span class="opt-label">ஆ</span>பொன் + கோடு + மேரு</button>
+      <button class="opt" onclick="ans(this,'q20','C')"><span class="opt-label">இ</span>பொற்கோடு + மேரு</button>
+      <button class="opt" onclick="ans(this,'q20','D')"><span class="opt-label">ஈ</span>பொன் + கோட்டு + மேரு</button>
+    </div>
+    <div class="explanation" id="exp-q20">✅ சரியான விடை: <strong>பொன் + கோடு + மேரு</strong></div>
+  </div>
+
+  <!-- Q21 -->
+  <div class="q-card" id="q21">
+    <div class="q-num">வினா 21</div>
+    <div class="q-text">"<span class="word">நல்லறம்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q21','A')"><span class="opt-label">அ</span>நல் + அறம்</button>
+      <button class="opt" onclick="ans(this,'q21','B')"><span class="opt-label">ஆ</span>நன்மை + அறம்</button>
+      <button class="opt" onclick="ans(this,'q21','C')"><span class="opt-label">இ</span>நல்ல + அறம்</button>
+      <button class="opt" onclick="ans(this,'q21','D')"><span class="opt-label">ஈ</span>நன்மை + ஆறம்</button>
+    </div>
+    <div class="explanation" id="exp-q21">✅ சரியான விடை: <strong>நன்மை + அறம்</strong></div>
+  </div>
+
+  <!-- Q22 -->
+  <div class="q-card" id="q22">
+    <div class="q-num">வினா 22</div>
+    <div class="q-text">"<span class="word">இவ்விரண்டு</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q22','A')"><span class="opt-label">அ</span>இவ் + வி + ரண்டு</button>
+      <button class="opt" onclick="ans(this,'q22','B')"><span class="opt-label">ஆ</span>இவ்வி + ரண்டு</button>
+      <button class="opt" onclick="ans(this,'q22','C')"><span class="opt-label">இ</span>இவ் + இரண்டு</button>
+      <button class="opt" onclick="ans(this,'q22','D')"><span class="opt-label">ஈ</span>இ + இரண்டு</button>
+    </div>
+    <div class="explanation" id="exp-q22">✅ சரியான விடை: <strong>இவ் + இரண்டு</strong></div>
+  </div>
+
+  <!-- Q23 -->
+  <div class="q-card" id="q23">
+    <div class="q-num">வினா 23</div>
+    <div class="q-text">"<span class="word">புத்தேளுலகு</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q23','A')"><span class="opt-label">அ</span>புத்தேள் + உலகு</button>
+      <button class="opt" onclick="ans(this,'q23','B')"><span class="opt-label">ஆ</span>புத்தேளு + உலகு</button>
+      <button class="opt" onclick="ans(this,'q23','C')"><span class="opt-label">இ</span>புத்து + ஏளுலகு</button>
+      <button class="opt" onclick="ans(this,'q23','D')"><span class="opt-label">ஈ</span>புத்தேன் + உலகு</button>
+    </div>
+    <div class="explanation" id="exp-q23">✅ சரியான விடை: <strong>புத்தேன் + உலகு</strong></div>
+  </div>
+
+  <!-- Q24 -->
+  <div class="q-card" id="q24">
+    <div class="q-num">வினா 24</div>
+    <div class="q-text">"<span class="word">பல்பொருணீங்கிய</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q24','A')"><span class="opt-label">அ</span>பல்ல + பொருள் + நீங்கிய</button>
+      <button class="opt" onclick="ans(this,'q24','B')"><span class="opt-label">ஆ</span>பல + பொருள் + நீங்கிய</button>
+      <button class="opt" onclick="ans(this,'q24','C')"><span class="opt-label">இ</span>பல் + பொருள் + நீங்கிய</button>
+      <button class="opt" onclick="ans(this,'q24','D')"><span class="opt-label">ஈ</span>பல்பொருள் + நீங்கிய</button>
+    </div>
+    <div class="explanation" id="exp-q24">✅ சரியான விடை: <strong>பல + பொருள் + நீங்கிய</strong></div>
+  </div>
+
+  <!-- Q25 -->
+  <div class="q-card" id="q25">
+    <div class="q-num">வினா 25</div>
+    <div class="q-text">"<span class="word">தாழ்வின்றி</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q25','A')"><span class="opt-label">அ</span>தாழ் + இன்றி</button>
+      <button class="opt" onclick="ans(this,'q25','B')"><span class="opt-label">ஆ</span>தாழ்வு + இன்றி</button>
+      <button class="opt" onclick="ans(this,'q25','C')"><span class="opt-label">இ</span>தாழ் + வின்றி</button>
+      <button class="opt" onclick="ans(this,'q25','D')"><span class="opt-label">ஈ</span>தாழ்வி + இன்றி</button>
+    </div>
+    <div class="explanation" id="exp-q25">✅ சரியான விடை: <strong>தாழ்வு + இன்றி</strong></div>
+  </div>
+
+  <!-- Q26 -->
+  <div class="q-card" id="q26">
+    <div class="q-num">வினா 26</div>
+    <div class="q-text">"<span class="word">அங்கண்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q26','A')"><span class="opt-label">அ</span>அங்கு + கண்</button>
+      <button class="opt" onclick="ans(this,'q26','B')"><span class="opt-label">ஆ</span>அம் + கண்</button>
+      <button class="opt" onclick="ans(this,'q26','C')"><span class="opt-label">இ</span>அங் + கண்</button>
+      <button class="opt" onclick="ans(this,'q26','D')"><span class="opt-label">ஈ</span>அ + கண்</button>
+    </div>
+    <div class="explanation" id="exp-q26">✅ சரியான விடை: <strong>அம் + கண்</strong></div>
+  </div>
+
+  <!-- Q27 -->
+  <div class="q-card" id="q27">
+    <div class="q-num">வினா 27</div>
+    <div class="q-text">"<span class="word">வண்பயன்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q27','A')"><span class="opt-label">அ</span>வண் + பயன்</button>
+      <button class="opt" onclick="ans(this,'q27','B')"><span class="opt-label">ஆ</span>வண்மை + பயன்</button>
+      <button class="opt" onclick="ans(this,'q27','C')"><span class="opt-label">இ</span>வண + பயன்</button>
+      <button class="opt" onclick="ans(this,'q27','D')"><span class="opt-label">ஈ</span>வண்ணம் + பயன்</button>
+    </div>
+    <div class="explanation" id="exp-q27">✅ சரியான விடை: <strong>வண்மை + பயன்</strong> — வண்மை திரிந்து வண் ஆகும்.</div>
+  </div>
+
+  <!-- Q28 -->
+  <div class="q-card" id="q28">
+    <div class="q-num">வினா 28</div>
+    <div class="q-text">"<span class="word">ஈராறாண்டு</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q28','A')"><span class="opt-label">அ</span>ஈர் + ஆறு + ஆண்டு</button>
+      <button class="opt" onclick="ans(this,'q28','B')"><span class="opt-label">ஆ</span>இரண்டு + ஆறு + ஆண்டு</button>
+      <button class="opt" onclick="ans(this,'q28','C')"><span class="opt-label">இ</span>ஈரா + றாண்டு</button>
+      <button class="opt" onclick="ans(this,'q28','D')"><span class="opt-label">ஈ</span>ஈர் + ஆண்டு</button>
+    </div>
+    <div class="explanation" id="exp-q28">✅ சரியான விடை: <strong>இரண்டு + ஆறு + ஆண்டு</strong> — பன்னிரண்டு ஆண்டு என்பதற்கான தொகைமொழி.</div>
+  </div>
+
+  <!-- Q29 -->
+  <div class="q-card" id="q29">
+    <div class="q-num">வினா 29</div>
+    <div class="q-text">"<span class="word">பெருங்குணம்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q29','A')"><span class="opt-label">அ</span>பெரு + குணம்</button>
+      <button class="opt" onclick="ans(this,'q29','B')"><span class="opt-label">ஆ</span>பெருமை + குணம்</button>
+      <button class="opt" onclick="ans(this,'q29','C')"><span class="opt-label">இ</span>பெரும் + குணம்</button>
+      <button class="opt" onclick="ans(this,'q29','D')"><span class="opt-label">ஈ</span>பெரும + குணம்</button>
+    </div>
+    <div class="explanation" id="exp-q29">✅ சரியான விடை: <strong>பெருமை + குணம்</strong></div>
+  </div>
+
+  <!-- Q30 -->
+  <div class="q-card" id="q30">
+    <div class="q-num">வினா 30</div>
+    <div class="q-text">"<span class="word">வீட்டிருந்து</span>" என்பது போல் "<span class="word">உடனெய்தும்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q30','A')"><span class="opt-label">அ</span>உடனே + எய்தும்</button>
+      <button class="opt" onclick="ans(this,'q30','B')"><span class="opt-label">ஆ</span>உடன் + இய்தும்</button>
+      <button class="opt" onclick="ans(this,'q30','C')"><span class="opt-label">இ</span>உடன் + எய்தும்</button>
+      <button class="opt" onclick="ans(this,'q30','D')"><span class="opt-label">ஈ</span>உட + நெய்தும்</button>
+    </div>
+    <div class="explanation" id="exp-q30">✅ சரியான விடை: <strong>உடன் + எய்தும்</strong></div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 2 — Pages 14–16 Intermediate
+  ════════════════════════════════════════════ -->
+  <div id="sec2"></div>
+  <div class="section-header">
+    <div class="section-num">2</div>
+    <div class="section-title">நடுத்தர வினாக்கள் — பக்கம் 14–16</div>
+    <div class="section-count">வினாக்கள் 31–55</div>
+  </div>
+
+  <!-- Q31 -->
+  <div class="q-card" id="q31">
+    <div class="q-num">வினா 31</div>
+    <div class="q-text">"<span class="word">கேழிலாள்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q31','A')"><span class="opt-label">அ</span>கேழ் + இலாள்</button>
+      <button class="opt" onclick="ans(this,'q31','B')"><span class="opt-label">ஆ</span>கேழி + லாள்</button>
+      <button class="opt" onclick="ans(this,'q31','C')"><span class="opt-label">இ</span>கேழ் + ஆள்</button>
+      <button class="opt" onclick="ans(this,'q31','D')"><span class="opt-label">ஈ</span>கே + ழிலாள்</button>
+    </div>
+    <div class="explanation" id="exp-q31">✅ சரியான விடை: <strong>கேழ் + இலாள்</strong></div>
+  </div>
+
+  <!-- Q32 -->
+  <div class="q-card" id="q32">
+    <div class="q-num">வினா 32</div>
+    <div class="q-text">"<span class="word">வெங்கதிர்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q32','A')"><span class="opt-label">அ</span>வெண் + கதிர்</button>
+      <button class="opt" onclick="ans(this,'q32','B')"><span class="opt-label">ஆ</span>வெம்மை + கதிர்</button>
+      <button class="opt" onclick="ans(this,'q32','C')"><span class="opt-label">இ</span>வெம் + கதிர்</button>
+      <button class="opt" onclick="ans(this,'q32','D')"><span class="opt-label">ஈ</span>வெங் + கதிர்</button>
+    </div>
+    <div class="explanation" id="exp-q32">✅ சரியான விடை: <strong>வெம்மை + கதிர்</strong> — வெம்மை திரிந்து வெம் ஆகி, வல்லொற்று மிக வெங் ஆகும்.</div>
+  </div>
+
+  <!-- Q33 -->
+  <div class="q-card" id="q33">
+    <div class="q-num">வினா 33</div>
+    <div class="q-text">"<span class="word">மாசுண்ட</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q33','A')"><span class="opt-label">அ</span>மாசு + ஆண்ட</button>
+      <button class="opt" onclick="ans(this,'q33','B')"><span class="opt-label">ஆ</span>மாசு + உண்ட</button>
+      <button class="opt" onclick="ans(this,'q33','C')"><span class="opt-label">இ</span>மா + சுண்ட</button>
+      <button class="opt" onclick="ans(this,'q33','D')"><span class="opt-label">ஈ</span>மாசு + அண்ட</button>
+    </div>
+    <div class="explanation" id="exp-q33">✅ சரியான விடை: <strong>மாசு + உண்ட</strong></div>
+  </div>
+
+  <!-- Q34 -->
+  <div class="q-card" id="q34">
+    <div class="q-num">வினா 34</div>
+    <div class="q-text">"<span class="word">செவ்வேள்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q34','A')"><span class="opt-label">அ</span>செவ் + வேள்</button>
+      <button class="opt" onclick="ans(this,'q34','B')"><span class="opt-label">ஆ</span>செம்மை + வேள்</button>
+      <button class="opt" onclick="ans(this,'q34','C')"><span class="opt-label">இ</span>செவ்வை + வேள்</button>
+      <button class="opt" onclick="ans(this,'q34','D')"><span class="opt-label">ஈ</span>செம் + வேள்</button>
+    </div>
+    <div class="explanation" id="exp-q34">✅ சரியான விடை: <strong>செம்மை + வேள்</strong></div>
+  </div>
+
+  <!-- Q35 -->
+  <div class="q-card" id="q35">
+    <div class="q-num">வினா 35</div>
+    <div class="q-text">"<span class="word">கருநிறத்தரக்கியர்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q35','A')"><span class="opt-label">அ</span>கருமை + நிறம் + அரக்கியர்</button>
+      <button class="opt" onclick="ans(this,'q35','B')"><span class="opt-label">ஆ</span>கருமை + நிறத்து + அரக்கியர்</button>
+      <button class="opt" onclick="ans(this,'q35','C')"><span class="opt-label">இ</span>கரு + நிறத்தர + க்கியர்</button>
+      <button class="opt" onclick="ans(this,'q35','D')"><span class="opt-label">ஈ</span>கரு + நிறம் + தரக்கியர்</button>
+    </div>
+    <div class="explanation" id="exp-q35">✅ சரியான விடை: <strong>கருமை + நிறத்து + அரக்கியர்</strong></div>
+  </div>
+
+  <!-- Q36 -->
+  <div class="q-card" id="q36">
+    <div class="q-num">வினா 36</div>
+    <div class="q-text">"<span class="word">அடுப்பகத்தேற்றி</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q36','A')"><span class="opt-label">அ</span>அடுப்பு + அகத்து + ஏற்றி</button>
+      <button class="opt" onclick="ans(this,'q36','B')"><span class="opt-label">ஆ</span>அடுப்பக + தேற்றி</button>
+      <button class="opt" onclick="ans(this,'q36','C')"><span class="opt-label">இ</span>அடுப்பு + அக + தேற்றி</button>
+      <button class="opt" onclick="ans(this,'q36','D')"><span class="opt-label">ஈ</span>அடு + பக + தேற்றி</button>
+    </div>
+    <div class="explanation" id="exp-q36">✅ சரியான விடை: <strong>அடுப்பு + அகத்து + ஏற்றி</strong></div>
+  </div>
+
+  <!-- Q37 -->
+  <div class="q-card" id="q37">
+    <div class="q-num">வினா 37</div>
+    <div class="q-text">"<span class="word">விடியளவும்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q37','A')"><span class="opt-label">அ</span>விடி + யளவும்</button>
+      <button class="opt" onclick="ans(this,'q37','B')"><span class="opt-label">ஆ</span>விடி + அளவும்</button>
+      <button class="opt" onclick="ans(this,'q37','C')"><span class="opt-label">இ</span>விடிய + அளவும்</button>
+      <button class="opt" onclick="ans(this,'q37','D')"><span class="opt-label">ஈ</span>விடி + வளவும்</button>
+    </div>
+    <div class="explanation" id="exp-q37">✅ சரியான விடை: <strong>விடி + அளவும்</strong></div>
+  </div>
+
+  <!-- Q38 -->
+  <div class="q-card" id="q38">
+    <div class="q-num">வினா 38</div>
+    <div class="q-text">"<span class="word">தடிந்தழிதல்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q38','A')"><span class="opt-label">அ</span>தடிந்து + இழிதல்</button>
+      <button class="opt" onclick="ans(this,'q38','B')"><span class="opt-label">ஆ</span>தடிந்து + அழிதல்</button>
+      <button class="opt" onclick="ans(this,'q38','C')"><span class="opt-label">இ</span>தடி + நதழிதல்</button>
+      <button class="opt" onclick="ans(this,'q38','D')"><span class="opt-label">ஈ</span>தடிந் + தழிதல்</button>
+    </div>
+    <div class="explanation" id="exp-q38">✅ சரியான விடை: <strong>தடிந்து + இழிதல்</strong></div>
+  </div>
+
+  <!-- Q39 -->
+  <div class="q-card" id="q39">
+    <div class="q-num">வினா 39</div>
+    <div class="q-text">"<span class="word">சேவடி</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q39','A')"><span class="opt-label">அ</span>செ + வடி</button>
+      <button class="opt" onclick="ans(this,'q39','B')"><span class="opt-label">ஆ</span>செம்மை + அடி</button>
+      <button class="opt" onclick="ans(this,'q39','C')"><span class="opt-label">இ</span>சேவ் + அடி</button>
+      <button class="opt" onclick="ans(this,'q39','D')"><span class="opt-label">ஈ</span>சேவ + டி</button>
+    </div>
+    <div class="explanation" id="exp-q39">✅ சரியான விடை: <strong>செம்மை + அடி</strong> — செம்மை திரிந்து சே ஆகி சேவடி ஆகும்.</div>
+  </div>
+
+  <!-- Q40 -->
+  <div class="q-card" id="q40">
+    <div class="q-num">வினா 40</div>
+    <div class="q-text">"<span class="word">வெவ்விருப்பாணி</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q40','A')"><span class="opt-label">அ</span>வெம்மை + இரும்பு + ஆணி</button>
+      <button class="opt" onclick="ans(this,'q40','B')"><span class="opt-label">ஆ</span>வெம் + இரும்பு + ஆணி</button>
+      <button class="opt" onclick="ans(this,'q40','C')"><span class="opt-label">இ</span>வெவ் + விரும்பு + ஆணி</button>
+      <button class="opt" onclick="ans(this,'q40','D')"><span class="opt-label">ஈ</span>வெவ்வி + ரும்பு + ஆணி</button>
+    </div>
+    <div class="explanation" id="exp-q40">✅ சரியான விடை: <strong>வெம்மை + இரும்பு + ஆணி</strong></div>
+  </div>
+
+  <!-- Q41 -->
+  <div class="q-card" id="q41">
+    <div class="q-num">வினா 41</div>
+    <div class="q-text">"<span class="word">வடமலை</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q41','A')"><span class="opt-label">அ</span>வட + மலை</button>
+      <button class="opt" onclick="ans(this,'q41','B')"><span class="opt-label">ஆ</span>வடக்கு + மலை</button>
+      <button class="opt" onclick="ans(this,'q41','C')"><span class="opt-label">இ</span>வடம் + மலை</button>
+      <button class="opt" onclick="ans(this,'q41','D')"><span class="opt-label">ஈ</span>வடவ் + மலை</button>
+    </div>
+    <div class="explanation" id="exp-q41">✅ சரியான விடை: <strong>வடக்கு + மலை</strong></div>
+  </div>
+
+  <!-- Q42 -->
+  <div class="q-card" id="q42">
+    <div class="q-num">வினா 42</div>
+    <div class="q-text">"<span class="word">தென்மலை</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q42','A')"><span class="opt-label">அ</span>தென் + மலை</button>
+      <button class="opt" onclick="ans(this,'q42','B')"><span class="opt-label">ஆ</span>தெற்கு + மலை</button>
+      <button class="opt" onclick="ans(this,'q42','C')"><span class="opt-label">இ</span>தென + மலை</button>
+      <button class="opt" onclick="ans(this,'q42','D')"><span class="opt-label">ஈ</span>தெற்கை + மலை</button>
+    </div>
+    <div class="explanation" id="exp-q42">✅ சரியான விடை: <strong>தெற்கு + மலை</strong></div>
+  </div>
+
+  <!-- Q43 -->
+  <div class="q-card" id="q43">
+    <div class="q-num">வினா 43</div>
+    <div class="q-text">"<span class="word">கனகமகாமேரு</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q43','A')"><span class="opt-label">அ</span>கனக + மேரு</button>
+      <button class="opt" onclick="ans(this,'q43','B')"><span class="opt-label">ஆ</span>கனகம் + மகா + மேரு</button>
+      <button class="opt" onclick="ans(this,'q43','C')"><span class="opt-label">இ</span>கனகமகா + மேரு</button>
+      <button class="opt" onclick="ans(this,'q43','D')"><span class="opt-label">ஈ</span>கன + கமகா + மேரு</button>
+    </div>
+    <div class="explanation" id="exp-q43">✅ சரியான விடை: <strong>கனகம் + மகா + மேரு</strong></div>
+  </div>
+
+  <!-- Q44 -->
+  <div class="q-card" id="q44">
+    <div class="q-num">வினா 44</div>
+    <div class="q-text">"<span class="word">நாஞ்சினாட்டு</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q44','A')"><span class="opt-label">அ</span>நாஞ்சி + நாட்டு</button>
+      <button class="opt" onclick="ans(this,'q44','B')"><span class="opt-label">ஆ</span>நாஞ்சில் + நாட்டு</button>
+      <button class="opt" onclick="ans(this,'q44','C')"><span class="opt-label">இ</span>நாஞ் + சினாட்டு</button>
+      <button class="opt" onclick="ans(this,'q44','D')"><span class="opt-label">ஈ</span>நாஞ்சிய + நாட்டு</button>
+    </div>
+    <div class="explanation" id="exp-q44">✅ சரியான விடை: <strong>நாஞ்சில் + நாட்டு</strong></div>
+  </div>
+
+  <!-- Q45 -->
+  <div class="q-card" id="q45">
+    <div class="q-num">வினா 45</div>
+    <div class="q-text">"<span class="word">மலலையிங்கள்</span>" — இதைப் போல் "<span class="word">மலையிங்கள்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q45','A')"><span class="opt-label">அ</span>மலை + இங்கள்</button>
+      <button class="opt" onclick="ans(this,'q45','B')"><span class="opt-label">ஆ</span>மலை + எங்கள்</button>
+      <button class="opt" onclick="ans(this,'q45','C')"><span class="opt-label">இ</span>மலை + யிங்கள்</button>
+      <button class="opt" onclick="ans(this,'q45','D')"><span class="opt-label">ஈ</span>மலலை + யிங்கள்</button>
+    </div>
+    <div class="explanation" id="exp-q45">✅ சரியான விடை: <strong>மலை + இங்கள்</strong> (மலையிங்கள் = மலை + இங்கள்)</div>
+  </div>
+
+  <!-- Q46 -->
+  <div class="q-card" id="q46">
+    <div class="q-num">வினா 46</div>
+    <div class="q-text">"<span class="word">பாழ்மலை</span>" என்பதைப் போல் "<span class="word">மலலையிங்கள்</span>" என்ற மூலச்சொல்லில் "<span class="word">மலையிங்கள்</span>" = மலை + இங்கள். அதுபோல் "<span class="word">பழம்பாடல்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q46','A')"><span class="opt-label">அ</span>பழம் + பாடல்</button>
+      <button class="opt" onclick="ans(this,'q46','B')"><span class="opt-label">ஆ</span>பழமை + பாடல்</button>
+      <button class="opt" onclick="ans(this,'q46','C')"><span class="opt-label">இ</span>பழ + பாடல்</button>
+      <button class="opt" onclick="ans(this,'q46','D')"><span class="opt-label">ஈ</span>பழம் + ஆடல்</button>
+    </div>
+    <div class="explanation" id="exp-q46">✅ சரியான விடை: <strong>பழமை + பாடல்</strong></div>
+  </div>
+
+  <!-- Q47 -->
+  <div class="q-card" id="q47">
+    <div class="q-num">வினா 47</div>
+    <div class="q-text">"<span class="word">திந்தமிழ்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q47','A')"><span class="opt-label">அ</span>தி + ந்தமிழ்</button>
+      <button class="opt" onclick="ans(this,'q47','B')"><span class="opt-label">ஆ</span>தீம் + தமிழ்</button>
+      <button class="opt" onclick="ans(this,'q47','C')"><span class="opt-label">இ</span>திந்த + மிழ்</button>
+      <button class="opt" onclick="ans(this,'q47','D')"><span class="opt-label">ஈ</span>திந்தி + தமிழ்</button>
+    </div>
+    <div class="explanation" id="exp-q47">✅ சரியான விடை: <strong>தீம் + தமிழ்</strong></div>
+  </div>
+
+  <!-- Q48 -->
+  <div class="q-card" id="q48">
+    <div class="q-num">வினா 48</div>
+    <div class="q-text">"<span class="word">தமிழ்முகுதவு</span>" என்பதைப் போல் "<span class="word">தமிழ்முகுதவு</span>" = தமிழ் + உதவு என்றாகும். அதேபோல் "<span class="word">பழம்பெரும்பூமி</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q48','A')"><span class="opt-label">அ</span>பழம் + பெரும் + பூமி</button>
+      <button class="opt" onclick="ans(this,'q48','B')"><span class="opt-label">ஆ</span>பழமை + பெருமை + பூமி</button>
+      <button class="opt" onclick="ans(this,'q48','C')"><span class="opt-label">இ</span>பழ + பெரும் + பூமி</button>
+      <button class="opt" onclick="ans(this,'q48','D')"><span class="opt-label">ஈ</span>பழம் + பெரு + பூமி</button>
+    </div>
+    <div class="explanation" id="exp-q48">✅ சரியான விடை: <strong>பழமை + பெருமை + பூமி</strong></div>
+  </div>
+
+  <!-- Q49 -->
+  <div class="q-card" id="q49">
+    <div class="q-num">வினா 49</div>
+    <div class="q-text">"<span class="word">திருவுள்ளத்திலழிகு</span>" என்பதைப் போன்று "<span class="word">திருவுள்ளத்திலழிகு</span>" ← இதனில் "<span class="word">கோயிற்கேற்றும்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q49','A')"><span class="opt-label">அ</span>கோயிற்கு + ஏற்றும்</button>
+      <button class="opt" onclick="ans(this,'q49','B')"><span class="opt-label">ஆ</span>கோயில் + கேற்றும்</button>
+      <button class="opt" onclick="ans(this,'q49','C')"><span class="opt-label">இ</span>கோயிர் + கேற்றும்</button>
+      <button class="opt" onclick="ans(this,'q49','D')"><span class="opt-label">ஈ</span>கோயிற் + கேற்றும்</button>
+    </div>
+    <div class="explanation" id="exp-q49">✅ சரியான விடை: <strong>கோயிற்கு + ஏற்றும்</strong> (கோயிற்கேற்றும் = கோயிற்கு + ஏற்றும்)</div>
+  </div>
+
+  <!-- Q50 -->
+  <div class="q-card" id="q50">
+    <div class="q-num">வினா 50</div>
+    <div class="q-text">"<span class="word">குழற்காடேந்துமிள</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q50','A')"><span class="opt-label">அ</span>குழல் + காடு + ஏந்தும் + இள</button>
+      <button class="opt" onclick="ans(this,'q50','B')"><span class="opt-label">ஆ</span>குழல் + காட்டு + ஏந்தும் + இள</button>
+      <button class="opt" onclick="ans(this,'q50','C')"><span class="opt-label">இ</span>குழல் + காடு + ஏந்த + உமிள</button>
+      <button class="opt" onclick="ans(this,'q50','D')"><span class="opt-label">ஈ</span>குழற்காடு + ஏந்து + மிள</button>
+    </div>
+    <div class="explanation" id="exp-q50">✅ சரியான விடை: <strong>குழல் + காடு + ஏந்தும் + இள</strong> — குழற்காடேந்துமிள = குழல் + காடு + ஏந்தும் + இள</div>
+  </div>
+
+  <!-- Q51 -->
+  <div class="q-card" id="q51">
+    <div class="q-num">வினா 51</div>
+    <div class="q-text">"<span class="word">செல்லினங்கள்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q51','A')"><span class="opt-label">அ</span>செல்லி + னங்கள்</button>
+      <button class="opt" onclick="ans(this,'q51','B')"><span class="opt-label">ஆ</span>செல் + இனங்கள்</button>
+      <button class="opt" onclick="ans(this,'q51','C')"><span class="opt-label">இ</span>செல்ல + இனங்கள்</button>
+      <button class="opt" onclick="ans(this,'q51','D')"><span class="opt-label">ஈ</span>செல் + லினங்கள்</button>
+    </div>
+    <div class="explanation" id="exp-q51">✅ சரியான விடை: <strong>செல் + இனங்கள்</strong></div>
+  </div>
+
+  <!-- Q52 -->
+  <div class="q-card" id="q52">
+    <div class="q-num">வினா 52</div>
+    <div class="q-text">"<span class="word">வெற்றிக்கொடி</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q52','A')"><span class="opt-label">அ</span>வெற்றி + கொடி</button>
+      <button class="opt" onclick="ans(this,'q52','B')"><span class="opt-label">ஆ</span>வெற்று + இக்கொடி</button>
+      <button class="opt" onclick="ans(this,'q52','C')"><span class="opt-label">இ</span>வெற் + றிக்கொடி</button>
+      <button class="opt" onclick="ans(this,'q52','D')"><span class="opt-label">ஈ</span>வெற்றிக் + கொடி</button>
+    </div>
+    <div class="explanation" id="exp-q52">✅ சரியான விடை: <strong>வெற்றி + கொடி</strong></div>
+  </div>
+
+  <!-- Q53 -->
+  <div class="q-card" id="q53">
+    <div class="q-num">வினா 53</div>
+    <div class="q-text">"<span class="word">வெற்றிடமின்றி</span>" என்பதைப் போல் "<span class="word">வெற்பிடமின்றி</span>" — "<span class="word">தோய்வன்ன</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q53','A')"><span class="opt-label">அ</span>தோய்வு + அன்ன</button>
+      <button class="opt" onclick="ans(this,'q53','B')"><span class="opt-label">ஆ</span>தோய் + வன்ன</button>
+      <button class="opt" onclick="ans(this,'q53','C')"><span class="opt-label">இ</span>தோய்ந்து + அன்ன</button>
+      <button class="opt" onclick="ans(this,'q53','D')"><span class="opt-label">ஈ</span>தோய்வன + ன</button>
+    </div>
+    <div class="explanation" id="exp-q53">✅ சரியான விடை: <strong>தோய்வு + அன்ன</strong></div>
+  </div>
+
+  <!-- Q54 -->
+  <div class="q-card" id="q54">
+    <div class="q-num">வினா 54</div>
+    <div class="q-text">"<span class="word">தாய்மைஆக</span>" என்பதைப் போல் "<span class="word">தூய்மையாக</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q54','A')"><span class="opt-label">அ</span>தூய் + மையாக</button>
+      <button class="opt" onclick="ans(this,'q54','B')"><span class="opt-label">ஆ</span>தூய்மை + ஆக</button>
+      <button class="opt" onclick="ans(this,'q54','C')"><span class="opt-label">இ</span>தூய + மையாக</button>
+      <button class="opt" onclick="ans(this,'q54','D')"><span class="opt-label">ஈ</span>தூய்மை + யாக</button>
+    </div>
+    <div class="explanation" id="exp-q54">✅ சரியான விடை: <strong>தூய்மை + ஆக</strong></div>
+  </div>
+
+  <!-- Q55 -->
+  <div class="q-card" id="q55">
+    <div class="q-num">வினா 55</div>
+    <div class="q-text">"<span class="word">முடிவெய்துகாறும்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q55','A')"><span class="opt-label">அ</span>முடிவு + எய்துகாறும்</button>
+      <button class="opt" onclick="ans(this,'q55','B')"><span class="opt-label">ஆ</span>முடி + வெய்து + காறும்</button>
+      <button class="opt" onclick="ans(this,'q55','C')"><span class="opt-label">இ</span>முடிவு + எய்து + காறும்</button>
+      <button class="opt" onclick="ans(this,'q55','D')"><span class="opt-label">ஈ</span>முடி + எய்து + காறும்</button>
+    </div>
+    <div class="explanation" id="exp-q55">✅ சரியான விடை: <strong>முடிவு + எய்து + காறும்</strong></div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 3 — Pages 17–20 Advanced
+  ════════════════════════════════════════════ -->
+  <div id="sec3"></div>
+  <div class="section-header">
+    <div class="section-num">3</div>
+    <div class="section-title">மேம்பட்ட வினாக்கள் — பக்கம் 17–20</div>
+    <div class="section-count">வினாக்கள் 56–80</div>
+  </div>
+
+  <!-- Q56 -->
+  <div class="q-card" id="q56">
+    <div class="q-num">வினா 56</div>
+    <div class="q-text">"<span class="word">மலடி</span>" என்பதைப் போல் "<span class="word">மலரடி</span>" என்பதைப் போல் — "<span class="word">எண்ணெய்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q56','A')"><span class="opt-label">அ</span>எண் + நெய்</button>
+      <button class="opt" onclick="ans(this,'q56','B')"><span class="opt-label">ஆ</span>எள் + நெய்</button>
+      <button class="opt" onclick="ans(this,'q56','C')"><span class="opt-label">இ</span>எண் + எய்</button>
+      <button class="opt" onclick="ans(this,'q56','D')"><span class="opt-label">ஈ</span>எண்ணி + நெய்</button>
+    </div>
+    <div class="explanation" id="exp-q56">✅ சரியான விடை: <strong>எள் + நெய்</strong></div>
+  </div>
+
+  <!-- Q57 -->
+  <div class="q-card" id="q57">
+    <div class="q-num">வினா 57</div>
+    <div class="q-text">"<span class="word">தண்ணீர்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q57','A')"><span class="opt-label">அ</span>தண் + நீர்</button>
+      <button class="opt" onclick="ans(this,'q57','B')"><span class="opt-label">ஆ</span>தண்மை + நீர்</button>
+      <button class="opt" onclick="ans(this,'q57','C')"><span class="opt-label">இ</span>தண் + ணீர்</button>
+      <button class="opt" onclick="ans(this,'q57','D')"><span class="opt-label">ஈ</span>தண்ண + ஈர்</button>
+    </div>
+    <div class="explanation" id="exp-q57">✅ சரியான விடை: <strong>தண்மை + நீர்</strong></div>
+  </div>
+
+  <!-- Q58 -->
+  <div class="q-card" id="q58">
+    <div class="q-num">வினா 58</div>
+    <div class="q-text">"<span class="word">நூற்றாண்டு</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q58','A')"><span class="opt-label">அ</span>நூறு + ஆண்டு</button>
+      <button class="opt" onclick="ans(this,'q58','B')"><span class="opt-label">ஆ</span>நூற்று + ஆண்டு</button>
+      <button class="opt" onclick="ans(this,'q58','C')"><span class="opt-label">இ</span>நூற் + றாண்டு</button>
+      <button class="opt" onclick="ans(this,'q58','D')"><span class="opt-label">ஈ</span>நூறு + தாண்டு</button>
+    </div>
+    <div class="explanation" id="exp-q58">✅ சரியான விடை: <strong>நூறு + ஆண்டு</strong></div>
+  </div>
+
+  <!-- Q59 -->
+  <div class="q-card" id="q59">
+    <div class="q-num">வினா 59</div>
+    <div class="q-text">"<span class="word">அலகிலா</span>" என்பதைப் போல் — "<span class="word">திருக்கசேற்று</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q59','A')"><span class="opt-label">அ</span>திரு + கசேற்று</button>
+      <button class="opt" onclick="ans(this,'q59','B')"><span class="opt-label">ஆ</span>திருக்கு + சேற்று</button>
+      <button class="opt" onclick="ans(this,'q59','C')"><span class="opt-label">இ</span>திருக்கசேற் + று</button>
+      <button class="opt" onclick="ans(this,'q59','D')"><span class="opt-label">ஈ</span>திரு + சேற்று</button>
+    </div>
+    <div class="explanation" id="exp-q59">✅ சரியான விடை: <strong>திரு + சேற்று</strong> — திருக்கசேற்று = திரு + சேற்று (திரு+செற்று)</div>
+  </div>
+
+  <!-- Q60 -->
+  <div class="q-card" id="q60">
+    <div class="q-num">வினா 60</div>
+    <div class="q-text">"<span class="word">பூந்தண்கா</span>" என்பதைப் போல் — "<span class="word">பைந்தமிழ்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q60','A')"><span class="opt-label">அ</span>பை + தமிழ்</button>
+      <button class="opt" onclick="ans(this,'q60','B')"><span class="opt-label">ஆ</span>பசுமை + தமிழ்</button>
+      <button class="opt" onclick="ans(this,'q60','C')"><span class="opt-label">இ</span>பைந்த + மிழ்</button>
+      <button class="opt" onclick="ans(this,'q60','D')"><span class="opt-label">ஈ</span>பை + ந்தமிழ்</button>
+    </div>
+    <div class="explanation" id="exp-q60">✅ சரியான விடை: <strong>பசுமை + தமிழ்</strong> — பசுமை திரிந்து பைந் ஆகும்.</div>
+  </div>
+
+  <!-- Q61 -->
+  <div class="q-card" id="q61">
+    <div class="q-num">வினா 61</div>
+    <div class="q-text">"<span class="word">வாழ்த்தாதென்னே</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q61','A')"><span class="opt-label">அ</span>வாழ்த்தா (த) து + என்னே</button>
+      <button class="opt" onclick="ans(this,'q61','B')"><span class="opt-label">ஆ</span>வாழ்த்தா + தென்னே</button>
+      <button class="opt" onclick="ans(this,'q61','C')"><span class="opt-label">இ</span>வாழ்த்து + ஆதென்னே</button>
+      <button class="opt" onclick="ans(this,'q61','D')"><span class="opt-label">ஈ</span>வாழ்ந்தா + தென்னே</button>
+    </div>
+    <div class="explanation" id="exp-q61">✅ சரியான விடை: <strong>வாழ்த்தா (த) து + என்னே</strong></div>
+  </div>
+
+  <!-- Q62 -->
+  <div class="q-card" id="q62">
+    <div class="q-num">வினா 62</div>
+    <div class="q-text">"<span class="word">நடுவிகந்தாம்</span>" என்ற சொல்லில் இதைப் போல் — "<span class="word">நடுவிகந்தாம்</span>" = நடுவு + இகந்தாம். அதேபோல் "<span class="word">மணிமேகலை</span>" வரிகளில் — "<span class="word">காட்டிலழும்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q62','A')"><span class="opt-label">அ</span>காட்டில் + ழும்</button>
+      <button class="opt" onclick="ans(this,'q62','B')"><span class="opt-label">ஆ</span>காட்டில + அழும்</button>
+      <button class="opt" onclick="ans(this,'q62','C')"><span class="opt-label">இ</span>காட் + டிலழும்</button>
+      <button class="opt" onclick="ans(this,'q62','D')"><span class="opt-label">ஈ</span>காட்டிலம் + அழும்</button>
+    </div>
+    <div class="explanation" id="exp-q62">✅ சரியான விடை: <strong>காட்டில + அழும்</strong></div>
+  </div>
+
+  <!-- Q63 -->
+  <div class="q-card" id="q63">
+    <div class="q-num">வினா 63</div>
+    <div class="q-text">"<span class="word">பாண்டியராயிற்று</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q63','A')"><span class="opt-label">அ</span>பாண்டியர் + ஆயிற்று</button>
+      <button class="opt" onclick="ans(this,'q63','B')"><span class="opt-label">ஆ</span>பாண்டியர் + ஆய் + இற்று</button>
+      <button class="opt" onclick="ans(this,'q63','C')"><span class="opt-label">இ</span>பாண்டியர் + ஆயிட்டு</button>
+      <button class="opt" onclick="ans(this,'q63','D')"><span class="opt-label">ஈ</span>பாண்டி + யராயிற்று</button>
+    </div>
+    <div class="explanation" id="exp-q63">✅ சரியான விடை: <strong>பாண்டியர் + ஆயிற்று</strong></div>
+  </div>
+
+  <!-- Q64 -->
+  <div class="q-card" id="q64">
+    <div class="q-num">வினா 64</div>
+    <div class="q-text">"<span class="word">முச்சந்தி</span>" என்பதைப் போல் — "<span class="word">முத்தமிழ்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q64','A')"><span class="opt-label">அ</span>முத்து + தமிழ்</button>
+      <button class="opt" onclick="ans(this,'q64','B')"><span class="opt-label">ஆ</span>முன்று + தமிழ்</button>
+      <button class="opt" onclick="ans(this,'q64','C')"><span class="opt-label">இ</span>மூன்று + தமிழ்</button>
+      <button class="opt" onclick="ans(this,'q64','D')"><span class="opt-label">ஈ</span>முத் + தமிழ்</button>
+    </div>
+    <div class="explanation" id="exp-q64">✅ சரியான விடை: <strong>மூன்று + தமிழ்</strong> — இயல், இசை, நாடகம் என்ற மூன்றும்.</div>
+  </div>
+
+  <!-- Q65 -->
+  <div class="q-card" id="q65">
+    <div class="q-num">வினா 65</div>
+    <div class="q-text">"<span class="word">அரண்ஓரு</span>" என்பதைப் போல் — "<span class="word">அரணாறு</span>" = "அரண் + ஒரு" என்றாகும். அதேபோல் "<span class="word">அரணாறு</span>" என்பதைப் போல் — "<span class="word">செந்தமிழ்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q65','A')"><span class="opt-label">அ</span>செந்த + மிழ்</button>
+      <button class="opt" onclick="ans(this,'q65','B')"><span class="opt-label">ஆ</span>செம்மை + தமிழ்</button>
+      <button class="opt" onclick="ans(this,'q65','C')"><span class="opt-label">இ</span>செந்தி + தமிழ்</button>
+      <button class="opt" onclick="ans(this,'q65','D')"><span class="opt-label">ஈ</span>செந்தமி + ழ்</button>
+    </div>
+    <div class="explanation" id="exp-q65">✅ சரியான விடை: <strong>செம்மை + தமிழ்</strong></div>
+  </div>
+
+  <!-- Q66 -->
+  <div class="q-card" id="q66">
+    <div class="q-num">வினா 66</div>
+    <div class="q-text">"<span class="word">இலக்கியப்பேட்டகம்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q66','A')"><span class="opt-label">அ</span>இலக்கியப் + பேட்டகம்</button>
+      <button class="opt" onclick="ans(this,'q66','B')"><span class="opt-label">ஆ</span>இலக்கியம் + பேட்டகம்</button>
+      <button class="opt" onclick="ans(this,'q66','C')"><span class="opt-label">இ</span>இலக்கிய + பேட்டகம்</button>
+      <button class="opt" onclick="ans(this,'q66','D')"><span class="opt-label">ஈ</span>இலக்கி + யப்பேட்டகம்</button>
+    </div>
+    <div class="explanation" id="exp-q66">✅ சரியான விடை: <strong>இலக்கியம் + பேட்டகம்</strong></div>
+  </div>
+
+  <!-- Q67 -->
+  <div class="q-card" id="q67">
+    <div class="q-num">வினா 67</div>
+    <div class="q-text">"<span class="word">வேல்</span>" என்பதைப் போல் — "<span class="word">வேரல்</span>" என்பதைப் போல் — "<span class="word">வேரல்</span>" = வேல் + தல் → "<span class="word">வேரல்</span>" ← இதைப் போல் "<span class="word">வேரல்</span>" → "<span class="word">காடேல்லாம்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q67','A')"><span class="opt-label">அ</span>காடு + எல்லாம்</button>
+      <button class="opt" onclick="ans(this,'q67','B')"><span class="opt-label">ஆ</span>காட + எல்லாம்</button>
+      <button class="opt" onclick="ans(this,'q67','C')"><span class="opt-label">இ</span>காட் + எல்லாம்</button>
+      <button class="opt" onclick="ans(this,'q67','D')"><span class="opt-label">ஈ</span>காட் + ஆறு</button>
+    </div>
+    <div class="explanation" id="exp-q67">✅ சரியான விடை: <strong>காடு + எல்லாம்</strong></div>
+  </div>
+
+  <!-- Q68 -->
+  <div class="q-card" id="q68">
+    <div class="q-num">வினா 68</div>
+    <div class="q-text">"<span class="word">முத்தொள்ளாயிரம்</span>" போன்று — "<span class="word">முத்தொள்ளாயிரம்</span>" = மூன்று + தொள்ளாயிரம். அதுபோல் "<span class="word">முப்பழம்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q68','A')"><span class="opt-label">அ</span>முப்பு + பழம்</button>
+      <button class="opt" onclick="ans(this,'q68','B')"><span class="opt-label">ஆ</span>மூன்று + பழம்</button>
+      <button class="opt" onclick="ans(this,'q68','C')"><span class="opt-label">இ</span>முப் + பழம்</button>
+      <button class="opt" onclick="ans(this,'q68','D')"><span class="opt-label">ஈ</span>முப்பு + அழம்</button>
+    </div>
+    <div class="explanation" id="exp-q68">✅ சரியான விடை: <strong>மூன்று + பழம்</strong></div>
+  </div>
+
+  <!-- Q69 -->
+  <div class="q-card" id="q69">
+    <div class="q-num">வினா 69</div>
+    <div class="q-text">"<span class="word">பல்கலைக்கழகம்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q69','A')"><span class="opt-label">அ</span>பல் + கலை + கழகம்</button>
+      <button class="opt" onclick="ans(this,'q69','B')"><span class="opt-label">ஆ</span>பல + கலை + கழகம்</button>
+      <button class="opt" onclick="ans(this,'q69','C')"><span class="opt-label">இ</span>பல் + கலைக் + கழகம்</button>
+      <button class="opt" onclick="ans(this,'q69','D')"><span class="opt-label">ஈ</span>பல்க + லைக்கழகம்</button>
+    </div>
+    <div class="explanation" id="exp-q69">✅ சரியான விடை: <strong>பல் + கலை + கழகம்</strong></div>
+  </div>
+
+  <!-- Q70 -->
+  <div class="q-card" id="q70">
+    <div class="q-num">வினா 70</div>
+    <div class="q-text">"<span class="word">வென்றிலங்கைவேந்தன்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q70','A')"><span class="opt-label">அ</span>வென்று + இலங்கை + வேந்தன்</button>
+      <button class="opt" onclick="ans(this,'q70','B')"><span class="opt-label">ஆ</span>வென்றி + இலங்கை + வேந்தன்</button>
+      <button class="opt" onclick="ans(this,'q70','C')"><span class="opt-label">இ</span>வென் + இலங்கை + வேந்தன்</button>
+      <button class="opt" onclick="ans(this,'q70','D')"><span class="opt-label">ஈ</span>வென்றி + லங்கைவேந்தன்</button>
+    </div>
+    <div class="explanation" id="exp-q70">✅ சரியான விடை: <strong>வென்று + இலங்கை + வேந்தன்</strong></div>
+  </div>
+
+  <!-- Q71 -->
+  <div class="q-card" id="q71">
+    <div class="q-num">வினா 71</div>
+    <div class="q-text">"<span class="word">சிந்தென்று</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q71','A')"><span class="opt-label">அ</span>சிந்தி + என்று</button>
+      <button class="opt" onclick="ans(this,'q71','B')"><span class="opt-label">ஆ</span>சிந்து + என்று</button>
+      <button class="opt" onclick="ans(this,'q71','C')"><span class="opt-label">இ</span>சிந்த + என்று</button>
+      <button class="opt" onclick="ans(this,'q71','D')"><span class="opt-label">ஈ</span>சிந் + தென்று</button>
+    </div>
+    <div class="explanation" id="exp-q71">✅ சரியான விடை: <strong>சிந்து + என்று</strong></div>
+  </div>
+
+  <!-- Q72 -->
+  <div class="q-card" id="q72">
+    <div class="q-num">வினா 72</div>
+    <div class="q-text">"<span class="word">சேரவர்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q72','A')"><span class="opt-label">அ</span>சேர + அவர்</button>
+      <button class="opt" onclick="ans(this,'q72','B')"><span class="opt-label">ஆ</span>சேரர் + ஆவர்</button>
+      <button class="opt" onclick="ans(this,'q72','C')"><span class="opt-label">இ</span>சேர் + ஆவர்</button>
+      <button class="opt" onclick="ans(this,'q72','D')"><span class="opt-label">ஈ</span>சேர + வர்</button>
+    </div>
+    <div class="explanation" id="exp-q72">✅ சரியான விடை: <strong>சேர் + ஆவர்</strong> (சேரவர் = சேர்+ஆவர்)</div>
+  </div>
+
+  <!-- Q73 -->
+  <div class="q-card" id="q73">
+    <div class="q-num">வினா 73</div>
+    <div class="q-text">"<span class="word">ஒருவர்க்கீது</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q73','A')"><span class="opt-label">அ</span>ஒருவர்க்கு + இது</button>
+      <button class="opt" onclick="ans(this,'q73','B')"><span class="opt-label">ஆ</span>ஒருவர் + கீது</button>
+      <button class="opt" onclick="ans(this,'q73','C')"><span class="opt-label">இ</span>ஒருவர்க் + கீது</button>
+      <button class="opt" onclick="ans(this,'q73','D')"><span class="opt-label">ஈ</span>ஒருவர்க்கு + ஈது</button>
+    </div>
+    <div class="explanation" id="exp-q73">✅ சரியான விடை: <strong>ஒருவர்க்கு + ஈது</strong></div>
+  </div>
+
+  <!-- Q74 -->
+  <div class="q-card" id="q74">
+    <div class="q-num">வினா 74</div>
+    <div class="q-text">"<span class="word">வேர்க்கோட்பலவின்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q74','A')"><span class="opt-label">அ</span>வேர் + கோள் + பலவின்</button>
+      <button class="opt" onclick="ans(this,'q74','B')"><span class="opt-label">ஆ</span>வேர்க்கோட்டு + பலவின்</button>
+      <button class="opt" onclick="ans(this,'q74','C')"><span class="opt-label">இ</span>வேர் + கோட்டு + பலவின்</button>
+      <button class="opt" onclick="ans(this,'q74','D')"><span class="opt-label">ஈ</span>வேர்க்கோட் + பலவின்</button>
+    </div>
+    <div class="explanation" id="exp-q74">✅ சரியான விடை: <strong>வேர் + கோள் + பலவின்</strong></div>
+  </div>
+
+  <!-- Q75 -->
+  <div class="q-card" id="q75">
+    <div class="q-num">வினா 75</div>
+    <div class="q-text">"<span class="word">நிலைமேலேற்ற</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q75','A')"><span class="opt-label">அ</span>நிலை + மேல் + ஏற்ற</button>
+      <button class="opt" onclick="ans(this,'q75','B')"><span class="opt-label">ஆ</span>நிலை + மேலே + ஏற்ற</button>
+      <button class="opt" onclick="ans(this,'q75','C')"><span class="opt-label">இ</span>நிலத்து + மேல் + ஏற்ற</button>
+      <button class="opt" onclick="ans(this,'q75','D')"><span class="opt-label">ஈ</span>நிலை + மேல் + எற்ற</button>
+    </div>
+    <div class="explanation" id="exp-q75">✅ சரியான விடை: <strong>நிலை + மேல் + ஏற்ற</strong></div>
+  </div>
+
+  <!-- Q76 -->
+  <div class="q-card" id="q76">
+    <div class="q-num">வினா 76</div>
+    <div class="q-text">"<span class="word">நாலடியார்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q76','A')"><span class="opt-label">அ</span>நால் + அடியார்</button>
+      <button class="opt" onclick="ans(this,'q76','B')"><span class="opt-label">ஆ</span>நான்கு + அடி + ஆர்</button>
+      <button class="opt" onclick="ans(this,'q76','C')"><span class="opt-label">இ</span>நாலு + அடியார்</button>
+      <button class="opt" onclick="ans(this,'q76','D')"><span class="opt-label">ஈ</span>நான்கடி + ஆர்</button>
+    </div>
+    <div class="explanation" id="exp-q76">✅ சரியான விடை: <strong>நான்கு + அடி + ஆர்</strong> (நாலடியார் = நான்கு + அடி + ஆர்)</div>
+  </div>
+
+  <!-- Q77 -->
+  <div class="q-card" id="q77">
+    <div class="q-num">வினா 77</div>
+    <div class="q-text">"<span class="word">உய்வின்றி</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q77','A')"><span class="opt-label">அ</span>உய் + இன்றி</button>
+      <button class="opt" onclick="ans(this,'q77','B')"><span class="opt-label">ஆ</span>உய்வு + இன்றி</button>
+      <button class="opt" onclick="ans(this,'q77','C')"><span class="opt-label">இ</span>உயிர் + இன்றி</button>
+      <button class="opt" onclick="ans(this,'q77','D')"><span class="opt-label">ஈ</span>உய்வி + ன்றி</button>
+    </div>
+    <div class="explanation" id="exp-q77">✅ சரியான விடை: <strong>உய்வு + இன்றி</strong></div>
+  </div>
+
+  <!-- Q78 -->
+  <div class="q-card" id="q78">
+    <div class="q-num">வினா 78</div>
+    <div class="q-text">"<span class="word">கைதொழுதேத்தி</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q78','A')"><span class="opt-label">அ</span>கை + தொழுது + ஏத்தி</button>
+      <button class="opt" onclick="ans(this,'q78','B')"><span class="opt-label">ஆ</span>கையை + தொழுது + ஏத்தி</button>
+      <button class="opt" onclick="ans(this,'q78','C')"><span class="opt-label">இ</span>கை + தொழுதே + ஆத்தி</button>
+      <button class="opt" onclick="ans(this,'q78','D')"><span class="opt-label">ஈ</span>கை + தொழு + தேத்தி</button>
+    </div>
+    <div class="explanation" id="exp-q78">✅ சரியான விடை: <strong>கை + தொழுது + ஏத்தி</strong></div>
+  </div>
+
+  <!-- Q79 -->
+  <div class="q-card" id="q79">
+    <div class="q-num">வினா 79</div>
+    <div class="q-text">"<span class="word">முக்குணம்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q79','A')"><span class="opt-label">அ</span>முக்கு + ணம்</button>
+      <button class="opt" onclick="ans(this,'q79','B')"><span class="opt-label">ஆ</span>மூன்று + குணம்</button>
+      <button class="opt" onclick="ans(this,'q79','C')"><span class="opt-label">இ</span>முக் + குணம்</button>
+      <button class="opt" onclick="ans(this,'q79','D')"><span class="opt-label">ஈ</span>முன்று + குணம்</button>
+    </div>
+    <div class="explanation" id="exp-q79">✅ சரியான விடை: <strong>மூன்று + குணம்</strong></div>
+  </div>
+
+  <!-- Q80 -->
+  <div class="q-card" id="q80">
+    <div class="q-num">வினா 80</div>
+    <div class="q-text">"<span class="word">நீரகம்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q80','A')"><span class="opt-label">அ</span>நீர் + கம்</button>
+      <button class="opt" onclick="ans(this,'q80','B')"><span class="opt-label">ஆ</span>நீர் + அகம்</button>
+      <button class="opt" onclick="ans(this,'q80','C')"><span class="opt-label">இ</span>நீரக + ம்</button>
+      <button class="opt" onclick="ans(this,'q80','D')"><span class="opt-label">ஈ</span>நீ + ரகம்</button>
+    </div>
+    <div class="explanation" id="exp-q80">✅ சரியான விடை: <strong>நீர் + அகம்</strong></div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 4 — Pages 21–23 Combined Words
+  ════════════════════════════════════════════ -->
+  <div id="sec4"></div>
+  <div class="section-header">
+    <div class="section-num">4</div>
+    <div class="section-title">முந்தைய ஆண்டு வினாக்கள் & கூட்டு சொற்கள் — பக்கம் 21–23</div>
+    <div class="section-count">வினாக்கள் 81–110</div>
+  </div>
+
+  <!-- Q81 -->
+  <div class="q-card" id="q81">
+    <div class="q-num">வினா 81</div>
+    <div class="q-text">"<span class="word">பாசிலை</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q81','A')"><span class="opt-label">அ</span>பாசி + இலை</button>
+      <button class="opt" onclick="ans(this,'q81','B')"><span class="opt-label">ஆ</span>பசுமை + இலை</button>
+      <button class="opt" onclick="ans(this,'q81','C')"><span class="opt-label">இ</span>பா + சிலை</button>
+      <button class="opt" onclick="ans(this,'q81','D')"><span class="opt-label">ஈ</span>பசும் + இலை</button>
+    </div>
+    <div class="explanation" id="exp-q81">✅ சரியான விடை: <strong>பசுமை + இலை</strong></div>
+  </div>
+
+  <!-- Q82 -->
+  <div class="q-card" id="q82">
+    <div class="q-num">வினா 82</div>
+    <div class="q-text">"<span class="word">கலம்பகம்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q82','A')"><span class="opt-label">அ</span>கலம் + பகம்</button>
+      <button class="opt" onclick="ans(this,'q82','B')"><span class="opt-label">ஆ</span>கலன் + பகம்</button>
+      <button class="opt" onclick="ans(this,'q82','C')"><span class="opt-label">இ</span>கலம் + அகம்</button>
+      <button class="opt" onclick="ans(this,'q82','D')"><span class="opt-label">ஈ</span>கல + அகம்</button>
+    </div>
+    <div class="explanation" id="exp-q82">✅ சரியான விடை: <strong>கலம் + அகம்</strong> — கலம் என்பது பாத்திரம்; அகம் என்பது உள்ளே.</div>
+  </div>
+
+  <!-- Q83 -->
+  <div class="q-card" id="q83">
+    <div class="q-num">வினா 83</div>
+    <div class="q-text">"<span class="word">மூதூர்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q83','A')"><span class="opt-label">அ</span>மூத்து + ஊர்</button>
+      <button class="opt" onclick="ans(this,'q83','B')"><span class="opt-label">ஆ</span>முதுமை + ஊர்</button>
+      <button class="opt" onclick="ans(this,'q83','C')"><span class="opt-label">இ</span>மூ + தூர்</button>
+      <button class="opt" onclick="ans(this,'q83','D')"><span class="opt-label">ஈ</span>மூது + ஊர்</button>
+    </div>
+    <div class="explanation" id="exp-q83">✅ சரியான விடை: <strong>முதுமை + ஊர்</strong> — மூதூர் = முதுமை + ஊர்.</div>
+  </div>
+
+  <!-- Q84 -->
+  <div class="q-card" id="q84">
+    <div class="q-num">வினா 84</div>
+    <div class="q-text">"<span class="word">குருகுமுண்டு</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q84','A')"><span class="opt-label">அ</span>குரு + குமுண்டு</button>
+      <button class="opt" onclick="ans(this,'q84','B')"><span class="opt-label">ஆ</span>குருகும் + உண்டு</button>
+      <button class="opt" onclick="ans(this,'q84','C')"><span class="opt-label">இ</span>குருகு + உண்டு</button>
+      <button class="opt" onclick="ans(this,'q84','D')"><span class="opt-label">ஈ</span>குரு + உண்டு</button>
+    </div>
+    <div class="explanation" id="exp-q84">✅ சரியான விடை: <strong>குருகும் + உண்டு</strong></div>
+  </div>
+
+  <!-- Q85 -->
+  <div class="q-card" id="q85">
+    <div class="q-num">வினா 85</div>
+    <div class="q-text">"<span class="word">இலக்கியம்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q85','A')"><span class="opt-label">அ</span>இல + ஆக்கியம்</button>
+      <button class="opt" onclick="ans(this,'q85','B')"><span class="opt-label">ஆ</span>இலக்கு + இயம்</button>
+      <button class="opt" onclick="ans(this,'q85','C')"><span class="opt-label">இ</span>இலக்கு + இயம்</button>
+      <button class="opt" onclick="ans(this,'q85','D')"><span class="opt-label">ஈ</span>இலக்கு + இயம்</button>
+    </div>
+    <div class="explanation" id="exp-q85">✅ சரியான விடை: <strong>இலக்கு + இயம்</strong> (வேம்மை = வேண்மை)</div>
+  </div>
+
+  <!-- Q86 -->
+  <div class="q-card" id="q86">
+    <div class="q-num">வினா 86</div>
+    <div class="q-text">"<span class="word">வேரூன்றிய</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q86','A')"><span class="opt-label">அ</span>வேர் + ஊன்றிய</button>
+      <button class="opt" onclick="ans(this,'q86','B')"><span class="opt-label">ஆ</span>வேர் + உன்றிய</button>
+      <button class="opt" onclick="ans(this,'q86','C')"><span class="opt-label">இ</span>வேரூ + ன்றிய</button>
+      <button class="opt" onclick="ans(this,'q86','D')"><span class="opt-label">ஈ</span>வேரி + உன்றிய</button>
+    </div>
+    <div class="explanation" id="exp-q86">✅ சரியான விடை: <strong>வேர் + ஊன்றிய</strong></div>
+  </div>
+
+  <!-- Q87 -->
+  <div class="q-card" id="q87">
+    <div class="q-num">வினா 87</div>
+    <div class="q-text">"<span class="word">நெடுநாவாய்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q87','A')"><span class="opt-label">அ</span>நெடும் + நாவாய்</button>
+      <button class="opt" onclick="ans(this,'q87','B')"><span class="opt-label">ஆ</span>நெடுமை + நாவாய்</button>
+      <button class="opt" onclick="ans(this,'q87','C')"><span class="opt-label">இ</span>நெடும் + ஆவாய்</button>
+      <button class="opt" onclick="ans(this,'q87','D')"><span class="opt-label">ஈ</span>நெடு + நாவாய்</button>
+    </div>
+    <div class="explanation" id="exp-q87">✅ சரியான விடை: <strong>நெடுமை + நாவாய்</strong></div>
+  </div>
+
+  <!-- Q88 -->
+  <div class="q-card" id="q88">
+    <div class="q-num">வினா 88</div>
+    <div class="q-text">"<span class="word">கரியன்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q88','A')"><span class="opt-label">அ</span>கரு + அன்</button>
+      <button class="opt" onclick="ans(this,'q88','B')"><span class="opt-label">ஆ</span>கருமை + அன்</button>
+      <button class="opt" onclick="ans(this,'q88','C')"><span class="opt-label">இ</span>கரியன் — ஒருசொல்</button>
+      <button class="opt" onclick="ans(this,'q88','D')"><span class="opt-label">ஈ</span>கரி + அன்</button>
+    </div>
+    <div class="explanation" id="exp-q88">✅ சரியான விடை: <strong>கருமை + அன்</strong></div>
+  </div>
+
+  <!-- Q89 -->
+  <div class="q-card" id="q89">
+    <div class="q-num">வினா 89</div>
+    <div class="q-text">"<span class="word">தாதுஓவி</span>" என்பதுபோல் "<span class="word">தாதுஓவி</span>" = தாது + ஓவி → "<span class="word">தாதுஓவி</span>" ← இதைப்போல் — "<span class="word">தாதுஓவி</span>" → "<span class="word">பூஞ்சோலை</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q89','A')"><span class="opt-label">அ</span>பூஞ் + சோலை</button>
+      <button class="opt" onclick="ans(this,'q89','B')"><span class="opt-label">ஆ</span>பூ + சோலை</button>
+      <button class="opt" onclick="ans(this,'q89','C')"><span class="opt-label">இ</span>பூஞ்சு + ஓலை</button>
+      <button class="opt" onclick="ans(this,'q89','D')"><span class="opt-label">ஈ</span>பூம் + சோலை</button>
+    </div>
+    <div class="explanation" id="exp-q89">✅ சரியான விடை: <strong>பூ + சோலை</strong></div>
+  </div>
+
+  <!-- Q90 -->
+  <div class="q-card" id="q90">
+    <div class="q-num">வினா 90</div>
+    <div class="q-text">"<span class="word">நாட்காரணம்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q90','A')"><span class="opt-label">அ</span>நாட் + காரணம்</button>
+      <button class="opt" onclick="ans(this,'q90','B')"><span class="opt-label">ஆ</span>நான்கு + காரணம்</button>
+      <button class="opt" onclick="ans(this,'q90','C')"><span class="opt-label">இ</span>நான்கு + கரணம்</button>
+      <button class="opt" onclick="ans(this,'q90','D')"><span class="opt-label">ஈ</span>நாட்கு + காரணம்</button>
+    </div>
+    <div class="explanation" id="exp-q90">✅ சரியான விடை: <strong>நான்கு + காரணம்</strong></div>
+  </div>
+
+  <!-- Q91 -->
+  <div class="q-card" id="q91">
+    <div class="q-num">வினா 91</div>
+    <div class="q-text">"<span class="word">தினேச்சை</span>" என்பதைப் போல் — "<span class="word">தினேச்சை</span>" = தினம் + இச்சை → "<span class="word">தினேச்சை</span>" ← இதைப்போல் — "<span class="word">ஊராண்மை</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q91','A')"><span class="opt-label">அ</span>ஊர் + ஆண்மை</button>
+      <button class="opt" onclick="ans(this,'q91','B')"><span class="opt-label">ஆ</span>ஊரம் + ஆண்மை</button>
+      <button class="opt" onclick="ans(this,'q91','C')"><span class="opt-label">இ</span>ஊர + ஆண்மை</button>
+      <button class="opt" onclick="ans(this,'q91','D')"><span class="opt-label">ஈ</span>ஊர் + ஆமை</button>
+    </div>
+    <div class="explanation" id="exp-q91">✅ சரியான விடை: <strong>ஊர் + ஆண்மை</strong></div>
+  </div>
+
+  <!-- Q92 -->
+  <div class="q-card" id="q92">
+    <div class="q-num">வினா 92</div>
+    <div class="q-text">"<span class="word">தவமிரண்டு</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q92','A')"><span class="opt-label">அ</span>தவம் + இரண்டு</button>
+      <button class="opt" onclick="ans(this,'q92','B')"><span class="opt-label">ஆ</span>தவம் + மிரண்டு</button>
+      <button class="opt" onclick="ans(this,'q92','C')"><span class="opt-label">இ</span>தவ + மிரண்டு</button>
+      <button class="opt" onclick="ans(this,'q92','D')"><span class="opt-label">ஈ</span>தவ + இரண்டு</button>
+    </div>
+    <div class="explanation" id="exp-q92">✅ சரியான விடை: <strong>தவம் + இரண்டு</strong></div>
+  </div>
+
+  <!-- Q93 -->
+  <div class="q-card" id="q93">
+    <div class="q-num">வினா 93</div>
+    <div class="q-text">"<span class="word">அரிவையம்பாகத்தான்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q93','A')"><span class="opt-label">அ</span>அரிவை + அம்பு + ஆகத்தான்</button>
+      <button class="opt" onclick="ans(this,'q93','B')"><span class="opt-label">ஆ</span>அரி + வை + அம்பு + ஆகத்தான்</button>
+      <button class="opt" onclick="ans(this,'q93','C')"><span class="opt-label">இ</span>அரிவை + யம் + பாகத்தான்</button>
+      <button class="opt" onclick="ans(this,'q93','D')"><span class="opt-label">ஈ</span>அரிவை + அம் + பாகத்தான்</button>
+    </div>
+    <div class="explanation" id="exp-q93">✅ சரியான விடை: <strong>அரிவை + அம்பு + ஆகத்தான்</strong></div>
+  </div>
+
+  <!-- Q94 -->
+  <div class="q-card" id="q94">
+    <div class="q-num">வினா 94</div>
+    <div class="q-text">"<span class="word">நீயால்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q94','A')"><span class="opt-label">அ</span>நீ + ஆல்</button>
+      <button class="opt" onclick="ans(this,'q94','B')"><span class="opt-label">ஆ</span>நீ + யால்</button>
+      <button class="opt" onclick="ans(this,'q94','C')"><span class="opt-label">இ</span>நீ + ஆள்</button>
+      <button class="opt" onclick="ans(this,'q94','D')"><span class="opt-label">ஈ</span>நீய் + ஆல்</button>
+    </div>
+    <div class="explanation" id="exp-q94">✅ சரியான விடை: <strong>நீ + ஆல்</strong></div>
+  </div>
+
+  <!-- Q95 -->
+  <div class="q-card" id="q95">
+    <div class="q-num">வினா 95</div>
+    <div class="q-text">"<span class="word">அண்ணாமலைக்கனுகூலன்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q95','A')"><span class="opt-label">அ</span>அண்ணாமலை + அனுகூலன்</button>
+      <button class="opt" onclick="ans(this,'q95','B')"><span class="opt-label">ஆ</span>அண்ணாமலைக்கு + அனுகூலன்</button>
+      <button class="opt" onclick="ans(this,'q95','C')"><span class="opt-label">இ</span>அண்ண + மலைக்கு + அனுகூலன்</button>
+      <button class="opt" onclick="ans(this,'q95','D')"><span class="opt-label">ஈ</span>அண்ணாமலை + கனுகூலன்</button>
+    </div>
+    <div class="explanation" id="exp-q95">✅ சரியான விடை: <strong>அண்ணாமலைக்கு + அனுகூலன்</strong></div>
+  </div>
+
+  <!-- Q96 -->
+  <div class="q-card" id="q96">
+    <div class="q-num">வினா 96</div>
+    <div class="q-text">"<span class="word">ஞானத்தத்துவங்கள்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q96','A')"><span class="opt-label">அ</span>ஞானம் + தத்துவங்கள்</button>
+      <button class="opt" onclick="ans(this,'q96','B')"><span class="opt-label">ஆ</span>ஞான + தத்துவங்கள்</button>
+      <button class="opt" onclick="ans(this,'q96','C')"><span class="opt-label">இ</span>ஞானத்த + துவங்கள்</button>
+      <button class="opt" onclick="ans(this,'q96','D')"><span class="opt-label">ஈ</span>ஞானம் + த + துவங்கள்</button>
+    </div>
+    <div class="explanation" id="exp-q96">✅ சரியான விடை: <strong>ஞானம் + தத்துவங்கள்</strong></div>
+  </div>
+
+  <!-- Q97 -->
+  <div class="q-card" id="q97">
+    <div class="q-num">வினா 97</div>
+    <div class="q-text">"<span class="word">பாம்பெள்ளெனவே</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q97','A')"><span class="opt-label">அ</span>பாம்பு + எள் + என்வே</button>
+      <button class="opt" onclick="ans(this,'q97','B')"><span class="opt-label">ஆ</span>பாம்பு + எள் + எனவே</button>
+      <button class="opt" onclick="ans(this,'q97','C')"><span class="opt-label">இ</span>பாம்பெ + ள்ளெனவே</button>
+      <button class="opt" onclick="ans(this,'q97','D')"><span class="opt-label">ஈ</span>பாம்பு + உள்ள + எனவே</button>
+    </div>
+    <div class="explanation" id="exp-q97">✅ சரியான விடை: <strong>பாம்பு + எள் + எனவே</strong></div>
+  </div>
+
+  <!-- Q98 -->
+  <div class="q-card" id="q98">
+    <div class="q-num">வினா 98</div>
+    <div class="q-text">"<span class="word">யாரஃதறிந்திசினோர்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q98','A')"><span class="opt-label">அ</span>யார் + அஃது + அறிந்தோர்</button>
+      <button class="opt" onclick="ans(this,'q98','B')"><span class="opt-label">ஆ</span>யார் + அஃது + அறிந்திசினோர்</button>
+      <button class="opt" onclick="ans(this,'q98','C')"><span class="opt-label">இ</span>யாரஃத + றிந்திசினோர்</button>
+      <button class="opt" onclick="ans(this,'q98','D')"><span class="opt-label">ஈ</span>யார் + அஃது + அறிந்திசி + நோர்</button>
+    </div>
+    <div class="explanation" id="exp-q98">✅ சரியான விடை: <strong>யார் + அஃது + அறிந்திசினோர்</strong></div>
+  </div>
+
+  <!-- Q99 -->
+  <div class="q-card" id="q99">
+    <div class="q-num">வினா 99</div>
+    <div class="q-text">"<span class="word">பயன்விளைப்பாளந்த</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q99','A')"><span class="opt-label">அ</span>பயன் + விளைப்பாள் + அந்த</button>
+      <button class="opt" onclick="ans(this,'q99','B')"><span class="opt-label">ஆ</span>பயன் + விளைப்பாள் + அந்த</button>
+      <button class="opt" onclick="ans(this,'q99','C')"><span class="opt-label">இ</span>பயன் + விளைப்பாளர் + அந்த</button>
+      <button class="opt" onclick="ans(this,'q99','D')"><span class="opt-label">ஈ</span>பயன் + விளைப்பாள் + இந்த</button>
+    </div>
+    <div class="explanation" id="exp-q99">✅ சரியான விடை: <strong>பயன் + விளைப்பாள் + அந்த</strong> (பயன்விளைப்பாளந்த)</div>
+  </div>
+
+  <!-- Q100 -->
+  <div class="q-card" id="q100">
+    <div class="q-num">வினா 100</div>
+    <div class="q-text">"<span class="word">மகற்காற்றும்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q100','A')"><span class="opt-label">அ</span>மகன் + கு + ஆற்றும்</button>
+      <button class="opt" onclick="ans(this,'q100','B')"><span class="opt-label">ஆ</span>மக + காற்றும்</button>
+      <button class="opt" onclick="ans(this,'q100','C')"><span class="opt-label">இ</span>மகர் + காற்றும்</button>
+      <button class="opt" onclick="ans(this,'q100','D')"><span class="opt-label">ஈ</span>மகர் + ஆற்றும்</button>
+    </div>
+    <div class="explanation" id="exp-q100">✅ சரியான விடை: <strong>மகன் + கு + ஆற்றும்</strong> (மகற்கு = மகன் + கு)</div>
+  </div>
+
+  <!-- Q101 -->
+  <div class="q-card" id="q101">
+    <div class="q-num">வினா 101</div>
+    <div class="q-text">"<span class="word">ஆடும்போதே யிரையும்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q101','A')"><span class="opt-label">அ</span>ஆடும்போதே + இரையும்</button>
+      <button class="opt" onclick="ans(this,'q101','B')"><span class="opt-label">ஆ</span>ஆடும்போதே + இரையும்</button>
+      <button class="opt" onclick="ans(this,'q101','C')"><span class="opt-label">இ</span>ஆடும்போதே + யிரையும்</button>
+      <button class="opt" onclick="ans(this,'q101','D')"><span class="opt-label">ஈ</span>ஆடும் + போதே + இரையும்</button>
+    </div>
+    <div class="explanation" id="exp-q101">✅ சரியான விடை: <strong>ஆடும்போதே + இரையும்</strong></div>
+  </div>
+
+  <!-- Q102 -->
+  <div class="q-card" id="q102">
+    <div class="q-num">வினா 102</div>
+    <div class="q-text">"<span class="word">பிண்ணாக்கும்உண்டாம்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q102','A')"><span class="opt-label">அ</span>பிள் + நாக்கும் + உண்டாம்</button>
+      <button class="opt" onclick="ans(this,'q102','B')"><span class="opt-label">ஆ</span>பிண்ணாக்கும் + உண்டாம்</button>
+      <button class="opt" onclick="ans(this,'q102','C')"><span class="opt-label">இ</span>பிண்ண் + ஆக்கும் + உண்டாம்</button>
+      <button class="opt" onclick="ans(this,'q102','D')"><span class="opt-label">ஈ</span>பிண்ணா + க்கும் + உண்டாம்</button>
+    </div>
+    <div class="explanation" id="exp-q102">✅ சரியான விடை: <strong>பிண்ணாக்கும் + உண்டாம்</strong> — (பிள் + நாக்கும் + உண்டாம்)</div>
+  </div>
+
+  <!-- Q103 -->
+  <div class="q-card" id="q103">
+    <div class="q-num">வினா 103</div>
+    <div class="q-text">"<span class="word">கணிப்பரிய</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q103','A')"><span class="opt-label">அ</span>கணி + அரிய</button>
+      <button class="opt" onclick="ans(this,'q103','B')"><span class="opt-label">ஆ</span>கணிப்பு + இரிய</button>
+      <button class="opt" onclick="ans(this,'q103','C')"><span class="opt-label">இ</span>கணிப்பு + அரிய (முடிவெடுக்க இயலாத)</button>
+      <button class="opt" onclick="ans(this,'q103','D')"><span class="opt-label">ஈ</span>கண் + அரிய</button>
+    </div>
+    <div class="explanation" id="exp-q103">✅ சரியான விடை: <strong>கணிப்பு + அரிய</strong> — முடிவெடுக்க இயலாதது என்று பொருள்.</div>
+  </div>
+
+  <!-- Q104–Q110 விரைவு வினாக்கள் -->
+  <div class="q-card" id="q104">
+    <div class="q-num">வினா 104</div>
+    <div class="q-text">"<span class="word">ஏற்றைகண்டா</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q104','A')"><span class="opt-label">அ</span>ஏற்றை + கண்ட + ஆ</button>
+      <button class="opt" onclick="ans(this,'q104','B')"><span class="opt-label">ஆ</span>ஏற்று + கண்டா</button>
+      <button class="opt" onclick="ans(this,'q104','C')"><span class="opt-label">இ</span>ஏட்டு + கண்டா</button>
+      <button class="opt" onclick="ans(this,'q104','D')"><span class="opt-label">ஈ</span>ஏற்றை + கண் + டா</button>
+    </div>
+    <div class="explanation" id="exp-q104">✅ சரியான விடை: <strong>ஏற்று + கண்டா</strong> (இரட்டு + கண்டாண் = இரண்டு + கண்டு + ஆண்)</div>
+  </div>
+
+  <div class="q-card" id="q105">
+    <div class="q-num">வினா 105</div>
+    <div class="q-text">"<span class="word">மன்னவரன்னவரெல்லாம்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q105','A')"><span class="opt-label">அ</span>மன்னவர் + அன்னவர் + எல்லாம்</button>
+      <button class="opt" onclick="ans(this,'q105','B')"><span class="opt-label">ஆ</span>மன்னவர் + ன்னவர் + எல்லாம்</button>
+      <button class="opt" onclick="ans(this,'q105','C')"><span class="opt-label">இ</span>மன் + அவர் + எல்லாம்</button>
+      <button class="opt" onclick="ans(this,'q105','D')"><span class="opt-label">ஈ</span>மன்னர் + அன்னவர் + எல்லாம்</button>
+    </div>
+    <div class="explanation" id="exp-q105">✅ சரியான விடை: <strong>மன்னவர் + அன்னவர் + எல்லாம்</strong></div>
+  </div>
+
+  <div class="q-card" id="q106">
+    <div class="q-num">வினா 106</div>
+    <div class="q-text">"<span class="word">நமதென்பதறிந்தோம்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q106','A')"><span class="opt-label">அ</span>நமது + என்பது + அறிந்தோம்</button>
+      <button class="opt" onclick="ans(this,'q106','B')"><span class="opt-label">ஆ</span>நமத் + என்பது + அறிந்தோம்</button>
+      <button class="opt" onclick="ans(this,'q106','C')"><span class="opt-label">இ</span>நமது + என்பது + ஆறிந்தோம்</button>
+      <button class="opt" onclick="ans(this,'q106','D')"><span class="opt-label">ஈ</span>நம + தென்பது + அறிந்தோம்</button>
+    </div>
+    <div class="explanation" id="exp-q106">✅ சரியான விடை: <strong>நமது + என்பது + அறிந்தோம்</strong></div>
+  </div>
+
+  <div class="q-card" id="q107">
+    <div class="q-num">வினா 107</div>
+    <div class="q-text">"<span class="word">கன்னலெனத்தகும்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q107','A')"><span class="opt-label">அ</span>கன்னல் + எனது + தகும்</button>
+      <button class="opt" onclick="ans(this,'q107','B')"><span class="opt-label">ஆ</span>கன்னல் + எனத் + தகும்</button>
+      <button class="opt" onclick="ans(this,'q107','C')"><span class="opt-label">இ</span>கன்னல் + எனத + தகும்</button>
+      <button class="opt" onclick="ans(this,'q107','D')"><span class="opt-label">ஈ</span>கன்னல் + எனத் + ஆகும்</button>
+    </div>
+    <div class="explanation" id="exp-q107">✅ சரியான விடை: <strong>கன்னல் + எனத் + தகும்</strong></div>
+  </div>
+
+  <div class="q-card" id="q108">
+    <div class="q-num">வினா 108</div>
+    <div class="q-text">"<span class="word">வைய்த்தோ — வைத்தோம் — வைத்தோ?" என்ற கேள்விக்கு — "<span class="word">கூடுதல்விளைவு</span>" என்ற சொல்லை பிரிக்கவும்.</span></div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q108','A')"><span class="opt-label">அ</span>கூட + உதல் + விளைவு</button>
+      <button class="opt" onclick="ans(this,'q108','B')"><span class="opt-label">ஆ</span>கூடு + தல் + விளைவு</button>
+      <button class="opt" onclick="ans(this,'q108','C')"><span class="opt-label">இ</span>கூடுதல் + விளைவு</button>
+      <button class="opt" onclick="ans(this,'q108','D')"><span class="opt-label">ஈ</span>கூட + விளைவு</button>
+    </div>
+    <div class="explanation" id="exp-q108">✅ சரியான விடை: <strong>கூடுதல் + விளைவு</strong></div>
+  </div>
+
+  <div class="q-card" id="q109">
+    <div class="q-num">வினா 109</div>
+    <div class="q-text">"<span class="word">வியன்உலகம்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q109','A')"><span class="opt-label">அ</span>வியன் + உலகம்</button>
+      <button class="opt" onclick="ans(this,'q109','B')"><span class="opt-label">ஆ</span>வியன் + இலகம்</button>
+      <button class="opt" onclick="ans(this,'q109','C')"><span class="opt-label">இ</span>வியல் + உலகம்</button>
+      <button class="opt" onclick="ans(this,'q109','D')"><span class="opt-label">ஈ</span>வியம் + உலகம்</button>
+    </div>
+    <div class="explanation" id="exp-q109">✅ சரியான விடை: <strong>வியன் + உலகம்</strong></div>
+  </div>
+
+  <div class="q-card" id="q110">
+    <div class="q-num">வினா 110</div>
+    <div class="q-text">"<span class="word">இரப்பார்க்கீந்து</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q110','A')"><span class="opt-label">அ</span>இரப்பார்க்கு + ஈந்து</button>
+      <button class="opt" onclick="ans(this,'q110','B')"><span class="opt-label">ஆ</span>இரப்பார் + கீந்து</button>
+      <button class="opt" onclick="ans(this,'q110','C')"><span class="opt-label">இ</span>இரப்பார் + கு + ஈந்து</button>
+      <button class="opt" onclick="ans(this,'q110','D')"><span class="opt-label">ஈ</span>இரப்பு + பார்க்கு + ஈந்து</button>
+    </div>
+    <div class="explanation" id="exp-q110">✅ சரியான விடை: <strong>இரப்பார்க்கு + ஈந்து</strong></div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 5 — Class 6–12 New Textbook Pg 24–26
+  ════════════════════════════════════════════ -->
+  <div id="sec5"></div>
+  <div class="section-header">
+    <div class="section-num">5</div>
+    <div class="section-title">6–12 ஆம் வகுப்பு புதிய பாடநூல் — பக்கம் 24–26</div>
+    <div class="section-count">வினாக்கள் 111–135</div>
+  </div>
+
+  <div class="q-card" id="q111">
+    <div class="q-num">வினா 111</div>
+    <div class="q-text">"<span class="word">அமுதென்று</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q111','A')"><span class="opt-label">அ</span>அமு + தென்று</button>
+      <button class="opt" onclick="ans(this,'q111','B')"><span class="opt-label">ஆ</span>அமுது + என்று</button>
+      <button class="opt" onclick="ans(this,'q111','C')"><span class="opt-label">இ</span>அமுத + என்று</button>
+      <button class="opt" onclick="ans(this,'q111','D')"><span class="opt-label">ஈ</span>அமுத் + என்று</button>
+    </div>
+    <div class="explanation" id="exp-q111">✅ சரியான விடை: <strong>அமுது + என்று</strong></div>
+  </div>
+
+  <div class="q-card" id="q112">
+    <div class="q-num">வினா 112</div>
+    <div class="q-text">"<span class="word">நன்மணி</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q112','A')"><span class="opt-label">அ</span>நல் + மணி</button>
+      <button class="opt" onclick="ans(this,'q112','B')"><span class="opt-label">ஆ</span>நன்மை + மணி</button>
+      <button class="opt" onclick="ans(this,'q112','C')"><span class="opt-label">இ</span>நன்ன + மணி</button>
+      <button class="opt" onclick="ans(this,'q112','D')"><span class="opt-label">ஈ</span>நல்ல + மணி</button>
+    </div>
+    <div class="explanation" id="exp-q112">✅ சரியான விடை: <strong>நல்ல + மணி</strong></div>
+  </div>
+
+  <div class="q-card" id="q113">
+    <div class="q-num">வினா 113</div>
+    <div class="q-text">"<span class="word">சீர்இலமை</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q113','A')"><span class="opt-label">அ</span>சீர் + இலமை</button>
+      <button class="opt" onclick="ans(this,'q113','B')"><span class="opt-label">ஆ</span>சீர்மை + இலமை</button>
+      <button class="opt" onclick="ans(this,'q113','C')"><span class="opt-label">இ</span>சீர்மை + இளமை</button>
+      <button class="opt" onclick="ans(this,'q113','D')"><span class="opt-label">ஈ</span>சீர் + மை + இலமை</button>
+    </div>
+    <div class="explanation" id="exp-q113">✅ சரியான விடை: <strong>சீர்மை + இளமை</strong></div>
+  </div>
+
+  <div class="q-card" id="q114">
+    <div class="q-num">வினா 114</div>
+    <div class="q-text">"<span class="word">வெண்குடை</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q114','A')"><span class="opt-label">அ</span>வெண் + குடை</button>
+      <button class="opt" onclick="ans(this,'q114','B')"><span class="opt-label">ஆ</span>வெண்மை + குடை</button>
+      <button class="opt" onclick="ans(this,'q114','C')"><span class="opt-label">இ</span>வெண்ண + குடை</button>
+      <button class="opt" onclick="ans(this,'q114','D')"><span class="opt-label">ஈ</span>வெள்ளை + குடை</button>
+    </div>
+    <div class="explanation" id="exp-q114">✅ சரியான விடை: <strong>வெண்மை + குடை</strong></div>
+  </div>
+
+  <div class="q-card" id="q115">
+    <div class="q-num">வினா 115</div>
+    <div class="q-text">"<span class="word">காடெல்லாம்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q115','A')"><span class="opt-label">அ</span>காடு + எல்லாம்</button>
+      <button class="opt" onclick="ans(this,'q115','B')"><span class="opt-label">ஆ</span>காட் + எல்லாம்</button>
+      <button class="opt" onclick="ans(this,'q115','C')"><span class="opt-label">இ</span>காடு + இல்லாம்</button>
+      <button class="opt" onclick="ans(this,'q115','D')"><span class="opt-label">ஈ</span>கா + டெல்லாம்</button>
+    </div>
+    <div class="explanation" id="exp-q115">✅ சரியான விடை: <strong>காடு + எல்லாம்</strong></div>
+  </div>
+
+  <div class="q-card" id="q116">
+    <div class="q-num">வினா 116</div>
+    <div class="q-text">"<span class="word">மின்னணு</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q116','A')"><span class="opt-label">அ</span>மின் + அணு</button>
+      <button class="opt" onclick="ans(this,'q116','B')"><span class="opt-label">ஆ</span>மின் + நணு</button>
+      <button class="opt" onclick="ans(this,'q116','C')"><span class="opt-label">இ</span>மின்ன + அணு</button>
+      <button class="opt" onclick="ans(this,'q116','D')"><span class="opt-label">ஈ</span>மின்னம் + அணு</button>
+    </div>
+    <div class="explanation" id="exp-q116">✅ சரியான விடை: <strong>மின் + அணு</strong></div>
+  </div>
+
+  <div class="q-card" id="q117">
+    <div class="q-num">வினா 117</div>
+    <div class="q-text">"<span class="word">கல்லெடுத்து</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q117','A')"><span class="opt-label">அ</span>கல் + எடுத்து</button>
+      <button class="opt" onclick="ans(this,'q117','B')"><span class="opt-label">ஆ</span>கல் + லெடுத்து</button>
+      <button class="opt" onclick="ans(this,'q117','C')"><span class="opt-label">இ</span>கல்லி + எடுத்து</button>
+      <button class="opt" onclick="ans(this,'q117','D')"><span class="opt-label">ஈ</span>கல் + அடுத்து</button>
+    </div>
+    <div class="explanation" id="exp-q117">✅ சரியான விடை: <strong>கல் + எடுத்து</strong></div>
+  </div>
+
+  <div class="q-card" id="q118">
+    <div class="q-num">வினா 118</div>
+    <div class="q-text">"<span class="word">நிலத்தின்இடையே</span>" என்பதைப் போல் "<span class="word">நிலத்தினிடையே</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q118','A')"><span class="opt-label">அ</span>நிலத்தின் + இடையே</button>
+      <button class="opt" onclick="ans(this,'q118','B')"><span class="opt-label">ஆ</span>நிலத்தி + னிடையே</button>
+      <button class="opt" onclick="ans(this,'q118','C')"><span class="opt-label">இ</span>நிலம் + இடையே</button>
+      <button class="opt" onclick="ans(this,'q118','D')"><span class="opt-label">ஈ</span>நிலத் + தினிடையே</button>
+    </div>
+    <div class="explanation" id="exp-q118">✅ சரியான விடை: <strong>நிலத்தின் + இடையே</strong></div>
+  </div>
+
+  <div class="q-card" id="q119">
+    <div class="q-num">வினா 119</div>
+    <div class="q-text">"<span class="word">பொறியியல்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q119','A')"><span class="opt-label">அ</span>பொறி + இயல்</button>
+      <button class="opt" onclick="ans(this,'q119','B')"><span class="opt-label">ஆ</span>பொறிய + இயல்</button>
+      <button class="opt" onclick="ans(this,'q119','C')"><span class="opt-label">இ</span>பொறி + யியல்</button>
+      <button class="opt" onclick="ans(this,'q119','D')"><span class="opt-label">ஈ</span>பொறி + ஆயல்</button>
+    </div>
+    <div class="explanation" id="exp-q119">✅ சரியான விடை: <strong>பொறி + இயல்</strong></div>
+  </div>
+
+  <div class="q-card" id="q120">
+    <div class="q-num">வினா 120</div>
+    <div class="q-text">"<span class="word">கடவுளுடைமை</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q120','A')"><span class="opt-label">அ</span>கடவுள் + உடைமை</button>
+      <button class="opt" onclick="ans(this,'q120','B')"><span class="opt-label">ஆ</span>கடவுளு + டைமை</button>
+      <button class="opt" onclick="ans(this,'q120','C')"><span class="opt-label">இ</span>கடவுள + உடைமை</button>
+      <button class="opt" onclick="ans(this,'q120','D')"><span class="opt-label">ஈ</span>கட + வுளுடைமை</button>
+    </div>
+    <div class="explanation" id="exp-q120">✅ சரியான விடை: <strong>கடவுள் + உடைமை</strong></div>
+  </div>
+
+  <div class="q-card" id="q121">
+    <div class="q-num">வினா 121</div>
+    <div class="q-text">"<span class="word">யாண்டுளனேனோ</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q121','A')"><span class="opt-label">அ</span>யாண்டு + உளனேனோ</button>
+      <button class="opt" onclick="ans(this,'q121','B')"><span class="opt-label">ஆ</span>யாண்டு + உளனே + நோ</button>
+      <button class="opt" onclick="ans(this,'q121','C')"><span class="opt-label">இ</span>யாண்டும் + உளனேனோ</button>
+      <button class="opt" onclick="ans(this,'q121','D')"><span class="opt-label">ஈ</span>யாண்டு + உளனோ</button>
+    </div>
+    <div class="explanation" id="exp-q121">✅ சரியான விடை: <strong>யாண்டு + உளனேனோ</strong></div>
+  </div>
+
+  <div class="q-card" id="q122">
+    <div class="q-num">வினா 122</div>
+    <div class="q-text">"<span class="word">கோட்டோவியம்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q122','A')"><span class="opt-label">அ</span>கோட்டோ + வியம்</button>
+      <button class="opt" onclick="ans(this,'q122','B')"><span class="opt-label">ஆ</span>கோடு + ஓவியம்</button>
+      <button class="opt" onclick="ans(this,'q122','C')"><span class="opt-label">இ</span>கோட் + ஓவியம்</button>
+      <button class="opt" onclick="ans(this,'q122','D')"><span class="opt-label">ஈ</span>கோடு + வியம்</button>
+    </div>
+    <div class="explanation" id="exp-q122">✅ சரியான விடை: <strong>கோடு + ஓவியம்</strong></div>
+  </div>
+
+  <div class="q-card" id="q123">
+    <div class="q-num">வினா 123</div>
+    <div class="q-text">"<span class="word">பெருங்கடல்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q123','A')"><span class="opt-label">அ</span>பெரும் + கடல்</button>
+      <button class="opt" onclick="ans(this,'q123','B')"><span class="opt-label">ஆ</span>பெருமை + கடல்</button>
+      <button class="opt" onclick="ans(this,'q123','C')"><span class="opt-label">இ</span>பெரு + கடல்</button>
+      <button class="opt" onclick="ans(this,'q123','D')"><span class="opt-label">ஈ</span>பெருங் + கடல்</button>
+    </div>
+    <div class="explanation" id="exp-q123">✅ சரியான விடை: <strong>பெருமை + கடல்</strong></div>
+  </div>
+
+  <div class="q-card" id="q124">
+    <div class="q-num">வினா 124</div>
+    <div class="q-text">"<span class="word">இன்னரும்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q124','A')"><span class="opt-label">அ</span>இன் + அரும்</button>
+      <button class="opt" onclick="ans(this,'q124','B')"><span class="opt-label">ஆ</span>இனிமை + அரும்</button>
+      <button class="opt" onclick="ans(this,'q124','C')"><span class="opt-label">இ</span>இன்ன + அரும்</button>
+      <button class="opt" onclick="ans(this,'q124','D')"><span class="opt-label">ஈ</span>இன்னம் + அரும்</button>
+    </div>
+    <div class="explanation" id="exp-q124">✅ சரியான விடை: <strong>இனிமை + அரும்</strong></div>
+  </div>
+
+  <div class="q-card" id="q125">
+    <div class="q-num">வினா 125</div>
+    <div class="q-text">"<span class="word">மண்ணுலகம்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q125','A')"><span class="opt-label">அ</span>மண் + உலகம்</button>
+      <button class="opt" onclick="ans(this,'q125','B')"><span class="opt-label">ஆ</span>மண்ண + உலகம்</button>
+      <button class="opt" onclick="ans(this,'q125','C')"><span class="opt-label">இ</span>மண்ணு + உலகம்</button>
+      <button class="opt" onclick="ans(this,'q125','D')"><span class="opt-label">ஈ</span>மண் + நுலகம்</button>
+    </div>
+    <div class="explanation" id="exp-q125">✅ சரியான விடை: <strong>மண் + உலகம்</strong></div>
+  </div>
+
+  <div class="q-card" id="q126">
+    <div class="q-num">வினா 126</div>
+    <div class="q-text">"<span class="word">தாமேயாம்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q126','A')"><span class="opt-label">அ</span>தாமே + யாம்</button>
+      <button class="opt" onclick="ans(this,'q126','B')"><span class="opt-label">ஆ</span>தாமே + ஆம்</button>
+      <button class="opt" onclick="ans(this,'q126','C')"><span class="opt-label">இ</span>தாம + ஏயாம்</button>
+      <button class="opt" onclick="ans(this,'q126','D')"><span class="opt-label">ஈ</span>தா + மேயாம்</button>
+    </div>
+    <div class="explanation" id="exp-q126">✅ சரியான விடை: <strong>தாமே + ஆம்</strong></div>
+  </div>
+
+  <div class="q-card" id="q127">
+    <div class="q-num">வினா 127</div>
+    <div class="q-text">"<span class="word">ஆற்றுணா</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q127','A')"><span class="opt-label">அ</span>ஆற்று + உணா</button>
+      <button class="opt" onclick="ans(this,'q127','B')"><span class="opt-label">ஆ</span>ஆறு + உணா</button>
+      <button class="opt" onclick="ans(this,'q127','C')"><span class="opt-label">இ</span>ஆற்ற + உணா</button>
+      <button class="opt" onclick="ans(this,'q127','D')"><span class="opt-label">ஈ</span>ஆற்றி + உணா</button>
+    </div>
+    <div class="explanation" id="exp-q127">✅ சரியான விடை: <strong>ஆறு + உணா</strong></div>
+  </div>
+
+  <div class="q-card" id="q128">
+    <div class="q-num">வினா 128</div>
+    <div class="q-text">"<span class="word">கலையெல்லாம்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q128','A')"><span class="opt-label">அ</span>கலை + எல்லாம்</button>
+      <button class="opt" onclick="ans(this,'q128','B')"><span class="opt-label">ஆ</span>கலைய + எல்லாம்</button>
+      <button class="opt" onclick="ans(this,'q128','C')"><span class="opt-label">இ</span>கலை + யெல்லாம்</button>
+      <button class="opt" onclick="ans(this,'q128','D')"><span class="opt-label">ஈ</span>கல + எல்லாம்</button>
+    </div>
+    <div class="explanation" id="exp-q128">✅ சரியான விடை: <strong>கலை + எல்லாம்</strong></div>
+  </div>
+
+  <div class="q-card" id="q129">
+    <div class="q-num">வினா 129</div>
+    <div class="q-text">"<span class="word">கோயிலப்பா</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q129','A')"><span class="opt-label">அ</span>கோயில் + அப்பா</button>
+      <button class="opt" onclick="ans(this,'q129','B')"><span class="opt-label">ஆ</span>கோயி + லப்பா</button>
+      <button class="opt" onclick="ans(this,'q129','C')"><span class="opt-label">இ</span>கோ + இல் + அப்பா</button>
+      <button class="opt" onclick="ans(this,'q129','D')"><span class="opt-label">ஈ</span>கோயிலம் + அப்பா</button>
+    </div>
+    <div class="explanation" id="exp-q129">✅ சரியான விடை: <strong>கோயில் + அப்பா</strong></div>
+  </div>
+
+  <div class="q-card" id="q130">
+    <div class="q-num">வினா 130</div>
+    <div class="q-text">"<span class="word">கனகச்சுனை</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q130','A')"><span class="opt-label">அ</span>கனக + சுனை</button>
+      <button class="opt" onclick="ans(this,'q130','B')"><span class="opt-label">ஆ</span>கனகம் + சுனை</button>
+      <button class="opt" onclick="ans(this,'q130','C')"><span class="opt-label">இ</span>கன + கச்சுனை</button>
+      <button class="opt" onclick="ans(this,'q130','D')"><span class="opt-label">ஈ</span>கனகம் + துனை</button>
+    </div>
+    <div class="explanation" id="exp-q130">✅ சரியான விடை: <strong>கனகம் + சுனை</strong></div>
+  </div>
+
+  <div class="q-card" id="q131">
+    <div class="q-num">வினா 131</div>
+    <div class="q-text">"<span class="word">மூவேந்தர்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q131','A')"><span class="opt-label">அ</span>மூன்று + வேந்தர்</button>
+      <button class="opt" onclick="ans(this,'q131','B')"><span class="opt-label">ஆ</span>மூன்று + வேந்தர்</button>
+      <button class="opt" onclick="ans(this,'q131','C')"><span class="opt-label">இ</span>மூவர் + வேந்தர்</button>
+      <button class="opt" onclick="ans(this,'q131','D')"><span class="opt-label">ஈ</span>மூ + வேந்தர்</button>
+    </div>
+    <div class="explanation" id="exp-q131">✅ சரியான விடை: <strong>மூன்று + வேந்தர்</strong></div>
+  </div>
+
+  <div class="q-card" id="q132">
+    <div class="q-num">வினா 132</div>
+    <div class="q-text">"<span class="word">முன்நாடு</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q132','A')"><span class="opt-label">அ</span>முன் + நாடு</button>
+      <button class="opt" onclick="ans(this,'q132','B')"><span class="opt-label">ஆ</span>மூன்று + நாடு</button>
+      <button class="opt" onclick="ans(this,'q132','C')"><span class="opt-label">இ</span>முன்னம் + நாடு</button>
+      <button class="opt" onclick="ans(this,'q132','D')"><span class="opt-label">ஈ</span>முன்று + நாடு</button>
+    </div>
+    <div class="explanation" id="exp-q132">✅ சரியான விடை: <strong>மூன்று + நாடு</strong></div>
+  </div>
+
+  <div class="q-card" id="q133">
+    <div class="q-num">வினா 133</div>
+    <div class="q-text">"<span class="word">இருபத்தைந்து</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q133','A')"><span class="opt-label">அ</span>இரண்டு + பது + ஐந்து</button>
+      <button class="opt" onclick="ans(this,'q133','B')"><span class="opt-label">ஆ</span>இருபது + ஐந்து</button>
+      <button class="opt" onclick="ans(this,'q133','C')"><span class="opt-label">இ</span>இருபத் + ஐந்து</button>
+      <button class="opt" onclick="ans(this,'q133','D')"><span class="opt-label">ஈ</span>இரு + பது + ஐந்து</button>
+    </div>
+    <div class="explanation" id="exp-q133">✅ சரியான விடை: <strong>இரண்டு + பது + ஐந்து</strong></div>
+  </div>
+
+  <div class="q-card" id="q134">
+    <div class="q-num">வினா 134</div>
+    <div class="q-text">"<span class="word">ஒப்புமையில்லாத</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q134','A')"><span class="opt-label">அ</span>ஒப்புமை + இல்லாத</button>
+      <button class="opt" onclick="ans(this,'q134','B')"><span class="opt-label">ஆ</span>ஒப்புமை + இல்லா + த</button>
+      <button class="opt" onclick="ans(this,'q134','C')"><span class="opt-label">இ</span>ஒப்பு + மை + இல்லாத</button>
+      <button class="opt" onclick="ans(this,'q134','D')"><span class="opt-label">ஈ</span>ஒப்பு + மையில்லாத</button>
+    </div>
+    <div class="explanation" id="exp-q134">✅ சரியான விடை: <strong>ஒப்புமை + இல்லாத</strong></div>
+  </div>
+
+  <div class="q-card" id="q135">
+    <div class="q-num">வினா 135</div>
+    <div class="q-text">"<span class="word">உள்ளலுவதெல்லாம்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q135','A')"><span class="opt-label">அ</span>உள்ளலுவது + எல்லாம்</button>
+      <button class="opt" onclick="ans(this,'q135','B')"><span class="opt-label">ஆ</span>உள்ளுவது + எல்லாம்</button>
+      <button class="opt" onclick="ans(this,'q135','C')"><span class="opt-label">இ</span>உள்ளல் + வது + எல்லாம்</button>
+      <button class="opt" onclick="ans(this,'q135','D')"><span class="opt-label">ஈ</span>உள்ளி + லுவது + எல்லாம்</button>
+    </div>
+    <div class="explanation" id="exp-q135">✅ சரியான விடை: <strong>உள்ளுவது + எல்லாம்</strong></div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 6 — Old Textbook Pg 27–32
+  ════════════════════════════════════════════ -->
+  <div id="sec6"></div>
+  <div class="section-header">
+    <div class="section-num">6</div>
+    <div class="section-title">பழைய & புதிய புத்தக வினாக்கள் — பக்கம் 27–32</div>
+    <div class="section-count">வினாக்கள் 136–160</div>
+  </div>
+
+  <div class="q-card" id="q136">
+    <div class="q-num">வினா 136</div>
+    <div class="q-text">"<span class="word">புன்கண்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q136','A')"><span class="opt-label">அ</span>புன் + கண்</button>
+      <button class="opt" onclick="ans(this,'q136','B')"><span class="opt-label">ஆ</span>புன்மை + கண்</button>
+      <button class="opt" onclick="ans(this,'q136','C')"><span class="opt-label">இ</span>புன்ன + கண்</button>
+      <button class="opt" onclick="ans(this,'q136','D')"><span class="opt-label">ஈ</span>பு + ன்கண்</button>
+    </div>
+    <div class="explanation" id="exp-q136">✅ சரியான விடை: <strong>புன்மை + கண்</strong></div>
+  </div>
+
+  <div class="q-card" id="q137">
+    <div class="q-num">வினா 137</div>
+    <div class="q-text">"<span class="word">நிழலருமை</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q137','A')"><span class="opt-label">அ</span>நிழல் + அருமை</button>
+      <button class="opt" onclick="ans(this,'q137','B')"><span class="opt-label">ஆ</span>நிழ + லருமை</button>
+      <button class="opt" onclick="ans(this,'q137','C')"><span class="opt-label">இ</span>நிழலு + அருமை</button>
+      <button class="opt" onclick="ans(this,'q137','D')"><span class="opt-label">ஈ</span>நிழல் + அருமைய்</button>
+    </div>
+    <div class="explanation" id="exp-q137">✅ சரியான விடை: <strong>நிழல் + அருமை</strong></div>
+  </div>
+
+  <div class="q-card" id="q138">
+    <div class="q-num">வினா 138</div>
+    <div class="q-text">"<span class="word">வழக்கென்ப</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q138','A')"><span class="opt-label">அ</span>வழக்கு + என்ப</button>
+      <button class="opt" onclick="ans(this,'q138','B')"><span class="opt-label">ஆ</span>வழக்க + என்ப</button>
+      <button class="opt" onclick="ans(this,'q138','C')"><span class="opt-label">இ</span>வழக்கெ + ன்ப</button>
+      <button class="opt" onclick="ans(this,'q138','D')"><span class="opt-label">ஈ</span>வழக் + கென்ப</button>
+    </div>
+    <div class="explanation" id="exp-q138">✅ சரியான விடை: <strong>வழக்கு + என்ப</strong></div>
+  </div>
+
+  <div class="q-card" id="q139">
+    <div class="q-num">வினா 139</div>
+    <div class="q-text">"<span class="word">அந்துடையார்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q139','A')"><span class="opt-label">அ</span>அஃது + உடையார்</button>
+      <button class="opt" onclick="ans(this,'q139','B')"><span class="opt-label">ஆ</span>அந்த + உடையார்</button>
+      <button class="opt" onclick="ans(this,'q139','C')"><span class="opt-label">இ</span>அந் + துடையார்</button>
+      <button class="opt" onclick="ans(this,'q139','D')"><span class="opt-label">ஈ</span>அந்து + உடையார்</button>
+    </div>
+    <div class="explanation" id="exp-q139">✅ சரியான விடை: <strong>அஃது + உடையார்</strong></div>
+  </div>
+
+  <div class="q-card" id="q140">
+    <div class="q-num">வினா 140</div>
+    <div class="q-text">"<span class="word">பொருளல்லது</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q140','A')"><span class="opt-label">அ</span>பொருள் + அல்லது</button>
+      <button class="opt" onclick="ans(this,'q140','B')"><span class="opt-label">ஆ</span>பொருல் + அல்லது</button>
+      <button class="opt" onclick="ans(this,'q140','C')"><span class="opt-label">இ</span>பொரு + ளல்லது</button>
+      <button class="opt" onclick="ans(this,'q140','D')"><span class="opt-label">ஈ</span>பொருள + அல்லது</button>
+    </div>
+    <div class="explanation" id="exp-q140">✅ சரியான விடை: <strong>பொருள் + அல்லது</strong></div>
+  </div>
+
+  <div class="q-card" id="q141">
+    <div class="q-num">வினா 141</div>
+    <div class="q-text">"<span class="word">சோர்விலன்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q141','A')"><span class="opt-label">அ</span>சோர்வு + இலன்</button>
+      <button class="opt" onclick="ans(this,'q141','B')"><span class="opt-label">ஆ</span>சோர் + விலன்</button>
+      <button class="opt" onclick="ans(this,'q141','C')"><span class="opt-label">இ</span>சோர்வி + லன்</button>
+      <button class="opt" onclick="ans(this,'q141','D')"><span class="opt-label">ஈ</span>சோர் + இலன்</button>
+    </div>
+    <div class="explanation" id="exp-q141">✅ சரியான விடை: <strong>சோர்வு + இலன்</strong></div>
+  </div>
+
+  <div class="q-card" id="q142">
+    <div class="q-num">வினா 142</div>
+    <div class="q-text">"<span class="word">ஒன்றீத்தும்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q142','A')"><span class="opt-label">அ</span>ஒன்று + ஈத்தும்</button>
+      <button class="opt" onclick="ans(this,'q142','B')"><span class="opt-label">ஆ</span>ஒன்றி + ஈத்தும்</button>
+      <button class="opt" onclick="ans(this,'q142','C')"><span class="opt-label">இ</span>ஒன்று + ஏத்தும்</button>
+      <button class="opt" onclick="ans(this,'q142','D')"><span class="opt-label">ஈ</span>ஒன்று + ஆத்தும்</button>
+    </div>
+    <div class="explanation" id="exp-q142">✅ சரியான விடை: <strong>ஒன்று + ஈத்தும்</strong></div>
+  </div>
+
+  <div class="q-card" id="q143">
+    <div class="q-num">வினா 143</div>
+    <div class="q-text">"<span class="word">மோய்ம்புளை</span>" என்பதைப் போல் "<span class="word">மோம்புளை</span>" = மோம் + உளை → "<span class="word">மோம்பு + உளை</span>". இதன் போல் "<span class="word">விலினையாக்கி</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q143','A')"><span class="opt-label">அ</span>வினை + ஆக்கி</button>
+      <button class="opt" onclick="ans(this,'q143','B')"><span class="opt-label">ஆ</span>வினை + ஆக்கி</button>
+      <button class="opt" onclick="ans(this,'q143','C')"><span class="opt-label">இ</span>வினை + ஆக்கி</button>
+      <button class="opt" onclick="ans(this,'q143','D')"><span class="opt-label">ஈ</span>வினை + ஆக்கி</button>
+    </div>
+    <div class="explanation" id="exp-q143">✅ சரியான விடை: <strong>வினை + ஆக்கி</strong></div>
+  </div>
+
+  <div class="q-card" id="q144">
+    <div class="q-num">வினா 144</div>
+    <div class="q-text">"<span class="word">திரிவிலி</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q144','A')"><span class="opt-label">அ</span>திரிவு + இலி</button>
+      <button class="opt" onclick="ans(this,'q144','B')"><span class="opt-label">ஆ</span>திரிவி + லி</button>
+      <button class="opt" onclick="ans(this,'q144','C')"><span class="opt-label">இ</span>திரி + விலி</button>
+      <button class="opt" onclick="ans(this,'q144','D')"><span class="opt-label">ஈ</span>திரி + இலி</button>
+    </div>
+    <div class="explanation" id="exp-q144">✅ சரியான விடை: <strong>திரிவு + இலி</strong></div>
+  </div>
+
+  <div class="q-card" id="q145">
+    <div class="q-num">வினா 145</div>
+    <div class="q-text">"<span class="word">வாணதி</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q145','A')"><span class="opt-label">அ</span>வான் + நதி</button>
+      <button class="opt" onclick="ans(this,'q145','B')"><span class="opt-label">ஆ</span>வான் + அதி</button>
+      <button class="opt" onclick="ans(this,'q145','C')"><span class="opt-label">இ</span>வா + நதி</button>
+      <button class="opt" onclick="ans(this,'q145','D')"><span class="opt-label">ஈ</span>வான + நதி</button>
+    </div>
+    <div class="explanation" id="exp-q145">✅ சரியான விடை: <strong>வான் + நதி</strong></div>
+  </div>
+
+  <div class="q-card" id="q146">
+    <div class="q-num">வினா 146</div>
+    <div class="q-text">"<span class="word">பாலுண்மை</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q146','A')"><span class="opt-label">அ</span>பால் + உண்மை;</button>
+      <button class="opt" onclick="ans(this,'q146','B')"><span class="opt-label">ஆ</span>பாலு + ண்மை</button>
+      <button class="opt" onclick="ans(this,'q146','C')"><span class="opt-label">இ</span>பால் + ஊண்மை</button>
+      <button class="opt" onclick="ans(this,'q146','D')"><span class="opt-label">ஈ</span>பாலு + உண்மை</button>
+    </div>
+    <div class="explanation" id="exp-q146">✅ சரியான விடை: <strong>பால் + உண்மை</strong></div>
+  </div>
+
+  <div class="q-card" id="q147">
+    <div class="q-num">வினா 147</div>
+    <div class="q-text">"<span class="word">குட்பா</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q147','A')"><span class="opt-label">அ</span>குட்பு + பா</button>
+      <button class="opt" onclick="ans(this,'q147','B')"><span class="opt-label">ஆ</span>குறல் + பா</button>
+      <button class="opt" onclick="ans(this,'q147','C')"><span class="opt-label">இ</span>குறல் + பா</button>
+      <button class="opt" onclick="ans(this,'q147','D')"><span class="opt-label">ஈ</span>குறல் + பா</button>
+    </div>
+    <div class="explanation" id="exp-q147">✅ சரியான விடை: <strong>குறல் + பா</strong></div>
+  </div>
+
+  <div class="q-card" id="q148">
+    <div class="q-num">வினா 148</div>
+    <div class="q-text">"<span class="word">ஒட்டுமொத்தம்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q148','A')"><span class="opt-label">அ</span>ஒட்டு + மொத்தம்</button>
+      <button class="opt" onclick="ans(this,'q148','B')"><span class="opt-label">ஆ</span>ஒட்டு + மொத + அம்</button>
+      <button class="opt" onclick="ans(this,'q148','C')"><span class="opt-label">இ</span>ஒட் + டுமொத்தம்</button>
+      <button class="opt" onclick="ans(this,'q148','D')"><span class="opt-label">ஈ</span>ஒட்டு + முத்தம்</button>
+    </div>
+    <div class="explanation" id="exp-q148">✅ சரியான விடை: <strong>ஒட்டு + மொத்தம்</strong></div>
+  </div>
+
+  <div class="q-card" id="q149">
+    <div class="q-num">வினா 149</div>
+    <div class="q-text">"<span class="word">சோதிடக்கலை</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q149','A')"><span class="opt-label">அ</span>சோதிடம் + கலை</button>
+      <button class="opt" onclick="ans(this,'q149','B')"><span class="opt-label">ஆ</span>சோதி + டக்கலை</button>
+      <button class="opt" onclick="ans(this,'q149','C')"><span class="opt-label">இ</span>சோதிடக் + கலை</button>
+      <button class="opt" onclick="ans(this,'q149','D')"><span class="opt-label">ஈ</span>சோதிட + கலை</button>
+    </div>
+    <div class="explanation" id="exp-q149">✅ சரியான விடை: <strong>சோதிடம் + கலை</strong></div>
+  </div>
+
+  <div class="q-card" id="q150">
+    <div class="q-num">வினா 150</div>
+    <div class="q-text">"<span class="word">தனிச்சிறப்பு</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q150','A')"><span class="opt-label">அ</span>தனி + சிறப்பு</button>
+      <button class="opt" onclick="ans(this,'q150','B')"><span class="opt-label">ஆ</span>தனி + சிறப்பு</button>
+      <button class="opt" onclick="ans(this,'q150','C')"><span class="opt-label">இ</span>தனித்த + சிறப்பு</button>
+      <button class="opt" onclick="ans(this,'q150','D')"><span class="opt-label">ஈ</span>தன் + சிறப்பு</button>
+    </div>
+    <div class="explanation" id="exp-q150">✅ சரியான விடை: <strong>தனி + சிறப்பு</strong></div>
+  </div>
+
+  <div class="q-card" id="q151">
+    <div class="q-num">வினா 151</div>
+    <div class="q-text">"<span class="word">வரலாற்றுச்சிறப்பு</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q151','A')"><span class="opt-label">அ</span>வரலாறு + சிறப்பு</button>
+      <button class="opt" onclick="ans(this,'q151','B')"><span class="opt-label">ஆ</span>வரலாற்று + சிறப்பு</button>
+      <button class="opt" onclick="ans(this,'q151','C')"><span class="opt-label">இ</span>வரலாற் + றுச்சிறப்பு</button>
+      <button class="opt" onclick="ans(this,'q151','D')"><span class="opt-label">ஈ</span>வரலாற்ற + சிறப்பு</button>
+    </div>
+    <div class="explanation" id="exp-q151">✅ சரியான விடை: <strong>வரலாறு + சிறப்பு</strong></div>
+  </div>
+
+  <div class="q-card" id="q152">
+    <div class="q-num">வினா 152</div>
+    <div class="q-text">"<span class="word">இனிதாவதெங்கும்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q152','A')"><span class="opt-label">அ</span>இனிது + ஆவது + எங்கும்</button>
+      <button class="opt" onclick="ans(this,'q152','B')"><span class="opt-label">ஆ</span>இனிதா + வதெங்கும்</button>
+      <button class="opt" onclick="ans(this,'q152','C')"><span class="opt-label">இ</span>இனிதாவது + எங்கும்</button>
+      <button class="opt" onclick="ans(this,'q152','D')"><span class="opt-label">ஈ</span>இனி + தாவது + எங்கும்</button>
+    </div>
+    <div class="explanation" id="exp-q152">✅ சரியான விடை: <strong>இனிது + ஆவது + எங்கும்</strong></div>
+  </div>
+
+  <div class="q-card" id="q153">
+    <div class="q-num">வினா 153</div>
+    <div class="q-text">"<span class="word">அன்னைக்கல்லால்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q153','A')"><span class="opt-label">அ</span>அன்னை + கல்லால்</button>
+      <button class="opt" onclick="ans(this,'q153','B')"><span class="opt-label">ஆ</span>அன்னைக்கு + அல்லால்</button>
+      <button class="opt" onclick="ans(this,'q153','C')"><span class="opt-label">இ</span>அன்னை + கல் + லால்</button>
+      <button class="opt" onclick="ans(this,'q153','D')"><span class="opt-label">ஈ</span>அன்னைக் + கல்லால்</button>
+    </div>
+    <div class="explanation" id="exp-q153">✅ சரியான விடை: <strong>அன்னைக்கு + அல்லால்</strong></div>
+  </div>
+
+  <div class="q-card" id="q154">
+    <div class="q-num">வினா 154</div>
+    <div class="q-text">"<span class="word">தார்காலமுண்டு</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q154','A')"><span class="opt-label">அ</span>தான் + உண்டு</button>
+      <button class="opt" onclick="ans(this,'q154','B')"><span class="opt-label">ஆ</span>தான் + காலம் + உண்டு</button>
+      <button class="opt" onclick="ans(this,'q154','C')"><span class="opt-label">இ</span>தார்காலம் + உண்டு</button>
+      <button class="opt" onclick="ans(this,'q154','D')"><span class="opt-label">ஈ</span>தான் + காலமுண்டு</button>
+    </div>
+    <div class="explanation" id="exp-q154">✅ சரியான விடை: <strong>தான் + காலம் + உண்டு</strong></div>
+  </div>
+
+  <div class="q-card" id="q155">
+    <div class="q-num">வினா 155</div>
+    <div class="q-text">"<span class="word">என்னுளளம்</span>" என்ற சொல்லை பிரிக்கவும்.</div>
+    <div class="options">
+      <button class="opt" onclick="ans(this,'q155','A')"><span class="opt-label">அ</span>என்னு + உள்ளம்</button>
+      <button class="opt" onclick="ans(this,'q155','B')"><span class="opt-label">ஆ</span>என்ன + உள்ளம்</button>
+      <button class="opt" onclick="ans(this,'q155','C')"><span class="opt-label">இ</span>என் + உள்ளம்</button>
+      <button class="opt" onclick="ans(this,'q155','D')"><span class="opt-label">ஈ</span>என்னுள் + ளம்</button>
+    </div>
+    <div class="explanation" id="exp-q155">✅ சரியான விடை: <strong>என் + உள்ளம்</strong></div>
+  </div>
+<Script>
+let score = {
+        total: 0,
+        correct: 0,
+        wrong: 0
+    };
+
+    const totalQuestions = Object.keys(answers).length;
+    document.getElementById('s-total').innerText = totalQuestions;
+
+    function ans(btn, qId, selectedOpt) {
+        const card = document.getElementById(qId);
+        const options = card.querySelectorAll('.opt');
+        const correctOpt = answers[qId];
+        const explanation = document.getElementById('exp-' + qId);
+
+        // Prevent multiple clicks on the same question
+        if (card.classList.contains('answered')) return;
+        card.classList.add('answered');
+
+        // Disable all buttons in this card
+        options.forEach(opt => opt.disabled = true);
+
+        if (selectedOpt === correctOpt) {
+            // Correct Answer Logic
+            btn.classList.add('correct');
+            card.classList.add('flash-correct');
+            score.correct++;
+        } else {
+            // Wrong Answer Logic
+            btn.classList.add('wrong');
+            card.classList.add('flash-wrong');
+            score.wrong++;
+            
+            // Highlight the correct answer for the user
+            options.forEach(opt => {
+                if (opt.innerText.includes(getTamilLabel(correctOpt))) {
+                    opt.classList.add('reveal');
+                }
+            });
+        }
+
+        // Show Explanation
+        if (explanation) explanation.classList.add('show');
+
+        updateStats();
+    }
+
+    function getTamilLabel(optLetter) {
+        const labels = { 'A': 'அ', 'B': 'ஆ', 'C': 'இ', 'D': 'ஈ' };
+        return labels[optLetter];
+    }
+
+    function updateStats() {
+        const answeredCount = score.correct + score.wrong;
+        const pct = Math.round((score.correct / answeredCount) * 100) || 0;
+
+        document.getElementById('s-correct').innerText = score.correct;
+        document.getElementById('s-wrong').innerText = score.wrong;
+        document.getElementById('s-pct').innerText = pct + '%';
+
+        // Update Progress Bar
+        const progress = (answeredCount / totalQuestions) * 100;
+        document.getElementById('prog-fill').style.width = progress + '%';
+
+        // Show result card if finished
+        if (answeredCount === totalQuestions) {
+            showFinalResults(pct);
+        }
+    }
+
+    function showFinalResults(pct) {
+        const resultCard = document.getElementById('final-result');
+        if (!resultCard) return;
+        
+        resultCard.style.display = 'block';
+        scrollTo('#final-result');
+    }
+
+    function scrollTo(selector) {
+        const element = document.querySelector(selector);
+        if (element) {
+            window.scrollTo({
+                top: element.offsetTop - 100,
+                behavior: 'smooth'
+            });
+        }
+    }
+
+    // Scroll to Top visibility
+    window.onscroll = function() {
+        const btn = document.getElementById("scrollTopBtn");
+        if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+            btn.classList.add("visible");
+        } else {
+            btn.classList.remove("visible");
+        }
+    };
+
+    function topFunction() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+</script>
+
+<div class="section" id="final-result" style="display:none;">
+    <div class="result-card">
+        <div class="result-emoji">🏆</div>
+        <div class="result-score" id="final-score-val">100%</div>
+        <div class="result-msg">வாழ்த்துகள்! நீங்கள் தேர்வை வெற்றிகரமாக முடித்துவிட்டீர்கள்.</div>
+        <div class="btn-group" style="justify-content: center;">
+            <button class="btn btn-primary" onclick="location.reload()">மீண்டும் முயற்சி செய்</button>
+            <a href="Tamil.html" class="btn btn-secondary">முகப்பு பக்கம்</a>
+        </div>
+    </div>
+</div>
+
+<button class="scroll-top" id="scrollTopBtn" onclick="topFunction()" title="Go to top">▲</button>
+
+<footer style="text-align: center; padding: 40px; color: var(--muted); border-top: 1px solid var(--border); margin-top: 60px;">
+    <p>© 2026 TAF IAS Academy. வடிவமைக்கப்பட்டது மாணவர்களின் வெற்றிக்காக.</p>
+    <p style="font-size: 0.8rem; margin-top: 10px;">இந்த தளம் கல்வி நோக்கத்திற்காக மட்டுமே உருவாக்கப்பட்டது.</p>
+</footer>
+
+</body>
+</html>
