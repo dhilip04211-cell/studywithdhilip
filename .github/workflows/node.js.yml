@@ -38,3 +38,4 @@ jobs:
         with:
           name: production-files
           path: dist/
+          cache-dependency-path: './my-subfolder/package-lock.json'
