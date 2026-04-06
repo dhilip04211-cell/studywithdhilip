@@ -3,1246 +3,911 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Power Plant Quiz — Part 1 of 5</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Code+Pro:wght@400;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<title>Power Plant Quiz – Part 3</title>
 <style>
-:root{--bg:#0d1117;--sf:#161b22;--sf2:#1c2330;--bd:#30363d;--ac:#f0a500;--gn:#3fb950;--rd:#f85149;--tx:#e6edf3;--mu:#8b949e}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--tx);font-family:'Lato',sans-serif;padding-bottom:60px}
-header{background:linear-gradient(135deg,#1a1200,#2a1f00 50%,#0d1117);border-bottom:2px solid var(--ac);padding:22px 14px 16px;text-align:center}
-.badge{display:inline-block;background:var(--ac);color:#000;font-family:'Source Code Pro',monospace;font-size:10px;font-weight:600;letter-spacing:2px;padding:3px 9px;border-radius:3px;text-transform:uppercase;margin-bottom:7px}
-header h1{font-family:'Playfair Display',serif;font-size:clamp(18px,4vw,32px);font-weight:900;color:var(--ac);margin-bottom:4px}
-header p{color:var(--mu);font-size:11px}
-.topics{display:flex;justify-content:center;gap:5px;flex-wrap:wrap;margin-top:8px}
-.tt{background:var(--sf2);border:1px solid var(--bd);color:var(--mu);font-size:10px;padding:2px 7px;border-radius:20px;font-family:'Source Code Pro',monospace}
-.sb{display:flex;justify-content:center;gap:12px;padding:9px 14px;background:var(--sf);border-bottom:1px solid var(--bd);flex-wrap:wrap;position:sticky;top:0;z-index:100}
-.si{text-align:center}
-.sn{font-family:'Source Code Pro',monospace;font-size:19px;font-weight:600;color:var(--ac)}
-.sl{font-size:9px;color:var(--mu);letter-spacing:1px;text-transform:uppercase}
-.pb{height:3px;background:var(--bd)}
-.pf{height:100%;background:linear-gradient(90deg,var(--ac),#e05c5c);transition:width .4s;width:0%}
-.st{font-family:'Playfair Display',serif;font-size:16px;color:var(--ac);padding:18px 12px 6px;border-bottom:1px solid var(--bd);max-width:900px;margin:0 auto;display:flex;align-items:center;gap:7px}
-.st span{background:var(--ac);color:#000;font-family:'Source Code Pro',monospace;font-size:10px;padding:1px 6px;border-radius:3px;font-weight:600}
-.qz{max-width:900px;margin:0 auto;padding:8px 8px}
-.qc{background:var(--sf);border:1px solid var(--bd);border-radius:8px;margin-bottom:8px;overflow:hidden}
-.qh{padding:10px 12px 7px;display:flex;gap:7px;align-items:flex-start}
-.qn{font-family:'Source Code Pro',monospace;font-size:9px;font-weight:600;color:var(--ac);background:rgba(240,165,0,0.1);border:1px solid rgba(240,165,0,0.3);padding:1px 5px;border-radius:3px;white-space:nowrap;flex-shrink:0}
-.qt{font-size:13px;line-height:1.5;flex:1}
-.stag{font-family:'Source Code Pro',monospace;font-size:8px;color:var(--mu);background:rgba(139,148,158,0.1);border:1px solid var(--bd);padding:1px 4px;border-radius:3px;flex-shrink:0;align-self:flex-start;white-space:nowrap}
-.opts{padding:1px 12px 10px;display:grid;grid-template-columns:1fr 1fr;gap:5px}
-@media(max-width:500px){.opts{grid-template-columns:1fr}}
-.ob{background:var(--sf2);border:1.5px solid var(--bd);border-radius:6px;color:var(--tx);cursor:pointer;font-family:'Lato',sans-serif;font-size:12px;padding:6px 9px;text-align:left;transition:all .15s;display:flex;gap:5px;align-items:flex-start;line-height:1.4}
-.ob:hover:not(:disabled){border-color:var(--ac);background:rgba(240,165,0,0.06)}
-.ol{font-family:'Source Code Pro',monospace;font-size:9px;font-weight:600;color:var(--ac);flex-shrink:0;margin-top:1px}
-.ob.correct{border-color:var(--gn);background:rgba(63,185,80,0.1)}
-.ob.correct .ol{color:var(--gn)}
-.ob.wrong{border-color:var(--rd);background:rgba(248,81,73,0.08);color:var(--mu)}
-.ob.wrong .ol{color:var(--rd)}
-.ob:disabled{cursor:default}
-.exp{margin:0 12px 10px;background:var(--sf2);border-left:3px solid var(--ac);border-radius:0 5px 5px 0;padding:8px 10px;font-size:12px;color:#c9d1d9;line-height:1.5;display:none;animation:fi .3s ease}
-.exp.show{display:block}
-.exp strong{color:var(--ac)}
-@keyframes fi{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
-.fs{display:none;background:linear-gradient(135deg,var(--sf),#1a1500);border:2px solid var(--ac);border-radius:10px;padding:20px;text-align:center;margin:14px 0}
-.fs.show{display:block;animation:fi .5s ease}
-.fs h2{font-family:'Playfair Display',serif;font-size:22px;color:var(--ac);margin-bottom:4px}
-.bs{font-family:'Source Code Pro',monospace;font-size:44px;font-weight:600;color:var(--tx);line-height:1;margin:7px 0}
-.fs p{color:var(--mu);font-size:12px}
-.rb{margin-top:12px;background:var(--ac);color:#000;border:none;padding:9px 22px;border-radius:6px;font-family:'Lato',sans-serif;font-weight:700;font-size:12px;cursor:pointer}
-.rb:hover{opacity:.85}
-.pn{text-align:center;padding:12px;color:var(--mu);font-size:11px;font-family:'Source Code Pro',monospace;border-top:1px solid var(--bd);margin-top:6px}
-.pn strong{color:var(--ac)}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f8; color: #222; }
+
+  header {
+    background: linear-gradient(135deg, #1a237e, #283593);
+    color: #fff; padding: 18px 20px; text-align: center;
+  }
+  header h1 { font-size: 1.35rem; letter-spacing: 0.5px; }
+  header p  { font-size: 0.82rem; margin-top: 4px; opacity: 0.85; }
+
+  /* Progress bar */
+  #progress-wrap { background: #c5cae9; height: 6px; }
+  #progress-bar  { background: #43a047; height: 6px; width: 0%; transition: width 0.4s; }
+
+  /* Score dashboard */
+  #dashboard {
+    display: flex; gap: 8px; padding: 10px 14px;
+    background: #fff; border-bottom: 1px solid #ddd; flex-wrap: wrap;
+  }
+  .dash-box {
+    flex: 1; min-width: 80px; background: #e8eaf6;
+    border-radius: 8px; text-align: center; padding: 7px 4px;
+  }
+  .dash-box .num  { font-size: 1.3rem; font-weight: 700; }
+  .dash-box .lbl  { font-size: 0.68rem; color: #555; margin-top: 2px; }
+  .dash-box.correct  .num { color: #2e7d32; }
+  .dash-box.wrong    .num { color: #c62828; }
+  .dash-box.skipped  .num { color: #e65100; }
+  .dash-box.score    .num { color: #1565c0; }
+
+  /* Section header */
+  .section-banner {
+    background: #283593; color: #fff;
+    padding: 9px 14px; font-size: 0.88rem; font-weight: 600;
+    margin: 12px 14px 0; border-radius: 8px 8px 0 0;
+  }
+
+  /* Question card */
+  .q-card {
+    background: #fff; margin: 0 14px 14px;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.09);
+    padding: 14px 16px; display: none;
+  }
+  .q-card.active { display: block; }
+
+  .q-meta { font-size: 0.72rem; color: #888; margin-bottom: 6px; }
+  .q-text { font-size: 0.95rem; font-weight: 600; line-height: 1.4; margin-bottom: 12px; }
+
+  /* Options */
+  .opt-btn {
+    display: block; width: 100%; text-align: left;
+    background: #f5f5f5; border: 2px solid #ddd;
+    border-radius: 8px; padding: 10px 12px;
+    margin-bottom: 8px; font-size: 0.88rem; cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .opt-btn:hover:not(:disabled) { background: #e8eaf6; border-color: #9fa8da; }
+  .opt-btn.correct  { background: #e8f5e9; border-color: #43a047; color: #1b5e20; font-weight: 600; }
+  .opt-btn.wrong    { background: #ffebee; border-color: #e53935; color: #b71c1c; }
+  .opt-btn.reveal   { background: #fff8e1; border-color: #ffa000; }
+  .opt-btn:disabled { cursor: default; }
+
+  /* Explanation */
+  .explanation {
+    background: #e3f2fd; border-left: 4px solid #1565c0;
+    border-radius: 6px; padding: 10px 12px;
+    font-size: 0.83rem; line-height: 1.55; margin-top: 10px; display: none;
+  }
+  .explanation.show { display: block; }
+  .explanation strong { color: #0d47a1; }
+
+  /* Navigation */
+  .nav-row {
+    display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;
+  }
+  .nav-btn {
+    flex: 1; padding: 10px 6px; border: none; border-radius: 8px;
+    font-size: 0.82rem; font-weight: 600; cursor: pointer;
+  }
+  .btn-skip   { background: #ff8f00; color: #fff; }
+  .btn-next   { background: #1565c0; color: #fff; }
+  .btn-prev   { background: #546e7a; color: #fff; }
+  .btn-finish { background: #2e7d32; color: #fff; }
+
+  /* Result screen */
+  #result-screen {
+    display: none; padding: 24px 16px; text-align: center;
+  }
+  #result-screen h2 { font-size: 1.4rem; color: #1a237e; margin-bottom: 14px; }
+  .result-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px; margin-bottom: 20px;
+  }
+  .r-box { background: #fff; border-radius: 10px; padding: 14px;
+           box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+  .r-box .big { font-size: 1.8rem; font-weight: 800; }
+  .r-box .sm  { font-size: 0.75rem; color: #666; }
+  .r-box.c { border-top: 4px solid #43a047; } .r-box.c .big { color: #2e7d32; }
+  .r-box.w { border-top: 4px solid #e53935; } .r-box.w .big { color: #c62828; }
+  .r-box.s { border-top: 4px solid #ff8f00; } .r-box.s .big { color: #e65100; }
+  .r-box.p { border-top: 4px solid #1565c0; } .r-box.p .big { color: #1565c0; }
+
+  .grade-badge {
+    display: inline-block; padding: 8px 24px;
+    border-radius: 30px; font-size: 1.1rem; font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .review-btn {
+    background: #1a237e; color: #fff; border: none;
+    border-radius: 10px; padding: 12px 28px;
+    font-size: 0.95rem; font-weight: 600; cursor: pointer; margin-top: 8px;
+  }
+  .restart-btn {
+    background: #43a047; color: #fff; border: none;
+    border-radius: 10px; padding: 12px 28px;
+    font-size: 0.95rem; font-weight: 600; cursor: pointer; margin-top: 8px; margin-left: 8px;
+  }
+
+  /* Review mode */
+  #review-screen { display: none; padding: 14px; }
+  .review-card {
+    background: #fff; border-radius: 10px;
+    box-shadow: 0 2px 7px rgba(0,0,0,0.09);
+    padding: 13px 15px; margin-bottom: 12px;
+  }
+  .review-card .r-meta { font-size: 0.7rem; color: #888; margin-bottom: 4px; }
+  .review-card .r-q    { font-size: 0.88rem; font-weight: 600; margin-bottom: 8px; }
+  .review-tag {
+    display: inline-block; font-size: 0.7rem; font-weight: 700;
+    border-radius: 4px; padding: 2px 8px; margin-bottom: 6px;
+  }
+  .tag-c { background: #e8f5e9; color: #2e7d32; }
+  .tag-w { background: #ffebee; color: #c62828; }
+  .tag-s { background: #fff8e1; color: #e65100; }
+  .r-ans { font-size: 0.8rem; margin-bottom: 4px; }
+  .r-exp { font-size: 0.78rem; background: #e3f2fd; border-left: 3px solid #1565c0;
+           padding: 7px 10px; border-radius: 5px; line-height: 1.5; margin-top: 6px; }
+  .back-btn {
+    background: #546e7a; color: #fff; border: none;
+    border-radius: 10px; padding: 11px 24px;
+    font-size: 0.88rem; cursor: pointer; margin-bottom: 14px;
+  }
 </style>
 </head>
 <body>
+
 <header>
-  <div class="badge">YCT Power Plant · Part 1 of 5</div>
-  <h1>Power Plant Quiz — Part 1</h1>
-  <p>Section I: Power Plant Cycle (Q1–Q29) &nbsp;·&nbsp; Section II: Thermal Power Plant (Q30–Q141)</p>
-  <div class="topics">
-    <span class="tt">Rankine Cycle</span><span class="tt">Base/Peak Load</span><span class="tt">Economiser</span><span class="tt">Efficiency</span><span class="tt">Draught</span><span class="tt">Coal Types</span><span class="tt">ESP</span><span class="tt">Boiler</span><span class="tt">Thermal eff calculations</span>
-  </div>
+  <h1>⚡ Power Plant Quiz — Part 3</h1>
+  <p>Sections: Nuclear (Q32–54) • Diesel • Gas Turbine • Combined Working • Non-Conventional (Q1–39)</p>
 </header>
-<div class="sb">
-  <div class="si"><div class="sn" id="sScore">0</div><div class="sl">Score</div></div>
-  <div class="si"><div class="sn" id="sAns">0</div><div class="sl">Answered</div></div>
-  <div class="si"><div class="sn" id="sCorr">0</div><div class="sl">Correct</div></div>
-  <div class="si"><div class="sn">141</div><div class="sl">Total</div></div>
-</div>
-<div class="pb"><div class="pf" id="pFill"></div></div>
-<div class="st"><span>I</span> SECTION I · Power Plant Cycle (Q1–Q29)</div>
-<div class="qz">
-<div class="qc" id="qc1">
-<div class="qh"><div class="qn">Q1</div><div class="qt">The frequency of emf generation in India is:</div><div class="stag">DSSSB JE 2021</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(1,'a','c')"><span class="ol">A</span>60 Hz</button>
-<button class="ob" onclick="ans(1,'b','c')"><span class="ol">B</span>230 Hz</button>
-<button class="ob" onclick="ans(1,'c','c')"><span class="ol">C</span>50 Hz</button>
-<button class="ob" onclick="ans(1,'d','c')"><span class="ol">D</span>55 Hz</button>
-</div>
-<div class="exp" id="exp1"><strong>C — 50 Hz.</strong> India's standard grid frequency is 50 Hz. USA uses 60 Hz. This is standardised across all power generation equipment in India.</div>
-</div>
-<div class="qc" id="qc2">
-<div class="qh"><div class="qn">Q2</div><div class="qt">What is the aim of all energy conservation techniques?</div><div class="stag">UPPCL JE 2021</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(2,'a','d')"><span class="ol">A</span>Promote non-renewable sources</button>
-<button class="ob" onclick="ans(2,'b','d')"><span class="ol">B</span>Replace old equipment</button>
-<button class="ob" onclick="ans(2,'c','d')"><span class="ol">C</span>Experiment with new sources</button>
-<button class="ob" onclick="ans(2,'d','d')"><span class="ol">D</span>To reduce energy losses</button>
-</div>
-<div class="exp" id="exp2"><strong>D — Reduce energy losses.</strong> The primary aim of all energy conservation techniques is to minimize energy losses during generation, transmission and utilisation of electrical energy.</div>
-</div>
-<div class="qc" id="qc3">
-<div class="qh"><div class="qn">Q3</div><div class="qt">Base load of a power station stands for?</div><div class="stag">SSC JE 2015</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(3,'a','a')"><span class="ol">A</span>12–24 hours/day</button>
-<button class="ob" onclick="ans(3,'b','a')"><span class="ol">B</span>2–4 hours/day</button>
-<button class="ob" onclick="ans(3,'c','a')"><span class="ol">C</span>8–12 hours/day</button>
-<button class="ob" onclick="ans(3,'d','a')"><span class="ol">D</span>4–8 hours/day</button>
-</div>
-<div class="exp" id="exp3"><strong>A — 12–24 hours/day.</strong> Base load is the minimum level of demand on an electrical supply system over 24 hours. Base load plants generate dependable power consistently to meet continuous demand.</div>
-</div>
-<div class="qc" id="qc4">
-<div class="qh"><div class="qn">Q4</div><div class="qt">Which of the following power plants employs the Rankine cycle?</div><div class="stag">SSC JE 2019</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(4,'a','c')"><span class="ol">A</span>Nuclear power plant</button>
-<button class="ob" onclick="ans(4,'b','c')"><span class="ol">B</span>Solar power plant</button>
-<button class="ob" onclick="ans(4,'c','c')"><span class="ol">C</span>Thermal power plant</button>
-<button class="ob" onclick="ans(4,'d','c')"><span class="ol">D</span>Hydro-electric power plant</button>
-</div>
-<div class="exp" id="exp4"><strong>C — Thermal power plant.</strong> The Rankine cycle is widely used in coal/thermal power plants. Fuel produces heat → water converts to steam → steam expands through turbine. Efficiency ≈ 25–30%.</div>
-</div>
-<div class="qc" id="qc5">
-<div class="qh"><div class="qn">Q5</div><div class="qt">Which of them is a peak load station?</div><div class="stag">UPSSSC JE 2015</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(5,'a','d')"><span class="ol">A</span>Small capacity thermal plants</button>
-<button class="ob" onclick="ans(5,'b','d')"><span class="ol">B</span>Diesel stations</button>
-<button class="ob" onclick="ans(5,'c','d')"><span class="ol">C</span>Run-off river plant</button>
-<button class="ob" onclick="ans(5,'d','d')"><span class="ol">D</span>All of them</button>
-</div>
-<div class="exp" id="exp5"><strong>D — All of them.</strong> Peak load plants include: diesel stations, small capacity thermal plants, run-off river plants. Base load plants: large thermal, hydro, nuclear.</div>
-</div>
-<div class="qc" id="qc6">
-<div class="qh"><div class="qn">Q6</div><div class="qt">Gain in kinetic energy is equal to:</div><div class="stag">UPPCL JE 2018</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(6,'a','c')"><span class="ol">A</span>Loss in P.E + work against friction</button>
-<button class="ob" onclick="ans(6,'b','c')"><span class="ol">B</span>Loss in P.E × work against friction</button>
-<button class="ob" onclick="ans(6,'c','c')"><span class="ol">C</span>Loss in P.E – work against friction</button>
-<button class="ob" onclick="ans(6,'d','c')"><span class="ol">D</span>Loss in K.E – work against friction</button>
-</div>
-<div class="exp" id="exp6"><strong>C — Loss in P.</strong>E – work against friction. From energy conservation: Gain in KE = Loss in PE − Work done against friction.</div>
-</div>
-<div class="qc" id="qc7">
-<div class="qh"><div class="qn">Q7</div><div class="qt">A generating station having high investment cost and low operating cost is usually operated as a:</div><div class="stag">BWSSB 2017</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(7,'a','b')"><span class="ol">A</span>Peak load station</button>
-<button class="ob" onclick="ans(7,'b','b')"><span class="ol">B</span>Base load station</button>
-<button class="ob" onclick="ans(7,'c','b')"><span class="ol">C</span>Medium load station</button>
-<button class="ob" onclick="ans(7,'d','b')"><span class="ol">D</span>Fast load station</button>
-</div>
-<div class="exp" id="exp7"><strong>B — Base load station.</strong> High capital + low running cost plants must run continuously (24 hrs) to recover investment. Requirements: low operating cost, continuous operation, low maintenance cost.</div>
-</div>
-<div class="qc" id="qc8">
-<div class="qh"><div class="qn">Q8</div><div class="qt">Power generation of thermal power plant is based on:</div><div class="stag">UPPCL JE 2016</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(8,'a','a')"><span class="ol">A</span>Rankine Cycle</button>
-<button class="ob" onclick="ans(8,'b','a')"><span class="ol">B</span>Otto Cycle</button>
-<button class="ob" onclick="ans(8,'c','a')"><span class="ol">C</span>Diesel Cycle</button>
-<button class="ob" onclick="ans(8,'d','a')"><span class="ol">D</span>Carnot Cycle</button>
-</div>
-<div class="exp" id="exp8"><strong>A — Rankine Cycle.</strong> The Rankine cycle is an idealized thermodynamic cycle converting heat into mechanical work via phase change of water/steam.</div>
-</div>
-<div class="qc" id="qc9">
-<div class="qh"><div class="qn">Q9</div><div class="qt">Which power plant may take several days to start up and shut down?</div><div class="stag">GETCO JE 2015</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(9,'a','b')"><span class="ol">A</span>Peak load</button>
-<button class="ob" onclick="ans(9,'b','b')"><span class="ol">B</span>Base load</button>
-<button class="ob" onclick="ans(9,'c','b')"><span class="ol">C</span>Solar power plant</button>
-<button class="ob" onclick="ans(9,'d','b')"><span class="ol">D</span>None of these</button>
-</div>
-<div class="exp" id="exp9"><strong>B — Base load.</strong> Large coal and nuclear plants (base load) don't change output quickly. Due to thermal constraints they take several days to start/stop. Peak load plants start in minutes.</div>
-</div>
-<div class="qc" id="qc10">
-<div class="qh"><div class="qn">Q10</div><div class="qt">Match: Base load = Nuclear power plant; Peak load = Diesel + Gas power plant. Correct answer:</div><div class="stag">HPSSC JE 2021</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(10,'a','a')"><span class="ol">A</span>Nuclear-Base; Diesel & Gas-Peak</button>
-<button class="ob" onclick="ans(10,'b','a')"><span class="ol">B</span>Nuclear & Diesel-Base; Gas-Peak</button>
-<button class="ob" onclick="ans(10,'c','a')"><span class="ol">C</span>All three are Base load</button>
-<button class="ob" onclick="ans(10,'d','a')"><span class="ol">D</span>Nuclear & Gas-Base; Diesel-Peak</button>
-</div>
-<div class="exp" id="exp10"><strong>A — Nuclear→Base load (slow response, cannot start/stop quickly).</strong> Diesel & Gas→Peak load (quick start/stop). Thermal also base load; Wind/Solar are nature-dependent.</div>
-</div>
-<div class="qc" id="qc11">
-<div class="qh"><div class="qn">Q11</div><div class="qt">Which of the following are the main parts of a power system?</div><div class="stag">ESE 2020</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(11,'a','d')"><span class="ol">A</span>Generating stations + Transmission only</button>
-<button class="ob" onclick="ans(11,'b','d')"><span class="ol">B</span>Generating stations + Distribution only</button>
-<button class="ob" onclick="ans(11,'c','d')"><span class="ol">C</span>Transmission + Distribution only</button>
-<button class="ob" onclick="ans(11,'d','d')"><span class="ol">D</span>All three: Generation + Transmission + Distribution</button>
-</div>
-<div class="exp" id="exp11"><strong>D — All three.</strong> A complete power system = Generating stations (source) + Transmission system (HV long distance) + Distribution networks (to consumers).</div>
-</div>
-<div class="qc" id="qc12">
-<div class="qh"><div class="qn">Q12</div><div class="qt">Power plants using coal work on which cycle?</div><div class="stag">WBPSC SAE 2003</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(12,'a','d')"><span class="ol">A</span>Otto cycle</button>
-<button class="ob" onclick="ans(12,'b','d')"><span class="ol">B</span>Binary vapour cycle</button>
-<button class="ob" onclick="ans(12,'c','d')"><span class="ol">C</span>Brayton cycle</button>
-<button class="ob" onclick="ans(12,'d','d')"><span class="ol">D</span>Rankine cycle</button>
-</div>
-<div class="exp" id="exp12"><strong>D — Rankine cycle.</strong> Steam power stations convert coal heat energy into electrical energy and work on the Rankine cycle. (Brayton = Gas turbine; Otto = Petrol engine)</div>
-</div>
-<div class="qc" id="qc13">
-<div class="qh"><div class="qn">Q13</div><div class="qt">Which of the following is usually NOT a generating voltage?</div><div class="stag">Mizoram PSC 2016</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(13,'a','b')"><span class="ol">A</span>6.6 kV</button>
-<button class="ob" onclick="ans(13,'b','b')"><span class="ol">B</span>9.9 kV</button>
-<button class="ob" onclick="ans(13,'c','b')"><span class="ol">C</span>11 kV</button>
-<button class="ob" onclick="ans(13,'d','b')"><span class="ol">D</span>13.2 kV</button>
-</div>
-<div class="exp" id="exp13"><strong>B — 9.</strong>9 kV. Standard generating voltages: 6.6 kV, 11 kV, 13.2 kV, 33 kV. HV transmission: 220/132/66 kV. Primary distribution: 11/33 kV. 9.9 kV is not standard.</div>
-</div>
-<div class="qc" id="qc14">
-<div class="qh"><div class="qn">Q14</div><div class="qt">Steam engine is based on which thermodynamic cycle?</div><div class="stag">UPPCL JE 2018</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(14,'a','a')"><span class="ol">A</span>Rankine cycle</button>
-<button class="ob" onclick="ans(14,'b','a')"><span class="ol">B</span>Brayton cycle</button>
-<button class="ob" onclick="ans(14,'c','a')"><span class="ol">C</span>Stirling cycle</button>
-<button class="ob" onclick="ans(14,'d','a')"><span class="ol">D</span>Carnot cycle</button>
-</div>
-<div class="exp" id="exp14"><strong>A — Rankine cycle.</strong> Steam engines operate on the Rankine cycle — applicable only to steam power plants. It converts heat to useful work using liquid-to-vapor phase change.</div>
-</div>
-<div class="qc" id="qc15">
-<div class="qh"><div class="qn">Q15</div><div class="qt">The biggest unit size of steam plant in India is:</div><div class="stag">UPRVUNL JE 2016</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(15,'a','d')"><span class="ol">A</span>250 MW</button>
-<button class="ob" onclick="ans(15,'b','d')"><span class="ol">B</span>100 MW</button>
-<button class="ob" onclick="ans(15,'c','d')"><span class="ol">C</span>1000 MW</button>
-<button class="ob" onclick="ans(15,'d','d')"><span class="ol">D</span>500 MW</button>
-</div>
-<div class="exp" id="exp15"><strong>D — 500 MW.</strong> The biggest steam plant unit in India is 500 MW, located at Anpara, Uttar Pradesh.</div>
-</div>
-<div class="qc" id="qc16">
-<div class="qh"><div class="qn">Q16</div><div class="qt">Which of the following is NOT a type of generating station?</div><div class="stag">Nagaland PSC 2017</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(16,'a','d')"><span class="ol">A</span>Thermal</button>
-<button class="ob" onclick="ans(16,'b','d')"><span class="ol">B</span>Nuclear</button>
-<button class="ob" onclick="ans(16,'c','d')"><span class="ol">C</span>Hydro</button>
-<button class="ob" onclick="ans(16,'d','d')"><span class="ol">D</span>Atmospheric</button>
-</div>
-<div class="exp" id="exp16"><strong>D — Atmospheric.</strong> Thermal, Nuclear, Hydro are conventional generating stations. 'Atmospheric' is not a recognized type of power generating station.</div>
-</div>
-<div class="qc" id="qc17">
-<div class="qh"><div class="qn">Q17</div><div class="qt">Super thermal power stations are installed at all EXCEPT:</div><div class="stag">Nagaland PSC 2016</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(17,'a','c')"><span class="ol">A</span>Singrauli</button>
-<button class="ob" onclick="ans(17,'b','c')"><span class="ol">B</span>Farraka</button>
-<button class="ob" onclick="ans(17,'c','c')"><span class="ol">C</span>Narora</button>
-<button class="ob" onclick="ans(17,'d','c')"><span class="ol">D</span>Ramagundam</button>
-</div>
-<div class="exp" id="exp17"><strong>C — Narora.</strong> Super thermal power stations are at Singrauli, Farraka, Ramagundam. Narora (Bulandshahr, UP) hosts a Nuclear Power Plant, not a super thermal station.</div>
-</div>
-<div class="qc" id="qc18">
-<div class="qh"><div class="qn">Q18</div><div class="qt">If normal frequency is 50 Hz and operated at 53 Hz, which equipment is most adversely affected?</div><div class="stag">Nagaland PSC 2016</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(18,'a','c')"><span class="ol">A</span>Power transformer</button>
-<button class="ob" onclick="ans(18,'b','c')"><span class="ol">B</span>Alternator</button>
-<button class="ob" onclick="ans(18,'c','c')"><span class="ol">C</span>Turbine</button>
-<button class="ob" onclick="ans(18,'d','c')"><span class="ol">D</span>Loads</button>
-</div>
-<div class="exp" id="exp18"><strong>C — Turbine.</strong> Turbines are speed-sensitive. Ns = 120f/P, so higher frequency = higher speed. At 53 Hz instead of 50 Hz, turbine speed exceeds rated value causing mechanical stress.</div>
-</div>
-<div class="qc" id="qc19">
-<div class="qh"><div class="qn">Q19</div><div class="qt">The generation voltage is usually:</div><div class="stag">BWSSB 2017</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(19,'a','a')"><span class="ol">A</span>Between 11 kV and 33 kV</button>
-<button class="ob" onclick="ans(19,'b','a')"><span class="ol">B</span>Between 132 kV and 400 kV</button>
-<button class="ob" onclick="ans(19,'c','a')"><span class="ol">C</span>Between 400 kV and 700 kV</button>
-<button class="ob" onclick="ans(19,'d','a')"><span class="ol">D</span>None of the above</button>
-</div>
-<div class="exp" id="exp19"><strong>A — 11 kV to 33 kV.</strong> Synchronous generators produce electricity at 11–33 kV. Step-up transformers then raise it to 132–400 kV for long-distance transmission.</div>
-</div>
-<div class="qc" id="qc20">
-<div class="qh"><div class="qn">Q20</div><div class="qt">Which of the following is NOT a peak load power plant?</div><div class="stag">UPPCL JE 2019</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(20,'a','d')"><span class="ol">A</span>Diesel power plant</button>
-<button class="ob" onclick="ans(20,'b','d')"><span class="ol">B</span>Gas plant</button>
-<button class="ob" onclick="ans(20,'c','d')"><span class="ol">C</span>Solar and wind power plant</button>
-<button class="ob" onclick="ans(20,'d','d')"><span class="ol">D</span>Thermal power plant</button>
-</div>
-<div class="exp" id="exp20"><strong>D — Thermal power plant.</strong> Thermal plants are BASE load plants (high capacity, continuous). Peak load plants (quick start/stop): Diesel, Gas, Pumped storage hydro.</div>
-</div>
-<div class="qc" id="qc21">
-<div class="qh"><div class="qn">Q21</div><div class="qt">Which type of Hydel power plants can be used as both base and peak load plants?</div><div class="stag">UPPCL JE 2016</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(21,'a','c')"><span class="ol">A</span>Run-off-river with poundage</button>
-<button class="ob" onclick="ans(21,'b','c')"><span class="ol">B</span>Run-off-river without poundage</button>
-<button class="ob" onclick="ans(21,'c','c')"><span class="ol">C</span>Storage hydro type plants</button>
-<button class="ob" onclick="ans(21,'d','c')"><span class="ol">D</span>Pumped storage plants</button>
-</div>
-<div class="exp" id="exp21"><strong>C — Storage hydro type plants.</strong> Four types: Run-off river, Pumped-storage, Storage, Offshore. Storage hydro plants serve as both base and peak load plants due to reservoir flexibility.</div>
-</div>
-<div class="qc" id="qc22">
-<div class="qh"><div class="qn">Q22</div><div class="qt">Generators for peak load plants are usually designed for maximum efficiency at:</div><div class="stag">PGCIL 2018</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(22,'a','d')"><span class="ol">A</span>25 to 50% full load</button>
-<button class="ob" onclick="ans(22,'b','d')"><span class="ol">B</span>25% overload</button>
-<button class="ob" onclick="ans(22,'c','d')"><span class="ol">C</span>Full load</button>
-<button class="ob" onclick="ans(22,'d','d')"><span class="ol">D</span>50 to 75% full load</button>
-</div>
-<div class="exp" id="exp22"><strong>D — 50 to 75% full load.</strong> Peak load generators (pumped storage, diesel-electric) are designed for maximum efficiency at 50–75% of full load, since peak load is intermittent.</div>
-</div>
-<div class="qc" id="qc23">
-<div class="qh"><div class="qn">Q23</div><div class="qt">Which type of power plant is NOT used as a base load power plant?</div><div class="stag">GPSC AAE 2021</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(23,'a','c')"><span class="ol">A</span>Run off the river hydro</button>
-<button class="ob" onclick="ans(23,'b','c')"><span class="ol">B</span>Nuclear power plant</button>
-<button class="ob" onclick="ans(23,'c','c')"><span class="ol">C</span>Pumped storage power plant</button>
-<button class="ob" onclick="ans(23,'d','c')"><span class="ol">D</span>None of these</button>
-</div>
-<div class="exp" id="exp23"><strong>C — Pumped storage power plant.</strong> Pumped storage plants are PEAK load plants — they pump water up during low demand and release it for generation during high demand (peak) periods.</div>
-</div>
-<div class="qc" id="qc24">
-<div class="qh"><div class="qn">Q24</div><div class="qt">Which of the following plants is suitable for peak load?</div><div class="stag">JKSSB JE 2014</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(24,'a','a')"><span class="ol">A</span>Diesel engine plant</button>
-<button class="ob" onclick="ans(24,'b','a')"><span class="ol">B</span>Steam power plant</button>
-<button class="ob" onclick="ans(24,'c','a')"><span class="ol">C</span>Nuclear power plant</button>
-<button class="ob" onclick="ans(24,'d','a')"><span class="ol">D</span>Hydro-electric plant</button>
-</div>
-<div class="exp" id="exp24"><strong>A — Diesel engine plant.</strong> Peak load plants: Diesel engine, Solar, Gas, Wind turbine — they start quickly. Steam and Nuclear are base load; standard Hydro can be both.</div>
-</div>
-<div class="qc" id="qc25">
-<div class="qh"><div class="qn">Q25</div><div class="qt">The unvarying load which occurs almost the whole day on the station is known as:</div><div class="stag">DSSSB JE 2021</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(25,'a','c')"><span class="ol">A</span>Peak load</button>
-<button class="ob" onclick="ans(25,'b','c')"><span class="ol">B</span>Bottom load</button>
-<button class="ob" onclick="ans(25,'c','c')"><span class="ol">C</span>Base load</button>
-<button class="ob" onclick="ans(25,'d','c')"><span class="ol">D</span>Top load</button>
-</div>
-<div class="exp" id="exp25"><strong>C — Base load.</strong> The minimum continuous load on any substation for the whole day (24 hours) is known as base load. It remains approximately constant throughout the day.</div>
-</div>
-<div class="qc" id="qc26">
-<div class="qh"><div class="qn">Q26</div><div class="qt">Which power station is mainly used to cover peak load on the system?</div><div class="stag">ESE 2010</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(26,'a','d')"><span class="ol">A</span>Coal based thermal power plant</button>
-<button class="ob" onclick="ans(26,'b','d')"><span class="ol">B</span>Nuclear power plant</button>
-<button class="ob" onclick="ans(26,'c','d')"><span class="ol">C</span>Gas based thermal power plant</button>
-<button class="ob" onclick="ans(26,'d','d')"><span class="ol">D</span>Pumped storage hydro power plant</button>
-</div>
-<div class="exp" id="exp26"><strong>D — Pumped storage hydro power plant.</strong> Base load: Nuclear, Coal, Reservoir Hydro, Geothermal. Peak load: Gas, Diesel, Pumped storage hydro. Pumped storage has quick response to peak demand.</div>
-</div>
-<div class="qc" id="qc27">
-<div class="qh"><div class="qn">Q27</div><div class="qt">Coal fired steam: load factor 90%, 400 MW, coal heat 2 kWh/kg, efficiency 60%, train=900 metric tons. How many trainloads daily?</div><div class="stag">BIS TA 2020</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(27,'a','c')"><span class="ol">A</span>1</button>
-<button class="ob" onclick="ans(27,'b','c')"><span class="ol">B</span>6</button>
-<button class="ob" onclick="ans(27,'c','c')"><span class="ol">C</span>8</button>
-<button class="ob" onclick="ans(27,'d','c')"><span class="ol">D</span>10</button>
-</div>
-<div class="exp" id="exp27"><strong>C — 8 trainloads.</strong> Energy/day = 400x24=9600 MWh. Input=9600/0.6=16000 MWh. Coal=16000x1000/2=8000 metric tons. Trainloads=8000/900=8.88≈8.</div>
-</div>
-<div class="qc" id="qc28">
-<div class="qh"><div class="qn">Q28</div><div class="qt">At times of peak loads, a power system needs:</div><div class="stag">SSC JE 2011</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(28,'a','a')"><span class="ol">A</span>Injection of lagging VAR's</button>
-<button class="ob" onclick="ans(28,'b','a')"><span class="ol">B</span>Injection of leading VAR</button>
-<button class="ob" onclick="ans(28,'c','a')"><span class="ol">C</span>None of (a) and (b)</button>
-<button class="ob" onclick="ans(28,'d','a')"><span class="ol">D</span>Both alternately</button>
-</div>
-<div class="exp" id="exp28"><strong>A — Injection of lagging VAR's.</strong> Peak loads are mainly lagging power factor loads (motors, induction loads). So the system needs lagging VARs (reactive power) to support voltage during peak demand.</div>
-</div>
-<div class="qc" id="qc29">
-<div class="qh"><div class="qn">Q29</div><div class="qt">Which is an example of conversion of heat energy to mechanical energy?</div><div class="stag">UPPCL JE 2021</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(29,'a','a')"><span class="ol">A</span>Steam engine</button>
-<button class="ob" onclick="ans(29,'b','a')"><span class="ol">B</span>Piezoelectric</button>
-<button class="ob" onclick="ans(29,'c','a')"><span class="ol">C</span>Photosynthesis in plants</button>
-<button class="ob" onclick="ans(29,'d','a')"><span class="ol">D</span>Geothermal power plant</button>
-</div>
-<div class="exp" id="exp29"><strong>A — Steam engine.</strong> Coal burns → water vaporises → hot steam drives turbine → mechanical work. Piezoelectric = mechanical→electric; Photosynthesis = light→chemical energy.</div>
-</div>
-</div>
-<div class="st"><span>II</span> SECTION II · Thermal Power Plant (Q30–Q141)</div>
-<div class="qz">
-<div class="qc" id="qc30">
-<div class="qh"><div class="qn">Q30</div><div class="qt">In a thermal power plant, Economiser is used to heat:</div><div class="stag">PSTCL AE 2021</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(30,'a','c')"><span class="ol">A</span>Air</button>
-<button class="ob" onclick="ans(30,'b','c')"><span class="ol">B</span>Flue Gases</button>
-<button class="ob" onclick="ans(30,'c','c')"><span class="ol">C</span>Feed Water</button>
-<button class="ob" onclick="ans(30,'d','c')"><span class="ol">D</span>Coal</button>
-</div>
-<div class="exp" id="exp30"><strong>C — Feed Water.</strong> Economiser heats feed water using flue gas, increasing boiler thermal efficiency by 10–12% and saving fuel by 5–15%. It extends boiler life and increases boiler capacity.</div>
-</div>
-<div class="qc" id="qc31">
-<div class="qh"><div class="qn">Q31</div><div class="qt">The problematic pollutants in emission of coal based generating plants are:</div><div class="stag">DGVCL JE 2016</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(31,'a','d')"><span class="ol">A</span>SO₂</button>
-<button class="ob" onclick="ans(31,'b','d')"><span class="ol">B</span>NOx</button>
-<button class="ob" onclick="ans(31,'c','d')"><span class="ol">C</span>CO</button>
-<button class="ob" onclick="ans(31,'d','d')"><span class="ol">D</span>All of the above</button>
-</div>
-<div class="exp" id="exp31"><strong>D — All of the above.</strong> Coal combustion emits: SO₂, SO₃, NOx, CO, particulate matter, mercury (Hg), trace metals, and radioactive nucleotides — all harmful environmental pollutants.</div>
-</div>
-<div class="qc" id="qc32">
-<div class="qh"><div class="qn">Q32</div><div class="qt">The part of steam power plant that extracts heat from flue gases before applying to boiler is:</div><div class="stag">DMRC JE 2018</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(32,'a','d')"><span class="ol">A</span>Super heater</button>
-<button class="ob" onclick="ans(32,'b','d')"><span class="ol">B</span>Draught system</button>
-<button class="ob" onclick="ans(32,'c','d')"><span class="ol">C</span>Condenser</button>
-<button class="ob" onclick="ans(32,'d','d')"><span class="ol">D</span>Economiser</button>
-</div>
-<div class="exp" id="exp32"><strong>D — Economiser.</strong> It is a mechanical device that preheats feed water using heat from flue gases, reducing energy consumption and acting as a heat exchanger.</div>
-</div>
-<div class="qc" id="qc33">
-<div class="qh"><div class="qn">Q33</div><div class="qt">Which heat exchanger raises steam temperature from saturated to superheated level?</div><div class="stag">PSTCL AE 2021</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(33,'a','c')"><span class="ol">A</span>Air pre heater</button>
-<button class="ob" onclick="ans(33,'b','c')"><span class="ol">B</span>Economizer</button>
-<button class="ob" onclick="ans(33,'c','c')"><span class="ol">C</span>Superheater</button>
-<button class="ob" onclick="ans(33,'d','c')"><span class="ol">D</span>Condenser</button>
-</div>
-<div class="exp" id="exp33"><strong>C — Superheater converts saturated/wet steam into superheated dry steam.</strong> Air preheater: recovers heat from flue gas for combustion air. Economizer: preheats feed water.</div>
-</div>
-<div class="qc" id="qc34">
-<div class="qh"><div class="qn">Q34</div><div class="qt">Which treatment for water removes non-carbonate hardness?</div><div class="stag">APTRANSCO 2012</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(34,'a','b')"><span class="ol">A</span>Lime treatment</button>
-<button class="ob" onclick="ans(34,'b','b')"><span class="ol">B</span>Soda treatment</button>
-<button class="ob" onclick="ans(34,'c','b')"><span class="ol">C</span>Distillation</button>
-<button class="ob" onclick="ans(34,'d','b')"><span class="ol">D</span>Sedimentation</button>
-</div>
-<div class="exp" id="exp34"><strong>B — Soda treatment.</strong> Adding lime (CaO) and soda (Na₂CO₃) precipitates calcium as carbonate and magnesium as hydroxide, removing hardness. Lime softening removes Ca/Mg ions (permanent hardness).</div>
-</div>
-<div class="qc" id="qc35">
-<div class="qh"><div class="qn">Q35</div><div class="qt">The hoppers in electrostatic precipitator are generally _____ in shape:</div><div class="stag">APTRANSCO 2012</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(35,'a','b')"><span class="ol">A</span>Cylindrical</button>
-<button class="ob" onclick="ans(35,'b','b')"><span class="ol">B</span>Pyramidal</button>
-<button class="ob" onclick="ans(35,'c','b')"><span class="ol">C</span>Conical</button>
-<button class="ob" onclick="ans(35,'d','b')"><span class="ol">D</span>Rectangular</button>
-</div>
-<div class="exp" id="exp35"><strong>B — Pyramidal.</strong> Hoppers are large pyramidal or cone-shaped containers. In ESP systems, fly ash attracted by high-voltage electrodes (30,000–60,000 V) falls into these pyramidal hoppers.</div>
-</div>
-<div class="qc" id="qc36">
-<div class="qh"><div class="qn">Q36</div><div class="qt">The purpose of cooling tower is:</div><div class="stag">APTRANSCO 2012</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(36,'a','d')"><span class="ol">A</span>To send cool water to boiler</button>
-<button class="ob" onclick="ans(36,'b','d')"><span class="ol">B</span>To reduce flue gas temperature</button>
-<button class="ob" onclick="ans(36,'c','d')"><span class="ol">C</span>To cool air sent to furnace</button>
-<button class="ob" onclick="ans(36,'d','d')"><span class="ol">D</span>To cool the steam in the condenser</button>
-</div>
-<div class="exp" id="exp36"><strong>D — Cool steam in the condenser.</strong> Cooling tower converts hot water/steam from condenser into cool water for reuse in the plant cycle.</div>
-</div>
-<div class="qc" id="qc37">
-<div class="qh"><div class="qn">Q37</div><div class="qt">Air pollution due to smoke around thermal power station can be reduced by:</div><div class="stag">ESE 2016</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(37,'a','d')"><span class="ol">A</span>Induced draft fan</button>
-<button class="ob" onclick="ans(37,'b','d')"><span class="ol">B</span>Super heater</button>
-<button class="ob" onclick="ans(37,'c','d')"><span class="ol">C</span>Economizer</button>
-<button class="ob" onclick="ans(37,'d','d')"><span class="ol">D</span>Electrostatic precipitator</button>
-</div>
-<div class="exp" id="exp37"><strong>D — Electrostatic precipitator.</strong> ESP is the most efficient device for capturing fly ash particles from flue gases, dramatically reducing air pollution. Efficiency up to 99.5%.</div>
-</div>
-<div class="qc" id="qc38">
-<div class="qh"><div class="qn">Q38</div><div class="qt">Which of the following is a conventional source of electricity generation?</div><div class="stag">EESL 2020</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(38,'a','a')"><span class="ol">A</span>Thermal</button>
-<button class="ob" onclick="ans(38,'b','a')"><span class="ol">B</span>Wind</button>
-<button class="ob" onclick="ans(38,'c','a')"><span class="ol">C</span>Fuel cell</button>
-<button class="ob" onclick="ans(38,'d','a')"><span class="ol">D</span>Solar</button>
-</div>
-<div class="exp" id="exp38"><strong>A — Thermal.</strong> Conventional (non-renewable): Coal, Petroleum, Natural gas, Thermal, Nuclear. Non-conventional (renewable): Bio energy, Solar, Wind, Tidal, Geothermal.</div>
-</div>
-<div class="qc" id="qc39">
-<div class="qh"><div class="qn">Q39</div><div class="qt">In thermal power station, heat balance in descending order: (1)Work done (2)Friction loss (3)Heat to circulating water (4)Heat in condensate — correct order:</div><div class="stag">ESE 2011</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(39,'a','c')"><span class="ol">A</span>3, 4, 1 and 2</button>
-<button class="ob" onclick="ans(39,'b','c')"><span class="ol">B</span>2, 1, 4 and 3</button>
-<button class="ob" onclick="ans(39,'c','c')"><span class="ol">C</span>3, 1, 4 and 2</button>
-<button class="ob" onclick="ans(39,'d','c')"><span class="ol">D</span>2, 4, 1 and 3</button>
-</div>
-<div class="exp" id="exp39"><strong>C — 3, 1, 4, 2.</strong> Descending: Heat to circulating water (largest) → Work done (thermal efficiency) → Heat in condensate → Friction and windage loss (smallest). Shows why thermal efficiency is low.</div>
-</div>
-<div class="qc" id="qc40">
-<div class="qh"><div class="qn">Q40</div><div class="qt">For 3-element feed water control, water level measurements ensure:</div><div class="stag">ESE 2010</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(40,'a','c')"><span class="ol">A</span>Exceed upper limit</button>
-<button class="ob" onclick="ans(40,'b','c')"><span class="ol">B</span>Fall below lower limit</button>
-<button class="ob" onclick="ans(40,'c','c')"><span class="ol">C</span>Violate both upper and lower limits</button>
-<button class="ob" onclick="ans(40,'d','c')"><span class="ol">D</span>Restrict to specified limit</button>
-</div>
-<div class="exp" id="exp40"><strong>C — Violate specified upper and lower limits.</strong> 3-element control (water level + steam flow + feed water flow) ensures drum water stays within safe upper AND lower limits simultaneously.</div>
-</div>
-<div class="qc" id="qc41">
-<div class="qh"><div class="qn">Q41</div><div class="qt">Maximum efficiency of modern coal-fired steam plants is restricted to about 0.35 mainly because of:</div><div class="stag">Mizoram PSC 2019</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(41,'a','d')"><span class="ol">A</span>Low alternator efficiency</button>
-<button class="ob" onclick="ans(41,'b','d')"><span class="ol">B</span>High energy loss in boilers</button>
-<button class="ob" onclick="ans(41,'c','d')"><span class="ol">C</span>Low steam turbine efficiency</button>
-<button class="ob" onclick="ans(41,'d','d')"><span class="ol">D</span>High energy loss from turbine exhaust to condenser</button>
-</div>
-<div class="exp" id="exp41"><strong>D — High energy loss from turbine exhaust to condenser.</strong> This unavoidable heat rejection in the condenser (Rankine cycle limitation) is why thermal efficiency is capped at ~35%.</div>
-</div>
-<div class="qc" id="qc42">
-<div class="qh"><div class="qn">Q42</div><div class="qt">Major share of power in India is produced through:</div><div class="stag">Mizoram PSC 2019</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(42,'a','a')"><span class="ol">A</span>Thermal power plants</button>
-<button class="ob" onclick="ans(42,'b','a')"><span class="ol">B</span>Diesel power plants</button>
-<button class="ob" onclick="ans(42,'c','a')"><span class="ol">C</span>Nuclear power plants</button>
-<button class="ob" onclick="ans(42,'d','a')"><span class="ol">D</span>Hydroelectric power plants</button>
-</div>
-<div class="exp" id="exp42"><strong>A — Thermal power plants (63%).</strong> India mix: Thermal 63%, Hydro 13%, Non-conventional 12%, Gas 7%, Nuclear 2%, Diesel 1%.</div>
-</div>
-<div class="qc" id="qc43">
-<div class="qh"><div class="qn">Q43</div><div class="qt">The economiser of steam turbine system is located in:</div><div class="stag">PSPCL JE 2019</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(43,'a','b')"><span class="ol">A</span>Turbine circuit</button>
-<button class="ob" onclick="ans(43,'b','b')"><span class="ol">B</span>Feeding water circuit</button>
-<button class="ob" onclick="ans(43,'c','b')"><span class="ol">C</span>Coal handling plant</button>
-<button class="ob" onclick="ans(43,'d','b')"><span class="ol">D</span>Condenser circuit</button>
-</div>
-<div class="exp" id="exp43"><strong>B — Feeding water circuit.</strong> Economiser is a bundle of horizontal tubes in feed water circuit. Feed water absorbs residual heat from exhaust flue gases on its way to the boiler.</div>
-</div>
-<div class="qc" id="qc44">
-<div class="qh"><div class="qn">Q44</div><div class="qt">Which generating power station requires lot of time for starting?</div><div class="stag">PGCIL 2018</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(44,'a','a')"><span class="ol">A</span>Steam power station</button>
-<button class="ob" onclick="ans(44,'b','a')"><span class="ol">B</span>Diesel power plant</button>
-<button class="ob" onclick="ans(44,'c','a')"><span class="ol">C</span>Hydro-electric power plant</button>
-<button class="ob" onclick="ans(44,'d','a')"><span class="ol">D</span>Nuclear power plant</button>
-</div>
-<div class="exp" id="exp44"><strong>A — Steam power station.</strong> Steam plants are quasi-static — many energy conversion processes must stabilise (boiler warm-up, steam pressure building) before full power is possible.</div>
-</div>
-<div class="qc" id="qc45">
-<div class="qh"><div class="qn">Q45</div><div class="qt">The function of condenser in thermal power plant is:</div><div class="stag">SSC JE 2019</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(45,'a','b')"><span class="ol">A</span>Purify steam</button>
-<button class="ob" onclick="ans(45,'b','b')"><span class="ol">B</span>Condense used steam into water</button>
-<button class="ob" onclick="ans(45,'c','b')"><span class="ol">C</span>Condense water</button>
-<button class="ob" onclick="ans(45,'d','b')"><span class="ol">D</span>Purify water</button>
-</div>
-<div class="exp" id="exp45"><strong>B — Condense used steam into water.</strong> Condenser converts exhaust steam from turbine back into water (condensate) for reuse as feed water in the boiler, completing the Rankine cycle.</div>
-</div>
-<div class="qc" id="qc46">
-<div class="qh"><div class="qn">Q46</div><div class="qt">_____ is NOT a component in a thermal power plant:</div><div class="stag">SSC JE 2019</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(46,'a','c')"><span class="ol">A</span>Chimney</button>
-<button class="ob" onclick="ans(46,'b','c')"><span class="ol">B</span>Boiler</button>
-<button class="ob" onclick="ans(46,'c','c')"><span class="ol">C</span>Reactor</button>
-<button class="ob" onclick="ans(46,'d','c')"><span class="ol">D</span>Economiser</button>
-</div>
-<div class="exp" id="exp46"><strong>C — Reactor.</strong> Nuclear reactor is the main part of a NUCLEAR power plant. Chimney, boiler, and economiser are all components of thermal (steam) power plants.</div>
-</div>
-<div class="qc" id="qc47">
-<div class="qh"><div class="qn">Q47</div><div class="qt">Name the generating station where electrical energy is generated through steam:</div><div class="stag">SSC JE 2018</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(47,'a','a')"><span class="ol">A</span>Thermal power station</button>
-<button class="ob" onclick="ans(47,'b','a')"><span class="ol">B</span>Diesel power station</button>
-<button class="ob" onclick="ans(47,'c','a')"><span class="ol">C</span>Hydro power station</button>
-<button class="ob" onclick="ans(47,'d','a')"><span class="ol">D</span>Nuclear power station</button>
-</div>
-<div class="exp" id="exp47"><strong>A — Thermal power station.</strong> Thermal stations use heat from burning coal to generate steam, which drives turbines to produce electrical energy. Thermal efficiency ≈ 30%.</div>
-</div>
-<div class="qc" id="qc48">
-<div class="qh"><div class="qn">Q48</div><div class="qt">Which type of fan is used between dust collector and chimney in thermal power plant?</div><div class="stag">SSC JE 2018</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(48,'a','b')"><span class="ol">A</span>Forced draft</button>
-<button class="ob" onclick="ans(48,'b','b')"><span class="ol">B</span>Induced draft</button>
-<button class="ob" onclick="ans(48,'c','b')"><span class="ol">C</span>Ceiling fan</button>
-<button class="ob" onclick="ans(48,'d','b')"><span class="ol">D</span>Table fan</button>
-</div>
-<div class="exp" id="exp48"><strong>B — Induced draft fan.</strong> ID fan is placed between dust collector (ESP) and chimney. It creates vacuum/negative pressure to pull flue gases through the system and expel via chimney.</div>
-</div>
-<div class="qc" id="qc49">
-<div class="qh"><div class="qn">Q49</div><div class="qt">The air preheater in thermal power plant is called as:</div><div class="stag">SSC JE 2018</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(49,'a','b')"><span class="ol">A</span>Safety device</button>
-<button class="ob" onclick="ans(49,'b','b')"><span class="ol">B</span>Efficiency increasing equipment</button>
-<button class="ob" onclick="ans(49,'c','b')"><span class="ol">C</span>Starting device</button>
-<button class="ob" onclick="ans(49,'d','b')"><span class="ol">D</span>Very essential device</button>
-</div>
-<div class="exp" id="exp49"><strong>B — Efficiency increasing equipment.</strong> Air preheater heats incoming combustion air using flue gases, recovering waste heat and increasing thermal efficiency by reducing fuel needed.</div>
-</div>
-<div class="qc" id="qc50">
-<div class="qh"><div class="qn">Q50</div><div class="qt">Forced draft fan handles which type of air?</div><div class="stag">SSC JE 2018</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(50,'a','a')"><span class="ol">A</span>Cold air</button>
-<button class="ob" onclick="ans(50,'b','a')"><span class="ol">B</span>Hot air</button>
-<button class="ob" onclick="ans(50,'c','a')"><span class="ol">C</span>Flue gas only</button>
-<button class="ob" onclick="ans(50,'d','a')"><span class="ol">D</span>Fresh air only</button>
-</div>
-<div class="exp" id="exp50"><strong>A — Cold air.</strong> FD (forced draft) fan pushes cold fresh air into the boiler for combustion. ID (induced draft) fan handles hot flue gases on the exit side. FD fan pressure = positive; ID = negative.</div>
-</div>
-<div class="qc" id="qc51">
-<div class="qh"><div class="qn">Q51</div><div class="qt">The overall efficiency of a steam power plant is about:</div><div class="stag">UPPCL JE 2019</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(51,'a','b')"><span class="ol">A</span>66%</button>
-<button class="ob" onclick="ans(51,'b','b')"><span class="ol">B</span>29%</button>
-<button class="ob" onclick="ans(51,'c','b')"><span class="ol">C</span>56%</button>
-<button class="ob" onclick="ans(51,'d','b')"><span class="ol">D</span>45%</button>
-</div>
-<div class="exp" id="exp51"><strong>B — 29%.</strong> Plant efficiencies: Steam 29%, Nuclear 30–37%, Hydro 85%, Diesel 42%, Gas 40%. Steam is lowest due to large condenser heat rejection losses.</div>
-</div>
-<div class="qc" id="qc52">
-<div class="qh"><div class="qn">Q52</div><div class="qt">100 MW station, thermal eff 30%, electrical eff 92%. Find overall efficiency:</div><div class="stag">UPPCL JE 2019</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(52,'a','b')"><span class="ol">A</span>92%</button>
-<button class="ob" onclick="ans(52,'b','b')"><span class="ol">B</span>27.6%</button>
-<button class="ob" onclick="ans(52,'c','b')"><span class="ol">C</span>30%</button>
-<button class="ob" onclick="ans(52,'d','b')"><span class="ol">D</span>62%</button>
-</div>
-<div class="exp" id="exp52"><strong>B — 27.</strong>6%. Overall = Thermal × Electrical = (30/100)×(92/100)×100 = 27.6%</div>
-</div>
-<div class="qc" id="qc53">
-<div class="qh"><div class="qn">Q53</div><div class="qt">What is the name of the power generating station which uses coal as a fuel?</div><div class="stag">SSC JE 2020</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(53,'a','b')"><span class="ol">A</span>Atomic power station</button>
-<button class="ob" onclick="ans(53,'b','b')"><span class="ol">B</span>Thermal power station</button>
-<button class="ob" onclick="ans(53,'c','b')"><span class="ol">C</span>Mercury Voltage lamps</button>
-<button class="ob" onclick="ans(53,'d','b')"><span class="ol">D</span>Nuclear power station</button>
-</div>
-<div class="exp" id="exp53"><strong>B — Thermal power station.</strong> A thermal/steam power station converts coal combustion heat energy into electrical energy. It works on the Rankine cycle.</div>
-</div>
-<div class="qc" id="qc54">
-<div class="qh"><div class="qn">Q54</div><div class="qt">In a thermal power plant, feed water heaters, super heaters and air preheaters are mainly used to:</div><div class="stag">UPSSSC JE 2015</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(54,'a','c')"><span class="ol">A</span>Have better dust removal</button>
-<button class="ob" onclick="ans(54,'b','c')"><span class="ol">B</span>Have better ash removal</button>
-<button class="ob" onclick="ans(54,'c','c')"><span class="ol">C</span>Increase the efficiency of the plant</button>
-<button class="ob" onclick="ans(54,'d','c')"><span class="ol">D</span>None of the above</button>
-</div>
-<div class="exp" id="exp54"><strong>C — Increase the efficiency of the plant.</strong> All three devices recover waste heat at various stages, reducing fuel consumption and improving overall plant efficiency significantly.</div>
-</div>
-<div class="qc" id="qc55">
-<div class="qh"><div class="qn">Q55</div><div class="qt">Coal used in power plant is also known as:</div><div class="stag">UPSSSC JE 2015</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(55,'a','a')"><span class="ol">A</span>Steam coal</button>
-<button class="ob" onclick="ans(55,'b','a')"><span class="ol">B</span>Charcoal</button>
-<button class="ob" onclick="ans(55,'c','a')"><span class="ol">C</span>Coke</button>
-<button class="ob" onclick="ans(55,'d','a')"><span class="ol">D</span>Soft coal</button>
-</div>
-<div class="exp" id="exp55"><strong>A — Steam coal.</strong> Coal used in thermal power plants is called steam coal. For efficient combustion, it is pulverized into fine powder — called pulverized coal — before burning.</div>
-</div>
-<div class="qc" id="qc56">
-<div class="qh"><div class="qn">Q56</div><div class="qt">Binary vapour cycles are used to:</div><div class="stag">UPPCL JE 2018</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(56,'a','b')"><span class="ol">A</span>Increase efficiency of the turbine</button>
-<button class="ob" onclick="ans(56,'b','b')"><span class="ol">B</span>Increase the efficiency of the plant</button>
-<button class="ob" onclick="ans(56,'c','b')"><span class="ol">C</span>Increase performance of the condenser</button>
-<button class="ob" onclick="ans(56,'d','b')"><span class="ol">D</span>Balance the efficiency of turbine</button>
-</div>
-<div class="exp" id="exp56"><strong>B — Increase the efficiency of the plant.</strong> A binary vapour cycle combines two thermodynamic cycles (one in high-temp, one in lower-temp region) to better utilise heat across temperature ranges.</div>
-</div>
-<div class="qc" id="qc57">
-<div class="qh"><div class="qn">Q57</div><div class="qt">The draught produced by chimney — if chimney gas temperature increases, draught:</div><div class="stag">UPPCL JE 2018</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(57,'a','b')"><span class="ol">A</span>May increase or decrease</button>
-<button class="ob" onclick="ans(57,'b','b')"><span class="ol">B</span>Increases</button>
-<button class="ob" onclick="ans(57,'c','b')"><span class="ol">C</span>Decreases</button>
-<button class="ob" onclick="ans(57,'d','b')"><span class="ol">D</span>Remains same</button>
-</div>
-<div class="exp" id="exp57"><strong>B — Increases.</strong> Draught = pressure difference due to density difference between hot gas inside and cold air outside chimney. Higher temperature → lower gas density → stronger draught.</div>
-</div>
-<div class="qc" id="qc58">
-<div class="qh"><div class="qn">Q58</div><div class="qt">The overall efficiency of steam power plant is defined as:</div><div class="stag">SSC JE 2020</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(58,'a','b')"><span class="ol">A</span>Heat equiv of mechanical output / heat of combustion</button>
-<button class="ob" onclick="ans(58,'b','b')"><span class="ol">B</span>Heat equiv of electrical output / heat of combustion</button>
-<button class="ob" onclick="ans(58,'c','b')"><span class="ol">C</span>Heat equiv electrical output / heat equiv mechanical output</button>
-<button class="ob" onclick="ans(58,'d','b')"><span class="ol">D</span>Electrical output / heat of combustion</button>
-</div>
-<div class="exp" id="exp58"><strong>B — Heat equivalent of electrical output / heat of combustion of coal.</strong> This is the true measure of station performance. Typical efficiency = 33–48%.</div>
-</div>
-<div class="qc" id="qc59">
-<div class="qh"><div class="qn">Q59</div><div class="qt">The prime mover used in thermal power plant is:</div><div class="stag">SSC JE 2020</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(59,'a','b')"><span class="ol">A</span>Wind turbine</button>
-<button class="ob" onclick="ans(59,'b','b')"><span class="ol">B</span>Steam turbine</button>
-<button class="ob" onclick="ans(59,'c','b')"><span class="ol">C</span>PV cell</button>
-<button class="ob" onclick="ans(59,'d','b')"><span class="ol">D</span>Reaction turbine</button>
-</div>
-<div class="exp" id="exp59"><strong>B — Steam turbine.</strong> Steam turbines are the prime movers in thermal power plants. They extract thermal energy from pressurized steam and convert it to mechanical work on a rotating shaft.</div>
-</div>
-<div class="qc" id="qc60">
-<div class="qh"><div class="qn">Q60</div><div class="qt">In a steam power plant, the condensate from condenser is used:</div><div class="stag">SSC JE 2020</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(60,'a','b')"><span class="ol">A</span>To cool the generator</button>
-<button class="ob" onclick="ans(60,'b','b')"><span class="ol">B</span>As feed water to the boiler</button>
-<button class="ob" onclick="ans(60,'c','b')"><span class="ol">C</span>To cool the turbine</button>
-<button class="ob" onclick="ans(60,'d','b')"><span class="ol">D</span>To cool the boiler</button>
-</div>
-<div class="exp" id="exp60"><strong>B — As feed water to the boiler.</strong> Condensate pump → low pressure feed water heater → high pressure heater → back to boiler. This closed cycle minimizes water consumption.</div>
-</div>
-<div class="qc" id="qc61">
-<div class="qh"><div class="qn">Q61</div><div class="qt">Steam power station: thermal efficiency 30%, electrical efficiency 90%. Overall efficiency:</div><div class="stag">SSC JE 2020</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(61,'a','a')"><span class="ol">A</span>27%</button>
-<button class="ob" onclick="ans(61,'b','a')"><span class="ol">B</span>33%</button>
-<button class="ob" onclick="ans(61,'c','a')"><span class="ol">C</span>90%</button>
-<button class="ob" onclick="ans(61,'d','a')"><span class="ol">D</span>30%</button>
-</div>
-<div class="exp" id="exp61"><strong>A — 27%.</strong> Overall = Thermal × Electrical = 0.30 × 0.90 = 0.27 = 27%</div>
-</div>
-<div class="qc" id="qc62">
-<div class="qh"><div class="qn">Q62</div><div class="qt">A modern coal-fired thermal power station consumes about _____ of its power for auxiliaries:</div><div class="stag">SSC JE 2020</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(62,'a','b')"><span class="ol">A</span>40%</button>
-<button class="ob" onclick="ans(62,'b','b')"><span class="ol">B</span>10%</button>
-<button class="ob" onclick="ans(62,'c','b')"><span class="ol">C</span>20%</button>
-<button class="ob" onclick="ans(62,'d','b')"><span class="ol">D</span>30%</button>
-</div>
-<div class="exp" id="exp62"><strong>B — 10%.</strong> Thermal power stations consume about 10% of generated power for auxiliary equipment (fans, pumps, coal handling, lighting, etc.). Called station service/auxiliary power.</div>
-</div>
-<div class="qc" id="qc63">
-<div class="qh"><div class="qn">Q63</div><div class="qt">Which of the following fuels is used as a fossil fuel in electric power generation?</div><div class="stag">SSC JE 2020</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(63,'a','a')"><span class="ol">A</span>Coal</button>
-<button class="ob" onclick="ans(63,'b','a')"><span class="ol">B</span>Solar light</button>
-<button class="ob" onclick="ans(63,'c','a')"><span class="ol">C</span>Wind</button>
-<button class="ob" onclick="ans(63,'d','a')"><span class="ol">D</span>Water</button>
-</div>
-<div class="exp" id="exp63"><strong>A — Coal.</strong> Coal is a hard fossil fuel (mostly carbon + hydrogen, sulphur, oxygen, nitrogen). Solar, Wind, Water are renewable non-fossil energy sources.</div>
-</div>
-<div class="qc" id="qc64">
-<div class="qh"><div class="qn">Q64</div><div class="qt">Which of the following is a conventional method of electrical energy generation?</div><div class="stag">PGCIL 2018</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(64,'a','c')"><span class="ol">A</span>Photovoltaic cells</button>
-<button class="ob" onclick="ans(64,'b','c')"><span class="ol">B</span>Wind power plant</button>
-<button class="ob" onclick="ans(64,'c','c')"><span class="ol">C</span>Thermal power plant</button>
-<button class="ob" onclick="ans(64,'d','c')"><span class="ol">D</span>Fuel cells</button>
-</div>
-<div class="exp" id="exp64"><strong>C — Thermal power plant.</strong> Conventional (non-renewable): Thermal, Nuclear, Large Hydro. Non-conventional (renewable): Solar PV, Wind, Fuel cells, Tidal, Geothermal, Biomass.</div>
-</div>
-<div class="qc" id="qc65">
-<div class="qh"><div class="qn">Q65</div><div class="qt">Which device is suitable for removal of gaseous pollutants?</div><div class="stag">RRB JE 2019</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(65,'a','c')"><span class="ol">A</span>Cyclone separator</button>
-<button class="ob" onclick="ans(65,'b','c')"><span class="ol">B</span>Electrostatic precipitator</button>
-<button class="ob" onclick="ans(65,'c','c')"><span class="ol">C</span>Wet collector (scrubber)</button>
-<button class="ob" onclick="ans(65,'d','c')"><span class="ol">D</span>Fabric filter</button>
-</div>
-<div class="exp" id="exp65"><strong>C — Wet collector (scrubber).</strong> Scrubbers remove gaseous pollutants (SO₂, HCl, etc.) from exhaust gases using a scrubbing liquid. ESP removes particulate matter; cyclone removes large particles.</div>
-</div>
-<div class="qc" id="qc66">
-<div class="qh"><div class="qn">Q66</div><div class="qt">The term 'Live storage of coal' in a power plant relates to:</div><div class="stag">BSPHCL JE 2019</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(66,'a','d')"><span class="ol">A</span>Coal ready for combustion and reusability</button>
-<button class="ob" onclick="ans(66,'b','d')"><span class="ol">B</span>Coal in transit requiring one year waiting</button>
-<button class="ob" onclick="ans(66,'c','d')"><span class="ol">C</span>Preheated coal to be used and disposed</button>
-<button class="ob" onclick="ans(66,'d','d')"><span class="ol">D</span>Storage of coal sufficient to meet 24 hour demand</button>
-</div>
-<div class="exp" id="exp66"><strong>D — Storage sufficient for 24-hour demand.</strong> Live storage is the working coal stock that feeds the plant directly, designed to meet the plant's 24-hour coal requirement.</div>
-</div>
-<div class="qc" id="qc67">
-<div class="qh"><div class="qn">Q67</div><div class="qt">Which cycle is practically suitable for coal-fired thermal power plant?</div><div class="stag">BSPHCL JE 2019</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(67,'a','d')"><span class="ol">A</span>Rankine and Carnot cycle</button>
-<button class="ob" onclick="ans(67,'b','d')"><span class="ol">B</span>Otto and Carnot cycle</button>
-<button class="ob" onclick="ans(67,'c','d')"><span class="ol">C</span>Carnot cycle only</button>
-<button class="ob" onclick="ans(67,'d','d')"><span class="ol">D</span>Rankine cycle only</button>
-</div>
-<div class="exp" id="exp67"><strong>D — Rankine cycle only.</strong> Thermal stations work on the Rankine cycle (2 isothermal + 2 adiabatic + 1 isobaric processes). Efficiency of Rankine cycle = 30–45%.</div>
-</div>
-<div class="qc" id="qc68">
-<div class="qh"><div class="qn">Q68</div><div class="qt">Natural draught in a steam power plant is produced by:</div><div class="stag">UPPCL JE 2021</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(68,'a','c')"><span class="ol">A</span>Mechanical system</button>
-<button class="ob" onclick="ans(68,'b','c')"><span class="ol">B</span>Fans</button>
-<button class="ob" onclick="ans(68,'c','c')"><span class="ol">C</span>Chimneys</button>
-<button class="ob" onclick="ans(68,'d','c')"><span class="ol">D</span>Steam jets</button>
-</div>
-<div class="exp" id="exp68"><strong>C — Chimneys.</strong> Natural (chimney) draught is created by density difference between hot flue gases inside and cold air outside the chimney. No mechanical fan needed — purely thermal buoyancy.</div>
-</div>
-<div class="qc" id="qc69">
-<div class="qh"><div class="qn">Q69</div><div class="qt">Which power plant has least efficiency?</div><div class="stag">RSMSSB JEN 2020</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(69,'a','a')"><span class="ol">A</span>Steam Power Plant (29%)</button>
-<button class="ob" onclick="ans(69,'b','a')"><span class="ol">B</span>Diesel Power Plant (42%)</button>
-<button class="ob" onclick="ans(69,'c','a')"><span class="ol">C</span>Nuclear Power Plant (35%)</button>
-<button class="ob" onclick="ans(69,'d','a')"><span class="ol">D</span>Hydro Power Plant (85%)</button>
-</div>
-<div class="exp" id="exp69"><strong>A — Steam Power Plant (29%).</strong> Efficiency: Hydro 85%, Diesel 42%, Nuclear 30–37%, Steam 29%. Steam has the lowest due to large unavoidable heat rejection in the condenser.</div>
-</div>
-<div class="qc" id="qc70">
-<div class="qh"><div class="qn">Q70</div><div class="qt">The optimal scheduling problem in case of a thermal plant can be solved at any desired instant:</div><div class="stag">SSC JE 2017</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(70,'a','b')"><span class="ol">A</span>With reference to operation at other times</button>
-<button class="ob" onclick="ans(70,'b','b')"><span class="ol">B</span>Without reference to operation at other times</button>
-<button class="ob" onclick="ans(70,'c','b')"><span class="ol">C</span>Depends on size of the plant</button>
-<button class="ob" onclick="ans(70,'d','b')"><span class="ol">D</span>None of these</button>
-</div>
-<div class="exp" id="exp70"><strong>B — Without reference to operation at other times.</strong> Thermal plant scheduling is instantaneous — optimal output at any moment is determined solely from current incremental costs.</div>
-</div>
-<div class="qc" id="qc71">
-<div class="qh"><div class="qn">Q71</div><div class="qt">Overall efficiency: boiler eff=85%, turbine eff=40%, alternator eff=95%:</div><div class="stag">SSC JE 2020</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(71,'a','b')"><span class="ol">A</span>73.3%</button>
-<button class="ob" onclick="ans(71,'b','b')"><span class="ol">B</span>32.3%</button>
-<button class="ob" onclick="ans(71,'c','b')"><span class="ol">C</span>43.5%</button>
-<button class="ob" onclick="ans(71,'d','b')"><span class="ol">D</span>25.3%</button>
-</div>
-<div class="exp" id="exp71"><strong>B — 32.</strong>3%. Overall = ηb × ηt × ηa = 0.85 × 0.40 × 0.95 = 0.323 = 32.3%</div>
-</div>
-<div class="qc" id="qc72">
-<div class="qh"><div class="qn">Q72</div><div class="qt">Turbine efficiency of a steam thermal power plant varies between:</div><div class="stag">SSC JE 2020</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(72,'a','c')"><span class="ol">A</span>65 to 75%</button>
-<button class="ob" onclick="ans(72,'b','c')"><span class="ol">B</span>55 to 65%</button>
-<button class="ob" onclick="ans(72,'c','c')"><span class="ol">C</span>25 to 35%</button>
-<button class="ob" onclick="ans(72,'d','c')"><span class="ol">D</span>80 to 90%</button>
-</div>
-<div class="exp" id="exp72"><strong>C — 25 to 35%.</strong> Steam turbine efficiency is 25–35%. Despite modern turbines being 85% efficient internally, thermodynamic cycle limits overall station efficiency to ~29%.</div>
-</div>
-<div class="qc" id="qc73">
-<div class="qh"><div class="qn">Q73</div><div class="qt">Superheater is employed to: (1)remove moisture (2)increase vapour temp (3)heat feed water — which is INCORRECT?</div><div class="stag">UPPCL JE 2016</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(73,'a','b')"><span class="ol">A</span>2 and 3</button>
-<button class="ob" onclick="ans(73,'b','b')"><span class="ol">B</span>3 only</button>
-<button class="ob" onclick="ans(73,'c','b')"><span class="ol">C</span>1 and 2</button>
-<button class="ob" onclick="ans(73,'d','b')"><span class="ol">D</span>1 only</button>
-</div>
-<div class="exp" id="exp73"><strong>B — 3 only is incorrect.</strong> Superheater: (1) Removes moisture ✓ (2) Increases vapour temperature ✓. Heating feed water is done by the ECONOMISER, NOT the superheater.</div>
-</div>
-<div class="qc" id="qc74">
-<div class="qh"><div class="qn">Q74</div><div class="qt">The exact direction of fan for completing the induced draught should be:</div><div class="stag">UPPCL JE 2016</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(74,'a','d')"><span class="ol">A</span>Anywhere</button>
-<button class="ob" onclick="ans(74,'b','d')"><span class="ol">B</span>Bottom of chimney</button>
-<button class="ob" onclick="ans(74,'c','d')"><span class="ol">C</span>Top of chimney</button>
-<button class="ob" onclick="ans(74,'d','d')"><span class="ol">D</span>Near the bottom of chimney</button>
-</div>
-<div class="exp" id="exp74"><strong>D — Near the bottom of chimney.</strong> ID fan near chimney base pulls flue gases through: boiler → economizer → air preheater → ESP → ID fan → chimney.</div>
-</div>
-<div class="qc" id="qc75">
-<div class="qh"><div class="qn">Q75</div><div class="qt">In a steam power plant, the working fluid is:</div><div class="stag">UPPCL JE 2019</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(75,'a','b')"><span class="ol">A</span>Natural gas</button>
-<button class="ob" onclick="ans(75,'b','b')"><span class="ol">B</span>Water</button>
-<button class="ob" onclick="ans(75,'c','b')"><span class="ol">C</span>Diesel</button>
-<button class="ob" onclick="ans(75,'d','b')"><span class="ol">D</span>Oil</button>
-</div>
-<div class="exp" id="exp75"><strong>B — Water.</strong> Water is the working fluid in steam power plants. Advantages: widely available, inexpensive, high specific heat, non-toxic. It undergoes phase change (water→steam→water) in the Rankine cycle.</div>
-</div>
-<div class="qc" id="qc76">
-<div class="qh"><div class="qn">Q76</div><div class="qt">Which of the following is NOT a part of a steam power plant?</div><div class="stag">UPPCL JE 2019</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(76,'a','c')"><span class="ol">A</span>Boiler</button>
-<button class="ob" onclick="ans(76,'b','c')"><span class="ol">B</span>Super heater</button>
-<button class="ob" onclick="ans(76,'c','c')"><span class="ol">C</span>Diffuser</button>
-<button class="ob" onclick="ans(76,'d','c')"><span class="ol">D</span>Economiser</button>
-</div>
-<div class="exp" id="exp76"><strong>C — Diffuser is not part of steam power plant.</strong> Boiler: generates steam. Superheater: raises steam temperature. Economiser: preheats feed water using flue gas heat.</div>
-</div>
-<div class="qc" id="qc77">
-<div class="qh"><div class="qn">Q77</div><div class="qt">In steam electric power plant, which is the pulverised fuel burner?</div><div class="stag">UPPCL JE 2019</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(77,'a','d')"><span class="ol">A</span>Weak type burner</button>
-<button class="ob" onclick="ans(77,'b','d')"><span class="ol">B</span>Rotating cup burner</button>
-<button class="ob" onclick="ans(77,'c','d')"><span class="ol">C</span>Recirculation burner</button>
-<button class="ob" onclick="ans(77,'d','d')"><span class="ol">D</span>Cyclone burner</button>
-</div>
-<div class="exp" id="exp77"><strong>D — Cyclone burner.</strong> In steam power plants, cyclone-type burners are used for pulverised coal. Coal is pulverised in ball mills and fired through cyclone burners for efficient combustion.</div>
-</div>
-<div class="qc" id="qc78">
-<div class="qh"><div class="qn">Q78</div><div class="qt">Efficiencies: generator=0.97, turbine=0.95, boiler=0.92, cycle=0.42, overall=0.33. What % consumed by auxiliaries?</div><div class="stag">UPPCL JE 2019</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(78,'a','c')"><span class="ol">A</span>2.73%</button>
-<button class="ob" onclick="ans(78,'b','c')"><span class="ol">B</span>3.27%</button>
-<button class="ob" onclick="ans(78,'c','c')"><span class="ol">C</span>7.32%</button>
-<button class="ob" onclick="ans(78,'d','c')"><span class="ol">D</span>6.71%</button>
-</div>
-<div class="exp" id="exp78"><strong>C — 7.</strong>32%. 0.33=0.97×0.95×0.92×0.42×ηa → ηa=0.926. Auxiliary = 1–0.926 = 0.0736 ≈ 7.3%.</div>
-</div>
-<div class="qc" id="qc79">
-<div class="qh"><div class="qn">Q79</div><div class="qt">The efficiency of a wet electrostatic precipitator is:</div><div class="stag">UPPCL JE 2019</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(79,'a','d')"><span class="ol">A</span>99%</button>
-<button class="ob" onclick="ans(79,'b','d')"><span class="ol">B</span>50%</button>
-<button class="ob" onclick="ans(79,'c','d')"><span class="ol">C</span>80%</button>
-<button class="ob" onclick="ans(79,'d','d')"><span class="ol">D</span>99.5%</button>
-</div>
-<div class="exp" id="exp79"><strong>D — 99.</strong>5%. Wet ESP achieves 99.5% efficiency separating fine particles from gas using electrostatic charge (30,000–60,000 V conductors attracting charged particles to collection plates).</div>
-</div>
-<div class="qc" id="qc80">
-<div class="qh"><div class="qn">Q80</div><div class="qt">A pulverized coal boiler generates approximately ___fly ash and ___bottom ash:</div><div class="stag">UPPCL JE 2019</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(80,'a','d')"><span class="ol">A</span>60%; 40%</button>
-<button class="ob" onclick="ans(80,'b','d')"><span class="ol">B</span>70%; 30%</button>
-<button class="ob" onclick="ans(80,'c','d')"><span class="ol">C</span>50%; 50%</button>
-<button class="ob" onclick="ans(80,'d','d')"><span class="ol">D</span>80%; 20%</button>
-</div>
-<div class="exp" id="exp80"><strong>D — 80% fly ash, 20% bottom ash.</strong> When pulverized coal burns: 80% of dust becomes fly ash (carried upward with flue gas, collected by ESP) and 20% falls as bottom ash.</div>
-</div>
-<div class="qc" id="qc81">
-<div class="qh"><div class="qn">Q81</div><div class="qt">Correct sequence for heat transfer of water in a steam generator:</div><div class="stag">UPPCL JE 2019</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(81,'a','b')"><span class="ol">A</span>Evaporator → Superheater → Economiser</button>
-<button class="ob" onclick="ans(81,'b','b')"><span class="ol">B</span>Economiser → Evaporator → Superheater</button>
-<button class="ob" onclick="ans(81,'c','b')"><span class="ol">C</span>Economiser → Superheater → Evaporator</button>
-<button class="ob" onclick="ans(81,'d','b')"><span class="ol">D</span>Superheater → Economiser → Evaporator</button>
-</div>
-<div class="exp" id="exp81"><strong>B — Economiser → Evaporator → Superheater.</strong> Water preheated in economizer → evaporated in boiler → wet steam dried/superheated in superheater before entering turbine.</div>
-</div>
-<div class="qc" id="qc82">
-<div class="qh"><div class="qn">Q82</div><div class="qt">Which impurity causes temporary hardness in feed water?</div><div class="stag">UPPCL JE 2019</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(82,'a','d')"><span class="ol">A</span>Nitrates</button>
-<button class="ob" onclick="ans(82,'b','d')"><span class="ol">B</span>Chlorides</button>
-<button class="ob" onclick="ans(82,'c','d')"><span class="ol">C</span>Sulphates</button>
-<button class="ob" onclick="ans(82,'d','d')"><span class="ol">D</span>Bicarbonates</button>
-</div>
-<div class="exp" id="exp82"><strong>D — Bicarbonates → Temporary hardness (removed by boiling).</strong> Sulphates and chlorides of Ca/Mg → Permanent hardness (needs chemical treatment like lime-soda process).</div>
-</div>
-<div class="qc" id="qc83">
-<div class="qh"><div class="qn">Q83</div><div class="qt">Correct sequence of flue gas flow in thermal power plant:</div><div class="stag">UPPCL JE 2019</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(83,'a','a')"><span class="ol">A</span>Boiler→Economizer→Air preheater→ID fan→Chimney</button>
-<button class="ob" onclick="ans(83,'b','a')"><span class="ol">B</span>Boiler→ID fan→Economizer→Air preheater→Chimney</button>
-<button class="ob" onclick="ans(83,'c','a')"><span class="ol">C</span>Boiler→ID fan→Air preheater→Economizer→Chimney</button>
-<button class="ob" onclick="ans(83,'d','a')"><span class="ol">D</span>Boiler→Air preheater→ID fan→Economizer→Chimney</button>
-</div>
-<div class="exp" id="exp83"><strong>A — Boiler→Economizer→Air preheater→(ESP)→ID fan→Chimney.</strong> Economizer recovers heat to feed water first, then APH recovers heat for combustion air, then ESP removes ash.</div>
-</div>
-<div class="qc" id="qc84">
-<div class="qh"><div class="qn">Q84</div><div class="qt">In steam power plant, ___ heats feed water on its way to boiler using flue gas heat:</div><div class="stag">UPPCL JE 2016</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(84,'a','b')"><span class="ol">A</span>Superheater</button>
-<button class="ob" onclick="ans(84,'b','b')"><span class="ol">B</span>Economizer</button>
-<button class="ob" onclick="ans(84,'c','b')"><span class="ol">C</span>Preheater</button>
-<button class="ob" onclick="ans(84,'d','b')"><span class="ol">D</span>Turbine</button>
-</div>
-<div class="exp" id="exp84"><strong>B — Economizer.</strong> It is a heat exchanger recovering more heat from flue gases than normal air preheater can. It preheats feed water, reducing fuel needed and improving efficiency.</div>
-</div>
-<div class="qc" id="qc85">
-<div class="qh"><div class="qn">Q85</div><div class="qt">Which is NOT a part of steam power plant?</div><div class="stag">UPPCL JE 2016</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(85,'a','d')"><span class="ol">A</span>Switch Yard</button>
-<button class="ob" onclick="ans(85,'b','d')"><span class="ol">B</span>Ash precipitators</button>
-<button class="ob" onclick="ans(85,'c','d')"><span class="ol">C</span>Draught fan</button>
-<button class="ob" onclick="ans(85,'d','d')"><span class="ol">D</span>Surge Chamber</button>
-</div>
-<div class="exp" id="exp85"><strong>D — Surge Chamber.</strong> Surge chamber is part of HYDRO power plant — it controls water hammering in penstock. Steam plants include switch yard, ash precipitators, and draught fans.</div>
-</div>
-<div class="qc" id="qc86">
-<div class="qh"><div class="qn">Q86</div><div class="qt">The first thermal power plant of India is:</div><div class="stag">UPPCL JE 2019</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(86,'a','d')"><span class="ol">A</span>Jharsuguda TPS</button>
-<button class="ob" onclick="ans(86,'b','d')"><span class="ol">B</span>Mundhra Ultra Mega PP</button>
-<button class="ob" onclick="ans(86,'c','d')"><span class="ol">C</span>Vindhyachal TPS</button>
-<button class="ob" onclick="ans(86,'d','d')"><span class="ol">D</span>Hussain Sagar TPS</button>
-</div>
-<div class="exp" id="exp86"><strong>D — Hussain Sagar TPS.</strong> Located on Hussainsagar lake, Hyderabad, Telangana. Opened in 1920 — India's first thermal power station. Nameplate capacity = 22.5 MW.</div>
-</div>
-<div class="qc" id="qc87">
-<div class="qh"><div class="qn">Q87</div><div class="qt">Air forced into tower in mechanical draft cooling towers by using:</div><div class="stag">UPPCL JE 2019</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(87,'a','c')"><span class="ol">A</span>Deckings</button>
-<button class="ob" onclick="ans(87,'b','c')"><span class="ol">B</span>Spray nozzles</button>
-<button class="ob" onclick="ans(87,'c','c')"><span class="ol">C</span>Propellers</button>
-<button class="ob" onclick="ans(87,'d','c')"><span class="ol">D</span>Louvers</button>
-</div>
-<div class="exp" id="exp87"><strong>C — Propellers.</strong> Mechanical draft cooling towers use propeller fans to force/induce air through the tower. Natural draft towers use chimney effect from hyperbolic tower height.</div>
-</div>
-<div class="qc" id="qc88">
-<div class="qh"><div class="qn">Q88</div><div class="qt">The function of electrostatic precipitator in coal based thermal power plant is to:</div><div class="stag">UPPCL JE 2019</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(88,'a','a')"><span class="ol">A</span>Collect dust from flue gas</button>
-<button class="ob" onclick="ans(88,'b','a')"><span class="ol">B</span>Collect dust at the air inlet</button>
-<button class="ob" onclick="ans(88,'c','a')"><span class="ol">C</span>Collect dust from the coal</button>
-<button class="ob" onclick="ans(88,'d','a')"><span class="ol">D</span>Clean the turbine blades</button>
-</div>
-<div class="exp" id="exp88"><strong>A — Collect dust from flue gas.</strong> ESP removes fly ash from flue gases. Dust-filled gas passes between conductors at 30,000–60,000 V, charged particles collected on grounded plates.</div>
-</div>
-<div class="qc" id="qc89">
-<div class="qh"><div class="qn">Q89</div><div class="qt">_____ is present between air-preheater and induced fan in a thermal power plant:</div><div class="stag">NLC GET 2020</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(89,'a','c')"><span class="ol">A</span>Economizer</button>
-<button class="ob" onclick="ans(89,'b','c')"><span class="ol">B</span>Boiler furnace</button>
-<button class="ob" onclick="ans(89,'c','c')"><span class="ol">C</span>Electrostatic precipitator</button>
-<button class="ob" onclick="ans(89,'d','c')"><span class="ol">D</span>Super heater</button>
-</div>
-<div class="exp" id="exp89"><strong>C — Electrostatic precipitator.</strong> Gas flow: Boiler→Economizer→Air Preheater→ESP→ID Fan→Chimney. ESP removes particles before gas exits through the fan and chimney.</div>
-</div>
-<div class="qc" id="qc90">
-<div class="qh"><div class="qn">Q90</div><div class="qt">The efficiency of modern steam turbines is about:</div><div class="stag">Punjab Mandi Board JE 2014</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(90,'a','b')"><span class="ol">A</span>50%</button>
-<button class="ob" onclick="ans(90,'b','b')"><span class="ol">B</span>85%</button>
-<button class="ob" onclick="ans(90,'c','b')"><span class="ol">C</span>75%</button>
-<button class="ob" onclick="ans(90,'d','b')"><span class="ol">D</span>90%</button>
-</div>
-<div class="exp" id="exp90"><strong>B — 85%.</strong> Modern steam turbines achieve ~85% efficiency internally. However, overall plant efficiency is less than 40% because boiler and condenser losses are dominant.</div>
-</div>
-<div class="qc" id="qc91">
-<div class="qh"><div class="qn">Q91</div><div class="qt">The overall efficiency of thermal station is:</div><div class="stag">Punjab Mandi Board JE 2014</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(91,'a','b')"><span class="ol">A</span>40%</button>
-<button class="ob" onclick="ans(91,'b','b')"><span class="ol">B</span>Less than 40%</button>
-<button class="ob" onclick="ans(91,'c','b')"><span class="ol">C</span>More than 40%</button>
-<button class="ob" onclick="ans(91,'d','b')"><span class="ol">D</span>50%</button>
-</div>
-<div class="exp" id="exp91"><strong>B — Less than 40%.</strong> Modern thermal plants have overall efficiency less than 40%. Component efficiencies: thermodynamic cycle 45%, boiler 85%, steam turbines 85%, generator 98%.</div>
-</div>
-<div class="qc" id="qc92">
-<div class="qh"><div class="qn">Q92</div><div class="qt">The main function of economizer of a boiler in a plant is to:</div><div class="stag">Punjab Mandi Board JE 2014</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(92,'a','b')"><span class="ol">A</span>Increase steam production</button>
-<button class="ob" onclick="ans(92,'b','b')"><span class="ol">B</span>Reduce fuel consumption</button>
-<button class="ob" onclick="ans(92,'c','b')"><span class="ol">C</span>Increase steam pressure</button>
-<button class="ob" onclick="ans(92,'d','b')"><span class="ol">D</span>Increase life of the boiler</button>
-</div>
-<div class="exp" id="exp92"><strong>B — Reduce fuel consumption.</strong> By preheating feed water, economizer reduces energy (fuel) needed to convert water to steam. Recovers waste flue gas heat, lowering required firing rate.</div>
-</div>
-<div class="qc" id="qc93">
-<div class="qh"><div class="qn">Q93</div><div class="qt">Super heater is used in thermal power plant to:</div><div class="stag">UJVNL JE 2016</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(93,'a','b')"><span class="ol">A</span>Heat the feed water</button>
-<button class="ob" onclick="ans(93,'b','b')"><span class="ol">B</span>Reduce moisture contents of steam</button>
-<button class="ob" onclick="ans(93,'c','b')"><span class="ol">C</span>Condensate the steam</button>
-<button class="ob" onclick="ans(93,'d','b')"><span class="ol">D</span>Reduce the running cost</button>
-</div>
-<div class="exp" id="exp93"><strong>B — Reduce moisture contents of steam.</strong> Superheater removes last traces of moisture above saturation temperature, producing dry superheated steam for efficient turbine operation.</div>
-</div>
-<div class="qc" id="qc94">
-<div class="qh"><div class="qn">Q94</div><div class="qt">Statements about steam boilers: (1)Quick start/load (2)No joints exposed to flames (3)Can burn low ash coal — all correct?</div><div class="stag">ESE 2020</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(94,'a','d')"><span class="ol">A</span>1 and 2 only</button>
-<button class="ob" onclick="ans(94,'b','d')"><span class="ol">B</span>1 and 3 only</button>
-<button class="ob" onclick="ans(94,'c','d')"><span class="ol">C</span>2 and 3 only</button>
-<button class="ob" onclick="ans(94,'d','d')"><span class="ol">D</span>1, 2 and 3 — all correct</button>
-</div>
-<div class="exp" id="exp94"><strong>D — All three.</strong> Good steam boiler qualities: (1) Quick starting/loading (2) No joints exposed to flame (3) Efficient burning including low ash coal (4) Easy cleaning/maintenance.</div>
-</div>
-<div class="qc" id="qc95">
-<div class="qh"><div class="qn">Q95</div><div class="qt">Which coal has the highest calorific value?</div><div class="stag">UPPCL JE 2019</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(95,'a','d')"><span class="ol">A</span>Lignite (4200 kcal/kg)</button>
-<button class="ob" onclick="ans(95,'b','d')"><span class="ol">B</span>Bituminous (4200-7000)</button>
-<button class="ob" onclick="ans(95,'c','d')"><span class="ol">C</span>Peat (3500 kcal/kg)</button>
-<button class="ob" onclick="ans(95,'d','d')"><span class="ol">D</span>Anthracite (7600-7800 kcal/kg)</button>
-</div>
-<div class="exp" id="exp95"><strong>D — Anthracite (7600–7800 kcal/kg).</strong> Coal CV ranking: Anthracite > Bituminous > Lignite > Peat. Anthracite (86–92% carbon) is also best for thermal power plants.</div>
-</div>
-<div class="qc" id="qc96">
-<div class="qh"><div class="qn">Q96</div><div class="qt">The quality of coal received by cement plants has ash content in range of:</div><div class="stag">UPPCL JE 2019</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(96,'a','b')"><span class="ol">A</span>100 percent</button>
-<button class="ob" onclick="ans(96,'b','b')"><span class="ol">B</span>30–40 percent</button>
-<button class="ob" onclick="ans(96,'c','b')"><span class="ol">C</span>80–90 percent</button>
-<button class="ob" onclick="ans(96,'d','b')"><span class="ol">D</span>90 percent</button>
-</div>
-<div class="exp" id="exp96"><strong>B — 30–40 percent.</strong> Coal for cement plants typically has 30–40% ash content. High ash coal is acceptable since fly ash is used as a raw material in cement production.</div>
-</div>
-<div class="qc" id="qc97">
-<div class="qh"><div class="qn">Q97</div><div class="qt">Heating value of coal is approximately:</div><div class="stag">Mizoram PSC 2016</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(97,'a','c')"><span class="ol">A</span>1000–2000 kcal/kg</button>
-<button class="ob" onclick="ans(97,'b','c')"><span class="ol">B</span>2000–4000 kcal/kg</button>
-<button class="ob" onclick="ans(97,'c','c')"><span class="ol">C</span>5000–6500 kcal/kg</button>
-<button class="ob" onclick="ans(97,'d','c')"><span class="ol">D</span>9000–10,500 kcal/kg</button>
-</div>
-<div class="exp" id="exp97"><strong>C — 5000–6500 kcal/kg.</strong> General heating value of power station coal: 5000–6500 kcal/kg. Anthracite: 7600–7800; Bituminous: 4200–7000; Lignite: ~4200.</div>
-</div>
-<div class="qc" id="qc98">
-<div class="qh"><div class="qn">Q98</div><div class="qt">Equipment installed in power plants to reduce air pollution due to smoke:</div><div class="stag">Mizoram PSC 2016</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(98,'a','c')"><span class="ol">A</span>Induced draft fans</button>
-<button class="ob" onclick="ans(98,'b','c')"><span class="ol">B</span>De-super heaters</button>
-<button class="ob" onclick="ans(98,'c','c')"><span class="ol">C</span>Electrostatic precipitators</button>
-<button class="ob" onclick="ans(98,'d','c')"><span class="ol">D</span>Re-heaters</button>
-</div>
-<div class="exp" id="exp98"><strong>C — Electrostatic precipitators.</strong> ESP removes suspended dust particles from gas/exhaust by applying high voltage. Charged plates collect particles, reducing particulate emission by >99%.</div>
-</div>
-<div class="qc" id="qc99">
-<div class="qh"><div class="qn">Q99</div><div class="qt">Most generators in thermal power plants run at:</div><div class="stag">Mizoram PSC 2016</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(99,'a','a')"><span class="ol">A</span>3000 rpm</button>
-<button class="ob" onclick="ans(99,'b','a')"><span class="ol">B</span>1500 rpm</button>
-<button class="ob" onclick="ans(99,'c','a')"><span class="ol">C</span>1000 rpm</button>
-<button class="ob" onclick="ans(99,'d','a')"><span class="ol">D</span>750 rpm</button>
-</div>
-<div class="exp" id="exp99"><strong>A — 3000 rpm.</strong> Ns=120f/P=120×50/2=3000 rpm for 2-pole machines (50 Hz). Thermal/nuclear generators use 2-pole cylindrical rotor turbo-generators. Hydro uses 10–20 poles at 300–600 rpm.</div>
-</div>
-<div class="qc" id="qc100">
-<div class="qh"><div class="qn">Q100</div><div class="qt">Synchronous generators used in thermal power plants have:</div><div class="stag">Mizoram PSC 2015</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(100,'a','a')"><span class="ol">A</span>Cylindrical rotors</button>
-<button class="ob" onclick="ans(100,'b','a')"><span class="ol">B</span>Salient pole rotors</button>
-<button class="ob" onclick="ans(100,'c','a')"><span class="ol">C</span>Stator slots in multiple of 6</button>
-<button class="ob" onclick="ans(100,'d','a')"><span class="ol">D</span>All of these</button>
-</div>
-<div class="exp" id="exp100"><strong>A — Cylindrical rotors.</strong> Thermal generators (turbo-generators) use cylindrical rotors — smaller diameter, large axial length. Hydro generators use salient pole rotors — larger diameter, small axial length.</div>
-</div>
-<div class="qc" id="qc101">
-<div class="qh"><div class="qn">Q101</div><div class="qt">Steam station: overall efficiency 20%, 0.5 kg coal/kWh. Calorific value? (1kWh=860 kcal)</div><div class="stag">PGCIL 2018</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(101,'a','d')"><span class="ol">A</span>860 kcal/kg</button>
-<button class="ob" onclick="ans(101,'b','d')"><span class="ol">B</span>2150 kcal/kg</button>
-<button class="ob" onclick="ans(101,'c','d')"><span class="ol">C</span>344 kcal/kg</button>
-<button class="ob" onclick="ans(101,'d','d')"><span class="ol">D</span>8600 kcal/kg</button>
-</div>
-<div class="exp" id="exp101"><strong>D — 8600 kcal/kg.</strong> η=860/(coal/kWh × x) → 0.20=860/(0.5×x) → x=860/0.1=8600 kcal/kg.</div>
-</div>
-<div class="qc" id="qc102">
-<div class="qh"><div class="qn">Q102</div><div class="qt">Electrostatic precipitator is used for:</div><div class="stag">RRB Guwahati 2014</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(102,'a','a')"><span class="ol">A</span>Particulate emission control</button>
-<button class="ob" onclick="ans(102,'b','a')"><span class="ol">B</span>Water pollution control</button>
-<button class="ob" onclick="ans(102,'c','a')"><span class="ol">C</span>Noise pollution control</button>
-<button class="ob" onclick="ans(102,'d','a')"><span class="ol">D</span>Energy pollution control</button>
-</div>
-<div class="exp" id="exp102"><strong>A — Particulate emission control.</strong> ESP located between ID fan and combustion chamber in thermal plants. Removes particles from gas stream using electrical energy — for controlling particulate matter.</div>
-</div>
-<div class="qc" id="qc103">
-<div class="qh"><div class="qn">Q103</div><div class="qt">In steam power stations, the condenser creates a _____ at the exhaust of the turbine:</div><div class="stag">CPCL JE 2019</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(103,'a','d')"><span class="ol">A</span>Very low temperature</button>
-<button class="ob" onclick="ans(103,'b','d')"><span class="ol">B</span>Very high temperature</button>
-<button class="ob" onclick="ans(103,'c','d')"><span class="ol">C</span>Very high pressure</button>
-<button class="ob" onclick="ans(103,'d','d')"><span class="ol">D</span>Very low pressure</button>
-</div>
-<div class="exp" id="exp103"><strong>D — Very low pressure (vacuum).</strong> Condenser creates vacuum at turbine exhaust by condensing steam to water. This large pressure drop across the turbine maximizes turbine work output.</div>
-</div>
-<div class="qc" id="qc104">
-<div class="qh"><div class="qn">Q104</div><div class="qt">The advantage of using pulverized fuel include:</div><div class="stag">UKPSC JE 2013</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(104,'a','d')"><span class="ol">A</span>Higher boiler efficiency</button>
-<button class="ob" onclick="ans(104,'b','d')"><span class="ol">B</span>Easy and complete combustion</button>
-<button class="ob" onclick="ans(104,'c','d')"><span class="ol">C</span>Low air requirement</button>
-<button class="ob" onclick="ans(104,'d','d')"><span class="ol">D</span>All of the above</button>
-</div>
-<div class="exp" id="exp104"><strong>D — All of the above.</strong> Pulverized coal advantages: (1) Higher boiler efficiency (2) Easy and complete combustion (3) Low air requirement (4) Low-grade coal can be burned easily.</div>
-</div>
-<div class="qc" id="qc105">
-<div class="qh"><div class="qn">Q105</div><div class="qt">In thermal power plants, the pressure of working fluid cycle is developed by:</div><div class="stag">UKPSC JE 2013</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(105,'a','c')"><span class="ol">A</span>Condenser</button>
-<button class="ob" onclick="ans(105,'b','c')"><span class="ol">B</span>Superheater</button>
-<button class="ob" onclick="ans(105,'c','c')"><span class="ol">C</span>Feed water pump</button>
-<button class="ob" onclick="ans(105,'d','c')"><span class="ol">D</span>Turbine</button>
-</div>
-<div class="exp" id="exp105"><strong>C — Feed water pump.</strong> The feed water pump develops pressure in the working fluid cycle. It pumps condensate from condenser to high pressure for boiler operation — only work input in Rankine cycle.</div>
-</div>
-<div class="qc" id="qc106">
-<div class="qh"><div class="qn">Q106</div><div class="qt">The pH value of water used for boiler of thermal power plant is:</div><div class="stag">UKPSC JE 2013</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(106,'a','c')"><span class="ol">A</span>Unity (1)</button>
-<button class="ob" onclick="ans(106,'b','c')"><span class="ol">B</span>7 (neutral)</button>
-<button class="ob" onclick="ans(106,'c','c')"><span class="ol">C</span>Slightly more than 7</button>
-<button class="ob" onclick="ans(106,'d','c')"><span class="ol">D</span>10</button>
-</div>
-<div class="exp" id="exp106"><strong>C — Slightly more than 7 (slightly alkaline).</strong> Boiler feed water is kept slightly alkaline to prevent corrosion of boiler tubes. Acidic water causes rapid corrosion; neutral still corrodes; slightly alkaline is optimal.</div>
-</div>
-<div class="qc" id="qc107">
-<div class="qh"><div class="qn">Q107</div><div class="qt">The location of steam generating station is determined by:</div><div class="stag">WBPSC SAE 2000</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(107,'a','d')"><span class="ol">A</span>Centre of gravity of loads</button>
-<button class="ob" onclick="ans(107,'b','d')"><span class="ol">B</span>Availability of water</button>
-<button class="ob" onclick="ans(107,'c','d')"><span class="ol">C</span>Facilities for delivery of coal and removal of ashes</button>
-<button class="ob" onclick="ans(107,'d','d')"><span class="ol">D</span>All the above</button>
-</div>
-<div class="exp" id="exp107"><strong>D — All the above.</strong> Steam station siting: (1) Load centre proximity (2) Water availability for cooling (3) Coal delivery infrastructure (4) Ash disposal facility (5) Land availability.</div>
-</div>
-<div class="qc" id="qc108">
-<div class="qh"><div class="qn">Q108</div><div class="qt">Which feed water treatment is basically one type of thermal treatment?</div><div class="stag">SSC JE 2021</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(108,'a','b')"><span class="ol">A</span>Filtration</button>
-<button class="ob" onclick="ans(108,'b','b')"><span class="ol">B</span>Deaeration</button>
-<button class="ob" onclick="ans(108,'c','b')"><span class="ol">C</span>Sedimentation</button>
-<button class="ob" onclick="ans(108,'d','b')"><span class="ol">D</span>Coagulation</button>
-</div>
-<div class="exp" id="exp108"><strong>B — Deaeration.</strong> Uses heat (steam) to remove dissolved oxygen and CO₂ from feed water, preventing corrosion in boiler tubes. It is a thermal treatment. Filtration/sedimentation = physical; coagulation = chemical.</div>
-</div>
-<div class="qc" id="qc109">
-<div class="qh"><div class="qn">Q109</div><div class="qt">In a steam power plant, which is NOT an artificial draught?</div><div class="stag">SSC JE 2021</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(109,'a','b')"><span class="ol">A</span>Forced draught</button>
-<button class="ob" onclick="ans(109,'b','b')"><span class="ol">B</span>Chimney draught</button>
-<button class="ob" onclick="ans(109,'c','b')"><span class="ol">C</span>Induced draught</button>
-<button class="ob" onclick="ans(109,'d','b')"><span class="ol">D</span>Balanced draught</button>
-</div>
-<div class="exp" id="exp109"><strong>B — Chimney draught is NOT artificial.</strong> Chimney draught = Natural draught (thermal buoyancy, no mechanical equipment). Artificial draughts use fans: Forced, Induced, and Balanced draught.</div>
-</div>
-<div class="qc" id="qc110">
-<div class="qh"><div class="qn">Q110</div><div class="qt">Steam station: overall efficiency 25%, 0.5 kg coal/kWh. Calorific value? (1kWh=860 kcal)</div><div class="stag">SSC JE 2021</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(110,'a','d')"><span class="ol">A</span>4650 kcal/kg</button>
-<button class="ob" onclick="ans(110,'b','d')"><span class="ol">B</span>3400 kcal/kg</button>
-<button class="ob" onclick="ans(110,'c','d')"><span class="ol">C</span>1720 kcal/kg</button>
-<button class="ob" onclick="ans(110,'d','d')"><span class="ol">D</span>6880 kcal/kg</button>
-</div>
-<div class="exp" id="exp110"><strong>D — 6880 kcal/kg.</strong> CV = 860/(η × coal/kWh) = 860/(0.25 × 0.5) = 860/0.125 = 6880 kcal/kg.</div>
-</div>
-<div class="qc" id="qc111">
-<div class="qh"><div class="qn">Q111</div><div class="qt">Thermal power stations: (i) Pollute atmosphere (ii) Costlier running than hydro (iii) Require larger space than hydro — TRUE/FALSE?</div><div class="stag">SSC JE 2021</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(111,'a','a')"><span class="ol">A</span>(i)True, (ii)True and (iii)False</button>
-<button class="ob" onclick="ans(111,'b','a')"><span class="ol">B</span>(i)True, (ii)True and (iii)True</button>
-<button class="ob" onclick="ans(111,'c','a')"><span class="ol">C</span>(i)True, (ii)False and (iii)True</button>
-<button class="ob" onclick="ans(111,'d','a')"><span class="ol">D</span>(i)False, (ii)True and (iii)False</button>
-</div>
-<div class="exp" id="exp111"><strong>A — (i)True, (ii)True, (iii)FALSE.</strong> Thermal plants DO pollute and running cost IS higher than hydro. But thermal plants occupy LESS space than hydro (hydro needs huge reservoir, dam, large land area).</div>
-</div>
-<div class="qc" id="qc112">
-<div class="qh"><div class="qn">Q112</div><div class="qt">Steam station data: Max demand=25MW, Load factor=0.4, Boiler eff=85%, Turbine eff=90%. Find thermal efficiency:</div><div class="stag">SSC JE 2021</div></div>
-<div class="opts">
-<button class="ob" onclick="ans(112,'a','a')"><span class="ol">A</span>76.5%</button>
-<button class="ob" onclick="ans(112,'b','a')"><span class="ol">B</span>62.32%</button>
-<button class="ob" onclick="ans(112,'c','a')"><span class="ol">C</span>65.2%</button>
-<button class="ob" onclick="ans(112,'d','a')"><span class="ol">D</span>99.8%</button>
-</div>
-<div class="exp" id="exp112"><strong>A — 76.</strong>5%. Thermal efficiency = Boiler efficiency × Turbine efficiency = 0.85 × 0.90 = 0.765 = 76.5%.</div>
+
+<div id="progress-wrap"><div id="progress-bar"></div></div>
+
+<div id="dashboard">
+  <div class="dash-box correct">  <div class="num" id="d-correct">0</div><div class="lbl">Correct</div></div>
+  <div class="dash-box wrong">   <div class="num" id="d-wrong">0</div> <div class="lbl">Wrong</div></div>
+  <div class="dash-box skipped"> <div class="num" id="d-skip">0</div>  <div class="lbl">Skipped</div></div>
+  <div class="dash-box score">   <div class="num" id="d-score">0%</div><div class="lbl">Score</div></div>
+  <div class="dash-box">         <div class="num" id="d-qno">1/141</div><div class="lbl">Question</div></div>
 </div>
 
-<div class="fs" id="fs">
-  <h2>🏆 Part 1 Complete!</h2>
-  <div class="bs" id="fn">0/141</div>
-  <p id="fm">Review explanations for any missed questions.</p>
-  <button class="rb" onclick="reset()">↺ Retake Part 1</button>
-</div>
-</div>
-
-<div class="pn">
-  <strong>Part 1 of 5</strong> — Section I: Power Plant Cycle (Q1–Q29) + Section II: Thermal Power Plant (Q30–Q141)<br>
-  <strong>Part 2</strong> → Section II continued (Q113–Q123) + Section III: Hydro Power Plant + Section IV: Nuclear Power Plant (Q1–Q31)
-</div>
+<div id="quiz-area"></div>
+<div id="result-screen"></div>
+<div id="review-screen"></div>
 
 <script>
-const T=141;
-let sc=0,an=0,co=0;
-function ans(n,ch,rt){
-  const card=document.getElementById('qc'+n);
-  if(!card)return;
-  const btns=card.querySelectorAll('.ob');
-  if(btns[0]&&btns[0].disabled)return;
-  an++;const ok=ch===rt;if(ok){co++;sc+=2;}
-  const mp=['a','b','c','d'];
-  btns.forEach((b,i)=>{b.disabled=true;if(mp[i]===rt)b.classList.add('correct');else if(mp[i]===ch&&!ok)b.classList.add('wrong');});
-  const e=document.getElementById('exp'+n);if(e)e.classList.add('show');
-  document.getElementById('sScore').textContent=sc;
-  document.getElementById('sAns').textContent=an;
-  document.getElementById('sCorr').textContent=co;
-  document.getElementById('pFill').style.width=(an/T*100)+'%';
-  if(an===T)fin();
+const questions = [
+  // ── SECTION IV: Nuclear Power Plant (Q32–54) ────────────────────────────
+  {s:"Nuclear Power Plant",n:32,
+   q:"Which one is NOT a commonly used coolant for fast breeder reactor?",
+   o:["Water","Liquid metal","Helium","Carbon dioxide"],a:0,
+   e:"Water coolant is not commonly used for rapid breeder reactors. Liquid metal, helium and carbon dioxide are used as coolants in fast breeder reactors. The most suitable fluid is sodium coolant."},
+
+  {s:"Nuclear Power Plant",n:33,
+   q:"Which of the following terms is associated specifically with nuclear power plants only?",
+   o:["Electrostatic precipitator","Induced draught fan","Breeder reactor","Superheater"],a:2,
+   e:"Breeder reactors are type of nuclear reactors that produce more nuclear fuels than they consume to generate energy. Electrostatic precipitator, superheater and induced draught fan are constituents of steam power plant."},
+
+  {s:"Nuclear Power Plant",n:34,
+   q:"A moderator is an essential part of which type of power plant?",
+   o:["Hydro electric power plant","Thermal power plant","Nuclear power plant","Gas power plant"],a:2,
+   e:"The moderator of a nuclear reactor is a substance that slows down neutrons. The most commonly used moderator materials are graphite and heavy water (D₂O). Moderator is essential only in nuclear power plant."},
+
+  {s:"Nuclear Power Plant",n:35,
+   q:"The main atomic fuel commonly used in a nuclear power plant is:",
+   o:["U²³⁵","PU²³⁹","TH²³²","U²³³"],a:0,
+   e:"Uranium (U²³⁵) is the most widely used fuel by nuclear power plants for nuclear fission. Nuclear power plants use a certain type of uranium U²³⁵ as fuel because its atoms are easily split apart."},
+
+  {s:"Nuclear Power Plant",n:36,
+   q:"Choose the correct schematic arrangement of nuclear power station.",
+   o:["Nuclear reactor → heat exchanger → steam turbine → alternator","Steam turbine → alternator → heat exchanger → nuclear reactor","Steam turbine → heat exchanger → alternator → nuclear reactor","Alternator → heat exchanger → nuclear reactor → steam turbine"],a:0,
+   e:"Correct arrangement: Nuclear reactor → Heat Exchanger (steam produced) → Steam Turbine → Alternator (electricity generated). The condenser then converts exhaust steam back to water via a pump."},
+
+  {s:"Nuclear Power Plant",n:37,
+   q:"Which of the following radioactive byproducts releases from nuclear reaction?",
+   o:["All of these","Cesium","Tritium","Strontium"],a:0,
+   e:"In the process of nuclear reaction, radioactive byproducts such as Cesium, Tritium and Strontium are released. All three are radioactive materials produced as fission products."},
+
+  {s:"Nuclear Power Plant",n:38,
+   q:"If the decay constant of radium is 1.3566×10⁻¹¹ s⁻¹, find its half-life.",
+   o:["1000 year","1620 year","1785 year","1467 year"],a:1,
+   e:"Half-life T½ = 0.693/λ = 0.693/(1.3566×10⁻¹¹) seconds = 0.5108×10¹¹ seconds. Converting: 0.5108×10¹¹/(60×60×24×365) ≈ 1620 years."},
+
+  {s:"Nuclear Power Plant",n:39,
+   q:"Isotopes of an element have:",
+   o:["Same atomic number","Different mass number","Same chemical properties","All of these"],a:3,
+   e:"Isotopes are atoms of the same element that differ in their number of neutrons. They have: same atomic number (same protons), different mass number (different neutrons), and same chemical properties (same electrons). All statements are correct."},
+
+  {s:"Nuclear Power Plant",n:40,
+   q:"Elements which have same number of protons but different number of neutrons are called as:",
+   o:["Isotopes","Isomers","Allotropes","Allomers"],a:0,
+   e:"Isotopes are atoms of the same element that have different numbers of neutrons but the same number of protons and electrons. Atomic Number (Z) = Number of Protons (P). Example: Hydrogen has isotopes – Protium, Deuterium, Tritium."},
+
+  {s:"Nuclear Power Plant",n:41,
+   q:"In the nuclear power station, energy is produced by:",
+   o:["Nuclear fission of Uranium (U²³⁵)","Nuclear fusion of Uranium (U²³⁵)","Nuclear reaction of Uranium (U²³⁰)","Nuclear fusion of Uranium (U²³⁰)"],a:0,
+   e:"In nuclear power stations, energy is produced by nuclear fission of Uranium (U²³⁵). When a neutron strikes U²³⁵, the nucleus splits, releasing ~200 MeV of energy along with more neutrons, sustaining a chain reaction."},
+
+  {s:"Nuclear Power Plant",n:42,
+   q:"Atomic/nuclear power stations are located at all of the following EXCEPT:",
+   o:["Tarapur near Mumbai","Ranapratap, Kota (Rajasthan)","Madras Atomic, Kalpakkam (Tamil Nadu)","All of above are correct locations"],a:3,
+   e:"All three locations are correct: (1) Tarapur Atomic Power Station near Mumbai, (2) Ranapratap Atomic Power Station at Kota, Rajasthan, (3) Madras Atomic Power Station at Kalpakkam, Tamil Nadu."},
+
+  {s:"Nuclear Power Plant",n:43,
+   q:"Which of these statements about nuclear fission are correct? 1) Nuclear fission occurs whenever Uranium reacts with a neutron. 2) Fission is accompanied by release of neutrons and gamma rays. 3) About 200 MeV energy is released in fission of U²³⁵. 4) Energy released mainly as kinetic energy of neutrons and gamma radiation.",
+   o:["1, 2, 3 and 4 only","3 and 4 only","2, 3 and 4 only","1, 2 and 4 only"],a:0,
+   e:"All four statements are correct: U²³⁵ + n → fission products + 3n + γ-rays + ~200 MeV. Fission occurs when neutron strikes U²³⁵; it releases neutrons and gamma rays; about 200 MeV is released; and this energy appears mainly as kinetic energy of fission fragments, neutrons and gamma radiation."},
+
+  {s:"Nuclear Power Plant",n:44,
+   q:"An isotope without any neutron is:",
+   o:["Tritium","Deuterium","Protium","None of these"],a:2,
+   e:"Protium (¹H) is the simplest atom — it contains a single proton, a single electron, and NO neutrons. It is the only stable atom with no neutron. Deuterium has 1 neutron; Tritium has 2 neutrons."},
+
+  {s:"Nuclear Power Plant",n:45,
+   q:"Uranium (Z=92, A=238) emits an α particle. The product has A and Z:",
+   o:["236, 92","234, 90","238, 90","236, 90"],a:1,
+   e:"An α particle is ₂He⁴. When emitted: Atomic number (Z) decreases by 2: 92−2 = 90. Mass number (A) decreases by 4: 238−4 = 234. So the product is ₉₀Th²³⁴ (Thorium-234)."},
+
+  {s:"Nuclear Power Plant",n:46,
+   q:"In what form is the initial energy released (200 MeV per fission) in a slow thermal nuclear reactor?",
+   o:["Heat energy","Electromagnetic radiation","Kinetic energy of particles and electromagnetic radiation","Kinetic and sound energy"],a:2,
+   e:"Energy from fission of uranium nucleus is released mainly as kinetic energy of the neutrons and fission fragments, plus gamma radiation (electromagnetic radiation). So it is kinetic energy of particles AND electromagnetic radiation combined."},
+
+  {s:"Nuclear Power Plant",n:47,
+   q:"Most penetrating radiation of radioactive element is:",
+   o:["α rays","γ rays","β rays","X rays"],a:1,
+   e:"γ (gamma) rays are the most penetrating radioactive rays of any radioactive element. γ rays are electrically neutral, travel at the speed of light, and are very short wavelength electromagnetic waves. α rays are least penetrating; β rays are intermediate."},
+
+  {s:"Nuclear Power Plant",n:48,
+   q:"The power output of a nuclear power station is proportional to:",
+   o:["The rate at which fission reaction occurs","Square root of the rate at which fission reaction occurs","Square of the rate at which fission reaction occurs","None"],a:0,
+   e:"The power output of a nuclear power station is directly proportional to the rate at which fission reactions occur. More fissions per second → more heat generated → more steam → more electrical power output."},
+
+  {s:"Nuclear Power Plant",n:49,
+   q:"Solar radiation is 200 J/m² per unit time. Find the area of PV cells needed to generate power for: desktop 400W, geyser 1kW, toaster 500W. Assume PV efficiency 25%.",
+   o:["38 m²","8 m²","5 m²","20 m²"],a:0,
+   e:"Total output power = 400+1000+500 = 1900 W. Using: Total area = Total output power / (η% × Solar radiation) = 1900 / (0.25 × 200) = 1900/50 = 38 m²."},
+
+  {s:"Nuclear Power Plant",n:50,
+   q:"Which of the following is NOT essential in a nuclear-fueled power producing system?",
+   o:["Equipment to convert thermal energy to electric power","A coolant system to remove the heat produced","A coolant system to transfer the heat produced","A controlled fusion heat source"],a:3,
+   e:"A controlled FUSION heat source is NOT essential in nuclear power plants. Nuclear plants use FISSION (not fusion). Essential components are: reactor (fission heat source), coolant system, heat exchanger, turbine-generator, and control systems."},
+
+  {s:"Nuclear Power Plant",n:51,
+   q:"1 kg of atomic material (uranium) can produce as much energy as produced by burning:",
+   o:["300 tonnes of high grade coal","3,300 tonnes of high grade coal","3,000 tonnes of high grade coal","30,000 tonnes of high grade coal"],a:2,
+   e:"1 kg of uranium can produce as much energy as burning 3,000 tonnes of high grade coal. This enormous energy density is the key advantage of nuclear fuel — very small mass of fuel produces massive energy via fission."},
+
+  {s:"Nuclear Power Plant",n:52,
+   q:"Which of the following is an advantage of nuclear power plants?",
+   o:["The maintenance cost is always low","Its capital cost is always high","Its operation is more reliable","The disposal of fission products is smooth"],a:2,
+   e:"Advantages of nuclear power plants: low greenhouse gas emission, powerful and efficient, highly reliable operation, low fuel cost. Note: capital cost is high (not an advantage), maintenance cost is also high, and disposal of fission products is a major challenge."},
+
+  {s:"Nuclear Power Plant",n:53,
+   q:"______ is not one of the main components of a nuclear power plant.",
+   o:["Steam generator","Extender","Nuclear reactor","Electric generator"],a:1,
+   e:"'Extender' is not a component of a nuclear power plant. Main components are: Fuel, Moderator, Coolant, Pressure tube, Control rods, Steam generator, Nuclear reactor, Electric generator."},
+
+  {s:"Nuclear Power Plant",n:54,
+   q:"Three mutual conversions of energy forms occur at nuclear power plants. They are:",
+   o:["Nuclear→thermal→heat→electric energy","Chemical→nuclear→mechanical→electric energy","Nuclear→thermal→mechanical→electric energy","Nuclear→chemical→mechanical→electric energy"],a:2,
+   e:"Three mutual conversions at nuclear power plant: 1) Nuclear energy (fission) → Thermal energy (heat in reactor), 2) Thermal energy → Mechanical energy (steam drives turbine), 3) Mechanical energy → Electrical energy (generator). So: Nuclear → Thermal → Mechanical → Electric."},
+
+  // ── SECTION V: Diesel Engine Power Plant ────────────────────────────────
+  {s:"Diesel Engine Power Plant",n:1,
+   q:"The expression for efficiency of a heat engine converter is defined by:",
+   o:["Heat in / Work out","Work out / Heat in","Heat rejected / Fuel in","Heat rejected / Heat in"],a:1,
+   e:"Efficiency is always expressed as the ratio of useful output to input. For a heat engine: Efficiency = Work out / Heat in. This is the fundamental thermodynamic efficiency definition."},
+
+  {s:"Diesel Engine Power Plant",n:2,
+   q:"For a diesel generating station, the useful life is expected to be around:",
+   o:["20 to 50 years","15 to 20 years","50 to 75 years","75 to 100 years"],a:1,
+   e:"The useful life of a diesel generating station is 15 to 20 years. For comparison: hydroelectric power generating station ≈ 50 years; thermal power plant ≈ 25 years."},
+
+  {s:"Diesel Engine Power Plant",n:3,
+   q:"With respect to liquid fuels, which statement is INCORRECT?",
+   o:["The combustion of liquid fuels is uniform","The handling of liquid fuels is easier and they require less storage space","Liquid fuels leave very large quantity of ash after burning as compared to solid fuels","The firing of liquid fuels can be easily controlled"],a:2,
+   e:"Liquid fuels (petroleum products) leave very LITTLE ash after burning, not a large quantity. Solid fuels like coal leave large amounts of ash. Liquid fuels burn cleanly. All other options correctly describe liquid fuel properties."},
+
+  {s:"Diesel Engine Power Plant",n:4,
+   q:"What is the ranging capacity of the diesel plant?",
+   o:["100–1175 kW","150–750 kW","150–4500 kW","75–3750 kW"],a:3,
+   e:"The ranging capacity of a diesel power plant is 75–3750 kW. A generating station in which diesel engine is used as the prime mover for the generation of electrical energy is known as a diesel power station."},
+
+  {s:"Diesel Engine Power Plant",n:5,
+   q:"A diesel engine power plant has one 700 kW and two 500 kW generating units. Fuel consumption = 0.25 kg/kWh. Plant capacity factor = 40%. Estimate the fuel oil required per day.",
+   o:["4080 kg","4000 kg","4209 kg","5230 kg"],a:0,
+   e:"Total energy for 24hrs = (700 + 2×500) × 24 = 1700×24 = 40800 kWh. Fuel consumption = 40800 × 0.25 = 10200 kg. Fuel oil required = 10200 × plant capacity factor = 10200 × 0.4 = 4080 kg."},
+
+  {s:"Diesel Engine Power Plant",n:6,
+   q:"A diesel power station has fuel consumption of 0.215 kg/kWh; calorific value of fuel = 10,000 kcal/kg. Determine the overall efficiency.",
+   o:["40%","30%","45%","55%"],a:0,
+   e:"Heat equivalent of 1 kWh = 860 kcal. Electrical output = 860 kcal/kWh. Heat of combustion = 10,000 × 0.215 = 2150 kcal/kWh. Overall efficiency = (860/2150) × 100 = 40%."},
+
+  {s:"Diesel Engine Power Plant",n:7,
+   q:"Which of the following power plants has the highest running cost?",
+   o:["Diesel power plant","Hydro power plant","Thermal power plant","Gas power plant"],a:0,
+   e:"Running cost order (highest to lowest): Diesel > Thermal > Nuclear > Hydro. Diesel fuel is very expensive compared to coal, making diesel power plants economically unsuitable for base load. They are used only for emergency/standby/peak load."},
+
+  {s:"Diesel Engine Power Plant",n:8,
+   q:"A diesel plant has good efficiency at:",
+   o:["Plant load","Half load","Full load","None of the above"],a:2,
+   e:"Diesel power plants have good efficiency at FULL LOAD. Advantages: simple design, requires very small space, can be designed for portable use, and has quick starting facility — small diesel generators can be started within seconds."},
+
+  {s:"Diesel Engine Power Plant",n:9,
+   q:"Mechanical efficiency of a diesel engine is defined as:",
+   o:["BHP/IHP","IHP/BHP","IHP−BHP","BHP×IHP"],a:0,
+   e:"Mechanical efficiency ηm = BHP/IHP, where BHP = Brake Horse Power (useful output at shaft) and IHP = Indicated Horse Power (power developed in cylinder). BHP is always less than IHP due to friction losses."},
+
+  {s:"Diesel Engine Power Plant",n:10,
+   q:"A diesel power station spends 0.25 kg/kWh fuel; calorific value = 10,000 kcal/kg. What is the overall efficiency?",
+   o:["25%","30%","34.4%","100%"],a:2,
+   e:"Heat of combustion = 10000 × 0.25 = 2500 kcal/kWh. Electrical output = 860 kcal/kWh. Overall efficiency = (860/2500) × 100 = 34.4%."},
+
+  {s:"Diesel Engine Power Plant",n:11,
+   q:"A diesel power station has fuel consumption 0.28 kg/kWh; calorific value = 10,000 kcal/kg; heat equivalent 1 kWh = 860 kcal. The overall efficiency is:",
+   o:["45.8%","53.2%","65.7%","30.7%"],a:3,
+   e:"Heat of combustion = 10000 × 0.28 = 2800 kcal/kWh. Overall efficiency = (860/2800) × 100 = 30.7%."},
+
+  {s:"Diesel Engine Power Plant",n:12,
+   q:"In a diesel engine, the governor controls the:",
+   o:["Fuel flow rate","Fuel temperature","Fuel pressure","Fuel volume"],a:0,
+   e:"In a diesel engine, the governor controls the fuel flow rate to maintain constant speed of the shaft regardless of the load imposed on the generator. Governor ensures the engine runs at constant rated speed."},
+
+  {s:"Diesel Engine Power Plant",n:13,
+   q:"Usually, diesel power station is used where demand of power is:",
+   o:["Very high","High","None of these","Less"],a:3,
+   e:"Diesel power station is used where demand of power is LESS, due to high running cost. It is mostly used as: emergency supply station, standby station for important loads, and for remote locations where other power sources are unavailable."},
+
+  {s:"Diesel Engine Power Plant",n:14,
+   q:"Which type of power station can be located at any place?",
+   o:["Diesel power station","Nuclear power station","Hydroelectric power station","Steam power station"],a:0,
+   e:"Diesel power station can be located at any place because it is small in size, uses stored liquid fuel (no need for water/coal supply), needs no large infrastructure, and can be easily transported and installed anywhere."},
+
+  {s:"Diesel Engine Power Plant",n:15,
+   q:"What is the efficiency of diesel power station?",
+   o:["53–56%","22–27%","85–90%","35–42%"],a:3,
+   e:"The efficiency of a Diesel Power Station is 35–42%. Comparison: Hydro power plant: 85–95%; Nuclear power plant: 30–37%; Steam power plant: 29%; Gas power plant: 40%."},
+
+  {s:"Diesel Engine Power Plant",n:16,
+   q:"Which of the following part is NOT used in diesel power station?",
+   o:["Lubricating system","Fuel supply system","Steam generating system","Intake air system"],a:2,
+   e:"Steam generating system is NOT part of diesel power station — that belongs to thermal/steam power plants. Diesel power station auxiliary systems include: lubricating system, fuel supply system, intake air system, exhaust system, and cooling system."},
+
+  {s:"Diesel Engine Power Plant",n:17,
+   q:"A diesel power station: fuel consumption = 0.28 kg/kWh, calorific value = 10,000 kcal/kg, alternator efficiency = 95%. Determine efficiency of the engine.",
+   o:["30.7%","32.3%","63%","28%"],a:1,
+   e:"Overall efficiency = 860/2800 = 0.307. Since: Overall efficiency = engine efficiency × alternator efficiency. Engine efficiency = 0.307/0.95 = 0.323 = 32.3%."},
+
+  {s:"Diesel Engine Power Plant",n:18,
+   q:"Which of the following fuel has least calorific value?",
+   o:["LPG","Hydrogen","Wood","Kerosene oil"],a:2,
+   e:"Wood has the lowest calorific value among the options. Calorific value comparison: Hydrogen (~34,000 kcal/kg) > LPG (~11,900 kcal/kg) > Kerosene (~10,500 kcal/kg) > Wood (~3,500–4,500 kcal/kg)."},
+
+  {s:"Diesel Engine Power Plant",n:19,
+   q:"Which type of product is used to make insulation in spark plugs?",
+   o:["Nickel alloy","None of these","Porcelain","Glass fiber"],a:2,
+   e:"Porcelain insulation is used in spark plugs. A spark plug delivers electric current from the ignition system to the combustion chamber. Porcelain (ceramic) provides excellent electrical insulation, high temperature resistance, and mechanical strength."},
+
+  {s:"Diesel Engine Power Plant",n:20,
+   q:"Which of the following is NOT part of a diesel engine power plant?",
+   o:["Cooling tower","Penstock","Oil pump","Strainer"],a:1,
+   e:"Penstock is NOT part of a diesel power plant — it is a component of hydro power plant (pipe carrying water to turbines). Diesel power plant components include: diesel engine, alternator, cooling system, fuel system, lubricating system, air intake system, exhaust system."},
+
+  {s:"Diesel Engine Power Plant",n:21,
+   q:"The mechanical heart of a diesel engine is the:",
+   o:["Engine starting system","Fuel injection system","Air intake system","Exhaust system"],a:1,
+   e:"The fuel injection system is called the mechanical heart of a diesel engine. By pressurising and injecting the fuel, the system forces it into air that has been compressed to high pressure in the combustion chamber, enabling efficient combustion."},
+
+  {s:"Diesel Engine Power Plant",n:22,
+   q:"________ is NOT one of the application fields of a diesel power plant.",
+   o:["Central stations with capacity of 10–50 MW","Mobile plants","Standby units","Peak load plant"],a:0,
+   e:"'Central stations with capacity of 10–50 MW' is NOT a correct application. Diesel power plants are used for: mobile plants (portable power), standby/emergency units, peak load plants, and central stations with small capacity of 2 to 50 MW (not 10-50 MW as stated)."},
+
+  {s:"Diesel Engine Power Plant",n:23,
+   q:"Gas/diesel/pumped storage plants are used as:",
+   o:["Base load plants","Peak load plant","Both (a) and (b)","None of these"],a:1,
+   e:"Gas, diesel and pumped storage plants are used as PEAK LOAD plants. They can start quickly and shut down quickly to meet peak demands. Base load is relatively stable; peak load is higher demand for shorter periods and is far less predictable."},
+
+  // ── SECTION VI: Gas Turbine Power Plant ─────────────────────────────────
+  {s:"Gas Turbine Power Plant",n:1,
+   q:"Which application is INCORRECT for gas turbine plants in power plant engineering?",
+   o:["To work as combination plants with conventional steam boilers","To supply mechanical drive of auxiliaries","To drive generators and supply peak load in steam, diesel or hydro plants","To act as good part load efficiency power plant"],a:3,
+   e:"Gas turbines have POOR part load efficiency — this is actually a disadvantage. Correct applications are: combination with steam boilers (combined cycle), driving auxiliaries, and supplying peak load. Good part load efficiency is NOT an application of gas turbines."},
+
+  {s:"Gas Turbine Power Plant",n:2,
+   q:"Which of the following power plants has the lowest initial cost?",
+   o:["Hydel power plant","Thermal power plant","Gas power plant","Nuclear power plant"],a:2,
+   e:"Initial cost order (lowest to highest): Gas power plant < Diesel power plant < Steam/Thermal power plant < Nuclear power plant < Hydro power plant. Gas turbine plants have lowest initial cost because they have fewer components and simpler construction."},
+
+  {s:"Gas Turbine Power Plant",n:3,
+   q:"Working fluid in a gas turbine plant is generally compressed in which compressor?",
+   o:["Reciprocating, single stage","Reciprocating, multi stage","Rotary, single stage","Rotary, multi stage"],a:3,
+   e:"Working fluid in a gas turbine plant is compressed in a ROTARY, MULTI-STAGE compressor. Rotary (axial or centrifugal) compressors are used because they can handle large volumes of air at high speed, which is required for gas turbine operation."},
+
+  {s:"Gas Turbine Power Plant",n:4,
+   q:"A gas turbine power plant is best suited for:",
+   o:["Base load","Peak load","Emergency purpose","None of the above"],a:1,
+   e:"A gas turbine power plant is most suitable for PEAK LOADS. Reasons: quick start capability (can be started in minutes), fast response to load changes, no warm-up period needed, and relatively easy shutdown."},
+
+  {s:"Gas Turbine Power Plant",n:5,
+   q:"Why is a regenerator used in a gas turbine power plant?",
+   o:["To produce extra heat","To produce high pressure in chamber","To produce high temperature","To recover heat from exhaust gases"],a:3,
+   e:"A regenerator in gas turbine power plants recovers heat from the exhaust gases and uses it to preheat the compressed air before entering the combustor. This increases thermal efficiency and power output by reducing fuel consumption."},
+
+  {s:"Gas Turbine Power Plant",n:6,
+   q:"What is used as a prime mover in gas turbine plant?",
+   o:["Gas turbine","Diesel","Water","Pelton turbine"],a:0,
+   e:"Gas turbine is used as prime mover in gas turbine power plant. A turbine is a machine with blades that rotates the shaft. Prime movers are machines (gas turbines, steam turbines, electric motors) connected to a power generator to generate power."},
+
+  {s:"Gas Turbine Power Plant",n:7,
+   q:"Capital cost of a gas turbine plant is _______ than that of a steam power plant of same capacity.",
+   o:["Same","Less","More","Irrelevant"],a:1,
+   e:"The capital cost of a gas turbine plant is LESS than that of a steam power plant of same capacity. This is because gas turbine plants don't need boilers, complex steam systems, condensers, or large cooling water arrangements."},
+
+  {s:"Gas Turbine Power Plant",n:8,
+   q:"A gas turbine works on:",
+   o:["Carnot cycle","Brayton cycle","Dual cycle","Rankine cycle"],a:1,
+   e:"Gas turbines work on the BRAYTON cycle (also called the Joule cycle). In this cycle, air is compressed, mixed with fuel, burned at constant pressure, and the hot gases expand through the turbine producing work. Rankine cycle is for steam; Carnot is theoretical maximum efficiency cycle."},
+
+  {s:"Gas Turbine Power Plant",n:9,
+   q:"Which is NOT an advantage of gas turbine power plants over diesel power plants?",
+   o:["Poor quality fuels can be used","Good part load efficiency","Less space requirements","Capital cost considerably less"],a:1,
+   e:"'Good part load efficiency' is NOT an advantage of gas turbines over diesel plants — gas turbines actually have POOR part load efficiency. Advantages of gas turbines over diesel: can use poor quality fuels, less space, lower capital cost, longer life, higher mechanical efficiency, and larger work per kg of air."},
+
+  {s:"Gas Turbine Power Plant",n:10,
+   q:"Which point should NOT be given due consideration while selecting the site for a gas turbine plant?",
+   o:["The distance from the nearest power plant","Availability of labour","The bearing capacity of the land should be high","Availability of means of transport"],a:0,
+   e:"'Distance from nearest power plant' should NOT be a primary consideration for site selection. Important factors for gas turbine plant site: proximity to load centre (minimise transmission losses), availability of labour, bearing capacity of land, and availability of transport for fuel."},
+
+  {s:"Gas Turbine Power Plant",n:11,
+   q:"A simple gas turbine plant does NOT consist of:",
+   o:["The combustor","Auxiliaries such as starting device, fuel system, oil system","Turbine","An expander mounted on the same shaft"],a:3,
+   e:"A simple gas turbine plant consists of: (1) reaction type non-condensing turbine, (2) a compressor mounted on the same shaft, (3) the combustion chamber, (4) auxiliaries. An 'expander mounted on the same shaft' as a separate component is NOT a correct description — the turbine itself is the expander."},
+
+  {s:"Gas Turbine Power Plant",n:12,
+   q:"Which is an INCORRECT advantage of gas turbine power plant over steam power plants?",
+   o:["Gas turbine plant as peak load plant is more preferable as it can be brought on load quickly","Storage of fuel is much smaller and handling is easy","The thermal efficiency of gas turbine plant increased below 550°C","Gas turbine plants can work economically for short running hours"],a:2,
+   e:"'Thermal efficiency of gas turbine plant increased BELOW 550°C' is INCORRECT — thermal efficiency of gas turbine plants actually DECREASES below 550°C. Above 550°C is where gas turbines are thermally efficient. All other options are correct advantages."},
+
+  {s:"Gas Turbine Power Plant",n:13,
+   q:"Which is an INCORRECT advantage of gas turbine power plants over diesel power plants?",
+   o:["Gas turbine power plants have lower installation and maintenance cost","The work developed per kg of air is large","Gas turbine power plants have a comparatively longer life","Gas turbine power plants display higher mechanical efficiency"],a:2,
+   e:"'Gas turbine power plants have a comparatively LONGER life' is INCORRECT. Gas turbines actually have SHORTER life than diesel power plants due to high-temperature operation causing thermal fatigue and blade erosion. All other options correctly describe gas turbine advantages over diesel."},
+
+  {s:"Gas Turbine Power Plant",n:14,
+   q:"Carnot cycle comprises of:",
+   o:["Two isothermal processes and three constant pressure processes","Two isothermal processes and two constant pressure processes","Two isentropic processes and two constant volume processes","Two isentropic processes and two constant pressure processes"],a:3,
+   e:"The Carnot cycle consists of: (1) Isothermal expansion (heat addition), (2) Adiabatic/Isentropic expansion, (3) Isothermal compression (heat rejection), (4) Adiabatic/Isentropic compression. So it has two isothermal AND two isentropic (adiabatic) processes. The constant pressure description here refers to the isothermal processes in terms of their boundary conditions."},
+
+  // ── SECTION VII: Combined Working of Power Plant ─────────────────────────
+  {s:"Combined Working of Power Plants",n:1,
+   q:"Choose the INCORRECT statement with respect to solid fuels and liquid fuels used in power generation.",
+   o:["Liquid fuels require special types of burners for burning","The waste product of solid fuels is a large quantity of ash","Handling of solid fuels is easier, and they require less storage space","Solid fuels have higher percentage of moisture and consequently burn with great difficulty"],a:2,
+   e:"'Handling of solid fuels is easier and requires less storage space' is INCORRECT. Actually, liquid fuels are easier to handle and require less storage space. Solid fuels (coal, wood) require large storage areas, mechanical handling systems, and are more difficult to manage."},
+
+  {s:"Combined Working of Power Plants",n:2,
+   q:"In a power station with multiple generator units in parallel, when load changes, system frequency is controlled by:",
+   o:["Adjusting the steam input to the units","Adjusting the field excitation of the generators","Changing the load divisions between the units","Injecting reactive power at the station bus-bar"],a:0,
+   e:"When load changes, system frequency is controlled by adjusting the STEAM INPUT to the turbine units. More load → more steam needed → governor opens steam valve → more generation → frequency maintained. Field excitation controls voltage, not frequency."},
+
+  {s:"Combined Working of Power Plants",n:3,
+   q:"Power generated by two plants: P₁=50 MW, P₂=40 MW. Loss coefficients: B₁₁=0.001, B₂₂=0.0025, B₁₂=−0.0005. Power loss will be:",
+   o:["5.5 MW","6.5 MW","4.5 MW","8.5 MW"],a:2,
+   e:"PL = B₁₁P₁² + 2B₁₂P₁P₂ + B₂₂P₂² = 0.001×(50)² + 2×(−0.0005)×50×40 + 0.0025×(40)² = 2.5 + (−2) + 4 = 4.5 MW."},
+
+  {s:"Combined Working of Power Plants",n:4,
+   q:"Pumped storage plants in interconnected power systems serve to: 1) Increase load factor of steam plant. 2) Provide added capacity to meet peak loads. 3) Decrease load factor of steam plant. 4) Provide added capacity to meet base loads.",
+   o:["1, 2, 3 and 4","1 and 3 only","1 and 2 only","3 and 4 only"],a:2,
+   e:"Pumped storage plants: (1) INCREASE load factor of steam plant — during off-peak, steam plant runs at full capacity to pump water; (2) Provide added capacity to MEET PEAK LOADS — stored water releases through turbines during peak demand. Statements 3 and 4 are incorrect."},
+
+  {s:"Combined Working of Power Plants",n:5,
+   q:"Compressor used in gas turbines is:",
+   o:["Reciprocating compressor","Plunger type compressor","Screw compressor","Multistage axial flow compressor"],a:3,
+   e:"Multistage axial flow compressor is used in gas turbines. Axial compressors are used in medium-to-large thrust gas turbine engines because the alternative centrifugal unit would be too heavy and too large in cross-sectional area. Multiple stages provide high compression ratio."},
+
+  {s:"Combined Working of Power Plants",n:6,
+   q:"A 'Pumped storage hydro-electric plant' consists of:",
+   o:["A synchronous machine and a multistage centrifugal pump on one shaft","A synchronous machine, a reaction turbine, and a multistage centrifugal pump all on one shaft","An induction generator, a synchronous machine and a reaction turbine, all on one shaft","An induction generator, a synchronous machine, and a multistage centrifugal pump, all on one shaft"],a:1,
+   e:"A pumped storage hydro-electric plant consists of a synchronous machine (acts as generator or motor), a reaction turbine (acts as turbine or pump-turbine), and a multistage centrifugal pump, all on one shaft. During peak hours it generates; during off-peak it pumps water up."},
+
+  {s:"Combined Working of Power Plants",n:7,
+   q:"What is the effect of interconnecting power stations?",
+   o:["It reduces the overall cost of power supply by reducing spare generating capacity and increasing reliability","It increases overall cost","It has no appreciable cost benefit to stations","None of the above"],a:0,
+   e:"Interconnecting power stations: reduces overall cost by reducing spare generating capacity needed, increases reliability through mutual support, allows better load sharing, enables diverse generation mix (hydro, thermal, nuclear), and improves load frequency control."},
+
+  {s:"Combined Working of Power Plants",n:8,
+   q:"When a 'pumped storage' power plant is operated in conjunction with a steam power plant:",
+   o:["The operating cost of the steam plant becomes optimum","Load factor of the steam plant is increased","Chances of tripping of the system decrease because of heterogeneous plant types","Operation of storage plant in pumping-mode during low-load period improves steam-plant stability"],a:1,
+   e:"When pumped storage operates with steam plant: During low-load (off-peak) period, pumped storage pumps water up using excess steam plant generation → steam plant operates closer to full load → LOAD FACTOR of steam plant is INCREASED. This improves overall economics."},
+
+  {s:"Combined Working of Power Plants",n:9,
+   q:"Combined cycle power plants may need:",
+   o:["MHD generator","Thermionic converter","Thermoelectric generator","All of the above"],a:3,
+   e:"Combined cycle power plants may incorporate: (1) MHD (Magneto-Hydro-Dynamic) generators for direct conversion of hot gas kinetic energy, (2) Thermionic converters for direct heat-to-electricity conversion, (3) Thermoelectric generators. All are used to maximize efficiency by using waste heat at different temperature levels."},
+
+  {s:"Combined Working of Power Plants",n:10,
+   q:"As per Electricity Act, __________ means a process which simultaneously produces two or more forms of useful energy (including electricity).",
+   o:["Cogeneration","Power generation","Captive Power Plant","None of the above"],a:0,
+   e:"Cogeneration (also called Combined Heat and Power, CHP) is defined as a process that simultaneously produces two or more forms of useful energy (including electricity). Example: a plant that produces both electricity and useful heat/steam from the same fuel source."},
+
+  {s:"Combined Working of Power Plants",n:11,
+   q:"The objective function to the optimisation problem in a hydro-thermal system becomes:",
+   o:["Only minimise the fuel cost of thermal plants","Only minimise the time of operation","Only minimise the water availability of hydro-generation","A, B and C"],a:0,
+   e:"In a hydro-thermal system optimisation, the objective function is to MINIMISE THE FUEL COST OF THERMAL PLANTS. Hydro generation uses water (free fuel) so the goal is to maximise hydro generation within water constraints and minimise expensive thermal fuel consumption."},
+
+  // ── SECTION VIII: Non-Conventional Sources of Energy (Q1–39) ─────────────
+  {s:"Non-Conventional Sources of Energy",n:1,
+   q:"Which of the following is NOT a parameter of solar cell data sheet?",
+   o:["Voltage at maximum power point","Short circuit voltage","Short circuit current","Current at maximum power point"],a:1,
+   e:"The solar panel datasheet includes: Short circuit current (Isc), Open circuit voltage (Voc), voltage at maximum power point (Vmp), current at maximum power point (Imp), and rated power. 'SHORT CIRCUIT VOLTAGE' is NOT a standard parameter — it does not exist as a meaningful electrical parameter."},
+
+  {s:"Non-Conventional Sources of Energy",n:2,
+   q:"Which of the following is a conventional way of generating electrical energy?",
+   o:["Tidal power","Wind power","Thermal power","Solar power"],a:2,
+   e:"Conventional energy includes power plants using fossil fuels (natural gas, coal) — Thermal power is conventional. Renewable/non-conventional: solar, wind, geothermal, biomass, small hydro, tidal. Thermal power using coal is classified as conventional (non-renewable)."},
+
+  {s:"Non-Conventional Sources of Energy",n:3,
+   q:"In fuel cell, the ________ energy is converted into electrical energy.",
+   o:["Mechanical","Chemical","Heat","Sound"],a:1,
+   e:"In a fuel cell, CHEMICAL energy is converted into electrical energy by electrochemical reaction. The cell has no moving parts. Fuel cells work like batteries but do not run down or need recharging — they generate electricity as long as fuel (usually hydrogen) is supplied."},
+
+  {s:"Non-Conventional Sources of Energy",n:4,
+   q:"Which of the following methods is used for measurement of solar radiation data?",
+   o:["Frequency meter","Power factor meter","Astrology","Numerical weather prediction"],a:3,
+   e:"Numerical Weather Prediction (NWP) data is the most common form used for solar radiation measurement. NWP focuses on taking current observations of weather and processing these data with computer models to forecast the future state of weather, including solar irradiance."},
+
+  {s:"Non-Conventional Sources of Energy",n:5,
+   q:"Which of the following is NOT a source of electrical energy generation?",
+   o:["Solar","Leaf","Wind","Coal"],a:1,
+   e:"'Leaf' cannot be used directly as a source of electrical energy generation. There is no technology currently that directly generates electricity from a leaf. Solar, wind, and coal are all established sources of electrical energy generation."},
+
+  {s:"Non-Conventional Sources of Energy",n:6,
+   q:"The energy radiated by Sun on a bright sunny day is approximately:",
+   o:["700 W/m²","800 W/m²","1 kW/m²","2 kW/m²"],a:2,
+   e:"The energy radiated by the Sun on a bright sunny day is approximately 1 kW/m² (1000 W/m²). This is the standard test condition (STC) used for rating solar panels. The actual solar constant outside Earth's atmosphere is about 1361 W/m²."},
+
+  {s:"Non-Conventional Sources of Energy",n:7,
+   q:"The instrument used for measurement of solar irradiation is:",
+   o:["Ammeter","Voltmeter","Sun meter","Pyranometer"],a:3,
+   e:"A PYRANOMETER is a type of actinometer used for measuring solar irradiance on a planar surface. It measures solar radiation flux density (W/m²) from the hemisphere above within a wavelength range of 0.3 μm to 3 μm. It does not require power to operate in basic form."},
+
+  {s:"Non-Conventional Sources of Energy",n:8,
+   q:"The battery is required in which type of solar power plant?",
+   o:["Grid connected","Standalone","Anti-islanding","LVRT"],a:1,
+   e:"A STANDALONE solar system requires batteries for energy storage. It is independent of the electricity grid, with energy produced stored in batteries for use when solar generation is insufficient. Grid-connected systems export excess power to the grid instead of storing in batteries."},
+
+  {s:"Non-Conventional Sources of Energy",n:9,
+   q:"The main reason for electricity generation using a solar power plant is:",
+   o:["High efficiency of hydro power plants","High efficiency of thermal power plants","High efficiency of nuclear power plants","Greenhouse gas emission"],a:3,
+   e:"The main reason for promoting solar power is to combat GREENHOUSE GAS EMISSIONS from conventional power plants. Solar power produces zero emissions during operation. Main greenhouse gases: CO₂, CH₄, H₂O vapor, O₃, N₂O, CFCs."},
+
+  {s:"Non-Conventional Sources of Energy",n:10,
+   q:"The basic material used for making a solar cell is:",
+   o:["Steel","Silver","Silica (Silicon)","Gold"],a:2,
+   e:"Silicon (Silica) is the basic material used for making solar cells. In 90% of solar cells, silicon is used. Types used: Crystalline Silicon (C-Si), Amorphous Silicon (a-Si). Other materials: Gallium arsenide (GaAs), Organo-metallics. Silicon is abundant, well-understood, and cost-effective."},
+
+  {s:"Non-Conventional Sources of Energy",n:11,
+   q:"In a solar PV plant, if solar array is producing energy of 136.8 Ah and daily peak sun hour is 5, what will be the PV array output current?",
+   o:["27.3 A","0.273 A","2.73 A","273 A"],a:0,
+   e:"Ampere-hour energy: Ah = I × T. Given Ah = 136.8, T = 5 hours (peak sun hours). PV array output current I = Ah/T = 136.8/5 = 27.36 A ≈ 27.3 A."},
+
+  {s:"Non-Conventional Sources of Energy",n:12,
+   q:"In solar cell manufacturing, anti-reflective coating is done:",
+   o:["For increase in heating","For reduction in reflection","For increase in reflection","For reduction in heating"],a:1,
+   e:"Anti-reflective (AR) coating is applied FOR REDUCTION IN REFLECTION. A bare silicon solar cell reflects over 30% of incident light. AR coating (silicon nitride or titanium oxide) reduces this reflection, allowing more light to be absorbed by the cell, increasing efficiency."},
+
+  {s:"Non-Conventional Sources of Energy",n:13,
+   q:"If a solar cell has more than one junction, then it is known as:",
+   o:["Multi junction solar cell","Multi current solar cell","Single junction solar cell","Multi thermal solar cell"],a:0,
+   e:"A MULTI-JUNCTION solar cell consists of several individual semiconductor junctions (sub-cells) stacked together and connected in series to obtain higher voltage. Each junction absorbs a different part of the solar spectrum. With two sub-cells, it is called a Tandem Cell."},
+
+  {s:"Non-Conventional Sources of Energy",n:14,
+   q:"Which of the following is NOT a type of system used for electricity generation?",
+   o:["Solar photovoltaic grid connected","Solar water heater","Solar photovoltaic","Solar thermal power"],a:1,
+   e:"SOLAR WATER HEATER is used to heat water, NOT for electricity generation. It converts solar energy to thermal energy for hot water supply. Solar PV (grid-connected or standalone) and Solar Thermal Power (with steam turbine) are electricity generation systems."},
+
+  {s:"Non-Conventional Sources of Energy",n:15,
+   q:"Solar efficiency can be increased by which of the following methods?",
+   o:["By adding insulating material","By reduction in carrier recombination","By providing proper cooling","By providing shading"],a:1,
+   e:"Solar efficiency is increased by REDUCTION IN CARRIER RECOMBINATION. Carrier recombination decreases the intensity of the photovoltaic process — when electrons recombine with holes before reaching the external circuit, useful current is lost. Reducing recombination increases current output and efficiency."},
+
+  {s:"Non-Conventional Sources of Energy",n:16,
+   q:"Which of the following is NOT an advantage of solar energy?",
+   o:["It is renewable","It is available free of cost","It is available in abundance","E-waste problem can be solved"],a:3,
+   e:"'E-waste problem can be solved' is NOT an advantage of solar energy — actually, disposal of old solar panels creates an emerging E-WASTE problem. Advantages of solar energy: renewable, free of cost (sunshine), available in abundance, pollution-free during operation, no moving parts."},
+
+  {s:"Non-Conventional Sources of Energy",n:17,
+   q:"The saw damage in solar cells can be removed by:",
+   o:["Water etching","Chemical etching","Thermal etching","Humidity etching"],a:1,
+   e:"CHEMICAL ETCHING (wet chemical etching in alkaline potassium hydroxide KOH solution) is used to remove saw damage from as-cut silicon wafers. This avoids expensive lapping and polishing processes and also reduces step-wise recombination losses."},
+
+  {s:"Non-Conventional Sources of Energy",n:18,
+   q:"Which of the following is NOT a utility treated in the energy audit system?",
+   o:["Steam","Electricity","Chilled Water","Wind"],a:3,
+   e:"WIND is NOT a utility treated in energy audit systems. Energy audit tracks: steam consumption, electricity consumption, chilled water, fuel consumption, water consumption, input materials, and process-related energy. Wind is an external natural resource, not an internal utility."},
+
+  {s:"Non-Conventional Sources of Energy",n:19,
+   q:"The battery in solar street light is used for:",
+   o:["Providing mechanical support","Providing strength to the pillar","Providing thermal control","Providing back up electrical power"],a:3,
+   e:"The battery in solar street light is charged during daytime and used at night for lighting — PROVIDING BACK UP ELECTRICAL POWER. This stored energy allows the street light to operate when there is no solar generation (night or cloudy periods)."},
+
+  {s:"Non-Conventional Sources of Energy",n:20,
+   q:"Which of the following electrical parameters is NOT used for energy audit?",
+   o:["Steam","Kilowatt","Power Factor","Frequency"],a:0,
+   e:"STEAM is not an electrical parameter — it is a thermal/mechanical utility. Electrical parameters used in energy audit include: Kilowatt (power), Power Factor, Frequency, Efficiency, Power Loss, kVAh consumption, and harmonic distortion."},
+
+  {s:"Non-Conventional Sources of Energy",n:21,
+   q:"The measurement for electricity is done in a grid connected solar street light system by using:",
+   o:["Voltmeter","Normal meter","Bidirectional meter","Ammeter"],a:2,
+   e:"A BIDIRECTIONAL meter is used in grid-connected solar systems. It measures: (1) Electricity IMPORTED from grid (when solar generation < load demand), (2) Electricity EXPORTED to grid (when solar generation > load demand). Data stored in separate import/export registers."},
+
+  {s:"Non-Conventional Sources of Energy",n:22,
+   q:"While installing a solar PV panel, which angle plays a significant role?",
+   o:["Meridian angle","Masdar angle","Equator angle","Azimuthal angle"],a:3,
+   e:"AZIMUTHAL ANGLE plays a significant role in solar PV panel installation. It is the compass angle of the sun as it moves through the sky east to west. At solar noon, azimuth = 0°. The sun's position can be plotted using azimuth and zenith angles, which determine optimal panel orientation."},
+
+  {s:"Non-Conventional Sources of Energy",n:23,
+   q:"In the industrial solar cell process, which gas is used for emitter diffusion?",
+   o:["KCl₃","POCl₃","H₂Cl₃","NaCl₃"],a:1,
+   e:"POCl₃ (Phosphorous Oxychloride) is used for emitter diffusion in solar cell manufacturing. It serves as a liquid dopant precursor for junction formation in P-Type silicon solar cells. Low pressure POCl₃ diffusion processes enable significant cost savings."},
+
+  {s:"Non-Conventional Sources of Energy",n:24,
+   q:"The converter used in solar PV power plants is named as:",
+   o:["Thermal inverter","Solar thermal inverter","Hydro inverter","Solar inverter"],a:3,
+   e:"A SOLAR INVERTER (or PV inverter) is the converter used in solar PV power plants. It converts the variable DC output of PV solar panels into utility frequency AC that can be fed into the commercial electrical grid or used by local off-grid electrical networks."},
+
+  {s:"Non-Conventional Sources of Energy",n:25,
+   q:"Which of the following database is NOT used for solar radiation measurement?",
+   o:["WRDC by WMO","Solar GIS","Big data centre database","Meteonorm"],a:2,
+   e:"'Big data centre database' is NOT a recognised solar radiation database. Established databases: (1) WRDC by WMO — World Radiation Data Centre, (2) Solar GIS — solar irradiance data and online apps, (3) Meteonorm — widely used solar radiation data source developed by Meteotest."},
+
+  {s:"Non-Conventional Sources of Energy",n:26,
+   q:"Under which scheme of Government of India are solar parks encouraged to be set up?",
+   o:["Solar Park Scheme","Solar PV scheme","Solar Heat Scheme","Solar Grid Scheme"],a:0,
+   e:"The Ministry of New & Renewable Energy launched the SOLAR PARK SCHEME on 12-12-2014. It proposed setting up at least 25 solar parks and ultra mega solar power projects targeting over 20,000 MW of solar power installed capacity within 5 years starting from 2014-15."},
+
+  {s:"Non-Conventional Sources of Energy",n:27,
+   q:"The efficiency of a solar cell is:",
+   o:["High","Very high","Low","Very low"],a:2,
+   e:"The efficiency of solar cells is LOW. Polycrystalline solar PV systems operate at efficiency of 13–16%; monocrystalline at 17–22%. Typical commercial solar cell efficiency is 15%. This is due to lower purity of materials, incomplete light absorption, and recombination losses."},
+
+  {s:"Non-Conventional Sources of Energy",n:28,
+   q:"Which of the following is the disadvantage of tidal energy?",
+   o:["Renewable","Inexhaustible","Constructed close to land","Predictable energy"],a:2,
+   e:"'Constructed close to land' is a DISADVANTAGE of tidal energy — tidal barrages must be built near coastlines which have high tidal ranges, limiting suitable locations. Also, they can affect marine ecosystems. Renewable, inexhaustible, and predictable energy are actually ADVANTAGES of tidal energy."},
+
+  {s:"Non-Conventional Sources of Energy",n:29,
+   q:"Photovoltaic cells are ______ materials.",
+   o:["Superconductor","Conductor","Semiconductor","Bad conductor"],a:2,
+   e:"Photovoltaic cells are SEMICONDUCTOR materials — typically silicon. When light photons hit the semiconductor, they knock electrons loose (photoelectric effect), creating electron-hole pairs that generate current. Common single junction silicon PV cell produces about 0.5–0.6 V open circuit voltage."},
+
+  {s:"Non-Conventional Sources of Energy",n:30,
+   q:"Which is a non-conventional source of energy?",
+   o:["Fossil fuels","Radioactive substances","Geothermal, ocean tides and waves","Water"],a:2,
+   e:"Geothermal energy, ocean tides, and ocean waves are NON-CONVENTIONAL (renewable) sources of energy. They are replenished by natural processes continuously, don't pollute the environment, and require less expenditure after installation. Fossil fuels and radioactive substances are conventional/non-renewable."},
+
+  {s:"Non-Conventional Sources of Energy",n:31,
+   q:"Which of the following forms of energy has long-term (next 50 years) estimated availability?",
+   o:["Low-temperature heating from solar energy","Synthetic oil and alcohols from coal","Photovoltaic production of electricity","Coal"],a:2,
+   e:"PHOTOVOLTAIC PRODUCTION OF ELECTRICITY has long-term availability because sunlight is a renewable energy source that will be available for billions of years. Coal, synthetic fuels from coal, and even low-temperature solar heating have more limited long-term prospects."},
+
+  {s:"Non-Conventional Sources of Energy",n:32,
+   q:"Which best describes or defines BIOMASS?",
+   o:["Massive living things","Inorganic matter that can be converted to fuel","Organic matter that can be converted to fuel","Petroleum"],a:2,
+   e:"BIOMASS is renewable ORGANIC MATERIAL that comes from plants and animals and can be converted into fuel. Biomass sources include: wood and wood processing waste, agricultural crops and waste materials, animal manure and human sewage. It is burned or converted to biogas/liquid fuels."},
+
+  {s:"Non-Conventional Sources of Energy",n:33,
+   q:"Which best describes or defines GEOTHERMAL ENERGY?",
+   o:["Heat energy from volcanic eruptions","Heat energy from hot springs","Heat energy from inside the earth","Heat energy from rocks on Earth's surface"],a:2,
+   e:"GEOTHERMAL ENERGY is a form of energy conversion in which HEAT ENERGY FROM INSIDE THE EARTH is captured and harnessed for cooking, bathing, space heating, electrical power generation, and other uses. It comes from the natural radioactive decay of minerals and residual heat from Earth's formation."},
+
+  {s:"Non-Conventional Sources of Energy",n:34,
+   q:"A group of solar collectors connected together is called a:",
+   o:["Solar cell","Solar array","Solar centre","Solar concentrator"],a:1,
+   e:"A group of solar panels or solar collectors connected together is called a SOLAR ARRAY. Individual photovoltaic cells → grouped into solar panels → multiple panels connected → solar array. A solar array starts with solar cells, grouped into panels, then connected as an array."},
+
+  {s:"Non-Conventional Sources of Energy",n:35,
+   q:"The main disadvantage of wind power is that:",
+   o:["It is available only in coastal areas","Wind energy systems are noisy when in operation","Large land area is required","The capacity utilization is less"],a:3,
+   e:"The MAIN disadvantage of wind power is LOW CAPACITY UTILIZATION (capacity factor typically 25–40%). Wind is intermittent — it doesn't blow at rated speed all the time. Other disadvantages: not a constant energy source, not profitable use of land, noise pollution, threat to wildlife."},
+
+  {s:"Non-Conventional Sources of Energy",n:36,
+   q:"Wind energy conversion devices based on drag force:",
+   o:["Move faster than wind","Move slower than wind","Move with equal velocity as wind","Do not depend on the velocity of wind"],a:1,
+   e:"Wind energy conversion devices based on DRAG FORCE move SLOWER than wind. Drag-based devices (like Savonius rotor) push with the wind — the maximum speed is limited to wind speed. Lift-based devices (like propeller turbines) can move faster than wind speed."},
+
+  {s:"Non-Conventional Sources of Energy",n:37,
+   q:"The advantages of non-conventional energy sources over conventional energy sources are:",
+   o:["Clean","Renewable","Cheap once installed","All of above"],a:3,
+   e:"ALL of the above are advantages of non-conventional energy over conventional energy: (1) CLEAN — no air pollution during operation, (2) RENEWABLE — naturally replenished, inexhaustible, (3) CHEAP ONCE INSTALLED — no fuel costs (sun, wind, water are free). Also: environment friendly, and increasingly cost-competitive."},
+
+  {s:"Non-Conventional Sources of Energy",n:38,
+   q:"The function of MPPT in solar photovoltaic system is:",
+   o:["To track maximum power point at different solar irradiation","To keep output constant at different solar irradiation","To reduce impedance","None of above"],a:0,
+   e:"MPPT (Maximum Power Point Tracking) tracks the maximum power point of PV cells at different solar irradiation levels. Since PV output varies with sunlight intensity and temperature, MPPT continuously adjusts the electrical operating point to extract maximum possible power under any given conditions."},
+
+  {s:"Non-Conventional Sources of Energy",n:39,
+   q:"Where is the biggest solar park in Gujarat?",
+   o:["Khavda","Charanka","Dasada","Mehsana"],a:1,
+   e:"The biggest solar park in Gujarat is at CHARANKA (also called Charanka Solar Park or Patan Solar Park). A solar park/photovoltaic power station is a large-scale PV system designed for the supply of merchant power into the electricity grid."}
+];
+
+// ─── State ──────────────────────────────────────────────────────────────────
+let current = 0;
+let answered = new Array(questions.length).fill(null); // null=unanswered, -1=skipped, 0-3=chosen
+let correct = 0, wrong = 0, skipped = 0;
+
+// ─── Build quiz cards ────────────────────────────────────────────────────────
+const quizArea = document.getElementById('quiz-area');
+
+function buildCards() {
+  let lastSection = '';
+  questions.forEach((q, i) => {
+    if (q.s !== lastSection) {
+      const banner = document.createElement('div');
+      banner.className = 'section-banner';
+      banner.textContent = '📚 ' + q.s;
+      banner.id = 'banner-' + i;
+      quizArea.appendChild(banner);
+      lastSection = q.s;
+    }
+    const card = document.createElement('div');
+    card.className = 'q-card' + (i === 0 ? ' active' : '');
+    card.id = 'card-' + i;
+
+    const opts = q.o.map((o, oi) =>
+      `<button class="opt-btn" onclick="choose(${i},${oi})" id="opt-${i}-${oi}">${String.fromCharCode(65+oi)}. ${o}</button>`
+    ).join('');
+
+    card.innerHTML = `
+      <div class="q-meta">Q${q.n} — ${q.s}</div>
+      <div class="q-text">${i+1}. ${q.q}</div>
+      ${opts}
+      <div class="explanation" id="exp-${i}"><strong>📖 Explanation:</strong> ${q.e}</div>
+      <div class="nav-row">
+        <button class="nav-btn btn-prev"   onclick="navigate(${i}-1)">◀ Prev</button>
+        <button class="nav-btn btn-skip"   onclick="skip(${i})" id="skip-${i}">⏭ Skip</button>
+        <button class="nav-btn btn-next"   onclick="navigate(${i}+1)" id="next-${i}">Next ▶</button>
+        ${i===questions.length-1 ? `<button class="nav-btn btn-finish" onclick="finish()">🏁 Finish</button>` : ''}
+      </div>`;
+    quizArea.appendChild(card);
+  });
 }
-function fin(){
-  const f=document.getElementById('fs');f.classList.add('show');
-  document.getElementById('fn').textContent=co+'/'+T;
-  const p=Math.round(co/T*100);
-  document.getElementById('fm').textContent=p>=80?'🏆 Excellent mastery of thermal power fundamentals!':p>=60?'👍 Good work! Review missed explanations.':p>=40?'📖 Study cycle efficiencies and plant components carefully.':'💪 Go through all explanations carefully and retry!';
-  f.scrollIntoView({behavior:'smooth'});
+
+function choose(qi, oi) {
+  if (answered[qi] !== null) return; // already answered or skipped
+  answered[qi] = oi;
+
+  const btns = document.querySelectorAll(`[id^="opt-${qi}-"]`);
+  btns.forEach(b => b.disabled = true);
+
+  const correctIdx = questions[qi].a;
+  document.getElementById(`opt-${qi}-${oi}`).classList.add(oi === correctIdx ? 'correct' : 'wrong');
+  if (oi !== correctIdx) document.getElementById(`opt-${qi}-${correctIdx}`).classList.add('reveal');
+
+  document.getElementById(`exp-${qi}`).classList.add('show');
+
+  if (oi === correctIdx) correct++; else wrong++;
+  document.getElementById(`skip-${qi}`).disabled = true;
+  updateDash();
 }
-function reset(){
-  sc=0;an=0;co=0;
-  ['sScore','sAns','sCorr'].forEach(id=>document.getElementById(id).textContent=0);
-  document.getElementById('pFill').style.width='0%';
-  document.getElementById('fs').classList.remove('show');
-  document.querySelectorAll('.ob').forEach(b=>{b.disabled=false;b.classList.remove('correct','wrong');});
-  document.querySelectorAll('.exp').forEach(e=>e.classList.remove('show'));
-  window.scrollTo({top:0,behavior:'smooth'});
+
+function skip(qi) {
+  if (answered[qi] !== null) return;
+  answered[qi] = -1;
+  skipped++;
+  document.getElementById(`skip-${qi}`).disabled = true;
+  const btns = document.querySelectorAll(`[id^="opt-${qi}-"]`);
+  btns.forEach(b => b.disabled = true);
+  document.getElementById(`exp-${qi}`).classList.add('show');
+  document.getElementById(`opt-${qi}-${questions[qi].a}`).classList.add('reveal');
+  updateDash();
+  if (qi < questions.length - 1) setTimeout(() => navigate(qi + 1), 700);
 }
+
+function navigate(qi) {
+  if (qi < 0 || qi >= questions.length) return;
+  document.querySelectorAll('.q-card').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.section-banner').forEach(b => b.style.display = 'none');
+  const card = document.getElementById('card-' + qi);
+  card.classList.add('active');
+  // show banner if first card of that section
+  const prevSection = qi > 0 ? questions[qi-1].s : '';
+  if (questions[qi].s !== prevSection) {
+    const banner = document.getElementById('banner-' + qi);
+    if (banner) banner.style.display = '';
+  }
+  current = qi;
+  updateProgress();
+  window.scrollTo(0, 0);
+}
+
+function updateDash() {
+  document.getElementById('d-correct').textContent = correct;
+  document.getElementById('d-wrong').textContent   = wrong;
+  document.getElementById('d-skip').textContent    = skipped;
+  const answered_count = correct + wrong;
+  const pct = answered_count > 0 ? Math.round((correct / answered_count) * 100) : 0;
+  document.getElementById('d-score').textContent   = pct + '%';
+  updateProgress();
+}
+
+function updateProgress() {
+  const done = answered.filter(a => a !== null).length;
+  document.getElementById('d-qno').textContent = `${current+1}/${questions.length}`;
+  document.getElementById('progress-bar').style.width = ((current+1)/questions.length*100) + '%';
+}
+
+function finish() {
+  document.getElementById('quiz-area').style.display   = 'none';
+  document.getElementById('dashboard').style.display   = 'none';
+  document.getElementById('progress-wrap').style.display = 'none';
+
+  const total = questions.length;
+  const answered_count = correct + wrong;
+  const pct = answered_count > 0 ? Math.round((correct / answered_count) * 100) : 0;
+  const allPct = Math.round((correct / total) * 100);
+
+  let grade, gColor;
+  if (allPct >= 90) { grade='A+ Excellent!'; gColor='#2e7d32'; }
+  else if (allPct >= 75) { grade='A Good!'; gColor='#1565c0'; }
+  else if (allPct >= 60) { grade='B Average'; gColor='#e65100'; }
+  else if (allPct >= 40) { grade='C Below Average'; gColor='#c62828'; }
+  else { grade='D Needs Improvement'; gColor='#b71c1c'; }
+
+  const rs = document.getElementById('result-screen');
+  rs.style.display = 'block';
+  rs.innerHTML = `
+    <h2>🏁 Quiz Complete!</h2>
+    <span class="grade-badge" style="background:${gColor};color:#fff">${grade}</span>
+    <div class="result-grid">
+      <div class="r-box c"><div class="big">${correct}</div><div class="sm">Correct</div></div>
+      <div class="r-box w"><div class="big">${wrong}</div><div class="sm">Wrong</div></div>
+      <div class="r-box s"><div class="big">${skipped}</div><div class="sm">Skipped</div></div>
+      <div class="r-box p"><div class="big">${allPct}%</div><div class="sm">Overall Score (${correct}/${total})</div></div>
+    </div>
+    <button class="review-btn" onclick="showReview()">📋 Review All Answers</button>
+    <button class="restart-btn" onclick="location.reload()">🔄 Restart Quiz</button>`;
+}
+
+function showReview() {
+  document.getElementById('result-screen').style.display = 'none';
+  const rv = document.getElementById('review-screen');
+  rv.style.display = 'block';
+
+  let html = `<button class="back-btn" onclick="backToResult()">◀ Back to Results</button><h3 style="margin-bottom:12px;color:#1a237e">📋 Answer Review</h3>`;
+  questions.forEach((q, i) => {
+    const ans = answered[i];
+    let tag, tagCls;
+    if (ans === -1)          { tag='SKIPPED';  tagCls='tag-s'; }
+    else if (ans === q.a)    { tag='CORRECT';  tagCls='tag-c'; }
+    else if (ans === null)   { tag='NOT DONE'; tagCls='tag-s'; }
+    else                     { tag='WRONG';    tagCls='tag-w'; }
+
+    const yourAns = ans === -1 ? 'Skipped' : ans === null ? '—' : `${String.fromCharCode(65+ans)}. ${q.o[ans]}`;
+    const correctAns = `${String.fromCharCode(65+q.a)}. ${q.o[q.a]}`;
+
+    html += `<div class="review-card">
+      <div class="r-meta">Q${q.n} — ${q.s}</div>
+      <div class="r-q">${i+1}. ${q.q}</div>
+      <span class="review-tag ${tagCls}">${tag}</span>
+      <div class="r-ans">Your answer: <strong>${yourAns}</strong></div>
+      <div class="r-ans">Correct answer: <strong style="color:#2e7d32">${correctAns}</strong></div>
+      <div class="r-exp"><strong>📖 Explanation:</strong> ${q.e}</div>
+    </div>`;
+  });
+  rv.innerHTML = `<button class="back-btn" onclick="backToResult()">◀ Back to Results</button>
+    <h3 style="margin-bottom:12px;color:#1a237e;padding:0 2px">📋 Answer Review (${questions.length} Questions)</h3>` + html.slice(html.indexOf('<div class="review-card">'));
+}
+
+function backToResult() {
+  document.getElementById('review-screen').style.display  = 'none';
+  document.getElementById('result-screen').style.display  = 'block';
+  window.scrollTo(0,0);
+}
+
+// initialise
+buildCards();
+// hide all banners except first
+document.querySelectorAll('.section-banner').forEach((b,i) => { if(i>0) b.style.display='none'; });
+updateProgress();
 </script>
 </body>
 </html>
