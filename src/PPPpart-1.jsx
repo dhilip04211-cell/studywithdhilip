@@ -1006,6 +1006,7 @@ export default function PPPartOne() {
   const [reviewIndex, setReviewIndex] = useState(0);
 
   const q = questions[current];
+  const TOTAL = questions.length;
 
   function handleSelect(idx) {
     if (revealed) return;
