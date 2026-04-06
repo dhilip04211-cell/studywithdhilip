@@ -995,7 +995,7 @@ const questions = [
 
 const TOTAL = questions.length;
 
-export default function PowerPlantQuizPart1() {
+export default function PPPartOne() {
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState(null);
   const [revealed, setRevealed] = useState(false);
