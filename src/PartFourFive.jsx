@@ -1,5 +1,4 @@
-import { useState } from "react";
-
+import React, { useState } from "react";
 const allQuestions = [
   // ── PART 4 ──────────────────────────────────────────────────────────────────
   // Section VIII – Non-conventional Sources of Energy  Q40–Q127
@@ -3082,235 +3081,46 @@ const PART4_START = 0;
 const PART4_END = allQuestions.findIndex(q => q.part === 5);
 const PART5_START = PART4_END;
 
+
 export default function PartFourFive() {
-  const [selectedPart, setSelectedPart] = useState(null);
-  const [questions, setQuestions] = useState([]);
-  const [current, setCurrent] = useState(0);
-  const [selected, setSelected] = useState(null);
-  const [showExplanation, setShowExplanation] = useState(false);
-  const [score, setScore] = useState(0);
-  const [answered, setAnswered] = useState(0);
-  const [finished, setFinished] = useState(false);
-  const [wrongList, setWrongList] = useState([]);
+  const [selectedPart, setSelectedPart] = useState(4);
 
-  const startPart = (part) => {
-    setSelectedPart(part);
-    const qs = allQuestions.filter(q => q.part === part);
-    setQuestions(qs);
-    setCurrent(0);
-    setSelected(null);
-    setShowExplanation(false);
-    setScore(0);
-    setAnswered(0);
-    setFinished(false);
-    setWrongList([]);
-  };
-
-  const handleOption = (idx) => {
-    if (selected !== null) return;
-    setSelected(idx);
-    setShowExplanation(true);
-    setAnswered(a => a + 1);
-    if (idx === questions[current].answer) {
-      setScore(s => s + 1);
-    } else {
-      setWrongList(w => [...w, questions[current]]);
-    }
-  };
-
-  const handleNext = () => {
-    if (current + 1 >= questions.length) {
-      setFinished(true);
-    } else {
-      setCurrent(c => c + 1);
-      setSelected(null);
-      setShowExplanation(false);
-    }
-  };
-
-  const reset = () => {
-    setSelectedPart(null);
-    setQuestions([]);
-    setCurrent(0);
-    setSelected(null);
-    setShowExplanation(false);
-    setScore(0);
-    setAnswered(0);
-    setFinished(false);
-    setWrongList([]);
-  };
-
-  const optionColors = (idx) => {
-    if (selected === null) return "bg-white border-gray-300 hover:border-blue-400 hover:bg-blue-50";
-    if (idx === questions[current].answer) return "bg-green-100 border-green-500 text-green-800";
-    if (idx === selected && idx !== questions[current].answer) return "bg-red-100 border-red-500 text-red-800";
-    return "bg-white border-gray-200 text-gray-400";
-  };
-
-  if (!selectedPart) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 flex items-center justify-center p-4">
-        <div className="max-w-lg w-full">
-          <div className="text-center mb-8">
-            <div className="text-5xl mb-3">⚡</div>
-            <h1 className="text-3xl font-bold text-white mb-2">Power Plant Quiz</h1>
-            <p className="text-blue-200">YCT Series — Parts 4 & 5</p>
-          </div>
-          <div className="space-y-4">
-            <button
-              onClick={() => startPart(4)}
-              className="w-full bg-white rounded-2xl p-6 text-left shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1"
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-sm font-semibold text-blue-600 uppercase tracking-wider mb-1">Part 4</div>
-                  <div className="text-xl font-bold text-gray-800">Non-Conventional Energy</div>
-                  <div className="text-sm text-gray-500 mt-1">Section VIII · Q40–Q127</div>
-                </div>
-                <div className="text-right">
-                  <div className="text-3xl font-bold text-blue-600">88</div>
-                  <div className="text-xs text-gray-500">questions</div>
-                </div>
-              </div>
-            </button>
-            <button
-              onClick={() => startPart(5)}
-              className="w-full bg-white rounded-2xl p-6 text-left shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1"
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-sm font-semibold text-indigo-600 uppercase tracking-wider mb-1">Part 5</div>
-                  <div className="text-xl font-bold text-gray-800">Economics of Power Generation</div>
-                  <div className="text-sm text-gray-500 mt-1">Section IX · Q54–Q238</div>
-                </div>
-                <div className="text-right">
-                  <div className="text-3xl font-bold text-indigo-600">185</div>
-                  <div className="text-xs text-gray-500">questions</div>
-                </div>
-              </div>
-            </button>
-          </div>
-          <p className="text-center text-blue-300 text-sm mt-6">Based on UPPCL, SSC JE, ESE & state PSC exams</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (finished) {
-    const pct = Math.round((score / questions.length) * 100);
-    const grade = pct >= 80 ? "🏆 Excellent!" : pct >= 60 ? "👍 Good" : pct >= 40 ? "📚 Keep Studying" : "🔄 Needs Work";
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-900 to-indigo-900 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-3xl shadow-2xl p-8 text-center">
-          <div className="text-5xl mb-4">{grade.split(" ")[0]}</div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-1">{grade.slice(2)}</h2>
-          <p className="text-gray-500 mb-6">Part {selectedPart} Complete</p>
-          <div className="bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl p-6 text-white mb-6">
-            <div className="text-5xl font-bold">{pct}%</div>
-            <div className="text-blue-100 mt-1">{score} / {questions.length} correct</div>
-          </div>
-          <div className="grid grid-cols-2 gap-3 mb-6">
-            <div className="bg-green-50 rounded-xl p-3">
-              <div className="text-2xl font-bold text-green-600">{score}</div>
-              <div className="text-xs text-green-700">Correct</div>
-            </div>
-            <div className="bg-red-50 rounded-xl p-3">
-              <div className="text-2xl font-bold text-red-600">{questions.length - score}</div>
-              <div className="text-xs text-red-700">Incorrect</div>
-            </div>
-          </div>
-          {wrongList.length > 0 && (
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-left mb-6 max-h-48 overflow-y-auto">
-              <div className="text-sm font-semibold text-amber-800 mb-2">Review These:</div>
-              {wrongList.map((q, i) => (
-                <div key={i} className="text-xs text-amber-700 mb-1">• {q.q}: {q.question.substring(0, 60)}...</div>
-              ))}
-            </div>
-          )}
-          <div className="space-y-3">
-            <button onClick={() => startPart(selectedPart)} className="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors">
-              Retry Part {selectedPart}
-            </button>
-            <button onClick={reset} className="w-full border-2 border-gray-300 text-gray-600 py-3 rounded-xl font-semibold hover:border-blue-400 transition-colors">
-              Choose Another Part
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  const q = questions[current];
-  const progress = ((current) / questions.length) * 100;
+  const filteredQuestions = allQuestions.filter(
+    (q) => q.part === selectedPart
+  );
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-blue-700 to-indigo-700 text-white px-4 py-3 sticky top-0 z-10 shadow-lg">
-        <div className="max-w-2xl mx-auto">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <button onClick={reset} className="text-blue-200 hover:text-white text-sm">← Parts</button>
-              <span className="text-blue-300">|</span>
-              <span className="text-sm font-medium">Part {selectedPart} · Sec {q.section} · {q.q}</span>
-            </div>
-            <div className="text-sm font-bold">{score}/{answered}</div>
-          </div>
-          <div className="w-full bg-blue-800 rounded-full h-1.5">
-            <div className="bg-yellow-400 h-1.5 rounded-full transition-all duration-300" style={{ width: `${progress}%` }} />
-          </div>
-          <div className="flex justify-between text-xs text-blue-200 mt-1">
-            <span>{q.topic}</span>
-            <span>{current + 1} / {questions.length}</span>
-          </div>
-        </div>
+    <div style={{ padding: "20px" }}>
+      <h1>Power Plant - Part 4 & 5</h1>
+
+      <div style={{ marginBottom: "20px" }}>
+        <button onClick={() => setSelectedPart(4)}>Part 4</button>
+        <button onClick={() => setSelectedPart(5)}>Part 5</button>
       </div>
 
-      {/* Question */}
-      <div className="max-w-2xl mx-auto px-4 py-5">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 mb-4">
-          <div className="text-xs font-semibold text-blue-600 uppercase tracking-wider mb-2">{q.q} — {q.topic}</div>
-          <p className="text-gray-800 font-medium leading-relaxed whitespace-pre-line">{q.question}</p>
+      {filteredQuestions.map((item, index) => (
+        <div
+          key={index}
+          style={{
+            border: "1px solid #ddd",
+            padding: "15px",
+            marginBottom: "15px",
+            borderRadius: "8px",
+          }}
+        >
+          <h3>{item.q} - {item.topic}</h3>
+          <p>{item.question}</p>
+
+          <ul>
+            {item.options.map((opt, i) => (
+              <li key={i}>{opt}</li>
+            ))}
+          </ul>
+
+          <p><b>Answer:</b> {item.options[item.answer]}</p>
+          <p><b>Explanation:</b> {item.explanation}</p>
         </div>
-
-        {/* Options */}
-        <div className="space-y-3 mb-4">
-          {q.options.map((opt, idx) => (
-            <button
-              key={idx}
-              onClick={() => handleOption(idx)}
-              className={`w-full text-left border-2 rounded-xl px-4 py-3 transition-all font-medium ${optionColors(idx)}`}
-            >
-              <span className="inline-flex items-center gap-3">
-                <span className="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-sm font-bold text-gray-600 shrink-0">
-                  {String.fromCharCode(65 + idx)}
-                </span>
-                <span>{opt}</span>
-              </span>
-            </button>
-          ))}
-        </div>
-
-        {/* Explanation */}
-        {showExplanation && (
-          <div className={`rounded-xl p-4 mb-4 border-l-4 ${selected === q.answer ? "bg-green-50 border-green-500" : "bg-red-50 border-red-500"}`}>
-            <div className={`text-sm font-bold mb-1 ${selected === q.answer ? "text-green-700" : "text-red-700"}`}>
-              {selected === q.answer ? "✓ Correct!" : `✗ Incorrect — Correct: ${String.fromCharCode(65 + q.answer)}) ${q.options[q.answer]}`}
-            </div>
-            <p className="text-sm text-gray-700 leading-relaxed">{q.explanation}</p>
-          </div>
-        )}
-
-        {/* Next */}
-        {selected !== null && (
-          <button
-            onClick={handleNext}
-            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5"
-          >
-            {current + 1 >= questions.length ? "See Results 🏆" : "Next Question →"}
-          </button>
-        )}
-      </div>
+      ))}
     </div>
   );
 }
