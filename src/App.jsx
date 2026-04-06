@@ -5,12 +5,18 @@ import PartFourFive from "./PartFourFive";
 
 function Home() {
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>Assistant Engineer (EEE)</h1>
-
-      <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-        <Link to="/part1" className="btn">Part-1</Link>
-        <Link to="/part4" className="btn">Part-4 and 5</Link>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100vh", width: "100%" }}>
+      <h1>StudyWithDhilip</h1>
+      <a href="public/PYQ/previous_years.html" className="btn">Previous Year Questions</a>
+      <a href="public/Tamil/Tamil.html" className="btn">Tamil</a>
+      <a href="public/AE/YCT-1/YCT-1.html" className="btn">Assistant Engineer</a>
+      
+      <div style={{ marginTop: "30px", textAlign: "center" }}>
+        <h2>Assistant Engineer (EEE)</h2>
+        <div style={{ display: "flex", flexDirection: "column", gap: "15px", marginTop: "15px" }}>
+          <Link to="/part1" className="btn">Part-1</Link>
+          <Link to="/part4" className="btn">Part-4 and 5</Link>
+        </div>
       </div>
     </div>
   );
