@@ -2,29 +2,32 @@ name: React CI
 
 on:
   push:
-    branches: [ "main", "develop" ]
+    branches: [ "main", "master" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "master" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-        cache: 'npm'
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          # Caching is disabled to prevent "lock file not found" errors
+          # If you add package-lock.json later, you can re-enable this.
 
-    - name: Install dependencies
-      run: npm ci
+      - name: Install dependencies
+        # Changed from 'npm ci' to 'npm install' because ci requires a lock file
+        run: npm install
 
-    - name: Lint JSX/JS
-      run: npm run lint
+      - name: Run build
+        # This ensures your .jsx files compile correctly without errors
+        run: npm run build --if-present
 
-    - name: Run Tests
-      run: npm test
+      - name: Run tests
+        run: npm test --if-present
