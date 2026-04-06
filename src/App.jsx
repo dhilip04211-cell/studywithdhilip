@@ -1,11 +1,11 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { HashRouter, Routes, Route, Link } from 'react-router-dom';
 import PartFourFive from './PartFourFive'; 
 
 function App() {
   return (
-    // basename ensures the links work on GitHub's sub-folder
-    <BrowserRouter basename="/studywithdhilip">
+    // HashRouter avoids GitHub Pages path-based 404s by keeping the route in the URL hash
+    <HashRouter>
       <Routes>
         <Route path="/" element={
           <div style={{ textAlign: 'center', marginTop: '50px' }}>
@@ -21,7 +21,7 @@ function App() {
         
         <Route path="/part4" element={<PartFourFive />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
