@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 const allQuestions = [
   // ── PART 4 ──────────────────────────────────────────────────────────────────
   // Section VIII – Non-conventional Sources of Energy  Q40–Q127
@@ -3076,49 +3077,59 @@ const allQuestions = [
     explanation: "Overhead charges are indirect costs of running an organisation that cannot be attributed to a specific product or service — including office rent, utilities, depreciation of office equipment, and administrative salaries."
   }
 ];
-
-const PART4_START = 0;
-const PART4_END = allQuestions.findIndex(q => q.part === 5);
-const PART5_START = PART4_END;
-
-
 export default function PartFourFive() {
   const [selectedPart, setSelectedPart] = useState(4);
 
   const filteredQuestions = allQuestions.filter(
-    (q) => q.part === selectedPart
+    (item) => item.part === selectedPart
   );
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Power Plant - Part 4 & 5</h1>
+    <div style={{ padding: "20px", maxWidth: "1000px", margin: "auto" }}>
+      <h1 style={{ textAlign: "center" }}>Power Plant - Part 4 & 5</h1>
 
-      <div style={{ marginBottom: "20px" }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "10px",
+          justifyContent: "center",
+          marginBottom: "20px",
+        }}
+      >
         <button onClick={() => setSelectedPart(4)}>Part 4</button>
         <button onClick={() => setSelectedPart(5)}>Part 5</button>
       </div>
 
-      {filteredQuestions.map((item, index) => (
+      {filteredQuestions.map((q, index) => (
         <div
           key={index}
           style={{
             border: "1px solid #ddd",
+            borderRadius: "10px",
             padding: "15px",
             marginBottom: "15px",
-            borderRadius: "8px",
+            background: "#fff",
           }}
         >
-          <h3>{item.q} - {item.topic}</h3>
-          <p>{item.question}</p>
+          <h3>
+            {q.q} - {q.topic}
+          </h3>
+
+          <p>{q.question}</p>
 
           <ul>
-            {item.options.map((opt, i) => (
-              <li key={i}>{opt}</li>
+            {q.options.map((option, i) => (
+              <li key={i}>{option}</li>
             ))}
           </ul>
 
-          <p><b>Answer:</b> {item.options[item.answer]}</p>
-          <p><b>Explanation:</b> {item.explanation}</p>
+          <p>
+            <b>Correct Answer:</b> {q.options[q.answer]}
+          </p>
+
+          <p>
+            <b>Explanation:</b> {q.explanation}
+          </p>
         </div>
       ))}
     </div>
