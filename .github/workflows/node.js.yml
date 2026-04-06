@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ "main" ]
 
-# Opt into Node.js 24 immediately to clear deprecation warnings
+# Opt into Node.js 24 runtime to clear the deprecation warnings
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -15,27 +15,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Updated to v5 (Supports Node 24)
+      # v5 is the latest version for Node 24 compatibility
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      # Ensure your environment is using Node 24 for your own scripts/builds
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: 'npm'
+          # We removed 'cache: npm' to fix the "Lock file not found" error.
+          # This is the safest way to get your build passing immediately.
 
       - name: Install dependencies
+        # This will create a fresh environment every time
         run: npm install
 
       - name: Run Build
+        # This runs your build script defined in package.json
         run: npm run build
 
-      # Updated to v5 (Supports Node 24)
+      # v5 ensures the artifact upload works with the new Node runtime
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v5
         with:
           name: production-files
           path: dist/
-          cache-dependency-path: './my-subfolder/package-lock.json'
