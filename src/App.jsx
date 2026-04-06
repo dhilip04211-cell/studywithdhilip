@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import PartFourFive from '../public/pages/part4/PartFourFive'; 
+import PartFourFive from './PartFourFive'; 
 
 function App() {
   return (
