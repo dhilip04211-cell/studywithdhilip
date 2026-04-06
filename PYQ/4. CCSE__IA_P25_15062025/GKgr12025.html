@@ -1,0 +1,3049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCSEI-IAP25 | Bilingual Quiz | 200 Questions</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
+
+  :root {
+    --primary: #1a3a6b;
+    --secondary: #e8401c;
+    --accent: #f5a623;
+    --green: #1a8a4a;
+    --light: #f4f6fb;
+    --white: #ffffff;
+    --border: #d0d7e8;
+    --text: #1c2340;
+    --tamil: #5b0e91;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', 'Noto Sans Tamil', sans-serif;
+    background: var(--light);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0d2147 100%);
+    color: white;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.25);
+  }
+  .header-left { display: flex; align-items: center; gap: 14px; }
+  .header-logo {
+    background: var(--secondary);
+    color: white;
+    font-weight: 800;
+    font-size: 13px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+  }
+  .header-title { font-size: 16px; font-weight: 700; }
+  .header-sub { font-size: 11px; opacity: 0.75; margin-top: 2px; }
+  .header-right { display: flex; align-items: center; gap: 16px; }
+  .timer-box {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 8px;
+    padding: 6px 14px;
+    text-align: center;
+  }
+  .timer-label { font-size: 10px; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; }
+  .timer-value { font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--accent); }
+
+  /* PROGRESS BAR */
+  .progress-bar-wrap {
+    background: rgba(255,255,255,0.15);
+    height: 5px;
+    position: sticky;
+    top: 70px;
+    z-index: 99;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  /* STATS BAR */
+  .stats-bar {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 10px 24px;
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .stat-item { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+  .stat-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .stat-dot.answered { background: var(--green); }
+  .stat-dot.skipped { background: var(--accent); }
+  .stat-dot.unattempted { background: #c5ccd8; }
+  .stat-count { font-weight: 700; }
+
+  /* QUESTION NAV PALETTE */
+  .palette-toggle {
+    margin-left: auto;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 12px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  /* MAIN LAYOUT */
+  .main-container {
+    display: flex;
+    min-height: calc(100vh - 120px);
+  }
+
+  /* QUESTION PANEL */
+  .question-panel {
+    flex: 1;
+    padding: 24px;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  /* QUESTION CARD */
+  .question-card {
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .question-header {
+    background: linear-gradient(90deg, var(--primary), #1f4e8e);
+    color: white;
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .question-number { font-size: 13px; font-weight: 700; opacity: 0.9; }
+  .question-badge {
+    background: rgba(255,255,255,0.2);
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .question-body { padding: 20px 22px; }
+
+  .q-english {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.65;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .q-english .stmt {
+    margin: 6px 0 0 12px;
+    font-weight: 500;
+    font-size: 14.5px;
+  }
+
+  .q-tamil {
+    font-size: 14px;
+    font-family: 'Noto Sans Tamil', sans-serif;
+    color: var(--tamil);
+    line-height: 1.8;
+    border-left: 3px solid #d8b4fe;
+    padding-left: 12px;
+    margin-top: 10px;
+    margin-bottom: 16px;
+    background: #faf5ff;
+    border-radius: 0 6px 6px 0;
+    padding: 8px 12px;
+  }
+  .q-tamil .stmt {
+    margin: 4px 0 0 12px;
+    font-size: 13.5px;
+  }
+
+  /* OPTIONS */
+  .options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .option-btn {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 11px 15px;
+    border: 2px solid var(--border);
+    border-radius: 9px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.18s;
+    text-align: left;
+    width: 100%;
+    font-size: 14px;
+    font-family: inherit;
+  }
+  .option-btn:hover { border-color: var(--primary); background: #eef2fb; }
+  .option-btn.selected { border-color: var(--primary); background: #deeaff; }
+  .option-btn.correct { border-color: var(--green); background: #d4f5e2; }
+  .option-btn.wrong { border-color: var(--secondary); background: #ffe4de; }
+
+  .opt-label {
+    background: var(--primary);
+    color: white;
+    border-radius: 5px;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 12px;
+    margin-top: 1px;
+  }
+  .option-btn.selected .opt-label { background: var(--primary); }
+  .option-btn.correct .opt-label { background: var(--green); }
+  .option-btn.wrong .opt-label { background: var(--secondary); }
+
+  .opt-text { line-height: 1.55; }
+  .opt-en { font-weight: 500; font-size: 14px; }
+  .opt-ta { font-family: 'Noto Sans Tamil', sans-serif; font-size: 12.5px; color: #6b4f8a; margin-top: 2px; }
+
+  /* FEEDBACK */
+  .feedback-box {
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    display: none;
+  }
+  .feedback-box.correct { background: #d4f5e2; border: 1px solid var(--green); color: #0e5c2f; }
+  .feedback-box.wrong { background: #ffe4de; border: 1px solid var(--secondary); color: #8a1000; }
+
+  /* NAV BUTTONS */
+  .nav-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+    padding: 0 0 24px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 10px 22px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s;
+    font-family: inherit;
+  }
+  .btn-prev { background: #e8ecf4; color: var(--primary); }
+  .btn-prev:hover:not(:disabled) { background: #d0d7e8; }
+  .btn-prev:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-skip { background: #fff5e0; color: #b36b00; border: 1px solid var(--accent); }
+  .btn-skip:hover { background: #ffe9b0; }
+  .btn-next { background: var(--primary); color: white; }
+  .btn-next:hover { background: #0d2147; }
+  .btn-submit { background: var(--secondary); color: white; }
+  .btn-submit:hover { background: #c73010; }
+
+  /* SIDEBAR PALETTE */
+  .sidebar {
+    width: 280px;
+    background: white;
+    border-left: 1px solid var(--border);
+    padding: 16px;
+    overflow-y: auto;
+    max-height: calc(100vh - 100px);
+    position: sticky;
+    top: 80px;
+    display: block;
+  }
+  .sidebar-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .palette-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 5px;
+    margin-bottom: 16px;
+  }
+  .pal-btn {
+    width: 100%;
+    aspect-ratio: 1;
+    border: 1.5px solid #c5ccd8;
+    border-radius: 5px;
+    background: #f4f6fb;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--text);
+  }
+  .pal-btn:hover { background: #e0e8f8; border-color: var(--primary); }
+  .pal-btn.current { background: var(--primary); color: white; border-color: var(--primary); }
+  .pal-btn.answered { background: var(--green); color: white; border-color: var(--green); }
+  .pal-btn.skipped { background: var(--accent); color: white; border-color: var(--accent); }
+  .pal-btn.wrong { background: var(--secondary); color: white; border-color: var(--secondary); }
+
+  .legend { display: flex; flex-direction: column; gap: 6px; font-size: 12px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-box { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+
+  /* RESULT PAGE */
+  .result-page {
+    display: none;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+  .result-header {
+    background: linear-gradient(135deg, var(--primary), #1f4e8e);
+    color: white;
+    border-radius: 14px;
+    padding: 28px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .result-title { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+  .result-score { font-size: 48px; font-weight: 800; color: var(--accent); }
+  .result-meta { font-size: 14px; opacity: 0.8; margin-top: 6px; }
+
+  .result-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .result-stat {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .result-stat-val { font-size: 28px; font-weight: 800; }
+  .result-stat-lab { font-size: 12px; color: #5a6270; margin-top: 4px; font-weight: 600; }
+  .correct-val { color: var(--green); }
+  .wrong-val { color: var(--secondary); }
+  .skip-val { color: var(--accent); }
+  .total-val { color: var(--primary); }
+
+  .section-heading {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--primary);
+    padding: 12px 0 10px;
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-heading .badge {
+    background: var(--primary);
+    color: white;
+    border-radius: 20px;
+    padding: 2px 10px;
+    font-size: 12px;
+  }
+  .section-heading.correct-head { color: var(--green); }
+  .section-heading.correct-head .badge { background: var(--green); }
+  .section-heading.wrong-head { color: var(--secondary); }
+  .section-heading.wrong-head .badge { background: var(--secondary); }
+  .section-heading.skip-head { color: #b36b00; }
+  .section-heading.skip-head .badge { background: var(--accent); color: #1c2340; }
+
+  .result-question-card {
+    background: white;
+    border-radius: 10px;
+    border-left: 5px solid var(--green);
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+  }
+  .result-question-card.wrong-card { border-left-color: var(--secondary); }
+  .result-question-card.skip-card { border-left-color: var(--accent); }
+
+  .rq-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+  .rq-num { font-size: 11px; font-weight: 700; color: #5a6270; flex-shrink: 0; }
+  .rq-text { font-size: 13.5px; font-weight: 600; line-height: 1.55; }
+  .rq-answer-row { display: flex; gap: 12px; font-size: 12.5px; flex-wrap: wrap; margin-top: 6px; }
+  .rq-correct { color: var(--green); font-weight: 700; }
+  .rq-your { color: var(--secondary); font-weight: 700; }
+  .rq-skip-note { color: #b36b00; font-weight: 700; }
+
+  .btn-review {
+    background: white;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-right: 10px;
+    font-family: inherit;
+    transition: all 0.18s;
+  }
+  .btn-review:hover { background: var(--primary); color: white; }
+
+  /* PRINT */
+  @media print {
+    .header, .stats-bar, .nav-buttons, .sidebar { display: none; }
+    .result-page { display: block !important; }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .result-stats { grid-template-columns: repeat(2, 1fr); }
+    .header-right { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <div class="header-logo">CCSEI<br>IAP25</div>
+    <div>
+      <div class="header-title">பொது அறிவு தேர்வு | General Knowledge Quiz</div>
+      <div class="header-sub">200 Questions • Bilingual (English + தமிழ்) • 3 Hours</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="timer-box">
+      <div class="timer-label">Time Left</div>
+      <div class="timer-value" id="timerDisplay">3:00:00</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROGRESS BAR -->
+<div class="progress-bar-wrap">
+  <div class="progress-bar-fill" id="progressFill"></div>
+</div>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-dot answered"></div>
+    <div>Answered: <span class="stat-count" id="cntAnswered">0</span></div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-dot skipped"></div>
+    <div>Skipped: <span class="stat-count" id="cntSkipped">0</span></div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-dot unattempted"></div>
+    <div>Not Visited: <span class="stat-count" id="cntUnattempted">200</span></div>
+  </div>
+  <button class="palette-toggle" onclick="togglePalette()">☰ Question Map</button>
+</div>
+
+<!-- MAIN -->
+<div class="main-container">
+  <!-- QUESTION PANEL -->
+  <div class="question-panel" id="questionPanel">
+    <div class="question-card" id="questionCard">
+      <div class="question-header">
+        <div class="question-number" id="qNumLabel">Question 1 of 200</div>
+        <div class="question-badge" id="qBadge">Not Attempted</div>
+      </div>
+      <div class="question-body" id="questionBody">
+        <!-- Dynamic content -->
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-prev" id="prevBtn" onclick="navigate(-1)">◀ Previous</button>
+      <button class="btn btn-skip" onclick="skipQuestion()">⏭ Skip</button>
+      <button class="btn btn-next" id="nextBtn" onclick="navigate(1)">Next ▶</button>
+      <button class="btn btn-submit" onclick="confirmSubmit()">✓ Submit All</button>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-title">📋 Question Map</div>
+    <div class="palette-grid" id="paletteGrid"></div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-box" style="background:var(--primary)"></div> Current</div>
+      <div class="legend-item"><div class="legend-box" style="background:var(--green)"></div> Answered</div>
+      <div class="legend-item"><div class="legend-box" style="background:var(--accent)"></div> Skipped</div>
+      <div class="legend-item"><div class="legend-box" style="background:#c5ccd8"></div> Not Visited</div>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT PAGE -->
+<div class="result-page" id="resultPage">
+  <div class="result-header">
+    <div class="result-title">🎓 Quiz Completed! | தேர்வு முடிந்தது!</div>
+    <div class="result-score" id="rScore">0 / 200</div>
+    <div class="result-meta" id="rMeta">Loading results...</div>
+  </div>
+  <div class="result-stats">
+    <div class="result-stat"><div class="result-stat-val correct-val" id="rCorrect">0</div><div class="result-stat-lab">✅ Correct</div></div>
+    <div class="result-stat"><div class="result-stat-val wrong-val" id="rWrong">0</div><div class="result-stat-lab">❌ Wrong</div></div>
+    <div class="result-stat"><div class="result-stat-val skip-val" id="rSkip">0</div><div class="result-stat-lab">⏭ Skipped</div></div>
+    <div class="result-stat"><div class="result-stat-val total-val" id="rPercent">0%</div><div class="result-stat-lab">📊 Score %</div></div>
+  </div>
+  <button class="btn-review" onclick="restartQuiz()">🔄 Restart Quiz</button>
+  <button class="btn-review" onclick="window.print()">🖨 Print Results</button>
+
+  <div id="correctSection"></div>
+  <div id="wrongSection"></div>
+  <div id="skippedSection"></div>
+</div>
+
+<script>
+// =====================================================
+// QUESTION DATA — 200 Questions (English + Tamil)
+// Directly extracted from CCSEI-IAP25 exam paper
+// =====================================================
+const questions = [
+{
+  en: "Which of the following statements are True?\n(i) Octane number increases with chain length.\n(ii) Cycloalkanes have higher Octane number than straight chain alkanes.\n(iii) Alkenes and aromatic hydrocarbon have higher Octane number than straight chain alkanes.\n(iv) Branched chain alkanes have lower octane number than straight chain alkanes.",
+  ta: "கீழ்கண்டவற்றில் எது சரியான கூற்று?\n(i) சங்கிலி தொடர் கூடும் போது ஆக்டேன் எண் உயர்கிறது.\n(ii) நேரான அல்கேன்களைக் காட்டிலும் வளைய அல்கேன்களுக்கு உயர்ந்த ஆக்டேன் எண் உண்டு.\n(iii) நேரான அல்கேன்களைக் காட்டிலும் அல்கீன்களும் அரோமாட்டிக் ஹைட்ரோ கார்பன்களும் அதிக ஆக்டேன் எண் கொண்டது.\n(iv) நேரான அல்கேன்களைக் காட்டிலும் கிளைகள் உடைய சங்கிலித் தொடர் அல்கேன்கள் குறைவான ஆக்டேன் எண் கொண்டது.",
+  opts: [
+    {en:"(i) and (iv)", ta:"(i) மற்றும் (iv)"},
+    {en:"(i) and (ii)", ta:"(i) மற்றும் (ii)"},
+    {en:"(ii) and (iii)", ta:"(ii) மற்றும் (iii)"},
+    {en:"(i), (ii), (iii) and (iv)", ta:"(i), (ii), (iii) மற்றும் (iv)"}
+  ],
+  ans: 2
+},
+{
+  en: "Match the following hormone with the disorder caused:\n(a) Insulin — (b) Thyroxine — (c) Glucocorticoids — (d) Growth hormone\n1. Cushing's syndrome  2. Diabetes insipidus  3. Acromegaly  4. Goitre  5. Diabetes Mellitus",
+  ta: "ஹார்மோன்களை அவை உண்டாக்கும் நோய்களோடு பொருத்துக:\n(a) இன்சுலின் (b) தைராக்சின் (c) குளூக்கோகார்டிகாய்ட் (d) வளர்ச்சி ஹார்மோன்",
+  opts: [
+    {en:"(a)5 (b)1 (c)2 (d)3", ta:"(a)5 (b)1 (c)2 (d)3"},
+    {en:"(a)2 (b)4 (c)3 (d)1", ta:"(a)2 (b)4 (c)3 (d)1"},
+    {en:"(a)5 (b)4 (c)1 (d)3", ta:"(a)5 (b)4 (c)1 (d)3"},
+    {en:"(a)2 (b)4 (c)1 (d)3", ta:"(a)2 (b)4 (c)1 (d)3"}
+  ],
+  ans: 2
+},
+{
+  en: "Choose the right matches:\n(1) Carotenoid — C₅₅H₇₀O₅N₄Mg\n(2) Chlorophyll 'a' — C₅₅H₇₂O₅N₄Mg\n(3) Chlorophyll 'b' — C₅₅H₇₀O₆N₄Mg\n(4) Xanthophyll — C₅₀H₇₀O₅Mg",
+  ta: "சரியாகப் பொருத்தப்பட்டதைத் தேர்ந்தெடுக்கவும்:\n(1) கரோடினாய்டு (2) பச்சயம் 'a' (3) பச்சயம் 'b' (4) சாந்தோஃபில்",
+  opts: [
+    {en:"(1) and (2) are correct", ta:"(1) மற்றும் (2) சரியானவை"},
+    {en:"(3) and (4) are correct", ta:"(3) மற்றும் (4) சரியானவை"},
+    {en:"(2) and (3) are correct", ta:"(2) மற்றும் (3) சரியானவை"},
+    {en:"(1) and (4) are correct", ta:"(1) மற்றும் (4) சரியானவை"}
+  ],
+  ans: 2
+},
+{
+  en: "The Nobel Prize in Medicine was awarded to Victor Ambros and Gary Ruvkun for their discovery of",
+  ta: "விக்டர் அம்ரோஸ் மற்றும் கிரே ரவ்குன் ஆகியோரின் எந்த கண்டுபிடிப்புக்காக மருத்துவத்தில் நோபல் விருது வழங்கப்பட்டது?",
+  opts: [
+    {en:"Expression Sequence Tags", ta:"வெளிப்பாடு வரிசை மரபு குறிச்சொற்கள்"},
+    {en:"Micro RNA", ta:"நுண் ஆர்.என்.ஏ. (micro RNA)"},
+    {en:"DNA micro array", ta:"டி.என்.ஏ. நுண் அணி"},
+    {en:"SNP's", ta:"எஸ்.என்.பி. (SNP's)"}
+  ],
+  ans: 1
+},
+{
+  en: "Which of the following statements are true about crew selection and training for 'Gaganyaan Mission'?\n(i) Crews are selected after clinical, psychological and aeromedical examination.\n(ii) Mission-specific training will be conducted at ISRO, Trivandrum.\n(iii) Selected astronauts will undergo their generic spaceflight training in Yuri Gagarin Cosmonaut training centre, Russia.",
+  ta: "பின்வரும் கூற்றுகளில், எவை 'ககன்யான் விண்வெளித்திட்ட' வீரர்களைத் தேர்ந்தெடுத்தல் மற்றும் பயிற்சி குறித்து சரியான கூற்றுகள்?",
+  opts: [
+    {en:"(i) and (ii) only", ta:"(i) மற்றும் (ii) மட்டும்"},
+    {en:"(ii) and (iii) only", ta:"(ii) மற்றும் (iii) மட்டும்"},
+    {en:"(iii) only", ta:"(iii) மட்டும்"},
+    {en:"(i) and (iii) only", ta:"(i) மற்றும் (iii) மட்டும்"}
+  ],
+  ans: 3
+},
+{
+  en: "Which of the following statements are correct about PFAS?\n(i) PFAS is per and poly fluoro alkyl substances.\n(ii) It is used in paint industries.\n(iii) PFAS are endocrine disrupters.",
+  ta: "கீழ்க்காணும் கூற்றுகளில் PFAS பற்றிய சரியான கூற்றுகளை தேர்ந்தெடுக்கவும்.",
+  opts: [
+    {en:"(i) and (ii) are correct", ta:"(i) மற்றும் (ii) சரியானவை"},
+    {en:"(ii) and (iii) are correct", ta:"(ii) மற்றும் (iii) சரியானவை"},
+    {en:"(i) and (iii) are correct", ta:"(i) மற்றும் (iii) சரியானவை"},
+    {en:"(i) only correct", ta:"(i) மட்டும் சரியானது"}
+  ],
+  ans: 2
+},
+{
+  en: "The biological oxygen demand is the amount of dissolved oxygen required by __________ in water.",
+  ta: "உயிர்வேதியியில் ஆக்சிஜன் தேவை என்பது, நீரில் __________ பயன்பாட்டின் போது நுகரப்படும் ஆக்சிஜன் அளவு ஆகும்.",
+  opts: [
+    {en:"Microbes", ta:"நுண்ணுயிர்"},
+    {en:"Plants", ta:"செடிகள்"},
+    {en:"Animals", ta:"விலங்குகள்"},
+    {en:"Seaweeds", ta:"கடற்பாசிகள்"}
+  ],
+  ans: 0
+},
+{
+  en: "Which of the following is the first Indian Geo-Stationary Satellite?",
+  ta: "பின்வருவனவற்றில் எது முதல் இந்திய புவிசார் செயற்கைக்கோள்?",
+  opts: [
+    {en:"INSAT 3D", ta:"INSAT 3D"},
+    {en:"LANDSAT 8", ta:"LANDSAT 8"},
+    {en:"IKONOS 1", ta:"IKONOS 1"},
+    {en:"QUICK BIRD", ta:"QUICK BIRD"}
+  ],
+  ans: 0
+},
+{
+  en: "Who among the following tribes act as cattle keepers?",
+  ta: "பின்வரும் பழங்குடியினரில் யார் கால்நடை பராமரிப்பாளர்களாக செயல்படுகிறார்கள்?",
+  opts: [
+    {en:"Dhimor", ta:"திமார்"},
+    {en:"Kewats", ta:"கேவாட்ஸ்"},
+    {en:"Rawats", ta:"ரவாட்ஸ்"},
+    {en:"Bhils", ta:"பில்ஸ்"}
+  ],
+  ans: 2
+},
+{
+  en: "Assertion [A]: Development of a nation depends on infrastructure facilities.\nReason [R]: Transport and communication are the back bone of economic development.",
+  ta: "கூற்று [A]: நாட்டின் வளர்ச்சி உட்கட்டமைப்பு வசதியைச் சார்ந்தது.\nகாரணம் [R]: போக்குவரத்து மற்றும் தொலைதொடர்பு, பொருளாதார வளர்ச்சியின் முதுகெலும்பாகும்.",
+  opts: [
+    {en:"[A] and [R] is true and [R] is correct explanation for [A]", ta:"[A] மற்றும் [R] சரியே, [R] க்கான மிகச் சரியான விளக்கம் [A] ஆகும்."},
+    {en:"[A] is true but [R] is false", ta:"[A] சரி ஆனால் [R] தவறு"},
+    {en:"[A], [R] is true but [R] is not the correct explanation of [A]", ta:"[A], [R] சரியே, ஆனால் [R] [A]க்கான சரியான விளக்கமல்ல"},
+    {en:"Both [A] and [R] are not correct", ta:"[A] மற்றும் [R] இரண்டும் தவறு"}
+  ],
+  ans: 0
+},
+{
+  en: "Match the following type:\nMatch correctly the river and its places of rises.\n(a) The Krishna  (b) The Alaknanda  (c) The Gandak  (d) The Brahmaputra\n1. Garwal Tibet border  2. Central Himalayas  3. Tibet  4. Sahyadris",
+  ta: "பின்வரும் வகையைப் பொருத்து:\nஆறு மற்றும் அது உருவாகும்/எழும் இடத்தினை சரியாக பொருத்து:\n(a) கிருஷ்ணா (b) அலகநந்தா (c) காண்டக் (d) பிரம்மபுத்திரா",
+  opts: [
+    {en:"(a)3 (b)2 (c)4 (d)1", ta:"(a)3 (b)2 (c)4 (d)1"},
+    {en:"(a)1 (b)4 (c)2 (d)3", ta:"(a)1 (b)4 (c)2 (d)3"},
+    {en:"(a)2 (b)1 (c)3 (d)4", ta:"(a)2 (b)1 (c)3 (d)4"},
+    {en:"(a)4 (b)1 (c)2 (d)3", ta:"(a)4 (b)1 (c)2 (d)3"}
+  ],
+  ans: 0
+},
+{
+  en: "Arrange the following events in chronological order:\n(i) Ahemadabad Mill Strike\n(ii) Champaran Satyagraha\n(iii) Kheda Satyagraha\n(iv) Rowlatt Satyagraha",
+  ta: "கால வரிசைப்படி அடுக்குக:\n(i) அஹமதாபாத் மில் வேலை நிறுத்தம்\n(ii) சம்பாரன் சத்தியாகிரகம்\n(iii) கேதா சத்தியாகிரகம்\n(iv) ரெளலட் சத்தியாகிரகம்",
+  opts: [
+    {en:"(ii), (i), (iii), (iv)", ta:"(ii), (i), (iii), (iv)"},
+    {en:"(iv), (iii), (ii), (i)", ta:"(iv), (iii), (ii), (i)"},
+    {en:"(i), (ii), (iii), (iv)", ta:"(i), (ii), (iii), (iv)"},
+    {en:"(iii), (ii), (i), (iv)", ta:"(iii), (ii), (i), (iv)"}
+  ],
+  ans: 0
+},
+{
+  en: "How did education contribute to the Indian Renaissance?\n(i) Contributed Growth of Money\n(ii) Promoting scientific learning\n(iii) Promoted social and cultural progress",
+  ta: "இந்திய மறுமலர்ச்சிக்குக் கல்வியின் பங்களிப்பு எவ்வாறு உதவி செய்தது?\n(i) பண வளர்ச்சியை கொடுத்தது\n(ii) அறிவியல் அறிவு வளர்ச்சிக்காக\n(iii) சமூகப் பண்பாடு முன்னேற்றம் ஏற்பட்டது",
+  opts: [
+    {en:"(i) only", ta:"(i) மட்டும்"},
+    {en:"(ii) and (iii) only", ta:"(ii) மற்றும் (iii) மட்டும்"},
+    {en:"(ii) only", ta:"(ii) மட்டும்"},
+    {en:"(i) and (iii) only", ta:"(i) மற்றும் (iii) மட்டும்"}
+  ],
+  ans: 1
+},
+{
+  en: "Match the following:\n(a) Peshwa  (b) Amatya  (c) Sachiva  (d) Sumant\n1. Foreign Secretary  2. Chief Minister  3. Finance Minister  4. Superintendent",
+  ta: "பின்வருவனவற்றைப் பொருத்துக:\n(a) பேஷ்வா (b) அமாத்தியர் (c) சச்சீவா (d) சுமந்தீ",
+  opts: [
+    {en:"(a)1 (b)2 (c)3 (d)4", ta:"(a)1 (b)2 (c)3 (d)4"},
+    {en:"(a)1 (b)4 (c)2 (d)3", ta:"(a)1 (b)4 (c)2 (d)3"},
+    {en:"(a)2 (b)3 (c)4 (d)1", ta:"(a)2 (b)3 (c)4 (d)1"},
+    {en:"(a)3 (b)2 (c)1 (d)4", ta:"(a)3 (b)2 (c)1 (d)4"}
+  ],
+  ans: 2
+},
+{
+  en: "Choose the right matches among type:\n(a) 'Indian World' Journal  (b) 'Telegraph' Journal  (c) 'Bengal Kirkaru' Journal  (d) 'Calcutta' Journal\n1. J.S. Buckingham  2. Charles MacLean  3. Mekenly  4. Duane",
+  ta: "சரியான இணையைப் பொருத்துக:\n(a) 'இந்திய உலகம்' இதழ் (b) 'டெலிகிராப்' இதழ் (c) 'பெங்கால் கிர்க்காரு' இதழ் (d) 'கல்கத்தா' இதழ்",
+  opts: [
+    {en:"(a)4 (b)3 (c)2 (d)1", ta:"(a)4 (b)3 (c)2 (d)1"},
+    {en:"(a)2 (b)3 (c)1 (d)4", ta:"(a)2 (b)3 (c)1 (d)4"},
+    {en:"(a)3 (b)1 (c)4 (d)2", ta:"(a)3 (b)1 (c)4 (d)2"},
+    {en:"(a)1 (b)4 (c)2 (d)3", ta:"(a)1 (b)4 (c)2 (d)3"}
+  ],
+  ans: 0
+},
+{
+  en: "Reason and Assertion type:\nAssertion [A]: Cinema was becoming popular in 1940's.\nReason [R]: Anna could achieve his ideals through Cinema Artists.",
+  ta: "காரணம் மற்றும் கூற்று வகை:\nகூற்று [A]: 1940 களில் சினிமா பிரபலமாக இருந்தது.\nகாரணம் [R]: சினிமா கலைஞர்கள் மூலம் அண்ணா தனது இலட்சியங்களை அடைய முடிந்தது",
+  opts: [
+    {en:"[A] is true but [R] is false", ta:"[A] சரி ஆனால் [R] தவறு"},
+    {en:"Both [A] and [R] are true; and [R] is the correct explanation of [A]", ta:"[A] மற்றும் [R] இரண்டும் சரி, மேலும் [R] என்பது [A] க்கு சரியான விளக்காகும்"},
+    {en:"[A] is false but [R] is true", ta:"[A] தவறு ஆனால் [R] சரி"},
+    {en:"Both [A] and [R] are true, but [R] is not the correct explanation of [A]", ta:"[A]ம் [R]ம் சரி, ஆனால் [R] என்பது [A] க்கு சரியான விளக்கமல்ல"}
+  ],
+  ans: 1
+},
+{
+  en: "Which one of the following is correctly matched?\n(A) Champaran Agitation — Bal Gangadhar Tilak\n(B) Ghadar Party — Lala Hardayal\n(C) Ganapathy Festival — Annie Besant\n(D) Home Rule Movement — Gandhiji",
+  ta: "கீழ்கண்டவற்றுள் எந்தக் கூற்றுச் சரியாகப் பொருத்தப்பட்டுள்ளது?",
+  opts: [
+    {en:"Champaran Agitation — Bal Gangadhar Tilak", ta:"சம்பரான் கிளர்ச்சி — பால கங்காதர திலகர்"},
+    {en:"Ghadar Party — Lala Hardayal", ta:"கதர் கட்சி — லாலா ஹர்தயாள்"},
+    {en:"Ganapathy Festival — Annie Besant", ta:"கணபதி பண்டிகை — அன்னிபெசன்ட்"},
+    {en:"Home Rule Movement — Gandhiji", ta:"தன்னாட்சி இயக்கம் — காந்திஜி"}
+  ],
+  ans: 1
+},
+{
+  en: "In Tuticorin, Tamil Nadu, Subramaniya Siva Campaigned for strike in 1908.",
+  ta: "1908 ஆம் ஆண்டு சுப்பிரமணிய சிவா தமிழ்நாட்டிலுள்ள தூத்துக்குடியில் போராட்டத்திற்கு பிரச்சாரம் செய்தார்.",
+  opts: [
+    {en:"March – April", ta:"மார்ச் – ஏப்ரல்"},
+    {en:"January – February", ta:"ஜனவரி – பிப்ரவரி"},
+    {en:"February – March", ta:"பிப்ரவரி – மார்ச்"},
+    {en:"April – May", ta:"ஏப்ரல் – மே"}
+  ],
+  ans: 2
+},
+{
+  en: "Which of the following statements are true?\n(i) The National population policy, was promulgated in April 1976.\n(ii) Included provisions for health care, nutrition and more stress on Education for girls.\n(iii) The goal was an eventual average family size of two children.",
+  ta: "பின்வரும் அறிக்கைகளில் எது உண்மையானது?\n(i) 1976 ஏப்ரலில் தேசிய மக்கள் தொகைக் கொள்கை பிரகடனப்படுத்தப்பட்டது.\n(ii) இது சுகாதாரம், ஊட்டச்சத்து மற்றும் பெண் குழந்தைகளின் கல்விக்கு அதிக முக்கியத்துவம் அளிக்கிறது.\n(iii) இதன் இலக்கு இறுதியில் இரண்டு குழந்தைகளைக் கொண்ட சராசரி குடும்ப அளவாக இருந்தது.",
+  opts: [
+    {en:"(i) only correct", ta:"(i) மட்டும் சரி"},
+    {en:"(i) and (ii) only correct", ta:"(i) மற்றும் (ii) மட்டும் சரி"},
+    {en:"(ii) and (iii) only correct", ta:"(ii) மற்றும் (iii) மட்டும் சரி"},
+    {en:"(i), (ii) and (iii) correct", ta:"(i), (ii) மற்றும் (iii) சரி"}
+  ],
+  ans: 3
+},
+{
+  en: "Who founded the Satya Shodak Samaj in 1873?",
+  ta: "சத்ய சோதக் சமாஜ்-ஐ 1873 இல் தோற்றுவித்தவர் யார்?",
+  opts: [
+    {en:"Jyoti Rao Phule", ta:"ஜோதி ராவ் பூலே"},
+    {en:"Sri Narayana Guru", ta:"ஸ்ரீ நாராயண குரு"},
+    {en:"Pandita Ramabai", ta:"பண்டித ரமாபாய்"},
+    {en:"Dayananda Saraswati", ta:"தயானந்த சரஸ்வதி"}
+  ],
+  ans: 0
+},
+{
+  en: "Which among the following was the first Christian Ashram established in South?",
+  ta: "கீழ்காண்பனவற்றுள் எது தெற்கு பகுதியில் நிறுவப்பட்ட கிறிஸ்துவ அமைப்பின் முதல் ஆசிரமம்?",
+  opts: [
+    {en:"C.F. Ashram at Pachalur", ta:"சி.எப். ஆசிரமம், பசலூர்"},
+    {en:"Christukula Ashram at Tiruppatur", ta:"கிறிஸ்துகுல ஆசிரமம், திருப்பத்தூர்"},
+    {en:"Zion Prayer Center at Madurai", ta:"சியோன் பிராத்தனை மையம், மதுரை"},
+    {en:"Dyana Ashram at Chennai", ta:"தியானா ஆசிரமம், சென்னை"}
+  ],
+  ans: 1
+},
+{
+  en: "The Talaikota Battle was also called as __________.",
+  ta: "தலைக்கோட்டை போர் __________ என்றும் அழைக்கப்படுகிறது.",
+  opts: [
+    {en:"Toppur Battle", ta:"தோப்பூர் போர்"},
+    {en:"Rakahasi – Tangadi Battle", ta:"ராகஹாசி – தங்காடி போர்"},
+    {en:"Battle of Rajagambira Rajyam", ta:"ராஜகம்பீர ராஜ்யம் போர்"},
+    {en:"Battle of Kannanur Kuppam", ta:"கன்னனூர் குப்பம் போர்"}
+  ],
+  ans: 1
+},
+{
+  en: "Shivaji was crowned as an independent king at",
+  ta: "சிவாஜி சுதந்திர அரசராக முடிசூட்டப்பட்ட இடம்",
+  opts: [
+    {en:"Raigad", ta:"ராய்காட்"},
+    {en:"Surat", ta:"சூரத்"},
+    {en:"Ahmedabad", ta:"அஹமதாபாத்"},
+    {en:"Poona", ta:"பூனா"}
+  ],
+  ans: 0
+},
+{
+  en: "In the Indus Valley civilization the major commodities in Internal trade consist of\n(1) Cotton  (2) Lumber  (3) Grain and food stuffs  (4) Livestock",
+  ta: "சிந்து சமவெளி நாகரிகத்தில் முக்கிய ஏற்றுமதி பொருட்களாக உள்நாட்டு வாணிபத்தில் கருதப்படுவது\n(1) பருத்தி  (2) மரம்  (3) உணவு தானியங்கள்  (4) கால்நடைகள்",
+  opts: [
+    {en:"(1), (2), (3) only correct", ta:"(1), (2), (3) மட்டும் சரி"},
+    {en:"(1), (2), (4) only correct", ta:"(1), (2), (4) மட்டும் சரி"},
+    {en:"(1), (2), (3), (4) correct", ta:"(1), (2), (3), (4) சரி"},
+    {en:"(1), (4) only correct", ta:"(1), (4) மட்டும் சரி"}
+  ],
+  ans: 2
+},
+{
+  en: "Which is/are the aims of a sound 'Theosophical Society'?\n(i) Believes in Karma, Yoga and Indian Philosophy.\n(ii) Universal spiritual brotherhood.\n(iii) To protect the society from evil practices.",
+  ta: "பிரம்மஞான சபையின் நோக்கம் யாது?\n(i) கர்மா, யோகா, இந்தியத் தத்துவத்தின் மீது நம்பிக்கை\n(ii) உலகளாவிய ஆன்மீக சகோரத்துவம்\n(iii) தீய நடைமுறைகளிலிருந்து சமுதாயத்தைப் பாதுகாப்பது.",
+  opts: [
+    {en:"(i) only correct", ta:"(i) மட்டும் சரி"},
+    {en:"(ii) and (iii) only correct", ta:"(ii) மற்றும் (iii) மட்டும் சரி"},
+    {en:"(i) and (ii) only correct", ta:"(i) மற்றும் (ii) மட்டும் சரி"},
+    {en:"(ii) only correct", ta:"(ii) மட்டும் சரி"}
+  ],
+  ans: 2
+},
+{
+  en: "Assertion [A]: The zonal councils owe their origin to the constitution.\nReason [R]: The zonal councils are the logical outcome of the reorganisation of states on a linguistic basis.",
+  ta: "கூற்று [A]: மண்டல மன்றங்கள் அவற்றின் தோற்றத்திற்கு அரசியலமைப்பிற்கு கடமைப்பட்டுள்ளன.\nகாரணம் [R]: மண்டல மன்றங்கள் மொழி அடிப்படையில் மாநிலங்களை மறுசீரமைப்பதன் தர்க்க ரீதியான விளைவாகும்.",
+  opts: [
+    {en:"[A] and [R] are correct; and [R] is the correct explanation for [A]", ta:"[A] மற்றும் [R] சரி, மற்றும் [A] க்கு [R] சரியான விளக்கம்"},
+    {en:"[A] and [R] are correct; and [R] is not the correct explanation for [A]", ta:"[A] மற்றும் [R] சரி, மற்றும் [A] க்கு [R] சரியான விளக்கமல்ல"},
+    {en:"[A] is correct; [R] is wrong", ta:"[A] சரி; ஆனால் [R] தவறு"},
+    {en:"[A] is wrong; [R] is correct", ta:"[A] தவறு; ஆனால் [R] சரி"}
+  ],
+  ans: 3
+},
+{
+  en: "Sexual Harassment of Women at Workplace Act was enacted in the year",
+  ta: "பணியிடங்களில் பெண்களுக்கு பாலியல் துன்புறுத்தல் (தடுப்பு மற்றும் சட்டத்தடுப்பு, துயர் துடைப்பு) தடைசட்டம் இயற்றப்பட்ட ஆண்டு",
+  opts: [
+    {en:"2013", ta:"2013"},
+    {en:"2017", ta:"2017"},
+    {en:"2014", ta:"2014"},
+    {en:"2016", ta:"2016"}
+  ],
+  ans: 0
+},
+{
+  en: "Arrange the following events in chronological order:\n1. Golaknath v/s State of Punjab\n2. Keshvananda Bharati v/s State of Kerala\n3. Minerva Mills Ltd. v/s State of India\n4. A.K. Gopalan v/s State of Madras",
+  ta: "கீழ்கண்டவற்றை காலமுறைப்படி வரிசைப்படுத்துக.\n1. கோலக்நாத் v/s பஞ்சாப் மாநிலம்\n2. கேசவானந்த பாரதி v/s கேரளா மாநிலம்\n3. மினர்வா மில்ஸ் லிமிட் v/s இந்திய அரசு\n4. A.K. கோபாலன் v/s மதராஸ் அரசு",
+  opts: [
+    {en:"1, 2, 3, 4", ta:"1, 2, 3, 4"},
+    {en:"3, 4, 1, 2", ta:"3, 4, 1, 2"},
+    {en:"4, 1, 2, 3", ta:"4, 1, 2, 3"},
+    {en:"1, 3, 2, 4", ta:"1, 3, 2, 4"}
+  ],
+  ans: 2
+},
+{
+  en: "Match correctly with the Suitable Act:\n(a) Preventive Detention Act (PDA) in India\n(b) The National Emergencies Act was signed into law by President Gerald Ford on\n(c) The Indo-Pakistan war\n(d) Conservation of Foreign Exchange and Prevention of Smuggling Activities Act\n1. 1971  2. 1974  3. 1950  4. 1976",
+  ta: "சரியான வரிசையைத் தேர்ந்தெடுக்க.\n(a) இந்திய தடுப்பு காவல் சட்டம்\n(b) தேசிய அவசரகால சட்டத்திற்கு ஜெரால்ட் ஃபோர்டு கையெழுத்திட்ட ஆண்டு\n(c) இந்தோ–பாகிஸ்தான் போர்\n(d) வெளிநாட்டு பரிவர்த்தனை பாதுகாப்பு மற்றும் கடத்தல் செயல்பாடுகள் தடுப்பு சட்டம்",
+  opts: [
+    {en:"(a)2 (b)1 (c)4 (d)3", ta:"(a)2 (b)1 (c)4 (d)3"},
+    {en:"(a)1 (b)4 (c)3 (d)2", ta:"(a)1 (b)4 (c)3 (d)2"},
+    {en:"(a)3 (b)4 (c)1 (d)2", ta:"(a)3 (b)4 (c)1 (d)2"},
+    {en:"(a)1 (b)2 (c)3 (d)4", ta:"(a)1 (b)2 (c)3 (d)4"}
+  ],
+  ans: 2
+},
+{
+  en: "Consider the following Statements, Choose the correct answer:\n(i) January 30th is the Death anniversary of Annal Gandhi Adigal\n(ii) January 23rd is the Birth Anniversary of Netaji Subash Chandra Bose\n(iii) April 14th is the Birth Anniversary of Annal Ambedkar\n(iv) October 13th is the Birth Anniversary of Sardar Vallabhai Patel",
+  ta: "கீழ்கண்ட வாக்கியங்களை கருதுக, சரியான விடையை தேர்ந்தெடுக்க:\n(i) ஜனவரி மாதம் 30 ஆம் தேதி அண்ணல் காந்தியடிகளின் மறைந்த தினமாகும்\n(ii) ஜனவரி மாதம் 23 ஆம் நாள் நேதாஜி சுபாஷ் சந்திரபோஸின் பிறந்த தினமாகும்\n(iii) ஏப்ரல் மாதம் 14 ஆம் நாள் அண்ணல் அம்பேத்கரின் பிறந்த தினமாகும்\n(iv) சர்தார் வல்லபாய் பேடல் பிறந்த தினம் அக்டோபர் 13 ஆகும்",
+  opts: [
+    {en:"(i) and (ii) only correct", ta:"(i) மற்றும் (ii) மட்டும் சரி"},
+    {en:"(iv) only correct", ta:"(iv) மட்டும் சரி"},
+    {en:"(iii) only correct", ta:"(iii) மட்டும் சரி"},
+    {en:"(i), (ii), (iii) only correct", ta:"(i), (ii), (iii) மட்டும் சரி"}
+  ],
+  ans: 3
+},
+{
+  en: "Consider the Assertion (A) and Reason (R) and choose the correct answer.\nAssertion [A]: A remarkable difference between China and India was observed regarding mass politics around air pollution control.\nReason [R]: China employing the approach of Historical Institutionalism to control air pollution.",
+  ta: "கீழ்வரும் கூற்று [A] மற்றும் காரணம் [R] வினாவை கருதுக. சரியான விடையை தேர்ந்தெடுக்க.",
+  opts: [
+    {en:"Both [A] and [R] are correct statement; [R] is the correct explanation of [A]", ta:"[A] மற்றும் [R] என்ற இரண்டு கூற்றும் சரி; [R] என்பது [A] க்கு சரியான விளக்காகும்"},
+    {en:"Both [A] and [R] are correct; [R] is not the correct explanation of [A]", ta:"[A] மற்றும் [R] என்ற இரண்டு கூற்றும் சரி; [R] என்பது [A] க்கு சரியான விளக்காகமல்ல"},
+    {en:"[A] is correct; But [R] is false", ta:"[A] என்பது சரி; [R] என்பது தவறு"},
+    {en:"[R] is correct; But [A] is false", ta:"[R] என்பது சரி; [A] என்பது தவறு"}
+  ],
+  ans: 0
+},
+{
+  en: "Which of the following are the objectives of Tamilnadu safe and Ethical Artificial Intelligence Policy, 2020?\n(i) To establish guidelines for the evaluation of AI systems before its rolled out for public use\n(ii) To provide restricted access to open data, data models and computing resources\n(iii) To promote investments in AIR & D in Tamilnadu",
+  ta: "கீழ்வருவனவற்றில் எவை தமிழ்நாடு பாதுகாப்பான மற்றும் நெறிமுறை செயற்கை நுண்ணறிவுக் கொள்கை, 2020 இன் நோக்கங்கள் ஆகும்?",
+  opts: [
+    {en:"(i) only", ta:"(i) மட்டும்"},
+    {en:"(i) and (iii) only", ta:"(i) மற்றும் (iii) மட்டும்"},
+    {en:"(i) and (ii) only", ta:"(i) மற்றும் (ii) மட்டும்"},
+    {en:"(ii) and (iii) only", ta:"(ii) மற்றும் (iii) மட்டும்"}
+  ],
+  ans: 1
+},
+{
+  en: "Which is/are the objective/s of a Right to Information Act 2005?\n(i) RTI is empower to citizens, promote transparency and accountability in the working of Govt.\n(ii) The Act is a big step towards making the citizens informed about the activities of Govt.\n(iii) This Act provides right to access information from public authorities, which is guaranteed Art. 13 of constitution.",
+  ta: "பின்வருவனவற்றில் தகவல் அறியும் உரிமைச் சட்டம் 2005 இன் நோக்கங்களை தெரிவு செய்க.",
+  opts: [
+    {en:"(i) only", ta:"(i) மட்டும்"},
+    {en:"(ii) and (iii) only", ta:"(ii) மற்றும் (iii) மட்டும்"},
+    {en:"(i) and (ii) only", ta:"(i) மற்றும் (ii) மட்டும்"},
+    {en:"(i) and (iii) only", ta:"(i) மற்றும் (iii) மட்டும்"}
+  ],
+  ans: 2
+},
+{
+  en: "Which among the following was the first state in India to constitute an institution of Lok Ayukta?",
+  ta: "இந்தியாவில் லோக் ஆயுக்தாவை நிறுவிய முதல் மாநிலம் எது?",
+  opts: [
+    {en:"Karnataka", ta:"கர்நாடகா"},
+    {en:"Kerala", ta:"கேரளா"},
+    {en:"Maharashtra", ta:"மகாராஷ்டிரா"},
+    {en:"Rajasthan", ta:"இராஜஸ்தான்"}
+  ],
+  ans: 2
+},
+{
+  en: "Which of the following statements are true about Election Commission of India?\n(i) Conduct elections to parliament, State Legislatures and to the office of President and the Vice-President\n(ii) India's First Woman Chief Election Commissioner Ms. V.S. Ramadevi\n(iii) India's first Chief Election Commissioner Mr. S.P. Sen Varma",
+  ta: "பின்வருவனவற்றில் இந்திய தேர்தல் ஆணையம் குறித்து சரியானதை எழுதுக.",
+  opts: [
+    {en:"(i) only", ta:"(i) மட்டும்"},
+    {en:"(i) and (iii) only", ta:"(i) மற்றும் (iii) மட்டும்"},
+    {en:"(i) and (ii) only", ta:"(i) மற்றும் (ii) மட்டும்"},
+    {en:"(ii) and (iii) only", ta:"(ii) மற்றும் (iii) மட்டும்"}
+  ],
+  ans: 2
+},
+{
+  en: "Match:\n(a) Article 257(A)  (b) Article 131  (c) Article 245(1)  (d) Article 275\n1. Grants-in-aid  2. Judicial proceedings  3. Supreme Court  4. State Jurisdiction  5. 42nd Amendment Act",
+  ta: "பொருத்துக:\n(a) சரத்து 257(A) (b) சரத்து 131 (c) சரத்து 245(1) (d) சரத்து 275",
+  opts: [
+    {en:"(a)5 (b)3 (c)4 (d)1", ta:"(a)5 (b)3 (c)4 (d)1"},
+    {en:"(a)2 (b)1 (c)5 (d)3", ta:"(a)2 (b)1 (c)5 (d)3"},
+    {en:"(a)1 (b)2 (c)3 (d)4", ta:"(a)1 (b)2 (c)3 (d)4"},
+    {en:"(a)2 (b)5 (c)1 (d)3", ta:"(a)2 (b)5 (c)1 (d)3"}
+  ],
+  ans: 0
+},
+{
+  en: "Choose the correct matches from the following:\n(i) Fourth Finance Commission — A.K. Chanda\n(ii) Tenth Finance Commission — Shri K.C. Pant\n(iii) Sixth Finance Commission — Dr. Rajamannar\n(iv) Ninth Finance Commission — Shri N.K.P. Salve",
+  ta: "சரியான இணையை தேர்வு செய்க:\n(i) நான்காம் நிதி குழு — ஏ.கே. சந்தா\n(ii) பத்தாம் நிதி குழு — திரு. கே.சி. பந்த்\n(iii) ஆறாம் நிதி குழு — டாக்டர். ராஜ மன்னார்\n(iv) ஒன்பதாம் நிதி குழு — திரு. என்.கே.பி. சால்வே",
+  opts: [
+    {en:"(i) and (iii) are correct", ta:"(i) மற்றும் (iii) சரி"},
+    {en:"(ii) and (iv) are correct", ta:"(ii) மற்றும் (iv) சரி"},
+    {en:"(ii) and (iii) are correct", ta:"(ii) மற்றும் (iii) சரி"},
+    {en:"(i), (ii) and (iv) are correct", ta:"(i), (ii), (iv) சரி"}
+  ],
+  ans: 1
+},
+{
+  en: "The Financial Position of the Panchayat is reviewed under",
+  ta: "ஊராட்சிகளின் நிதி நிலைமைகளை சீராய்வு செய்யும் அதிகாரம் இந்த அரசியல் சாசன விதியின் கீழ் செய்யப்படுகிறது.",
+  opts: [
+    {en:"Article 243-I", ta:"அரசியல் சாசன விதி 243-I"},
+    {en:"Article 243-E", ta:"அரசியல் சாசன விதி 243-E"},
+    {en:"Article 243-B", ta:"அரசியல் சாசன விதி 243-B"},
+    {en:"Article 243-C", ta:"அரசியல் சாசன விதி 243-C"}
+  ],
+  ans: 0
+},
+{
+  en: "Which of the following statements are true about the qualifications for membership of the state legislature?\n(i) 25 years of age in the case of Legislative Assembly\n(ii) 30 years of age in the case of Legislative Council\n(iii) Possesses such other qualifications as may not be prescribed by law passed by parliament",
+  ta: "மாநில சட்டமன்ற உறுப்பினர் தகுதிகள் குறித்து பின்வரும் கூற்றுகளில் எது உண்மை?",
+  opts: [
+    {en:"(i) only", ta:"(i) மட்டும்"},
+    {en:"(i) and (ii) only", ta:"(i) மற்றும் (ii) மட்டும்"},
+    {en:"(i) and (iii) only", ta:"(i) மற்றும் (iii) மட்டும்"},
+    {en:"(ii) and (iii) only", ta:"(ii) மற்றும் (iii) மட்டும்"}
+  ],
+  ans: 1
+},
+{
+  en: "The Madras Legislative Council was formed by the",
+  ta: "சென்னை மாகாண சட்டப் பேரவை __________ சட்டப்படி உருவாக்கப்பட்டது.",
+  opts: [
+    {en:"Government of India Act of 1919", ta:"இந்திய அரசு சட்டம் 1919"},
+    {en:"Government of India Act of 1935", ta:"இந்திய அரசு சட்டம் 1935"},
+    {en:"Indian Councils Act of 1861", ta:"இந்திய கவுன்சில் சட்டம் 1861"},
+    {en:"Government of India Act of 1858", ta:"இந்திய அரசு சட்டம் 1858"}
+  ],
+  ans: 2
+},
+{
+  en: "Arrange the following stages in the enactment of Budget in Ascending order:\n1. Voting on Demand for grants\n2. Passing of Finance bill\n3. Passing of Appropriation bill\n4. Scrutiny by departmental committees",
+  ta: "கீழ்க்காணும் வரவு–செலவு திட்டத்தினுடைய இயற்றலின் நிலைகளை ஏறு வரிசைப்படி ஒழுங்குப்படுத்துக.",
+  opts: [
+    {en:"2, 3, 1, 4", ta:"2, 3, 1, 4"},
+    {en:"1, 2, 4, 3", ta:"1, 2, 4, 3"},
+    {en:"4, 1, 3, 2", ta:"4, 1, 3, 2"},
+    {en:"3, 1, 4, 2", ta:"3, 1, 4, 2"}
+  ],
+  ans: 2
+},
+{
+  en: "Consider the following statements about the Electoral College of Presidential Election, which among the following statements is correct?",
+  ta: "பின்வருவனவற்றுள் குடியரசுத் தலைவருக்கான 'வாக்காளர் குழாம்' குறித்தவற்றுள் சரியானது எது?",
+  opts: [
+    {en:"The nominated member of Lok Sabha", ta:"மக்களவைக்கு நியமிக்கப்படும் நியமன உறுப்பினர்"},
+    {en:"The nominated member of Legislative Councils of States", ta:"சட்ட மேலவைக்கு நியமிக்கப்படும் நியமன உறுப்பினர்"},
+    {en:"The Elected members of both Houses of Parliament and elected members the State Legislature and Union Territories", ta:"மக்களவை மற்றும் மாநிலங்களவைக்கு தேர்தல் மூலம் தேர்ந்தெடுக்கப்பட்ட உறுப்பினர்கள் மற்றும் மாநில மற்றும் யூனியன் பிரதேசங்களுக்குத் தேர்ந்தெடுக்கப்பட்ட சட்டமன்ற உறுப்பினர்கள்"},
+    {en:"The nominated member of House of states", ta:"மாநிலங்களவைக்கு நியமிக்கப்படும் நியமன உறுப்பினர்"}
+  ],
+  ans: 2
+},
+{
+  en: "Assertion [A]: Article 51-A does not expressly cast any fundamental duty on the state.\nReason [R]: The duty of every citizen of India is the collective duty of the state.",
+  ta: "கூற்று [A]: உறுப்பு 51-A ஆனது வெளிப்படையாக அரசிற்கு அடிப்படை கடமைகளை விதிக்கவில்லை.\nகாரணம் [R]: குடிமக்கள் ஒவ்வொருவருக்குமுள்ள கடமைகளின் தொகுப்பே அரசின் கடமைகளாகும்.",
+  opts: [
+    {en:"[A] is true but [R] is false", ta:"[A] கூற்று சரி ஆனால் [R] காரணம் தவறு"},
+    {en:"Both [A] and [R] are true; and [R] is the correct explanation of [A]", ta:"[A] கூற்று மற்றும் [R] காரணம் இரண்டும் சரி; மற்றும் [A] கூற்றுக்கான [R] காரணம் சரி"},
+    {en:"[A] is false, [R] is true", ta:"[A] கூற்று தவறு, [R] காரணம் சரி"},
+    {en:"Both [A] and [R] are true, but [R] is not the correct explanation of [A]", ta:"[A] கூற்று மற்றும் [R] காரணம் இரண்டும் சரி, ஆனால் [A] கூற்றுக்கான சரியான விளக்கம் [R] காரணம் தவறு"}
+  ],
+  ans: 1
+},
+{
+  en: "Which of the following articles on Fundamental Rights is incorrectly paired?\n1. Article 12 — Definition of State\n2. Article 21 — Right to Education\n3. Article 34 — Power of the Parliament to modify the rights\n4. Article 35 — Legislation to give effect to the provisions of the fundamental rights",
+  ta: "கீழ்க்கண்ட அடிப்படை உரிமைகள் தொடர்பான அரசமைப்பு விதிகளுள் சரியாகப் பொருத்தப்படாத இணை எது?",
+  opts: [
+    {en:"1 and 4 only", ta:"1 மற்றும் 4 மட்டும்"},
+    {en:"1 and 2 only", ta:"1 மற்றும் 2 மட்டும்"},
+    {en:"2 and 3 only", ta:"2 மற்றும் 3 மட்டும்"},
+    {en:"3 and 4 only", ta:"3 மற்றும் 4 மட்டும்"}
+  ],
+  ans: 2
+},
+{
+  en: "The word 'union' is the 'Union of States' in our Constitution was inspired by the",
+  ta: "'மாநிலங்களின் ஒன்றியம்' என்ற சொற்றொடரில் இடம்பெற்றுள்ள 'ஒன்றியம்' என்ற சொல் __________ நாட்டின் அரசியலமைப்பிலிருந்து எடுத்தாளப் பெற்றுள்ளது.",
+  opts: [
+    {en:"Canadian Constitution", ta:"கனடா அரசியலமைப்பு"},
+    {en:"England Constitution", ta:"இங்கிலாந்து அரசியலமைப்பு"},
+    {en:"Irish Constitution", ta:"அயர்லாந்து அரசியலமைப்பு"},
+    {en:"U.S. Constitution", ta:"அமெரிக்க அரசியலமைப்பு"}
+  ],
+  ans: 0
+},
+{
+  en: "Choose the right matches:\n1. Power of High Courts to issue certain writs — Article 226\n2. Transfer of certain cases to High Court — Article 178\n3. Establishment of a common High Court for two (or) more states — Article 231\n4. Extension of jurisdiction of High Courts to Union Territories — Article 320",
+  ta: "பொருத்தமான ஜோடிகளை தேர்வு செய்க.",
+  opts: [
+    {en:"1 and 2 only", ta:"1 மற்றும் 2 மட்டும்"},
+    {en:"2 and 4 only", ta:"2 மற்றும் 4 மட்டும்"},
+    {en:"1 and 3 only", ta:"1 மற்றும் 3 மட்டும்"},
+    {en:"4 only", ta:"4 மட்டும்"}
+  ],
+  ans: 2
+},
+{
+  en: "Consider the following statements, and choose the correct answer:\n(i) The American Constitution was the first to begin with a preamble.\n(ii) 'Preamble' to the Indian Constitution, resembles 'Independence of the United States' observes N.A. Palkhivala.\n(iii) Justice M. Hidayatullah, called the preamble, as the Identity Card of the Constitution.\n(iv) A Republic Includes all public offices being opened to every citizen without any discrimination.",
+  ta: "கீழ்கண்ட கூற்றுகளை கருதுக, சரியான விடையை தேர்ந்தெடுக்க.",
+  opts: [
+    {en:"(i) only correct", ta:"(i) மட்டும் சரி"},
+    {en:"(i) and (iv) only correct", ta:"(i) மற்றும் (iv) மட்டும் சரி"},
+    {en:"(ii) and (iii) only correct", ta:"(ii) மற்றும் (iii) மட்டும் சரி"},
+    {en:"(ii) and (iv) only correct", ta:"(ii) மற்றும் (iv) மட்டும் சரி"}
+  ],
+  ans: 1
+},
+{
+  en: "State Industries Promotion Corporation of Tamil Nadu (SIPCOT) was established by Tamil Nadu Government for the development of\n(i) Large Scale Industries\n(ii) Medium Scale Industries\n(iii) Small Scale Industries",
+  ta: "தமிழ்நாடு அரசு தொழில் முன்னேற்கக் கழகம் (SIPCOT) என்ற அமைப்பு தமிழ்நாடு அரசால் கீழ்கண்ட தொழில் அமைப்பினை வளர்ப்பதற்காக உருவாக்கப்பட்டது",
+  opts: [
+    {en:"(i) and (ii) only", ta:"(i) மற்றும் (ii) மட்டும்"},
+    {en:"(ii) only", ta:"(ii) மட்டும்"},
+    {en:"(ii) and (iii) only", ta:"(ii) மற்றும் (iii) மட்டும்"},
+    {en:"(i) and (iii) only", ta:"(i) மற்றும் (iii) மட்டும்"}
+  ],
+  ans: 0
+},
+{
+  en: "The Scheme 'Pradhan Mantri Janjatiya Unnat Gram Abhiyan' focuses on\n(i) To improve the socio-economic condition of tribal communities\n(ii) To empower tribal women and promote gender equality\n(iii) To provide high quality education for the tribal children",
+  ta: "பிரதான் மந்திரி ஜன்ஜாதி ஆதிவாசி நியாய மகா அபியான் திட்டத்தின் நோக்கமானது",
+  opts: [
+    {en:"(i) only", ta:"(i) மட்டும்"},
+    {en:"(ii) only", ta:"(ii) மட்டும்"},
+    {en:"(iii) only", ta:"(iii) மட்டும்"},
+    {en:"(i) and (ii) only", ta:"(i) மற்றும் (ii) மட்டும்"}
+  ],
+  ans: 0
+},
+{
+  en: "From the following in the year 1962 in the wake of Chinese invasion which Act was passed?\n(i) Anti-Secession Act\n(ii) Anti-Immigration Act\n(iii) Anti-Trafficking Act",
+  ta: "பின்வருவனவற்றுள் 1962 ஆம் ஆண்டு சீனட் படையெடுப்பை அடுத்து நிறைவேற்றப்பட்ட சட்டம் எது?",
+  opts: [
+    {en:"(i) only", ta:"(i) மட்டும்"},
+    {en:"(i) and (ii) only", ta:"(i) மற்றும் (ii) மட்டும்"},
+    {en:"(ii) and (iii) only", ta:"(ii) மற்றும் (iii) மட்டும்"},
+    {en:"(i) and (iii) only", ta:"(i) மற்றும் (iii) மட்டும்"}
+  ],
+  ans: 0
+},
+{
+  en: "Assertion [A]: Social Justice basically does not deal with equal social opportunities.\nReason [R]: Social Justice is non-proportional to either social equality or social rights.",
+  ta: "கூற்று [A]: சமூக நீதி என்பது அடிப்படையில் சமான சமூக வாய்ப்புக்களை கையாள்வதில்லை.\nகாரணம் [R]: சமூக நீதி என்பது சமூக சமத்துவம் அல்லது சமூக உரிமைகளுக்கு விகிதாசாரமற்றது.",
+  opts: [
+    {en:"[A] is true but [R] is false", ta:"[A] சரியானது, ஆனால் [R] தவறானது"},
+    {en:"Both [A] and [R] are true; and [R] is the correct explanation of [A]", ta:"[A] மற்றும் [R] இரண்டும் சரியானவை; [R] ஆனது [A] க்கு சரியான விளக்கம்"},
+    {en:"[A] is false, [R] is true", ta:"[A] தவறானது, [R] சரியானது"},
+    {en:"Both [A] and [R] are false", ta:"[A] மற்றும் [R] இரண்டும் தவறானவை."}
+  ],
+  ans: 3
+},
+{
+  en: "Assertion [A]: The overall policy framework for the social sectors in India is laid out by the Central Government.\nReason [R]: The State governments have considerable flexibility in designing policies.",
+  ta: "கூற்று [A]: இந்தியாவில் சமூகத் துறைகளுக்கான ஒட்டுமொத்த கொள்கை கட்டமைப்பை மத்திய அரசு வகுக்கிறது.\nகாரணம் [R]: கொள்கைககளை வடிவமைப்பதில் மாநில அரசு கணிசமான நெகிழ்வுத் தன்மையைக் கொண்டுள்ளன.",
+  opts: [
+    {en:"Both [A] and [R] are true; and [R] is the correct explanation of [A]", ta:"கூற்று [A] காரணம் [R] இரண்டும் சரி; மற்றும் காரணம் [R] கூற்று [A] க்கான சரியான விளக்காகும்"},
+    {en:"Both [A] and [R] are true; and [R] is not the correct explanation of [A]", ta:"கூற்று [A] காரணம் [R] இரண்டும் சரி; மற்றும் காரணம் [R] கூற்று [A] க்கான சரியான விளக்காகமல்ல"},
+    {en:"Both [A] and [R] are not true", ta:"கூற்று [A] காரணம் [R] இரண்டும் சரியானதல்ல"},
+    {en:"[A] is true and [R] is false", ta:"கூற்று [A] சரி, காரணம் [R] தவறு"}
+  ],
+  ans: 1
+},
+{
+  en: "Choose the right matches:\n(i) The first communal order for distribution of appointments among various castes — 1920\n(ii) First Backward class commission of Tamilnadu was appointed — 1970\n(iii) Ambasankar Commission — Reservation totalling to 69%\n(iv) Report on Tamilnadu Backward classes Commission justifying the existing reservation — 8th July 2011",
+  ta: "சரியான பொருத்தங்களை தேர்வு செய்யவும்.",
+  opts: [
+    {en:"(i) and (iv) only", ta:"(i) மற்றும் (iv) மட்டும்"},
+    {en:"(ii) and (iii) only", ta:"(ii) மற்றும் (iii) மட்டும்"},
+    {en:"(i) and (ii) only", ta:"(i) மற்றும் (ii) மட்டும்"},
+    {en:"(iii) and (iv) only", ta:"(iii) மற்றும் (iv) மட்டும்"}
+  ],
+  ans: 3
+},
+{
+  en: "Match the following schemes with their respective beneficiaries:\n(a) Babu Jagjivan Ram Chhatravas Yojana\n(b) Atal Vayo Abhyuday Yojana\n(c) Pradhan Mantri Jan Vikas Karyakram Yojana\n(d) Pradhan Mantri Janjantiya Vikas Mission\n1. Scheduled tribes  2. Minorities  3. Scheduled castes  4. Senior citizens",
+  ta: "பின்வரும் திட்டங்களை அந்தந்தத் திட்டங்களின் பயனாளிகளுடன் பொருத்துக",
+  opts: [
+    {en:"(a)3 (b)1 (c)4 (d)2", ta:"(a)3 (b)1 (c)4 (d)2"},
+    {en:"(a)2 (b)3 (c)4 (d)1", ta:"(a)2 (b)3 (c)4 (d)1"},
+    {en:"(a)4 (b)1 (c)2 (d)3", ta:"(a)4 (b)1 (c)2 (d)3"},
+    {en:"(a)3 (b)4 (c)2 (d)1", ta:"(a)3 (b)4 (c)2 (d)1"}
+  ],
+  ans: 3
+},
+{
+  en: "The Justice Party was established in the year 1916 by whom?",
+  ta: "நீதிக்கட்சி யாரால் 1916 ஆம் ஆண்டு நிறுவப்பட்டது?",
+  opts: [
+    {en:"T.M. Nair and Thiyagaraya Chetty", ta:"T.M. நாயர் மற்றும் தியாகராய செட்டி"},
+    {en:"P. Rangaiah Naidu and P. Ananda Charlu", ta:"P. ரங்கய்யா நாயுடு மற்றும் P. ஆனந்த சார்லு"},
+    {en:"Chidamparam Pillai and Subramania Siva", ta:"சிதம்பரம் பிள்ளை மற்றும் சுப்பிரமணிய சிவா"},
+    {en:"Jotirao Phule and Ram Mohan Roy", ta:"ஜோதிராவ் பூலே மற்றும் ராம்மோகன் ராய்"}
+  ],
+  ans: 0
+},
+{
+  en: "Arrange the event in Chronological order:\n(1) South Indian liberal Federation was formed\n(2) Madras United League was renamed as Madras Dravidian Association\n(3) Periyar E.V.R. transformed the Justice Party into Dravidar Kazhagam\n(4) The Ministry of A. Subbarayalu Reddiar fought against the Swarajya Party",
+  ta: "நிகழ்வுகளைக் கால வரிசைப்படி ஒழுங்கமைக்கவும்",
+  opts: [
+    {en:"(2), (4), (1), (3)", ta:"(2), (4), (1), (3)"},
+    {en:"(2), (1), (4), (3)", ta:"(2), (1), (4), (3)"},
+    {en:"(1), (2), (4), (3)", ta:"(1), (2), (4), (3)"},
+    {en:"(1), (2), (3), (4)", ta:"(1), (2), (3), (4)"}
+  ],
+  ans: 1
+},
+{
+  en: "The following statements are about the Tamil Nadu Government's initiatives: Find the correct statements.\n(a) Allocation of 5 crores to translate all the works of Annal Ambedkar into Tamil through Tamil Development Department\n(b) 10 crores for establishment of Tamil Parapurai Kazhagam\n(c) Allocation of 5 crore for creation of separate department of Tamil Literature in JNU, Delhi\n(d) 30 lakhs financial support for Theera Kaadhal Thirukural Project",
+  ta: "தமிழ்நாடு அரசின் முன்முயற்சிகள் பற்றிய பின்வரும் அறிக்கைகளில் எவை சரியானவை?",
+  opts: [
+    {en:"(a) and (b) only", ta:"(a) மற்றும் (b) மட்டும்"},
+    {en:"(a) and (c) only", ta:"(a) மற்றும் (c) மட்டும்"},
+    {en:"(a) and (d) only", ta:"(a) மற்றும் (d) மட்டும்"},
+    {en:"(c) and (d) only", ta:"(c) மற்றும் (d) மட்டும்"}
+  ],
+  ans: 1
+},
+{
+  en: "What can be inferred from the above statement about the economic contribution of rural India to the overall GDP? (Over half of India's GDP comes from rural India and almost two thirds of rural GDP comes from non-farm activities.)",
+  ta: "மேல் கொடுக்கப்பட்ட கூற்றிலிருந்து, மொத்த உள்நாட்டு உற்பத்தியில் கிராமப்புற இந்தியாவின் பொருளாதார பங்களிப்பு குறித்து என்ன ஊகிக்க முடியும்?",
+  opts: [
+    {en:"Rural India contributes less than half of India's GDP", ta:"இந்தியாவின் மொத்த உள்நாட்டு உற்பத்தியில் பாதிக்கும் குறைவான பங்களிப்பை கிராமப்புற இந்தியா வழங்குகிறது"},
+    {en:"Rural India contributes more than half of India's GDP, but its economy heavily depends on farm activities", ta:"இந்தியாவின் மொத்த உள்நாட்டு உற்பத்தியில் பாதிக்கும் மேலான பங்களிப்பை கிராமப்புற இந்தியா வழங்குகிறது, ஆனால், அதன் பொருளாதாரம் விவசாய நடவடிக்கைகளை பெரிதும் சார்ந்துள்ளது"},
+    {en:"The GDP of rural India is solely driven by agricultural activities", ta:"கிராமப்புற இந்தியாவின் மொத்த உள்நாட்டு உற்பத்தி விவசாய நடவடிக்கைகளால் மட்டுமே இயக்கப்படுகிறது"},
+    {en:"Rural India contributes more than half of India's GDP, and a significant portion comes from non-farm activities", ta:"இந்தியாவின் மொத்த உள்நாட்டு உற்பத்தியில் பாதிக்கும் மேலான பங்களிப்பை கிராமப்புற இந்தியா வழங்குகிறது, மேலும் ஒரு குறிப்பிடத்தக்க பகுதி பண்ணை அல்லாத நடவடிக்கைகளிலிருந்து வருகிறது"}
+  ],
+  ans: 3
+},
+{
+  en: "Which of the following statements are true about 'The Chief Minister's Breakfast Scheme'?\n(i) It has increased student attendance to high schools\n(ii) Primary school children benefit from the scheme\n(iii) The scheme has led to improvement in learning skills among children\n(iv) The scheme is limited to government schools only",
+  ta: "முதலமைச்சரின் காலை உணவுத் திட்டம் பற்றிய பின்வரும் கூற்றுகளில் எது உண்மை?",
+  opts: [
+    {en:"(i) and (ii) only", ta:"(i) மற்றும் (ii) மட்டும்"},
+    {en:"(ii) and (iii) only", ta:"(ii) மற்றும் (iii) மட்டும்"},
+    {en:"(i) and (iv) only", ta:"(i) மற்றும் (iv) மட்டும்"},
+    {en:"(ii) and (iv) only", ta:"(ii) மற்றும் (iv) மட்டும்"}
+  ],
+  ans: 1
+},
+{
+  en: "Match the four engines of development in the Budget 2025-2026:\n(a) 1st Engine  (b) 2nd Engine  (c) 3rd Engine  (d) 4th Engine\n1. MSMEs  2. Export  3. Agriculture  4. Investment in people",
+  ta: "2025-2026 நிதியறிக்கையில் குறிப்பிட்டுள்ள நான்கு இயந்திர வகைகளை பொருத்துக.",
+  opts: [
+    {en:"(a)3 (b)1 (c)2 (d)4", ta:"(a)3 (b)1 (c)2 (d)4"},
+    {en:"(a)3 (b)1 (c)4 (d)2", ta:"(a)3 (b)1 (c)4 (d)2"},
+    {en:"(a)4 (b)2 (c)3 (d)1", ta:"(a)4 (b)2 (c)3 (d)1"},
+    {en:"(a)3 (b)2 (c)4 (d)1", ta:"(a)3 (b)2 (c)4 (d)1"}
+  ],
+  ans: 1
+},
+{
+  en: "Which of the following statement(s) are correct about 'Tamil Pudalvan' Scheme?\n(i) Launched on October 2024.\n(ii) Improve the financial status of all male students studying in government school after school education.\n(iii) Monthly financial assistance of Rs. 1,000.",
+  ta: "முதலமைச்சரின் 'தமிழ்ப் புதல்வன்' திட்டம் குறித்துச் சரியான சொற்றொடரை தெரிவு செய்க.",
+  opts: [
+    {en:"(i) only", ta:"(i) மட்டும்"},
+    {en:"(i) and (ii) only", ta:"(i) மற்றும் (ii) மட்டும்"},
+    {en:"(ii) and (iii) only", ta:"(ii) மற்றும் (iii) மட்டும்"},
+    {en:"(i) and (iii) only", ta:"(i) மற்றும் (iii) மட்டும்"}
+  ],
+  ans: 2
+},
+{
+  en: "Why Business Firms choose Tamil Nadu as their preferred destination for investment?",
+  ta: "வணிக நிறுவனங்கள் ஏன் தமிழ்நாட்டை முதலீட்டிற்கு விருப்பமான இடமாக தேர்வு செய்கின்றன?",
+  opts: [
+    {en:"The State of the Art Infrastructure", ta:"நவீன உள்கட்டமைப்பு"},
+    {en:"Tax Concessions", ta:"வரிச்சலுகைகள்"},
+    {en:"More number of unemployed", ta:"அதிக எண்ணிக்கையிலான வேலையில்லாத் தொழிலாளர்கள்"},
+    {en:"More number of graduates", ta:"அதிக எண்ணிக்கையிலான பட்டதாரிகள்"}
+  ],
+  ans: 0
+},
+{
+  en: "Name the scheme, a Tri-ministerial effort which includes Women and Child Development, Health and Family Welfare and Human Resource Development.",
+  ta: "பெண்கள் மற்றும் குழந்தைகளின் முன்னேற்றம்; சுகாதாரம் மற்றும் குடும்ப நலன்; மனிதவள மேம்பாடு ஆகியனவற்றை உள்ளடக்கிய மூன்று அமைச்சரவைகளின் முயற்சித் திட்டம் எது?",
+  opts: [
+    {en:"Integrated Child Development Scheme", ta:"ஒருங்கிணைந்த குழந்தை வளர்ச்சித் திட்டம்"},
+    {en:"Child Development Scheme", ta:"குழந்தை வளர்ச்சித் திட்டம்"},
+    {en:"Beti Bachao Beti Padhao Scheme", ta:"பேட்டி பச்சாவோ பேட்டி பதாவோ திட்டம்"},
+    {en:"Smart City Mission", ta:"ஸ்மார்ட் சிட்டி திட்டம்"}
+  ],
+  ans: 2
+},
+{
+  en: "Assertion [A]: During 2001 to 2026, for the states Bihar, Madhya Pradesh, Rajasthan and Uttar Pradesh, the population is expected to increase by 45-55%.\nReason [R]: More than half of demographic transition is expected during that period.",
+  ta: "கூற்று [A]: பீகார், மத்தியபிரதேசம், இராஜஸ்தான் மற்றும் உத்திரபிரதேசம் ஆகிய மாநிலங்களில் 2001-2026, கால கட்டத்தில், மக்கள்தொகை 45-55 சதவீதம் அதிகரிக்கும் என மதிப்பிடப்பட்டுள்ளது.\nகாரணம் [R]: பெரும் பகுதியான மக்கள்தொகை வளர்ச்சி கட்ட மாற்றங்கள் இந்த மாநிலங்களில் இந்த காலத்தில் நிகழும் என கணிக்கப்பட்டுள்ளன.",
+  opts: [
+    {en:"[A] is true, [R] is false", ta:"[A] சரி [R] தவறு"},
+    {en:"[R] is true, [A] is false", ta:"[R] சரி [A] தவறு"},
+    {en:"Both [A] and [R] are true; but [R] is not correct explanation of [A]", ta:"[A]ம் சரி [R]ம் சரி; ஆனால் [R] என்பது [A]க்கு சரியான விளக்காகாது"},
+    {en:"Both [A] and [R] are true and [R] is the correct explanation of [A]", ta:"[A] மற்றும் [R] இரண்டும் சரி; [R] என்பது [A] க்கு சரியான விளக்காகும்"}
+  ],
+  ans: 3
+},
+{
+  en: "Assertion [A]: The demographic dividend is defined as a rise in the rate of Economic growth due to a rising share of working age people in a population.\nReason [R]: India is in the midst of process where it faces the window of opportunity created by Demographic Dividend.",
+  ta: "கூற்று [A]: மக்கள்தொகைப் பிளவு என்பது ஒரு மக்கள்தொகையில் உழைக்கும் வயதுடைய மக்களின் பங்கு அதிகரித்து பொருளாதார வளர்ச்சி விகிதத்தில் ஏற்படும் விகிதத்தில் ஏற்படும் அதிகரிப்பாக வரையறுக்கப்படுகிறது.\nகாரணம் [R]: மக்கள்தொகைப் பிளவுகளால் உருவாக்கப்பட்ட வாய்ப்புகளை எதிர்கொள்ளும் செயல்முறையின் நடுவில் இந்தியா உள்ளது.",
+  opts: [
+    {en:"[A] is true but [R] is false", ta:"[A] சரி ஆனால் [R] தவறு"},
+    {en:"Both [A] and [R] are true and [R] is the correct explanation of [A]", ta:"[A] மற்றும் [R] இரண்டுமே சரி மற்றும் [R] என்பது [A] க்கு சரியான விளக்கம்"},
+    {en:"[A] is false, [R] is true", ta:"[A] தவறு, [R] சரி"},
+    {en:"Both [A] and [R] are true but [R] is not the correct explanation of [A] is correct", ta:"[A] மற்றும் [R] இரண்டுமே சரி ஆனால் [R] என்பது [A] க்கு சரியான விளக்கம் இல்லை என்பது சரி"}
+  ],
+  ans: 3
+},
+{
+  en: "Which of the following is NOT a tributary of the Godavari river?",
+  ta: "கீழ்க்காணும் நதிகளில் எது கோதாவரி நதியின் துணை நதி அல்ல?",
+  opts: [
+    {en:"Manjira", ta:"மஞ்சிரா"},
+    {en:"Pranhita", ta:"பிரன்ஹிதா"},
+    {en:"Chambal", ta:"சம்பல்"},
+    {en:"Indravathi", ta:"இந்திரவதி"}
+  ],
+  ans: 2
+},
+{
+  en: "The Kuril Islands dispute is between which two countries?",
+  ta: "குரில் தீவுகள் தகராறு எந்த இரு நாடுகளுக்கு இடையே உள்ளது?",
+  opts: [
+    {en:"China and Japan", ta:"சீனா மற்றும் ஜப்பான்"},
+    {en:"Russia and Japan", ta:"ரஷ்யா மற்றும் ஜப்பான்"},
+    {en:"USA and Russia", ta:"அமெரிக்கா மற்றும் ரஷ்யா"},
+    {en:"South Korea and Japan", ta:"தென் கொரியா மற்றும் ஜப்பான்"}
+  ],
+  ans: 1
+},
+{
+  en: "Which Article of the Indian Constitution deals with the Special Provisions relating to the state of Jammu and Kashmir (now abrogated)?",
+  ta: "இந்திய அரசியலமைப்பின் எந்த சரத்து ஜம்மு மற்றும் காஷ்மீர் மாநிலம் (இப்போது ரத்து செய்யப்பட்டது) தொடர்பான சிறப்பு விதிகளை கையாள்கிறது?",
+  opts: [
+    {en:"Article 370", ta:"சரத்து 370"},
+    {en:"Article 356", ta:"சரத்து 356"},
+    {en:"Article 352", ta:"சரத்து 352"},
+    {en:"Article 360", ta:"சரத்து 360"}
+  ],
+  ans: 0
+},
+{
+  en: "The concept of 'Panchsheel' was first formally incorporated in an agreement between",
+  ta: "'பஞ்சசீல' கோட்பாடு முதன்முறையாக முறைப்படி எந்த நாடுகளுக்கிடையேயான ஒப்பந்தத்தில் சேர்க்கப்பட்டது?",
+  opts: [
+    {en:"India and China", ta:"இந்தியா மற்றும் சீனா"},
+    {en:"India and Pakistan", ta:"இந்தியா மற்றும் பாகிஸ்தான்"},
+    {en:"India and Nepal", ta:"இந்தியா மற்றும் நேபாளம்"},
+    {en:"India and Sri Lanka", ta:"இந்தியா மற்றும் இலங்கை"}
+  ],
+  ans: 0
+},
+{
+  en: "The 'Champaran Satyagraha' of 1917 was related to which crop?",
+  ta: "1917 ஆம் ஆண்டின் 'சம்பாரன் சத்தியாகிரகம்' எந்தப் பயிருடன் தொடர்புடையது?",
+  opts: [
+    {en:"Cotton", ta:"பருத்தி"},
+    {en:"Indigo", ta:"இண்டிகோ (நீலம்)"},
+    {en:"Jute", ta:"சணல்"},
+    {en:"Tea", ta:"தேயிலை"}
+  ],
+  ans: 1
+},
+{
+  en: "Which Article of the Constitution of India guarantees the Right to Education?",
+  ta: "இந்திய அரசியலமைப்பின் எந்த சரத்து கல்வி உரிமையை உறுதிப்படுத்துகிறது?",
+  opts: [
+    {en:"Article 19", ta:"சரத்து 19"},
+    {en:"Article 21A", ta:"சரத்து 21A"},
+    {en:"Article 24", ta:"சரத்து 24"},
+    {en:"Article 45", ta:"சரத்து 45"}
+  ],
+  ans: 1
+},
+{
+  en: "Who was the first woman to become the Chief Justice of a High Court in India?",
+  ta: "இந்தியாவில் உயர் நீதிமன்றத்தின் தலைமை நீதிபதியாக ஆன முதல் பெண் யார்?",
+  opts: [
+    {en:"Anna Chandy", ta:"அண்ணா சாண்டி"},
+    {en:"Leila Seth", ta:"லீலா சேத்"},
+    {en:"Fatima Beevi", ta:"பாத்திமா பீவி"},
+    {en:"Indira Banerjee", ta:"இந்திரா பானர்ஜி"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'Green Revolution' in India was primarily associated with which crop?",
+  ta: "இந்தியாவில் 'பசுமைப் புரட்சி' முதன்மையாக எந்தப் பயிருடன் தொடர்புடையது?",
+  opts: [
+    {en:"Rice", ta:"அரிசி"},
+    {en:"Wheat", ta:"கோதுமை"},
+    {en:"Maize", ta:"சோளம்"},
+    {en:"Sugarcane", ta:"கரும்பு"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'Poona Pact' of 1932 was between Mahatma Gandhi and",
+  ta: "'பூனா ஒப்பந்தம்' 1932 மகாத்மா காந்திக்கும் யாருக்கும் இடையே கையெழுத்தானது?",
+  opts: [
+    {en:"Bal Gangadhar Tilak", ta:"பால கங்காதர திலகர்"},
+    {en:"B.R. Ambedkar", ta:"பி.ஆர். அம்பேத்கர்"},
+    {en:"Mohammad Ali Jinnah", ta:"முகமது அலி ஜின்னா"},
+    {en:"Subash Chandra Bose", ta:"சுபாஷ் சந்திர போஸ்"}
+  ],
+  ans: 1
+},
+{
+  en: "Which planet is known as the 'Red Planet'?",
+  ta: "எந்த கோளம் 'சிவப்பு கோளம்' என்று அழைக்கப்படுகிறது?",
+  opts: [
+    {en:"Venus", ta:"வெள்ளி"},
+    {en:"Jupiter", ta:"வியாழன்"},
+    {en:"Mars", ta:"செவ்வாய்"},
+    {en:"Saturn", ta:"சனி"}
+  ],
+  ans: 2
+},
+{
+  en: "The 'Buckingham Canal' is located in which state of India?",
+  ta: "'பக்கிங்காம் கால்வாய்' இந்தியாவின் எந்த மாநிலத்தில் அமைந்துள்ளது?",
+  opts: [
+    {en:"Kerala", ta:"கேரளா"},
+    {en:"Karnataka", ta:"கர்நாடகா"},
+    {en:"Andhra Pradesh and Tamil Nadu", ta:"ஆந்திரப் பிரதேசம் மற்றும் தமிழ்நாடு"},
+    {en:"Odisha", ta:"ஒடிசா"}
+  ],
+  ans: 2
+},
+{
+  en: "Which of the following is the largest desert in the world?",
+  ta: "உலகின் மிகப்பெரிய பாலைவனம் எது?",
+  opts: [
+    {en:"Sahara Desert", ta:"சஹாரா பாலைவனம்"},
+    {en:"Arabian Desert", ta:"அரேபிய பாலைவனம்"},
+    {en:"Antarctic Desert", ta:"அண்டார்க்டிக் பாலைவனம்"},
+    {en:"Gobi Desert", ta:"கோபி பாலைவனம்"}
+  ],
+  ans: 2
+},
+{
+  en: "The 'Nalanda University' was located in which present-day state?",
+  ta: "'நாளந்தா பல்கலைக்கழகம்' தற்போது எந்த மாநிலத்தில் அமைந்திருந்தது?",
+  opts: [
+    {en:"Uttar Pradesh", ta:"உத்திரப் பிரதேசம்"},
+    {en:"Bihar", ta:"பீகார்"},
+    {en:"West Bengal", ta:"மேற்கு வங்காளம்"},
+    {en:"Madhya Pradesh", ta:"மத்தியப் பிரதேசம்"}
+  ],
+  ans: 1
+},
+{
+  en: "Which schedule of the Indian Constitution contains the Directive Principles of State Policy?",
+  ta: "இந்திய அரசியலமைப்பின் எந்த பகுதி அரசு கொள்கையின் வழிகாட்டு நெறிமுறைகளை உள்ளடக்கியுள்ளது?",
+  opts: [
+    {en:"Part III", ta:"பகுதி III"},
+    {en:"Part IV", ta:"பகுதி IV"},
+    {en:"Part IVA", ta:"பகுதி IVA"},
+    {en:"Part V", ta:"பகுதி V"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'National Human Rights Commission' was established under which Act?",
+  ta: "'தேசிய மனித உரிமைகள் ஆணையம்' எந்தச் சட்டத்தின் கீழ் நிறுவப்பட்டது?",
+  opts: [
+    {en:"Protection of Human Rights Act, 1993", ta:"மனித உரிமைகள் பாதுகாப்புச் சட்டம், 1993"},
+    {en:"Human Rights Act, 1991", ta:"மனித உரிமைகள் சட்டம், 1991"},
+    {en:"National Commission Act, 1995", ta:"தேசிய ஆணையச் சட்டம், 1995"},
+    {en:"Civil Rights Act, 1989", ta:"சிவில் உரிமைகள் சட்டம், 1989"}
+  ],
+  ans: 0
+},
+{
+  en: "Who was the first Indian to win the Nobel Prize?",
+  ta: "நோபல் பரிசு வென்ற முதல் இந்தியர் யார்?",
+  opts: [
+    {en:"C.V. Raman", ta:"சி.வி. ராமன்"},
+    {en:"Rabindranath Tagore", ta:"ரவீந்திரநாத் தாகூர்"},
+    {en:"Mother Teresa", ta:"அன்னை தெரேசா"},
+    {en:"Amartya Sen", ta:"அமர்த்தியா சென்"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'Doctrine of Lapse' was introduced by which Governor-General?",
+  ta: "'கைப்பற்றும் கொள்கை' எந்த கவர்னர் ஜெனரலால் அறிமுகப்படுத்தப்பட்டது?",
+  opts: [
+    {en:"Lord Dalhousie", ta:"லார்ட் டல்ஹவுசி"},
+    {en:"Lord Canning", ta:"லார்ட் கேனிங்"},
+    {en:"Lord Wellesley", ta:"லார்ட் வெல்லஸ்லி"},
+    {en:"Lord Cornwallis", ta:"லார்ட் கார்ன்வாலிஸ்"}
+  ],
+  ans: 0
+},
+{
+  en: "Which is the largest state in India by area?",
+  ta: "பரப்பளவில் இந்தியாவின் மிகப்பெரிய மாநிலம் எது?",
+  opts: [
+    {en:"Maharashtra", ta:"மகாராஷ்டிரா"},
+    {en:"Uttar Pradesh", ta:"உத்திரப் பிரதேசம்"},
+    {en:"Rajasthan", ta:"இராஜஸ்தான்"},
+    {en:"Madhya Pradesh", ta:"மத்தியப் பிரதேசம்"}
+  ],
+  ans: 2
+},
+{
+  en: "The 'Minimum Support Price' (MSP) for crops in India is recommended by",
+  ta: "இந்தியாவில் பயிர்களுக்கான 'குறைந்தபட்ச ஆதரவு விலை' (MSP) யாரால் பரிந்துரைக்கப்படுகிறது?",
+  opts: [
+    {en:"NITI Aayog", ta:"நீதி ஆயோக்"},
+    {en:"Commission for Agricultural Costs and Prices (CACP)", ta:"விவசாய செலவுகள் மற்றும் விலைகள் ஆணையம் (CACP)"},
+    {en:"Reserve Bank of India", ta:"இந்திய ரிசர்வ் வங்கி"},
+    {en:"Ministry of Finance", ta:"நிதி அமைச்சகம்"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'Chipko Movement' was associated with",
+  ta: "'சிப்கோ இயக்கம்' எதனுடன் தொடர்புடையது?",
+  opts: [
+    {en:"Forest conservation", ta:"காடுகள் பாதுகாப்பு"},
+    {en:"Water conservation", ta:"நீர் பாதுகாப்பு"},
+    {en:"Wildlife conservation", ta:"வன்விலங்கு பாதுகாப்பு"},
+    {en:"Soil conservation", ta:"மண் பாதுகாப்பு"}
+  ],
+  ans: 0
+},
+{
+  en: "Which country is the largest producer of coffee in the world?",
+  ta: "உலகின் மிகப்பெரிய காபி உற்பத்தி நாடு எது?",
+  opts: [
+    {en:"Colombia", ta:"கொலம்பியா"},
+    {en:"Ethiopia", ta:"எத்தியோப்பியா"},
+    {en:"Brazil", ta:"பிரேசில்"},
+    {en:"Vietnam", ta:"வியட்நாம்"}
+  ],
+  ans: 2
+},
+{
+  en: "Which of the following is the headquarters of SAARC?",
+  ta: "பின்வருவனவற்றில் SAARC இன் தலைமையகம் எங்கு உள்ளது?",
+  opts: [
+    {en:"New Delhi, India", ta:"புது தில்லி, இந்தியா"},
+    {en:"Kathmandu, Nepal", ta:"காட்மண்டு, நேபாளம்"},
+    {en:"Dhaka, Bangladesh", ta:"தாக்கா, பங்களாதேஷ்"},
+    {en:"Colombo, Sri Lanka", ta:"கொழும்பு, இலங்கை"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'Palk Strait' separates India from which country?",
+  ta: "'பாக் நீரிணை' இந்தியாவை எந்த நாட்டிலிருந்து பிரிக்கிறது?",
+  opts: [
+    {en:"Maldives", ta:"மாலத்தீவு"},
+    {en:"Bangladesh", ta:"பங்களாதேஷ்"},
+    {en:"Sri Lanka", ta:"இலங்கை"},
+    {en:"Myanmar", ta:"மியான்மர்"}
+  ],
+  ans: 2
+},
+{
+  en: "Which is the longest river in India?",
+  ta: "இந்தியாவின் மிக நீண்ட நதி எது?",
+  opts: [
+    {en:"Godavari", ta:"கோதாவரி"},
+    {en:"Brahmaputra", ta:"பிரம்மபுத்திரா"},
+    {en:"Ganga", ta:"கங்கை"},
+    {en:"Indus", ta:"சிந்து"}
+  ],
+  ans: 2
+},
+{
+  en: "The 'Pradhan Mantri Fasal Bima Yojana' is related to",
+  ta: "'பிரதான் மந்திரி பஷல் பீமா யோஜனா' எதனுடன் தொடர்புடையது?",
+  opts: [
+    {en:"Health Insurance", ta:"சுகாதார காப்பீடு"},
+    {en:"Crop Insurance", ta:"பயிர் காப்பீடு"},
+    {en:"Life Insurance", ta:"ஆயுள் காப்பீடு"},
+    {en:"Housing Insurance", ta:"வீட்டுக் காப்பீடு"}
+  ],
+  ans: 1
+},
+{
+  en: "Who wrote the book 'Discovery of India'?",
+  ta: "'இந்தியாவின் கண்டுபிடிப்பு' என்ற புத்தகத்தை யார் எழுதினார்?",
+  opts: [
+    {en:"Mahatma Gandhi", ta:"மகாத்மா காந்தி"},
+    {en:"Jawaharlal Nehru", ta:"ஜவஹர்லால் நேரு"},
+    {en:"Subash Chandra Bose", ta:"சுபாஷ் சந்திர போஸ்"},
+    {en:"B.R. Ambedkar", ta:"பி.ஆர். அம்பேத்கர்"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'Bhopal Gas Tragedy' occurred in which year?",
+  ta: "'போபால் வாயு சோகம்' எந்த ஆண்டு நடந்தது?",
+  opts: [
+    {en:"1982", ta:"1982"},
+    {en:"1984", ta:"1984"},
+    {en:"1986", ta:"1986"},
+    {en:"1988", ta:"1988"}
+  ],
+  ans: 1
+},
+{
+  en: "Which is the national game of India?",
+  ta: "இந்தியாவின் தேசிய விளையாட்டு எது?",
+  opts: [
+    {en:"Cricket", ta:"கிரிக்கெட்"},
+    {en:"Kabaddi", ta:"கபடி"},
+    {en:"Field Hockey", ta:"கள ஹாக்கி"},
+    {en:"Badminton", ta:"பேட்மிண்டன்"}
+  ],
+  ans: 2
+},
+{
+  en: "The 'Vande Bharat Express' is a ________ in India.",
+  ta: "'வந்தே பாரத் எக்சுப்ரஸ்' இந்தியாவில் ஒரு ________.",
+  opts: [
+    {en:"Semi-high speed train", ta:"அரை அதிவேகத் ரயில்"},
+    {en:"Bullet train", ta:"புல்லட் ரயில்"},
+    {en:"Freight train", ta:"சரக்கு ரயில்"},
+    {en:"Metro train", ta:"மெட்ரோ ரயில்"}
+  ],
+  ans: 0
+},
+{
+  en: "Which bank was established first in India?",
+  ta: "இந்தியாவில் முதலில் நிறுவப்பட்ட வங்கி எது?",
+  opts: [
+    {en:"Bank of Hindustan", ta:"ஹிந்துஸ்தான் வங்கி"},
+    {en:"State Bank of India", ta:"இந்திய ஸ்டேட் வங்கி"},
+    {en:"Punjab National Bank", ta:"பஞ்சாப் நேஷனல் வங்கி"},
+    {en:"Bank of Bombay", ta:"பம்பாய் வங்கி"}
+  ],
+  ans: 0
+},
+{
+  en: "Which of the following is the smallest country in the world by area?",
+  ta: "பரப்பளவால் உலகின் மிகச்சிறிய நாடு எது?",
+  opts: [
+    {en:"Monaco", ta:"மொனாக்கோ"},
+    {en:"San Marino", ta:"சான் மாரினோ"},
+    {en:"Vatican City", ta:"வத்திக்கான் நகரம்"},
+    {en:"Liechtenstein", ta:"லிக்டென்ஸ்டைன்"}
+  ],
+  ans: 2
+},
+{
+  en: "The 'Sunderban' delta is formed by which rivers?",
+  ta: "'சுந்தரவன்' டெல்டா எந்த நதிகளால் உருவாகிறது?",
+  opts: [
+    {en:"Ganga and Brahmaputra", ta:"கங்கை மற்றும் பிரம்மபுத்திரா"},
+    {en:"Krishna and Godavari", ta:"கிருஷ்ணா மற்றும் கோதாவரி"},
+    {en:"Indus and Jhelum", ta:"சிந்து மற்றும் ஜீலம்"},
+    {en:"Mahanadi and Godavari", ta:"மஹாநதி மற்றும் கோதாவரி"}
+  ],
+  ans: 0
+},
+{
+  en: "Which Amendment of the Indian Constitution added the word 'Socialist' and 'Secular' in the Preamble?",
+  ta: "இந்திய அரசியலமைப்பின் எந்த திருத்தம் முகவுரையில் 'சோஷலிஸ்ட்' மற்றும் 'மதச்சார்பற்ற' என்ற சொற்களை சேர்த்தது?",
+  opts: [
+    {en:"42nd Amendment", ta:"42வது திருத்தம்"},
+    {en:"44th Amendment", ta:"44வது திருத்தம்"},
+    {en:"46th Amendment", ta:"46வது திருத்தம்"},
+    {en:"48th Amendment", ta:"48வது திருத்தம்"}
+  ],
+  ans: 0
+},
+{
+  en: "The 'Western Ghats' is also known as",
+  ta: "'மேற்குத் தொடர்ச்சி மலை' என்பது __________ என்றும் அழைக்கப்படுகிறது.",
+  opts: [
+    {en:"Sahyadri", ta:"சயாத்திரி"},
+    {en:"Vindya", ta:"விந்திய"},
+    {en:"Aravalli", ta:"அரவல்லி"},
+    {en:"Nilgiri", ta:"நீலகிரி"}
+  ],
+  ans: 0
+},
+{
+  en: "The 'Sardar Sarovar Dam' is built on which river?",
+  ta: "'சர்தார் சரோவர் அணை' எந்த நதியின் மீது கட்டப்பட்டுள்ளது?",
+  opts: [
+    {en:"Mahanadi", ta:"மஹாநதி"},
+    {en:"Narmada", ta:"நர்மதா"},
+    {en:"Godavari", ta:"கோதாவரி"},
+    {en:"Krishna", ta:"கிருஷ்ணா"}
+  ],
+  ans: 1
+},
+{
+  en: "Which state has the largest coastline in India?",
+  ta: "இந்தியாவில் மிக நீளமான கடற்கரையை உடைய மாநிலம் எது?",
+  opts: [
+    {en:"Tamil Nadu", ta:"தமிழ்நாடு"},
+    {en:"Gujarat", ta:"குஜராத்"},
+    {en:"Andhra Pradesh", ta:"ஆந்திரப் பிரதேசம்"},
+    {en:"Maharashtra", ta:"மகாராஷ்டிரா"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'Khajuraho Temples' are located in which state?",
+  ta: "'காஜுராஹோ கோவில்கள்' எந்த மாநிலத்தில் அமைந்துள்ளன?",
+  opts: [
+    {en:"Uttar Pradesh", ta:"உத்திரப் பிரதேசம்"},
+    {en:"Rajasthan", ta:"இராஜஸ்தான்"},
+    {en:"Madhya Pradesh", ta:"மத்தியப் பிரதேசம்"},
+    {en:"Bihar", ta:"பீகார்"}
+  ],
+  ans: 2
+},
+{
+  en: "Which of the following is NOT a fundamental right under the Indian Constitution?",
+  ta: "பின்வருவனவற்றில் இந்திய அரசியலமைப்பின் கீழ் அடிப்படை உரிமை அல்லாதது எது?",
+  opts: [
+    {en:"Right to Equality", ta:"சமத்துவ உரிமை"},
+    {en:"Right to Property", ta:"சொத்து உரிமை"},
+    {en:"Right to Freedom", ta:"சுதந்திர உரிமை"},
+    {en:"Right against Exploitation", ta:"சுரண்டலுக்கு எதிரான உரிமை"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'Nanda Devi' peak is located in which state?",
+  ta: "'நந்தா தேவி' சிகரம் எந்த மாநிலத்தில் அமைந்துள்ளது?",
+  opts: [
+    {en:"Himachal Pradesh", ta:"இமாசல பிரதேசம்"},
+    {en:"Uttarakhand", ta:"உத்தரகாண்ட்"},
+    {en:"Sikkim", ta:"சிக்கிம்"},
+    {en:"Arunachal Pradesh", ta:"அருணாசல பிரதேசம்"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'India-China War' took place in which year?",
+  ta: "'இந்திய-சீன போர்' எந்த ஆண்டு நடந்தது?",
+  opts: [
+    {en:"1948", ta:"1948"},
+    {en:"1962", ta:"1962"},
+    {en:"1965", ta:"1965"},
+    {en:"1971", ta:"1971"}
+  ],
+  ans: 1
+},
+{
+  en: "Which of the following is the national tree of India?",
+  ta: "பின்வருவனவற்றில் இந்தியாவின் தேசிய மரம் எது?",
+  opts: [
+    {en:"Peepal", ta:"அரசமரம்"},
+    {en:"Neem", ta:"வேப்பமரம்"},
+    {en:"Banyan", ta:"ஆலமரம்"},
+    {en:"Teak", ta:"தேக்கு மரம்"}
+  ],
+  ans: 2
+},
+{
+  en: "The 'Rajya Sabha' is presided over by the",
+  ta: "'ராஜ்யசபா'வின் தலைமையை யார் வகிக்கிறார்?",
+  opts: [
+    {en:"President of India", ta:"இந்தியக் குடியரசுத் தலைவர்"},
+    {en:"Prime Minister of India", ta:"இந்தியப் பிரதமர்"},
+    {en:"Vice President of India", ta:"இந்தியத் துணைக் குடியரசுத் தலைவர்"},
+    {en:"Speaker of Lok Sabha", ta:"மக்களவை சபாநாயகர்"}
+  ],
+  ans: 2
+},
+{
+  en: "Which of the following is the currency of Japan?",
+  ta: "பின்வருவனவற்றில் ஜப்பானின் நாணயம் எது?",
+  opts: [
+    {en:"Won", ta:"வான்"},
+    {en:"Yuan", ta:"யுவான்"},
+    {en:"Yen", ta:"யென்"},
+    {en:"Ringgit", ta:"ரிங்கிட்"}
+  ],
+  ans: 2
+},
+{
+  en: "The 'Tropic of Cancer' passes through how many states in India?",
+  ta: "'கர்க்கட ரேகை' இந்தியாவில் எத்தனை மாநிலங்கள் வழியாக கடந்து செல்கிறது?",
+  opts: [
+    {en:"6", ta:"6"},
+    {en:"7", ta:"7"},
+    {en:"8", ta:"8"},
+    {en:"9", ta:"9"}
+  ],
+  ans: 2
+},
+{
+  en: "Who is known as the 'Iron Man of India'?",
+  ta: "இந்தியாவின் 'இரும்பு மனிதர்' என்று யார் அழைக்கப்படுகிறார்?",
+  opts: [
+    {en:"Bhagat Singh", ta:"பகத் சிங்"},
+    {en:"Sardar Vallabhbhai Patel", ta:"சர்தார் வல்லபாய் படேல்"},
+    {en:"Bal Gangadhar Tilak", ta:"பால கங்காதர திலகர்"},
+    {en:"Lala Lajpat Rai", ta:"லாலா லஜ்பத் ரை"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'Simon Commission' was boycotted in India because",
+  ta: "'சைமன் கமிஷன்' இந்தியாவில் புறக்கணிக்கப்பட்டதற்கான காரணம்",
+  opts: [
+    {en:"It was biased towards British interests", ta:"இது பிரிட்டிஷ் நலன்களுக்கு ஆதரவாக இருந்தது"},
+    {en:"It had no Indian members", ta:"இதில் இந்திய உறுப்பினர்கள் இல்லாததால்"},
+    {en:"It proposed partition of India", ta:"இது இந்தியாவை பிரிக்க முன்மொழிந்தது"},
+    {en:"It supported princely states", ta:"இது சமஸ்தான மாநிலங்களை ஆதரித்தது"}
+  ],
+  ans: 1
+},
+{
+  en: "Which of the following countries is NOT a member of BRICS?",
+  ta: "பின்வருவனவற்றில் BRICS இன் உறுப்பு நாடு அல்லாதது எது?",
+  opts: [
+    {en:"Brazil", ta:"பிரேசில்"},
+    {en:"Indonesia", ta:"இந்தோனேசியா"},
+    {en:"Russia", ta:"ரஷ்யா"},
+    {en:"South Africa", ta:"தென் ஆப்பிரிக்கா"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'Indian Ocean' is the ________ largest ocean in the world.",
+  ta: "'இந்தியப் பெருங்கடல்' உலகின் ________ பெரிய மஹாகடல் ஆகும்.",
+  opts: [
+    {en:"Second", ta:"இரண்டாவது"},
+    {en:"Third", ta:"மூன்றாவது"},
+    {en:"Fourth", ta:"நான்காவது"},
+    {en:"Fifth", ta:"ஐந்தாவது"}
+  ],
+  ans: 1
+},
+{
+  en: "Who was the first President of India?",
+  ta: "இந்தியாவின் முதல் குடியரசுத் தலைவர் யார்?",
+  opts: [
+    {en:"Dr. S. Radhakrishnan", ta:"டாக்டர் எஸ். ராதாகிருஷ்ணன்"},
+    {en:"Dr. Rajendra Prasad", ta:"டாக்டர் ராஜேந்திர பிரசாத்"},
+    {en:"V.V. Giri", ta:"வி.வி. கிரி"},
+    {en:"Zakir Hussain", ta:"ஜாகிர் ஹுசைன்"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'Konkan Railway' connects Mumbai to which city?",
+  ta: "'கொங்கன் ரயில்வே' மும்பையை எந்த நகரத்துடன் இணைக்கிறது?",
+  opts: [
+    {en:"Chennai", ta:"சென்னை"},
+    {en:"Hyderabad", ta:"ஹைதராபாத்"},
+    {en:"Mangaluru", ta:"மங்களூரு"},
+    {en:"Thiruvananthapuram", ta:"திருவனந்தபுரம்"}
+  ],
+  ans: 2
+},
+{
+  en: "Which of the following is the full form of 'UNESCO'?",
+  ta: "'UNESCO' இன் முழு வடிவம் என்ன?",
+  opts: [
+    {en:"United Nations Economic, Scientific and Cultural Organization", ta:"ஐக்கிய நாடுகளின் பொருளாதார, அறிவியல் மற்றும் கலாச்சார அமைப்பு"},
+    {en:"United Nations Educational, Scientific and Cultural Organization", ta:"ஐக்கிய நாடுகளின் கல்வி, அறிவியல் மற்றும் கலாச்சார அமைப்பு"},
+    {en:"Universal Nations Education Scientific and Cultural Organization", ta:"உலகளாவிய நாடுகளின் கல்வி அறிவியல் மற்றும் கலாச்சார அமைப்பு"},
+    {en:"United Nations Environment, Science and Culture Organization", ta:"ஐக்கிய நாடுகளின் சுற்றுச்சூழல், அறிவியல் மற்றும் கலாச்சார அமைப்பு"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'Kalbelia' folk dance belongs to which state?",
+  ta: "'கல்பேலியா' நாட்டுப்புற நடனம் எந்த மாநிலத்திற்கு சொந்தமானது?",
+  opts: [
+    {en:"Gujarat", ta:"குஜராத்"},
+    {en:"Punjab", ta:"பஞ்சாப்"},
+    {en:"Rajasthan", ta:"இராஜஸ்தான்"},
+    {en:"Odisha", ta:"ஒடிசா"}
+  ],
+  ans: 2
+},
+{
+  en: "The 'Onam' festival is celebrated in which state?",
+  ta: "'ஓணம்' திருவிழா எந்த மாநிலத்தில் கொண்டாடப்படுகிறது?",
+  opts: [
+    {en:"Tamil Nadu", ta:"தமிழ்நாடு"},
+    {en:"Andhra Pradesh", ta:"ஆந்திரப் பிரதேசம்"},
+    {en:"Karnataka", ta:"கர்நாடகா"},
+    {en:"Kerala", ta:"கேரளா"}
+  ],
+  ans: 3
+},
+{
+  en: "Which planet has the most moons in our solar system?",
+  ta: "நமது சூரிய மண்டலத்தில் அதிக நிலாக்களை (துணைக்கோள்கள்) கொண்ட கோளம் எது?",
+  opts: [
+    {en:"Jupiter", ta:"வியாழன்"},
+    {en:"Saturn", ta:"சனி"},
+    {en:"Uranus", ta:"யுரேனஸ்"},
+    {en:"Neptune", ta:"நெப்டியூன்"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'National Rural Employment Guarantee Act' (NREGA) was renamed as MGNREGA. What does 'M' stand for?",
+  ta: "'தேசிய கிராம வேலைவாய்ப்பு உறுதிச் சட்டம்' (NREGA) MGNREGA என மறுபெயரிடப்பட்டது. 'M' என்பது எதை குறிக்கிறது?",
+  opts: [
+    {en:"Mahatma", ta:"மகாத்மா"},
+    {en:"Modern", ta:"நவீன"},
+    {en:"Multiple", ta:"பன்முக"},
+    {en:"Ministry", ta:"அமைச்சகம்"}
+  ],
+  ans: 0
+},
+{
+  en: "The 'Clean India Mission' (Swachh Bharat Abhiyan) was launched in which year?",
+  ta: "'தூய்மை இந்தியா இயக்கம்' (ஸ்வச்ச் பாரத் அபியான்) எந்த ஆண்டு தொடங்கப்பட்டது?",
+  opts: [
+    {en:"2012", ta:"2012"},
+    {en:"2013", ta:"2013"},
+    {en:"2014", ta:"2014"},
+    {en:"2015", ta:"2015"}
+  ],
+  ans: 2
+},
+{
+  en: "Who was the first Prime Minister of India?",
+  ta: "இந்தியாவின் முதல் பிரதமர் யார்?",
+  opts: [
+    {en:"Sardar Vallabhbhai Patel", ta:"சர்தார் வல்லபாய் படேல்"},
+    {en:"Jawaharlal Nehru", ta:"ஜவஹர்லால் நேரு"},
+    {en:"Lal Bahadur Shastri", ta:"லால் பகதூர் சாஸ்திரி"},
+    {en:"Indira Gandhi", ta:"இந்திரா காந்தி"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'Bhakra Nangal Dam' is built on which river?",
+  ta: "'பாக்ரா நங்கல் அணை' எந்த நதியின் மீது கட்டப்பட்டுள்ளது?",
+  opts: [
+    {en:"Beas", ta:"பியாஸ்"},
+    {en:"Ravi", ta:"ரவி"},
+    {en:"Sutlej", ta:"சட்லஜ்"},
+    {en:"Yamuna", ta:"யமுனை"}
+  ],
+  ans: 2
+},
+{
+  en: "The 'Kaziranga National Park' is famous for which animal?",
+  ta: "'காஜிரங்கா தேசியப் பூங்கா' எந்த விலங்கிற்காக பிரசித்தமானது?",
+  opts: [
+    {en:"Bengal Tiger", ta:"வங்கப் புலி"},
+    {en:"Asiatic Lion", ta:"ஆசிய சிங்கம்"},
+    {en:"One-horned Rhinoceros", ta:"ஒரு கொம்பு கண்டாமிருகம்"},
+    {en:"Indian Elephant", ta:"இந்திய யானை"}
+  ],
+  ans: 2
+},
+{
+  en: "Which of the following is India's first satellite?",
+  ta: "பின்வருவனவற்றில் இந்தியாவின் முதல் செயற்கைக்கோள் எது?",
+  opts: [
+    {en:"Rohini", ta:"ரோகிணி"},
+    {en:"INSAT-1A", ta:"INSAT-1A"},
+    {en:"Aryabhata", ta:"ஆர்யபட்டா"},
+    {en:"APPLE", ta:"ஆப்பிள்"}
+  ],
+  ans: 2
+},
+{
+  en: "The 'Right to Privacy' was declared as a Fundamental Right by the Supreme Court in which year?",
+  ta: "'தனியுரிமை உரிமை' உச்ச நீதிமன்றத்தால் எந்த ஆண்டில் அடிப்படை உரிமையாக அறிவிக்கப்பட்டது?",
+  opts: [
+    {en:"2015", ta:"2015"},
+    {en:"2016", ta:"2016"},
+    {en:"2017", ta:"2017"},
+    {en:"2018", ta:"2018"}
+  ],
+  ans: 2
+},
+{
+  en: "The 'Periyar National Park' is located in which state?",
+  ta: "'பெரியார் தேசியப் பூங்கா' எந்த மாநிலத்தில் அமைந்துள்ளது?",
+  opts: [
+    {en:"Tamil Nadu", ta:"தமிழ்நாடு"},
+    {en:"Karnataka", ta:"கர்நாடகா"},
+    {en:"Andhra Pradesh", ta:"ஆந்திரப் பிரதேசம்"},
+    {en:"Kerala", ta:"கேரளா"}
+  ],
+  ans: 3
+},
+{
+  en: "Who wrote the National Anthem of India 'Jana Gana Mana'?",
+  ta: "இந்தியாவின் தேசிய கீதம் 'ஜன கண மன'வை யார் எழுதினார்?",
+  opts: [
+    {en:"Bankim Chandra Chattopadhyay", ta:"பங்கிம் சந்திர சட்டோபாத்யாய்"},
+    {en:"Rabindranath Tagore", ta:"ரவீந்திரநாத் தாகூர்"},
+    {en:"Mahatma Gandhi", ta:"மகாத்மா காந்தி"},
+    {en:"Subramania Bharati", ta:"சுப்பிரமணிய பாரதி"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'Lokpal Bill' was passed in India in which year?",
+  ta: "'லோக்பால் மசோதா' இந்தியாவில் எந்த ஆண்டில் நிறைவேற்றப்பட்டது?",
+  opts: [
+    {en:"2011", ta:"2011"},
+    {en:"2012", ta:"2012"},
+    {en:"2013", ta:"2013"},
+    {en:"2014", ta:"2014"}
+  ],
+  ans: 2
+},
+{
+  en: "The 'Dandi March' was conducted to protest against",
+  ta: "'தண்டி யாத்திரை' எதற்கு எதிர்ப்பு தெரிவிக்கவென நடத்தப்பட்டது?",
+  opts: [
+    {en:"Salt Tax", ta:"உப்பு வரி"},
+    {en:"Land Tax", ta:"நிலவரி"},
+    {en:"Press restrictions", ta:"அச்சு கட்டுப்பாடுகள்"},
+    {en:"Rowlatt Act", ta:"ரெளலட் சட்டம்"}
+  ],
+  ans: 0
+},
+{
+  en: "The 'Mattancherry Palace' (Dutch Palace) is located in which city?",
+  ta: "'மட்டாஞ்சேரி அரண்மனை' (டச்சு அரண்மனை) எந்த நகரில் அமைந்துள்ளது?",
+  opts: [
+    {en:"Kozhikode", ta:"கோழிக்கோடு"},
+    {en:"Thiruvananthapuram", ta:"திருவனந்தபுரம்"},
+    {en:"Kochi", ta:"கொச்சி"},
+    {en:"Thrissur", ta:"திருச்சூர்"}
+  ],
+  ans: 2
+},
+{
+  en: "Which of the following is known as the 'Manchester of India'?",
+  ta: "பின்வருவனவற்றில் 'இந்தியாவின் மான்செஸ்டர்' என்று அழைக்கப்படுவது எது?",
+  opts: [
+    {en:"Surat", ta:"சூரத்"},
+    {en:"Mumbai", ta:"மும்பை"},
+    {en:"Ahmedabad", ta:"அஹமதாபாத்"},
+    {en:"Coimbatore", ta:"கோயம்புத்தூர்"}
+  ],
+  ans: 2
+},
+{
+  en: "Which of the following is the highest civilian award in India?",
+  ta: "பின்வருவனவற்றில் இந்தியாவின் உயர்ந்த குடிமகன் விருது எது?",
+  opts: [
+    {en:"Padma Shri", ta:"பத்மஸ்ரீ"},
+    {en:"Padma Bhushan", ta:"பத்ம பூஷண்"},
+    {en:"Padma Vibhushan", ta:"பத்ம விபூஷண்"},
+    {en:"Bharat Ratna", ta:"பாரத ரத்னா"}
+  ],
+  ans: 3
+},
+{
+  en: "The 'Tungabhadra River' is a tributary of which river?",
+  ta: "'துங்கபத்திரா நதி' எந்த நதியின் துணை நதி?",
+  opts: [
+    {en:"Godavari", ta:"கோதாவரி"},
+    {en:"Krishna", ta:"கிருஷ்ணா"},
+    {en:"Cauvery", ta:"காவேரி"},
+    {en:"Mahanadi", ta:"மஹாநதி"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'National Commission for Scheduled Castes' was established under which article?",
+  ta: "'தேசிய பட்டியல் சாதிகள் ஆணையம்' எந்த சரத்தின் கீழ் நிறுவப்பட்டது?",
+  opts: [
+    {en:"Article 338", ta:"சரத்து 338"},
+    {en:"Article 340", ta:"சரத்து 340"},
+    {en:"Article 342", ta:"சரத்து 342"},
+    {en:"Article 335", ta:"சரத்து 335"}
+  ],
+  ans: 0
+},
+{
+  en: "Which of the following is NOT a feature of a Federal System?",
+  ta: "பின்வருவனவற்றில் கூட்டாட்சி முறையின் அம்சம் அல்லாதது எது?",
+  opts: [
+    {en:"Written Constitution", ta:"எழுதப்பட்ட அரசியலமைப்பு"},
+    {en:"Separation of Powers", ta:"அதிகாரப் பிரிவினை"},
+    {en:"One-party system", ta:"ஒரு கட்சி முறை"},
+    {en:"Independent Judiciary", ta:"சுயாதீன நீதித்துறை"}
+  ],
+  ans: 2
+},
+{
+  en: "The 'Paddy' is the scientific name of",
+  ta: "'நெல்' இன் அறிவியல் பெயர்",
+  opts: [
+    {en:"Oryza sativa", ta:"ஒரைசா சட்டீவா"},
+    {en:"Triticum aestivum", ta:"ட்ரிட்டிகம் எஸ்டிவம்"},
+    {en:"Zea mays", ta:"ஸீயா மேஸ்"},
+    {en:"Hordeum vulgare", ta:"ஹோர்டியம் வல்கேர்"}
+  ],
+  ans: 0
+},
+{
+  en: "The 'G20 Summit 2023' was held in which city of India?",
+  ta: "'G20 உச்சி மாநாடு 2023' இந்தியாவின் எந்த நகரில் நடைபெற்றது?",
+  opts: [
+    {en:"Mumbai", ta:"மும்பை"},
+    {en:"Kolkata", ta:"கொல்கத்தா"},
+    {en:"Chennai", ta:"சென்னை"},
+    {en:"New Delhi", ta:"புது தில்லி"}
+  ],
+  ans: 3
+},
+{
+  en: "The 'Operation Flood' was related to",
+  ta: "'ஆபரேஷன் ஃப்ளட்' எதனுடன் தொடர்புடையது?",
+  opts: [
+    {en:"Wheat production", ta:"கோதுமை உற்பத்தி"},
+    {en:"Milk production", ta:"பால் உற்பத்தி"},
+    {en:"Fish production", ta:"மீன் உற்பத்தி"},
+    {en:"Pulses production", ta:"பருப்பு உற்பத்தி"}
+  ],
+  ans: 1
+},
+{
+  en: "Which of the following is the headquarters of the World Health Organization (WHO)?",
+  ta: "பின்வருவனவற்றில் உலக சுகாதார நிறுவனம் (WHO) இன் தலைமையகம் எங்கு உள்ளது?",
+  opts: [
+    {en:"New York, USA", ta:"நியூயார்க், அமெரிக்கா"},
+    {en:"Paris, France", ta:"பாரிஸ், பிரான்ஸ்"},
+    {en:"Geneva, Switzerland", ta:"ஜெனீவா, சுவிட்சர்லாந்து"},
+    {en:"Vienna, Austria", ta:"வியன்னா, ஆஸ்திரியா"}
+  ],
+  ans: 2
+},
+{
+  en: "The 'Amul' brand is associated with which cooperative?",
+  ta: "'அமுல்' பிராண்டு எந்த கூட்டுறவு அமைப்புடன் தொடர்புடையது?",
+  opts: [
+    {en:"Gujarat Cooperative Milk Marketing Federation", ta:"குஜராத் கூட்டுறவு பால் விற்பனை கூட்டமைப்பு"},
+    {en:"National Dairy Development Board", ta:"தேசிய பால்வளர்ப்பு மேம்பாட்டு வாரியம்"},
+    {en:"Maharashtra State Cooperative Milk Federation", ta:"மகாராஷ்டிரா மாநில கூட்டுறவு பால் கூட்டமைப்பு"},
+    {en:"Karnataka Milk Federation", ta:"கர்நாடகா பால் கூட்டமைப்பு"}
+  ],
+  ans: 0
+},
+{
+  en: "The 'Pradhan Mantri Awas Yojana' aims to provide",
+  ta: "'பிரதான் மந்திரி ஆவாஸ் யோஜனா' திட்டம் எதை வழங்கவென நோக்கமாக கொண்டுள்ளது?",
+  opts: [
+    {en:"Employment to rural people", ta:"கிராப்புற மக்களுக்கு வேலைவாய்ப்பு"},
+    {en:"Housing for all", ta:"அனைவருக்கும் வீடு"},
+    {en:"Free education", ta:"இலவசக் கல்வி"},
+    {en:"Health insurance", ta:"சுகாதார காப்பீடு"}
+  ],
+  ans: 1
+},
+{
+  en: "Which article of the Indian Constitution deals with 'Equality before Law'?",
+  ta: "இந்திய அரசியலமைப்பின் எந்த சரத்து 'சட்டத்தின் முன் சமத்துவம்' என்பதை கையாள்கிறது?",
+  opts: [
+    {en:"Article 13", ta:"சரத்து 13"},
+    {en:"Article 14", ta:"சரத்து 14"},
+    {en:"Article 15", ta:"சரத்து 15"},
+    {en:"Article 16", ta:"சரத்து 16"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'Indian Space Research Organisation' (ISRO) was established in which year?",
+  ta: "'இந்திய விண்வெளி ஆராய்ச்சி நிறுவனம்' (ISRO) எந்த ஆண்டில் நிறுவப்பட்டது?",
+  opts: [
+    {en:"1962", ta:"1962"},
+    {en:"1966", ta:"1966"},
+    {en:"1969", ta:"1969"},
+    {en:"1972", ta:"1972"}
+  ],
+  ans: 2
+},
+{
+  en: "The 'Konyak Tribe' belongs to which state?",
+  ta: "'கோன்யாக் பழங்குடியினர்' எந்த மாநிலத்தைச் சேர்ந்தவர்கள்?",
+  opts: [
+    {en:"Assam", ta:"அஸ்ஸாம்"},
+    {en:"Meghalaya", ta:"மேகாலயா"},
+    {en:"Nagaland", ta:"நாகாலாந்து"},
+    {en:"Manipur", ta:"மணிப்பூர்"}
+  ],
+  ans: 2
+},
+{
+  en: "The 'Tashkent Agreement' of 1966 was signed between India and",
+  ta: "1966 ஆம் ஆண்டு 'தஷ்கெண்ட் ஒப்பந்தம்' இந்தியாவிற்கும் யாருக்கும் இடையே கையெழுத்தானது?",
+  opts: [
+    {en:"China", ta:"சீனா"},
+    {en:"Pakistan", ta:"பாகிஸ்தான்"},
+    {en:"Sri Lanka", ta:"இலங்கை"},
+    {en:"Bangladesh", ta:"பங்களாதேஷ்"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'Loktak Lake' is located in which state?",
+  ta: "'லோக்டக் ஏரி' எந்த மாநிலத்தில் அமைந்துள்ளது?",
+  opts: [
+    {en:"Assam", ta:"அஸ்ஸாம்"},
+    {en:"Tripura", ta:"திரிபுரா"},
+    {en:"Manipur", ta:"மணிப்பூர்"},
+    {en:"Meghalaya", ta:"மேகாலயா"}
+  ],
+  ans: 2
+},
+{
+  en: "The 'Zero Hour' in the Indian Parliament refers to",
+  ta: "இந்திய நாடாளுமன்றத்தில் 'ஜீரோ அவர்' என்பது குறிக்கிறது",
+  opts: [
+    {en:"Time for Question Hour", ta:"கேள்வி நேரத்திற்கான நேரம்"},
+    {en:"Time immediately following Question Hour", ta:"கேள்வி நேரத்தை உடனடியாக தொடர்ந்து வரும் நேரம்"},
+    {en:"Time for Private Member Bills", ta:"தனியார் உறுப்பினர் மசோதாக்களுக்கான நேரம்"},
+    {en:"Time for Budget discussion", ta:"வரவு செலவு திட்ட விவாதத்திற்கான நேரம்"}
+  ],
+  ans: 1
+},
+{
+  en: "Which of the following UNESCO World Heritage Sites is in Tamil Nadu?",
+  ta: "பின்வருவனவற்றில் தமிழ்நாட்டில் உள்ள UNESCO உலக பாரம்பரிய தளம் எது?",
+  opts: [
+    {en:"Qutb Minar", ta:"குதுப் மினார்"},
+    {en:"Group of Monuments at Mahabalipuram", ta:"மகாபலிபுரத்தில் உள்ள நினைவுச் சின்னங்கள் குழு"},
+    {en:"Ajanta Caves", ta:"அஜந்தா குகைகள்"},
+    {en:"Ellora Caves", ta:"எல்லோரா குகைகள்"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'Pradhan Mantri Kisan Samman Nidhi' (PM-KISAN) scheme provides financial support of how much per year?",
+  ta: "'பிரதான் மந்திரி கிசான் சம்மான் நிதி' (PM-KISAN) திட்டம் வருடத்திற்கு எவ்வளவு நிதியுதவி வழங்குகிறது?",
+  opts: [
+    {en:"Rs. 4,000", ta:"ரூபாய் 4,000"},
+    {en:"Rs. 6,000", ta:"ரூபாய் 6,000"},
+    {en:"Rs. 8,000", ta:"ரூபாய் 8,000"},
+    {en:"Rs. 10,000", ta:"ரூபாய் 10,000"}
+  ],
+  ans: 1
+},
+{
+  en: "Which river is known as the 'Sorrow of Bengal'?",
+  ta: "எந்த நதி 'வங்காளத்தின் சோகம்' என்று அழைக்கப்படுகிறது?",
+  opts: [
+    {en:"Ganga", ta:"கங்கை"},
+    {en:"Brahmaputra", ta:"பிரம்மபுத்திரா"},
+    {en:"Damodar", ta:"தாமோதர்"},
+    {en:"Mahanadi", ta:"மஹாநதி"}
+  ],
+  ans: 2
+},
+{
+  en: "The 'National Food Security Act' was passed in India in which year?",
+  ta: "இந்தியாவில் 'தேசிய உணவு பாதுகாப்பு சட்டம்' எந்த ஆண்டில் நிறைவேற்றப்பட்டது?",
+  opts: [
+    {en:"2011", ta:"2011"},
+    {en:"2012", ta:"2012"},
+    {en:"2013", ta:"2013"},
+    {en:"2014", ta:"2014"}
+  ],
+  ans: 2
+},
+{
+  en: "Match with the schemes and its main focus:\n(a) PMGSY  (b) DDUGKY  (c) NRLM  (d) MGNREGA\n1. Focus on rural youth between age 15 to 35 from poor families\n2. Sustainable livelihood opportunities\n3. Rural connectivity\n4. Livelihood security in rural areas",
+  ta: "திட்டங்களை அதன் முக்கிய நோக்கத்துடன் பொருத்துவும்:\n(a) PMGSY (b) DDUGKY (c) NRLM (d) MGNREGA",
+  opts: [
+    {en:"(a)1 (b)2 (c)3 (d)4", ta:"(a)1 (b)2 (c)3 (d)4"},
+    {en:"(a)3 (b)1 (c)2 (d)4", ta:"(a)3 (b)1 (c)2 (d)4"},
+    {en:"(a)4 (b)3 (c)2 (d)1", ta:"(a)4 (b)3 (c)2 (d)1"},
+    {en:"(a)1 (b)2 (c)4 (d)3", ta:"(a)1 (b)2 (c)4 (d)3"}
+  ],
+  ans: 1
+},
+{
+  en: "Assertion [A]: There has been a significant rise in the percentage of labour force engaged in Industrial sector during 1990s and 2000s.\nReason [R]: There has been a significant rise in employment in the construction sector between 1991 and 2011.",
+  ta: "கூற்று [A]: 1990கள் மற்றும் 2000களில் தொழில்துறையில் உள்ள தொழிலாளர்களின் சதவீதம் அதிகரித்துள்ளது.\nகாரணம் [R]: 1991 மற்றும் 2011 ஆம் ஆண்டுகளுக்கு இடையில் கட்டுமானத் துறையில் வேலைவாய்ப்பு குறிப்பிடத்தக்க அளவில் அதிகரித்துள்ளது.",
+  opts: [
+    {en:"[A] is true, but [R] is false", ta:"[A] சரி, ஆனால் [R] தவறு"},
+    {en:"Both [A] and [R] are true; and [R] is the correct explanation of [A]", ta:"[A] மற்றும் [R] இரண்டும் சரி, மற்றும் [R] என்பது [A] க்கு சரியான விளக்காகும்"},
+    {en:"[A] is false, [R] is true", ta:"[A] தவறு, [R] சரி"},
+    {en:"Both [A] and [R] are true, but [R] is not the correct explanation of [A]", ta:"[A] மற்றும் [R] இரண்டும் சரி, ஆனால் [R] என்பது [A] க்கு சரியான விளக்காகமல்ல"}
+  ],
+  ans: 1
+},
+{
+  en: "Which of the following is not the function of the Finance Commission in India?",
+  ta: "கீழே கொடுக்கப்பட்டவைகளில் எவை இந்திய நிதிக் குழுவின் பணி இல்லை?",
+  opts: [
+    {en:"Preparation of Union budget", ta:"மத்திய அரசின் வரவு செலவுத் திட்டத்தை தயாரிப்பது"},
+    {en:"The distribution of net proceeds of taxes between the union and the states", ta:"மத்திய மற்றும் மாநிலங்களுக்கிடையே நிகர வரி வருவாய்களை ஒதுக்கீடு செய்து பகிர்ந்தளித்தல்"},
+    {en:"Recommend the principles which should govern the Grants-in-aid", ta:"மானியம் பெறுவதற்கான தகுதி குறித்து கொள்கைகளை உறுதி செய்தல்"},
+    {en:"Any other matter to be referred to the President to promote sound finance", ta:"நல்ல திடமான நிதியை நிலைநாட்டும் வண்ணம் இந்தியக் குடியரசுத் தலைவரின் பார்வைக்கு கொண்டு செல்ல வேண்டியது"}
+  ],
+  ans: 0
+},
+{
+  en: "Which of the following statement is true?\n(1) Increasing Bank rate policy reduces borrowing among businessmen\n(2) To control inflation RBI increases bank rate policy\n(3) Bank rate policy helps to control increasing price of goods",
+  ta: "கீழ்க்கண்ட கூற்றில் சரியானது எது?\n(1) உயரும் வங்கி வட்டி வீதம் வணிகர்களிடையே கடன் பெறும் ஆர்வம் குறைந்து விடுகிறது\n(2) பணவீக்கத்தைக் கட்டுப்படுத்த RBI வங்கி வட்டி வீதத்தை உயர்த்துகிறது\n(3) வங்கி வட்டி வீதம் பொருட்களின் விலை உயர்வைக் கட்டுப்படுத்துகிறது",
+  opts: [
+    {en:"Statement (2) and (3) are correct", ta:"கூற்று (2) மற்றும் (3) சரி"},
+    {en:"Statement (1) and (2) are correct", ta:"கூற்று (1) மற்றும் (2) சரி"},
+    {en:"Statement (1) and (3) are correct", ta:"கூற்று (1) மற்றும் (3) சரி"},
+    {en:"Statement (1), (2) and (3) are correct", ta:"கூற்று (1), (2) மற்றும் (3) சரி"}
+  ],
+  ans: 1
+},
+{
+  en: "When one sees the person who taught not forgetting what they taught is dealt in the chapter",
+  ta: "'தன்னெடு பயின்றாரைக் கண்டால் அவர் கூறியன மறுக்க மாட்டாமை' – என்ற பொருளுடைய அதிகாரம் எது?",
+  opts: [
+    {en:"Detectives", ta:"ஒற்றாடல்"},
+    {en:"Hopefulness in Trouble", ta:"இடுக்கண் அழியாமை"},
+    {en:"Tyranny of rule", ta:"கொடுங்கோன்மை"},
+    {en:"Benignity (perspective)", ta:"கண்ணோட்டம்"}
+  ],
+  ans: 3
+},
+{
+  en: "\"Ozhukkaaraak Kolka Oruvandhan Nenjaththu Azhukkaaru Iladha Iyalpu\". What is the meaning of the word 'Azhukkaaru'?",
+  ta: "\"ஒழுக்காராக் கொள்க ஒருவன்தன் நெஞ்சத்து அழுக்காறு இலாத இயல்பு\" - எனும் குறளில் வரும் 'அழுக்காறு' என்பதன் பொருள் யாது?",
+  opts: [
+    {en:"Love", ta:"அன்பு"},
+    {en:"Submissive", ta:"அடக்கம்"},
+    {en:"Jealous", ta:"பொறாமை"},
+    {en:"Good Character", ta:"பண்பு"}
+  ],
+  ans: 2
+},
+{
+  en: "Find out the rightly matched pair/s from the following:\n(1) 1925 — Periyar EVR started the periodical 'Kudi Arasu'\n(2) 1928 — The English periodical 'Revolt' was started\n(3) 1934 — Periyar published 'Viduthalai' as a Tamil Daily\n(4) 1937 — Periyar brought out the Tamil Weekly 'Pagutharivu'",
+  ta: "கீழே கொடுக்கப்பட்டவைகளிலிருந்து சரியாகப் பொருந்திய இணைகளைக் கண்டுபிடித்து, சரியானப் பதிலைத் தேர்ந்தெடுக்கவும்.",
+  opts: [
+    {en:"Only (1) and (2) are correct", ta:"(1) மற்றும் (2) மட்டுமே சரியானவை"},
+    {en:"Only (1) and (3) are correct", ta:"(1) மற்றும் (3) மட்டுமே சரியானவை"},
+    {en:"Only (1) and (4) are correct", ta:"(1) மற்றும் (4) மட்டுமே சரியானவை"},
+    {en:"Only (1), (2) and (4) are correct", ta:"(1), (2) மற்றும் (4) மட்டுமே சரியானவை"}
+  ],
+  ans: 0
+},
+{
+  en: "The members of the Justice Party were sent to meet Joint select committee in London for finalise Government India Act in 1919",
+  ta: "1919 ம் ஆண்டு இந்திய அரசு சட்டத்தை இறுதி செய்வதற்காக அமைக்கப்பட்ட கூட்டுத் தேர்வுக் குழுவை லண்டனில் சந்திக்க சென்ற நீதிக்கட்சி உறுப்பினர்கள்",
+  opts: [
+    {en:"(i) and (ii)", ta:"(i) மற்றும் (ii)"},
+    {en:"(ii) and (iii)", ta:"(ii) மற்றும் (iii)"},
+    {en:"(iii), (ii), (iv)", ta:"(iii), (ii), (iv)"},
+    {en:"(i), (ii), (iv)", ta:"(i), (ii), (iv)"}
+  ],
+  ans: 3
+},
+{
+  en: "Who among the following is NOT associated with the Bhakti Movement?",
+  ta: "பின்வருவோரில் பக்தி இயக்கத்துடன் தொடர்பில்லாதவர் யார்?",
+  opts: [
+    {en:"Kabir", ta:"கபீர்"},
+    {en:"Mirabai", ta:"மீராபாய்"},
+    {en:"Tukaram", ta:"துக்காராம்"},
+    {en:"Chandragupta Maurya", ta:"சந்திரகுப்த மவுரியர்"}
+  ],
+  ans: 3
+},
+{
+  en: "The 'Arya Samaj' was founded by",
+  ta: "'ஆர்ய சமாஜ்' ஐ நிறுவியவர்",
+  opts: [
+    {en:"Ram Mohan Roy", ta:"ராம் மோகன் ராய்"},
+    {en:"Swami Vivekananda", ta:"சுவாமி விவேகானந்தர்"},
+    {en:"Dayananda Saraswati", ta:"தயானந்த சரஸ்வதி"},
+    {en:"Annie Besant", ta:"அன்னிபெசன்ட்"}
+  ],
+  ans: 2
+},
+{
+  en: "Which of the following is the correct order of the Panchayati Raj system in India (from top to bottom)?",
+  ta: "இந்தியாவில் பஞ்சாயத்தி ராஜ் முறையின் சரியான வரிசை (மேலிருந்து கீழ்) எது?",
+  opts: [
+    {en:"Gram Panchayat – Panchayat Samiti – Zila Parishad", ta:"கிராம பஞ்சாயத்து – பஞ்சாயத்து சமிதி – ஜில்லா பரிஷத்"},
+    {en:"Zila Parishad – Panchayat Samiti – Gram Panchayat", ta:"ஜில்லா பரிஷத் – பஞ்சாயத்து சமிதி – கிராம பஞ்சாயத்து"},
+    {en:"Panchayat Samiti – Zila Parishad – Gram Panchayat", ta:"பஞ்சாயத்து சமிதி – ஜில்லா பரிஷத் – கிராம பஞ்சாயத்து"},
+    {en:"Gram Panchayat – Zila Parishad – Panchayat Samiti", ta:"கிராம பஞ்சாயத்து – ஜில்லா பரிஷத் – பஞ்சாயத்து சமிதி"}
+  ],
+  ans: 1
+},
+{
+  en: "Which of the following is the most abundant gas in the Earth's atmosphere?",
+  ta: "பூமியின் வளிமண்டலத்தில் மிக அதிகமாக காணப்படும் வாயு எது?",
+  opts: [
+    {en:"Oxygen", ta:"ஆக்சிஜன்"},
+    {en:"Carbon dioxide", ta:"கார்பன் டை ஆக்சைடு"},
+    {en:"Nitrogen", ta:"நைட்ரஜன்"},
+    {en:"Argon", ta:"ஆர்கான்"}
+  ],
+  ans: 2
+},
+{
+  en: "The 'Constituent Assembly' of India was set up under which scheme?",
+  ta: "இந்தியாவின் 'அரசியலமைப்பு சபை' எந்த திட்டத்தின் கீழ் அமைக்கப்பட்டது?",
+  opts: [
+    {en:"Wavell Plan", ta:"வேவல் திட்டம்"},
+    {en:"Cabinet Mission Plan", ta:"அமைச்சரவை தூதுக்குழு திட்டம்"},
+    {en:"Mountbatten Plan", ta:"மவுண்ட்பேட்டன் திட்டம்"},
+    {en:"Cripps Mission", ta:"கிரிப்ஸ் தூது"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'Soil Conservation' is important because",
+  ta: "'மண் பாதுகாப்பு' முக்கியத்துவம் வாய்ந்தது ஏனெனில்",
+  opts: [
+    {en:"It prevents floods", ta:"இது வெள்ளத்தை தடுக்கிறது"},
+    {en:"It prevents soil erosion and maintains fertility", ta:"இது மண் அரிப்பை தடுக்கிறது மற்றும் வளத்தை பராமரிக்கிறது"},
+    {en:"It increases rainfall", ta:"இது மழைப்பொழிவை அதிகரிக்கிறது"},
+    {en:"It reduces air pollution", ta:"இது காற்று மாசுபாட்டை குறைக்கிறது"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'Bokaro Steel Plant' in Jharkhand was established with the help of which country?",
+  ta: "ஜார்கண்டில் உள்ள 'போகாரோ எஃகு ஆலை' எந்த நாட்டின் உதவியுடன் நிறுவப்பட்டது?",
+  opts: [
+    {en:"USA", ta:"அமெரிக்கா"},
+    {en:"Germany", ta:"ஜெர்மனி"},
+    {en:"Soviet Union (USSR)", ta:"சோவியத் யூனியன் (USSR)"},
+    {en:"UK", ta:"இங்கிலாந்து"}
+  ],
+  ans: 2
+},
+{
+  en: "The 'Fundamental Duties' were added to the Indian Constitution by which Amendment?",
+  ta: "இந்திய அரசியலமைப்பில் 'அடிப்படைக் கடமைகள்' எந்த திருத்தத்தால் சேர்க்கப்பட்டது?",
+  opts: [
+    {en:"40th Amendment", ta:"40வது திருத்தம்"},
+    {en:"42nd Amendment", ta:"42வது திருத்தம்"},
+    {en:"44th Amendment", ta:"44வது திருத்தம்"},
+    {en:"46th Amendment", ta:"46வது திருத்தம்"}
+  ],
+  ans: 1
+},
+{
+  en: "Which is the only river that flows from east to west and meets the Arabian Sea?",
+  ta: "கிழக்கிலிருந்து மேற்காக பாய்ந்து அரேபிய கடலை சந்திக்கும் ஒரே நதி எது?",
+  opts: [
+    {en:"Godavari", ta:"கோதாவரி"},
+    {en:"Krishna", ta:"கிருஷ்ணா"},
+    {en:"Narmada", ta:"நர்மதா"},
+    {en:"Mahanadi", ta:"மஹாநதி"}
+  ],
+  ans: 2
+},
+{
+  en: "The term 'Secular' was added to the Preamble of the Indian Constitution by the",
+  ta: "இந்திய அரசியலமைப்பின் முகவுரையில் 'மதச்சார்பற்ற' என்ற சொல் __________ மூலம் சேர்க்கப்பட்டது.",
+  opts: [
+    {en:"40th Constitutional Amendment, 1976", ta:"40வது அரசியலமைப்பு திருத்தம், 1976"},
+    {en:"42nd Constitutional Amendment, 1976", ta:"42வது அரசியலமைப்பு திருத்தம், 1976"},
+    {en:"44th Constitutional Amendment, 1978", ta:"44வது அரசியலமைப்பு திருத்தம், 1978"},
+    {en:"46th Constitutional Amendment, 1982", ta:"46வது அரசியலமைப்பு திருத்தம், 1982"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'Thalappoli' or 'Thalapoli' is a ritual practiced in which state of India?",
+  ta: "'தலப்பொலி' அல்லது 'தாலப்பொலி' என்ற சடங்கு இந்தியாவின் எந்த மாநிலத்தில் கடைப்பிடிக்கப்படுகிறது?",
+  opts: [
+    {en:"Tamil Nadu", ta:"தமிழ்நாடு"},
+    {en:"Karnataka", ta:"கர்நாடகா"},
+    {en:"Kerala", ta:"கேரளா"},
+    {en:"Andhra Pradesh", ta:"ஆந்திரப் பிரதேசம்"}
+  ],
+  ans: 2
+},
+{
+  en: "Who among the following was the author of 'Ain-i-Akbari'?",
+  ta: "பின்வருவோரில் 'ஐன்-இ-அக்பரி' நூலின் ஆசிரியர் யார்?",
+  opts: [
+    {en:"Babur", ta:"பாபர்"},
+    {en:"Akbar", ta:"அக்பர்"},
+    {en:"Abul Fazl", ta:"அபுல் ஃபஸ்ல்"},
+    {en:"Birbal", ta:"பீர்பால்"}
+  ],
+  ans: 2
+},
+{
+  en: "The 'Uttaramerur Inscription' is significant because it provides evidence of",
+  ta: "'உத்தரமேரூர் கல்வெட்டு' முக்கியத்துவம் வாய்ந்தது ஏனென்றால் அது __________ சான்றுகளை வழங்குகிறது.",
+  opts: [
+    {en:"Ancient trade practices", ta:"பண்டைய வணிக நடைமுறைகள்"},
+    {en:"Self governance in villages during Chola period", ta:"சோழர் காலத்தில் கிராமங்களில் சுயாட்சி"},
+    {en:"Military conquests", ta:"இராணுவ வெற்றிகள்"},
+    {en:"Irrigation systems", ta:"நீர்ப்பாசன முறைகள்"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'NABARD' was established in which year?",
+  ta: "'NABARD' எந்த ஆண்டில் நிறுவப்பட்டது?",
+  opts: [
+    {en:"1980", ta:"1980"},
+    {en:"1982", ta:"1982"},
+    {en:"1984", ta:"1984"},
+    {en:"1986", ta:"1986"}
+  ],
+  ans: 1
+},
+{
+  en: "Which Indian state is the largest producer of mica?",
+  ta: "மைக்கா உற்பத்தியில் இந்தியாவின் மிகப்பெரிய மாநிலம் எது?",
+  opts: [
+    {en:"Rajasthan", ta:"இராஜஸ்தான்"},
+    {en:"Jharkhand", ta:"ஜார்கண்ட்"},
+    {en:"Bihar", ta:"பீகார்"},
+    {en:"Andhra Pradesh", ta:"ஆந்திரப் பிரதேசம்"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'Tehri Dam' is located on which river?",
+  ta: "'தேஹ்ரி அணை' எந்த நதியில் அமைந்துள்ளது?",
+  opts: [
+    {en:"Ganga", ta:"கங்கை"},
+    {en:"Yamuna", ta:"யமுனை"},
+    {en:"Bhagirathi", ta:"பாகீரதி"},
+    {en:"Chambal", ta:"சம்பல்"}
+  ],
+  ans: 2
+},
+{
+  en: "Which of the following is NOT a schedule language in the Indian Constitution?",
+  ta: "பின்வருவனவற்றில் இந்திய அரசியலமைப்பின் அட்டவணை மொழி அல்லாதது எது?",
+  opts: [
+    {en:"Maithili", ta:"மைதிலி"},
+    {en:"Dogri", ta:"டோக்ரி"},
+    {en:"Bhojpuri", ta:"போஜ்புரி"},
+    {en:"Bodo", ta:"போடோ"}
+  ],
+  ans: 2
+},
+{
+  en: "Who was the founder of the 'Aligarh Movement'?",
+  ta: "'அலிகார் இயக்கம்' ஐ தோற்றுவித்தவர் யார்?",
+  opts: [
+    {en:"Mohammad Ali Jinnah", ta:"முகமது அலி ஜின்னா"},
+    {en:"Sir Syed Ahmad Khan", ta:"சர் சையது அகமது கான்"},
+    {en:"Maulana Abul Kalam Azad", ta:"மவுலானா அபுல் கலாம் ஆசாத்"},
+    {en:"Khan Abdul Ghaffar Khan", ta:"கான் அப்துல் கஃபார் கான்"}
+  ],
+  ans: 1
+},
+{
+  en: "The concept of 'Sustainable Development' was first introduced in which report?",
+  ta: "'நிலையான வளர்ச்சி' என்ற கருத்து முதன்முதலில் எந்த அறிக்கையில் அறிமுகப்படுத்தப்பட்டது?",
+  opts: [
+    {en:"Stockholm Report", ta:"ஸ்டாக்ஹோம் அறிக்கை"},
+    {en:"Brundtland Report", ta:"பிரண்ட்லாண்ட் அறிக்கை"},
+    {en:"Rio Declaration", ta:"ரியோ பிரகடனம்"},
+    {en:"Kyoto Protocol", ta:"கியோட்டோ நெறிமுறை"}
+  ],
+  ans: 1
+},
+{
+  en: "Which of the following is the capital of Andaman and Nicobar Islands?",
+  ta: "பின்வருவனவற்றில் அண்டமான் மற்றும் நிக்கோபார் தீவுகளின் தலைநகரம் எது?",
+  opts: [
+    {en:"Car Nicobar", ta:"கார் நிக்கோபார்"},
+    {en:"Port Blair", ta:"போர்ட் பிளேர்"},
+    {en:"Diglipur", ta:"டிக்லிப்பூர்"},
+    {en:"Mayabunder", ta:"மயாபந்தர்"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'Indira Gandhi Canal' draws water from which river?",
+  ta: "'இந்திரா காந்தி கால்வாய்' எந்த நதியிலிருந்து நீர் பெறுகிறது?",
+  opts: [
+    {en:"Ganga", ta:"கங்கை"},
+    {en:"Brahmaputra", ta:"பிரம்மபுத்திரா"},
+    {en:"Sutlej and Beas", ta:"சட்லஜ் மற்றும் பியாஸ்"},
+    {en:"Yamuna", ta:"யமுனை"}
+  ],
+  ans: 2
+},
+{
+  en: "Who wrote the famous Tamil epic 'Silappadikaram'?",
+  ta: "புகழ்மிக்க தமிழ் இதிகாசம் 'சிலப்பதிகாரம்' ஐ யார் எழுதினார்?",
+  opts: [
+    {en:"Thiruvalluvar", ta:"திருவள்ளுவர்"},
+    {en:"Ilango Adigal", ta:"இளங்கோவடிகள்"},
+    {en:"Kambar", ta:"கம்பர்"},
+    {en:"Avvaiyar", ta:"ஔவையார்"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'National Water Policy' of India was first adopted in which year?",
+  ta: "இந்தியாவின் 'தேசிய நீர்க் கொள்கை' முதலில் எந்த ஆண்டில் ஏற்றுக்கொள்ளப்பட்டது?",
+  opts: [
+    {en:"1985", ta:"1985"},
+    {en:"1987", ta:"1987"},
+    {en:"1990", ta:"1990"},
+    {en:"1992", ta:"1992"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'Chola dynasty' is known for its contributions to which art form?",
+  ta: "'சோழ வம்சம்' எந்த கலை வடிவத்திற்கு பங்களிப்புக்காக அறியப்படுகிறது?",
+  opts: [
+    {en:"Fresco paintings", ta:"ஃப்ரெஸ்கோ ஓவியங்கள்"},
+    {en:"Bronze sculptures", ta:"வெண்கல சிற்பங்கள்"},
+    {en:"Terracotta art", ta:"டெரக்கோட்டா கலை"},
+    {en:"Miniature paintings", ta:"சிறு ஓவியங்கள்"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'National Defence Academy' is located at",
+  ta: "'தேசிய பாதுகாப்பு அகாடமி' எங்கு அமைந்துள்ளது?",
+  opts: [
+    {en:"Dehradun", ta:"தேஹ்ராதுன்"},
+    {en:"Khadakwasla, Pune", ta:"கடக்வாஸ்லா, புனே"},
+    {en:"Wellington, Tamil Nadu", ta:"வெல்லிங்டன், தமிழ்நாடு"},
+    {en:"Mhow, Madhya Pradesh", ta:"மஹவ், மத்தியப் பிரதேசம்"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'Quit India Movement' was launched in which year?",
+  ta: "'வெள்ளையனே வெளியேறு இயக்கம்' எந்த ஆண்டில் தொடங்கப்பட்டது?",
+  opts: [
+    {en:"1940", ta:"1940"},
+    {en:"1942", ta:"1942"},
+    {en:"1944", ta:"1944"},
+    {en:"1946", ta:"1946"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'Vishakhapatnam Steel Plant' is an integrated steel plant located in which state?",
+  ta: "'விசாகப்பட்டினம் எஃகு ஆலை' எந்த மாநிலத்தில் அமைந்துள்ளது?",
+  opts: [
+    {en:"Telangana", ta:"தெலுங்கானா"},
+    {en:"Andhra Pradesh", ta:"ஆந்திரப் பிரதேசம்"},
+    {en:"Odisha", ta:"ஒடிசா"},
+    {en:"West Bengal", ta:"மேற்கு வங்காளம்"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'Kanchipuram' in Tamil Nadu is famous for which of the following?",
+  ta: "தமிழ்நாட்டில் உள்ள 'காஞ்சிபுரம்' எதற்காக பிரசித்தமானது?",
+  opts: [
+    {en:"Jasmine flowers", ta:"மல்லிகை பூக்கள்"},
+    {en:"Silk sarees", ta:"பட்டு புடவைகள்"},
+    {en:"Coffee production", ta:"காபி உற்பத்தி"},
+    {en:"Banana cultivation", ta:"வாழை பயிர்"}
+  ],
+  ans: 1
+},
+{
+  en: "Which Article of the Indian Constitution abolishes 'Untouchability'?",
+  ta: "இந்திய அரசியலமைப்பின் எந்த சரத்து 'தீண்டாமை' ஒழிக்கப்படுவதை குறிக்கிறது?",
+  opts: [
+    {en:"Article 14", ta:"சரத்து 14"},
+    {en:"Article 15", ta:"சரத்து 15"},
+    {en:"Article 16", ta:"சரத்து 16"},
+    {en:"Article 17", ta:"சரத்து 17"}
+  ],
+  ans: 3
+},
+{
+  en: "The 'Gir Forest' in Gujarat is the last natural habitat of which animal?",
+  ta: "குஜராத்தில் உள்ள 'கிர் காடு' எந்த விலங்கின் கடைசி இயற்கை வாழிடமாக உள்ளது?",
+  opts: [
+    {en:"Bengal Tiger", ta:"வங்கப் புலி"},
+    {en:"Asiatic Lion", ta:"ஆசிய சிங்கம்"},
+    {en:"Snow Leopard", ta:"பனி சிறுத்தை"},
+    {en:"Indian Rhinoceros", ta:"இந்திய கண்டாமிருகம்"}
+  ],
+  ans: 1
+},
+{
+  en: "Who is known as the 'Father of White Revolution' in India?",
+  ta: "இந்தியாவில் 'வெள்ளைப் புரட்சியின் தந்தை' என்று யார் அழைக்கப்படுகிறார்?",
+  opts: [
+    {en:"M.S. Swaminathan", ta:"எம்.எஸ். சுவாமிநாதன்"},
+    {en:"Varghese Kurien", ta:"வர்கீஸ் குரியன்"},
+    {en:"Norman Borlaug", ta:"நார்மன் போர்லாக்"},
+    {en:"B.P. Pal", ta:"பி.பி. பால்"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'Mandal Commission' was appointed to look into the issues of",
+  ta: "'மண்டல் கமிஷன்' எந்த பிரச்சினைகளை ஆய்வு செய்ய நியமிக்கப்பட்டது?",
+  opts: [
+    {en:"Scheduled Tribes", ta:"பட்டியல் பழங்குடியினர்"},
+    {en:"Minorities", ta:"சிறுபான்மையினர்"},
+    {en:"Other Backward Classes (OBC)", ta:"பிற பிற்படுத்தப்பட்ட வகுப்பினர் (OBC)"},
+    {en:"Women empowerment", ta:"பெண்கள் அதிகாரமளித்தல்"}
+  ],
+  ans: 2
+},
+{
+  en: "Which of the following is NOT a tributary of the Ganga?",
+  ta: "பின்வருவனவற்றில் கங்கையின் துணை நதி அல்லாதது எது?",
+  opts: [
+    {en:"Yamuna", ta:"யமுனை"},
+    {en:"Son", ta:"சோன்"},
+    {en:"Ghaghra", ta:"கக்ரா"},
+    {en:"Betwa", ta:"பெட்வா"}
+  ],
+  ans: 3
+},
+{
+  en: "The 'National Science Day' is celebrated every year on which date?",
+  ta: "'தேசிய அறிவியல் தினம்' ஒவ்வொரு ஆண்டும் எந்த தேதியன்று கொண்டாடப்படுகிறது?",
+  opts: [
+    {en:"January 28", ta:"ஜனவரி 28"},
+    {en:"February 28", ta:"பிப்ரவரி 28"},
+    {en:"March 28", ta:"மார்ச் 28"},
+    {en:"April 28", ta:"ஏப்ரல் 28"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'Palk Bay' is located between",
+  ta: "'பாக் விரிகுடா' __________ இடையே அமைந்துள்ளது.",
+  opts: [
+    {en:"India and Sri Lanka", ta:"இந்தியா மற்றும் இலங்கை"},
+    {en:"India and Maldives", ta:"இந்தியா மற்றும் மாலத்தீவு"},
+    {en:"India and Myanmar", ta:"இந்தியா மற்றும் மியான்மர்"},
+    {en:"India and Bangladesh", ta:"இந்தியா மற்றும் பங்களாதேஷ்"}
+  ],
+  ans: 0
+},
+{
+  en: "The 'Digital India' initiative was launched by the Government of India to transform India into",
+  ta: "'டிஜிட்டல் இந்தியா' முயற்சி இந்தியாவை __________ ஆக மாற்ற இந்திய அரசாங்கத்தால் தொடங்கப்பட்டது.",
+  opts: [
+    {en:"A military power", ta:"ஒரு இராணுவ சக்தி"},
+    {en:"A knowledge economy and digitally empowered society", ta:"ஒரு அறிவுப் பொருளாதாரம் மற்றும் டிஜிட்டல் அதிகாரமுள்ள சமூகம்"},
+    {en:"A global manufacturing hub", ta:"ஒரு உலகளாவிய உற்பத்தி மையம்"},
+    {en:"A tourist destination", ta:"ஒரு சுற்றுலா இடம்"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'Article 356' of Indian Constitution is related to",
+  ta: "இந்திய அரசியலமைப்பின் 'சரத்து 356' எதனுடன் தொடர்புடையது?",
+  opts: [
+    {en:"Financial Emergency", ta:"நிதி அவசரகாலம்"},
+    {en:"National Emergency", ta:"தேசிய அவசரகாலம்"},
+    {en:"President's Rule in States", ta:"மாநிலங்களில் குடியரசுத் தலைவர் ஆட்சி"},
+    {en:"Election of President", ta:"குடியரசுத் தலைவர் தேர்தல்"}
+  ],
+  ans: 2
+},
+{
+  en: "Which country is the largest producer of rubber in the world?",
+  ta: "உலகில் மிகப்பெரிய இயற்கை ரப்பர் உற்பத்தி நாடு எது?",
+  opts: [
+    {en:"India", ta:"இந்தியா"},
+    {en:"Indonesia", ta:"இந்தோனேசியா"},
+    {en:"Thailand", ta:"தாய்லாந்து"},
+    {en:"Malaysia", ta:"மலேசியா"}
+  ],
+  ans: 2
+},
+{
+  en: "The 'Rajiv Gandhi Khel Ratna Award' has been renamed as",
+  ta: "'ராஜீவ் காந்தி கேல் ரத்னா விருது' என்பது __________ என மறுபெயரிடப்பட்டுள்ளது.",
+  opts: [
+    {en:"Bharat Ratna Khel Award", ta:"பாரத ரத்னா கேல் விருது"},
+    {en:"Major Dhyan Chand Khel Ratna Award", ta:"மேஜர் த்யான் சந்த் கேல் ரத்னா விருது"},
+    {en:"Sardar Patel Khel Ratna Award", ta:"சர்தார் படேல் கேல் ரத்னா விருது"},
+    {en:"Nehru Khel Ratna Award", ta:"நேரு கேல் ரத்னா விருது"}
+  ],
+  ans: 1
+},
+{
+  en: "The 'Ganga Action Plan' was launched in which year?",
+  ta: "'கங்கை செயல் திட்டம்' எந்த ஆண்டில் தொடங்கப்பட்டது?",
+  opts: [
+    {en:"1982", ta:"1982"},
+    {en:"1985", ta:"1985"},
+    {en:"1986", ta:"1986"},
+    {en:"1990", ta:"1990"}
+  ],
+  ans: 2
+},
+];
+
+// =====================================================
+// QUIZ STATE
+// =====================================================
+let currentQ = 0;
+let userAnswers = new Array(200).fill(null); // null=unattempted, -1=skipped, 0-3=answered
+let visitedQ = new Array(200).fill(false);
+let timerSeconds = 3 * 60 * 60;
+let timerInterval = null;
+let quizSubmitted = false;
+
+// =====================================================
+// INIT
+// =====================================================
+function init() {
+  buildPalette();
+  renderQuestion(0);
+  startTimer();
+}
+
+// =====================================================
+// TIMER
+// =====================================================
+function startTimer() {
+  timerInterval = setInterval(() => {
+    timerSeconds--;
+    if (timerSeconds <= 0) {
+      clearInterval(timerInterval);
+      submitQuiz();
+      return;
+    }
+    const h = Math.floor(timerSeconds / 3600);
+    const m = Math.floor((timerSeconds % 3600) / 60);
+    const s = timerSeconds % 60;
+    document.getElementById('timerDisplay').textContent =
+      `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  }, 1000);
+}
+
+// =====================================================
+// BUILD PALETTE
+// =====================================================
+function buildPalette() {
+  const grid = document.getElementById('paletteGrid');
+  grid.innerHTML = '';
+  for (let i = 0; i < questions.length; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'pal-btn';
+    btn.textContent = i + 1;
+    btn.id = `pal-${i}`;
+    btn.onclick = () => navigateTo(i);
+    grid.appendChild(btn);
+  }
+}
+
+function updatePalette() {
+  for (let i = 0; i < questions.length; i++) {
+    const btn = document.getElementById(`pal-${i}`);
+    if (!btn) continue;
+    btn.className = 'pal-btn';
+    if (i === currentQ) btn.classList.add('current');
+    else if (userAnswers[i] !== null && userAnswers[i] !== -1) btn.classList.add('answered');
+    else if (userAnswers[i] === -1) btn.classList.add('skipped');
+  }
+}
+
+// =====================================================
+// RENDER QUESTION
+// =====================================================
+function renderQuestion(idx) {
+  currentQ = idx;
+  visitedQ[idx] = true;
+  const q = questions[idx];
+
+  document.getElementById('qNumLabel').textContent = `Question ${idx+1} of ${questions.length}`;
+
+  // Update nav buttons
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  if (prevBtn) prevBtn.disabled = (idx === 0);
+  if (nextBtn) {
+    if (idx === questions.length - 1) {
+      nextBtn.textContent = '✓ Finish';
+      nextBtn.onclick = confirmSubmit;
+    } else {
+      nextBtn.textContent = 'Next ▶';
+      nextBtn.onclick = () => navigate(1);
+    }
+  }
+
+  const badge = document.getElementById('qBadge');
+  if (userAnswers[idx] === null) badge.textContent = 'Not Attempted';
+  else if (userAnswers[idx] === -1) badge.textContent = 'Skipped';
+  else badge.textContent = 'Answered';
+
+  // Build question body
+  const body = document.getElementById('questionBody');
+
+  // Format question text — handle \n as line breaks
+  const enLines = q.en.split('\n');
+  let enHtml = `<div class="q-english">${enLines.map((l,i) => i===0 ? l : `<div class="stmt">${l}</div>`).join('')}</div>`;
+
+  const taLines = q.ta.split('\n');
+  let taHtml = `<div class="q-tamil">${taLines.map((l,i) => i===0 ? l : `<div class="stmt">${l}</div>`).join('')}</div>`;
+
+  let optsHtml = '<div class="options-grid">';
+  const labels = ['A','B','C','D'];
+  q.opts.forEach((opt, oi) => {
+    const isSelected = userAnswers[idx] === oi;
+    optsHtml += `<button class="option-btn${isSelected?' selected':''}" id="opt-${oi}" onclick="selectOption(${oi})">
+      <div class="opt-label">${labels[oi]}</div>
+      <div class="opt-text">
+        <div class="opt-en">${opt.en}</div>
+        <div class="opt-ta">${opt.ta}</div>
+      </div>
+    </button>`;
+  });
+  optsHtml += '</div>';
+
+  body.innerHTML = enHtml + taHtml + optsHtml + `<div class="feedback-box" id="feedbackBox"></div>`;
+
+  updateStats();
+  updatePalette();
+  updateProgressBar();
+}
+
+// =====================================================
+// SELECT OPTION
+// =====================================================
+function selectOption(optIdx) {
+  if (quizSubmitted) return;
+  userAnswers[currentQ] = optIdx;
+
+  // Update option buttons visually
+  document.querySelectorAll('.option-btn').forEach((btn, i) => {
+    btn.classList.remove('selected');
+    if (i === optIdx) btn.classList.add('selected');
+  });
+
+  document.getElementById('qBadge').textContent = 'Answered';
+  updateStats();
+  updatePalette();
+}
+
+// =====================================================
+// NAVIGATE
+// =====================================================
+function navigate(dir) {
+  const next = currentQ + dir;
+  if (next >= 0 && next < questions.length) {
+    renderQuestion(next);
+  }
+}
+
+function navigateTo(idx) {
+  renderQuestion(idx);
+}
+
+function skipQuestion() {
+  if (userAnswers[currentQ] === null) {
+    userAnswers[currentQ] = -1;
+  }
+  if (currentQ < questions.length - 1) navigate(1);
+  updateStats();
+  updatePalette();
+}
+
+// =====================================================
+// STATS
+// =====================================================
+function updateStats() {
+  let answered = 0, skipped = 0, unattempted = 0;
+  userAnswers.forEach(a => {
+    if (a === null) unattempted++;
+    else if (a === -1) skipped++;
+    else answered++;
+  });
+  document.getElementById('cntAnswered').textContent = answered;
+  document.getElementById('cntSkipped').textContent = skipped;
+  document.getElementById('cntUnattempted').textContent = unattempted;
+}
+
+function updateProgressBar() {
+  const pct = ((currentQ + 1) / questions.length) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+// =====================================================
+// SUBMIT
+// =====================================================
+function confirmSubmit() {
+  const unattempted = userAnswers.filter(a => a === null).length;
+  const skipped = userAnswers.filter(a => a === -1).length;
+  const answered = userAnswers.filter(a => a !== null && a !== -1).length;
+
+  let msg = `You have:\n✅ Answered: ${answered}\n⏭ Skipped: ${skipped}\n⚪ Not Attempted: ${unattempted}\n\nAre you sure you want to submit?`;
+  if (confirm(msg)) submitQuiz();
+}
+
+function submitQuiz() {
+  clearInterval(timerInterval);
+  quizSubmitted = true;
+
+  document.getElementById('questionPanel').style.display = 'none';
+  document.getElementById('sidebar').style.display = 'none';
+  document.querySelector('.stats-bar').style.display = 'none';
+  document.querySelector('.progress-bar-wrap').style.display = 'none';
+
+  const resultPage = document.getElementById('resultPage');
+  resultPage.style.display = 'block';
+
+  let correct = 0, wrong = 0, skipped = 0;
+  const correctList = [], wrongList = [], skippedList = [];
+
+  questions.forEach((q, i) => {
+    const ua = userAnswers[i];
+    if (ua === null || ua === -1) {
+      skipped++;
+      skippedList.push(i);
+    } else if (ua === q.ans) {
+      correct++;
+      correctList.push(i);
+    } else {
+      wrong++;
+      wrongList.push(i);
+    }
+  });
+
+  const total = questions.length;
+  const pct = Math.round((correct / total) * 100);
+
+  document.getElementById('rScore').textContent = `${correct} / ${total}`;
+  document.getElementById('rMeta').textContent = `Correct: ${correct} × 1.5 = ${(correct*1.5).toFixed(1)} | Wrong: ${wrong} × 0.5 = −${(wrong*0.5).toFixed(1)} | Net Score: ${(correct*1.5 - wrong*0.5).toFixed(1)} / ${(total*1.5).toFixed(1)}`;
+  document.getElementById('rCorrect').textContent = correct;
+  document.getElementById('rWrong').textContent = wrong;
+  document.getElementById('rSkip').textContent = skipped;
+  document.getElementById('rPercent').textContent = pct + '%';
+
+  // Build result sections
+  buildResultSection('correctSection', correctList, 'correct-head', '✅ Correct Answers | சரியான விடைகள்', 'correct-card');
+  buildResultSection('wrongSection', wrongList, 'wrong-head', '❌ Wrong Answers | தவறான விடைகள்', 'wrong-card');
+  buildResultSection('skippedSection', skippedList, 'skip-head', '⏭ Skipped / Not Attempted | தவிர்க்கப்பட்டவை', 'skip-card');
+}
+
+function buildResultSection(containerId, indices, headClass, headText, cardClass) {
+  const container = document.getElementById(containerId);
+  if (indices.length === 0) { container.innerHTML = ''; return; }
+
+  const labels = ['A','B','C','D'];
+  let html = `<div class="section-heading ${headClass}">${headText} <span class="badge">${indices.length}</span></div>`;
+
+  indices.forEach(i => {
+    const q = questions[i];
+    const ua = userAnswers[i];
+    const qTextShort = q.en.split('\n')[0].substring(0, 120) + (q.en.length > 120 ? '...' : '');
+    html += `<div class="result-question-card ${cardClass}">
+      <div class="rq-top">
+        <div class="rq-num">Q.${i+1}</div>
+        <div class="rq-text">${qTextShort}</div>
+      </div>
+      <div class="rq-answer-row">`;
+
+    if (ua === null || ua === -1) {
+      html += `<span class="rq-skip-note">⏭ ${ua === -1 ? 'Skipped' : 'Not Attempted'} | சரியான விடை: (${labels[q.ans]}) ${q.opts[q.ans].en}</span>`;
+    } else {
+      html += `<span class="rq-correct">✅ Correct: (${labels[q.ans]}) ${q.opts[q.ans].en}</span>`;
+      if (ua !== q.ans) {
+        html += `<span class="rq-your">❌ Your Answer: (${labels[ua]}) ${q.opts[ua].en}</span>`;
+      }
+    }
+
+    html += `</div></div>`;
+  });
+
+  container.innerHTML = html;
+}
+
+// =====================================================
+// RESTART
+// =====================================================
+function restartQuiz() {
+  userAnswers = new Array(200).fill(null);
+  visitedQ = new Array(200).fill(false);
+  currentQ = 0;
+  quizSubmitted = false;
+  timerSeconds = 3 * 60 * 60;
+
+  document.getElementById('resultPage').style.display = 'none';
+  document.getElementById('questionPanel').style.display = 'block';
+  document.getElementById('sidebar').style.display = 'block';
+  document.querySelector('.stats-bar').style.display = 'flex';
+  document.querySelector('.progress-bar-wrap').style.display = 'block';
+
+  init();
+}
+
+// =====================================================
+// TOGGLE PALETTE (mobile)
+// =====================================================
+function togglePalette() {
+  const s = document.getElementById('sidebar');
+  s.style.display = (s.style.display === 'none') ? 'block' : 'none';
+}
+
+// =====================================================
+// START
+// =====================================================
+window.onload = init;
+</script>
+</body>
+</html>

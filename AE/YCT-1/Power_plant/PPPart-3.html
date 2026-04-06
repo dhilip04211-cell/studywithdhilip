@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Power Plant Quiz – Part 3</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f8; color: #222; }
+
+  header {
+    background: linear-gradient(135deg, #1a237e, #283593);
+    color: #fff; padding: 18px 20px; text-align: center;
+  }
+  header h1 { font-size: 1.35rem; letter-spacing: 0.5px; }
+  header p  { font-size: 0.82rem; margin-top: 4px; opacity: 0.85; }
+
+  /* Progress bar */
+  #progress-wrap { background: #c5cae9; height: 6px; }
+  #progress-bar  { background: #43a047; height: 6px; width: 0%; transition: width 0.4s; }
+
+  /* Score dashboard */
+  #dashboard {
+    display: flex; gap: 8px; padding: 10px 14px;
+    background: #fff; border-bottom: 1px solid #ddd; flex-wrap: wrap;
+  }
+  .dash-box {
+    flex: 1; min-width: 80px; background: #e8eaf6;
+    border-radius: 8px; text-align: center; padding: 7px 4px;
+  }
+  .dash-box .num  { font-size: 1.3rem; font-weight: 700; }
+  .dash-box .lbl  { font-size: 0.68rem; color: #555; margin-top: 2px; }
+  .dash-box.correct  .num { color: #2e7d32; }
+  .dash-box.wrong    .num { color: #c62828; }
+  .dash-box.skipped  .num { color: #e65100; }
+  .dash-box.score    .num { color: #1565c0; }
+
+  /* Section header */
+  .section-banner {
+    background: #283593; color: #fff;
+    padding: 9px 14px; font-size: 0.88rem; font-weight: 600;
+    margin: 12px 14px 0; border-radius: 8px 8px 0 0;
+  }
+
+  /* Question card */
+  .q-card {
+    background: #fff; margin: 0 14px 14px;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.09);
+    padding: 14px 16px; display: none;
+  }
+  .q-card.active { display: block; }
+
+  .q-meta { font-size: 0.72rem; color: #888; margin-bottom: 6px; }
+  .q-text { font-size: 0.95rem; font-weight: 600; line-height: 1.4; margin-bottom: 12px; }
+
+  /* Options */
+  .opt-btn {
+    display: block; width: 100%; text-align: left;
+    background: #f5f5f5; border: 2px solid #ddd;
+    border-radius: 8px; padding: 10px 12px;
+    margin-bottom: 8px; font-size: 0.88rem; cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .opt-btn:hover:not(:disabled) { background: #e8eaf6; border-color: #9fa8da; }
+  .opt-btn.correct  { background: #e8f5e9; border-color: #43a047; color: #1b5e20; font-weight: 600; }
+  .opt-btn.wrong    { background: #ffebee; border-color: #e53935; color: #b71c1c; }
+  .opt-btn.reveal   { background: #fff8e1; border-color: #ffa000; }
+  .opt-btn:disabled { cursor: default; }
+
+  /* Explanation */
+  .explanation {
+    background: #e3f2fd; border-left: 4px solid #1565c0;
+    border-radius: 6px; padding: 10px 12px;
+    font-size: 0.83rem; line-height: 1.55; margin-top: 10px; display: none;
+  }
+  .explanation.show { display: block; }
+  .explanation strong { color: #0d47a1; }
+
+  /* Navigation */
+  .nav-row {
+    display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;
+  }
+  .nav-btn {
+    flex: 1; padding: 10px 6px; border: none; border-radius: 8px;
+    font-size: 0.82rem; font-weight: 600; cursor: pointer;
+  }
+  .btn-skip   { background: #ff8f00; color: #fff; }
+  .btn-next   { background: #1565c0; color: #fff; }
+  .btn-prev   { background: #546e7a; color: #fff; }
+  .btn-finish { background: #2e7d32; color: #fff; }
+
+  /* Result screen */
+  #result-screen {
+    display: none; padding: 24px 16px; text-align: center;
+  }
+  #result-screen h2 { font-size: 1.4rem; color: #1a237e; margin-bottom: 14px; }
+  .result-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px; margin-bottom: 20px;
+  }
+  .r-box { background: #fff; border-radius: 10px; padding: 14px;
+           box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+  .r-box .big { font-size: 1.8rem; font-weight: 800; }
+  .r-box .sm  { font-size: 0.75rem; color: #666; }
+  .r-box.c { border-top: 4px solid #43a047; } .r-box.c .big { color: #2e7d32; }
+  .r-box.w { border-top: 4px solid #e53935; } .r-box.w .big { color: #c62828; }
+  .r-box.s { border-top: 4px solid #ff8f00; } .r-box.s .big { color: #e65100; }
+  .r-box.p { border-top: 4px solid #1565c0; } .r-box.p .big { color: #1565c0; }
+
+  .grade-badge {
+    display: inline-block; padding: 8px 24px;
+    border-radius: 30px; font-size: 1.1rem; font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .review-btn {
+    background: #1a237e; color: #fff; border: none;
+    border-radius: 10px; padding: 12px 28px;
+    font-size: 0.95rem; font-weight: 600; cursor: pointer; margin-top: 8px;
+  }
+  .restart-btn {
+    background: #43a047; color: #fff; border: none;
+    border-radius: 10px; padding: 12px 28px;
+    font-size: 0.95rem; font-weight: 600; cursor: pointer; margin-top: 8px; margin-left: 8px;
+  }
+
+  /* Review mode */
+  #review-screen { display: none; padding: 14px; }
+  .review-card {
+    background: #fff; border-radius: 10px;
+    box-shadow: 0 2px 7px rgba(0,0,0,0.09);
+    padding: 13px 15px; margin-bottom: 12px;
+  }
+  .review-card .r-meta { font-size: 0.7rem; color: #888; margin-bottom: 4px; }
+  .review-card .r-q    { font-size: 0.88rem; font-weight: 600; margin-bottom: 8px; }
+  .review-tag {
+    display: inline-block; font-size: 0.7rem; font-weight: 700;
+    border-radius: 4px; padding: 2px 8px; margin-bottom: 6px;
+  }
+  .tag-c { background: #e8f5e9; color: #2e7d32; }
+  .tag-w { background: #ffebee; color: #c62828; }
+  .tag-s { background: #fff8e1; color: #e65100; }
+  .r-ans { font-size: 0.8rem; margin-bottom: 4px; }
+  .r-exp { font-size: 0.78rem; background: #e3f2fd; border-left: 3px solid #1565c0;
+           padding: 7px 10px; border-radius: 5px; line-height: 1.5; margin-top: 6px; }
+  .back-btn {
+    background: #546e7a; color: #fff; border: none;
+    border-radius: 10px; padding: 11px 24px;
+    font-size: 0.88rem; cursor: pointer; margin-bottom: 14px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>⚡ Power Plant Quiz — Part 3</h1>
+  <p>Sections: Nuclear (Q32–54) • Diesel • Gas Turbine • Combined Working • Non-Conventional (Q1–39)</p>
+</header>
+
+<div id="progress-wrap"><div id="progress-bar"></div></div>
+
+<div id="dashboard">
+  <div class="dash-box correct">  <div class="num" id="d-correct">0</div><div class="lbl">Correct</div></div>
+  <div class="dash-box wrong">   <div class="num" id="d-wrong">0</div> <div class="lbl">Wrong</div></div>
+  <div class="dash-box skipped"> <div class="num" id="d-skip">0</div>  <div class="lbl">Skipped</div></div>
+  <div class="dash-box score">   <div class="num" id="d-score">0%</div><div class="lbl">Score</div></div>
+  <div class="dash-box">         <div class="num" id="d-qno">1/141</div><div class="lbl">Question</div></div>
+</div>
+
+<div id="quiz-area"></div>
+<div id="result-screen"></div>
+<div id="review-screen"></div>
+
+<script>
+const questions = [
+  // ── SECTION IV: Nuclear Power Plant (Q32–54) ────────────────────────────
+  {s:"Nuclear Power Plant",n:32,
+   q:"Which one is NOT a commonly used coolant for fast breeder reactor?",
+   o:["Water","Liquid metal","Helium","Carbon dioxide"],a:0,
+   e:"Water coolant is not commonly used for rapid breeder reactors. Liquid metal, helium and carbon dioxide are used as coolants in fast breeder reactors. The most suitable fluid is sodium coolant."},
+
+  {s:"Nuclear Power Plant",n:33,
+   q:"Which of the following terms is associated specifically with nuclear power plants only?",
+   o:["Electrostatic precipitator","Induced draught fan","Breeder reactor","Superheater"],a:2,
+   e:"Breeder reactors are type of nuclear reactors that produce more nuclear fuels than they consume to generate energy. Electrostatic precipitator, superheater and induced draught fan are constituents of steam power plant."},
+
+  {s:"Nuclear Power Plant",n:34,
+   q:"A moderator is an essential part of which type of power plant?",
+   o:["Hydro electric power plant","Thermal power plant","Nuclear power plant","Gas power plant"],a:2,
+   e:"The moderator of a nuclear reactor is a substance that slows down neutrons. The most commonly used moderator materials are graphite and heavy water (D₂O). Moderator is essential only in nuclear power plant."},
+
+  {s:"Nuclear Power Plant",n:35,
+   q:"The main atomic fuel commonly used in a nuclear power plant is:",
+   o:["U²³⁵","PU²³⁹","TH²³²","U²³³"],a:0,
+   e:"Uranium (U²³⁵) is the most widely used fuel by nuclear power plants for nuclear fission. Nuclear power plants use a certain type of uranium U²³⁵ as fuel because its atoms are easily split apart."},
+
+  {s:"Nuclear Power Plant",n:36,
+   q:"Choose the correct schematic arrangement of nuclear power station.",
+   o:["Nuclear reactor → heat exchanger → steam turbine → alternator","Steam turbine → alternator → heat exchanger → nuclear reactor","Steam turbine → heat exchanger → alternator → nuclear reactor","Alternator → heat exchanger → nuclear reactor → steam turbine"],a:0,
+   e:"Correct arrangement: Nuclear reactor → Heat Exchanger (steam produced) → Steam Turbine → Alternator (electricity generated). The condenser then converts exhaust steam back to water via a pump."},
+
+  {s:"Nuclear Power Plant",n:37,
+   q:"Which of the following radioactive byproducts releases from nuclear reaction?",
+   o:["All of these","Cesium","Tritium","Strontium"],a:0,
+   e:"In the process of nuclear reaction, radioactive byproducts such as Cesium, Tritium and Strontium are released. All three are radioactive materials produced as fission products."},
+
+  {s:"Nuclear Power Plant",n:38,
+   q:"If the decay constant of radium is 1.3566×10⁻¹¹ s⁻¹, find its half-life.",
+   o:["1000 year","1620 year","1785 year","1467 year"],a:1,
+   e:"Half-life T½ = 0.693/λ = 0.693/(1.3566×10⁻¹¹) seconds = 0.5108×10¹¹ seconds. Converting: 0.5108×10¹¹/(60×60×24×365) ≈ 1620 years."},
+
+  {s:"Nuclear Power Plant",n:39,
+   q:"Isotopes of an element have:",
+   o:["Same atomic number","Different mass number","Same chemical properties","All of these"],a:3,
+   e:"Isotopes are atoms of the same element that differ in their number of neutrons. They have: same atomic number (same protons), different mass number (different neutrons), and same chemical properties (same electrons). All statements are correct."},
+
+  {s:"Nuclear Power Plant",n:40,
+   q:"Elements which have same number of protons but different number of neutrons are called as:",
+   o:["Isotopes","Isomers","Allotropes","Allomers"],a:0,
+   e:"Isotopes are atoms of the same element that have different numbers of neutrons but the same number of protons and electrons. Atomic Number (Z) = Number of Protons (P). Example: Hydrogen has isotopes – Protium, Deuterium, Tritium."},
+
+  {s:"Nuclear Power Plant",n:41,
+   q:"In the nuclear power station, energy is produced by:",
+   o:["Nuclear fission of Uranium (U²³⁵)","Nuclear fusion of Uranium (U²³⁵)","Nuclear reaction of Uranium (U²³⁰)","Nuclear fusion of Uranium (U²³⁰)"],a:0,
+   e:"In nuclear power stations, energy is produced by nuclear fission of Uranium (U²³⁵). When a neutron strikes U²³⁵, the nucleus splits, releasing ~200 MeV of energy along with more neutrons, sustaining a chain reaction."},
+
+  {s:"Nuclear Power Plant",n:42,
+   q:"Atomic/nuclear power stations are located at all of the following EXCEPT:",
+   o:["Tarapur near Mumbai","Ranapratap, Kota (Rajasthan)","Madras Atomic, Kalpakkam (Tamil Nadu)","All of above are correct locations"],a:3,
+   e:"All three locations are correct: (1) Tarapur Atomic Power Station near Mumbai, (2) Ranapratap Atomic Power Station at Kota, Rajasthan, (3) Madras Atomic Power Station at Kalpakkam, Tamil Nadu."},
+
+  {s:"Nuclear Power Plant",n:43,
+   q:"Which of these statements about nuclear fission are correct? 1) Nuclear fission occurs whenever Uranium reacts with a neutron. 2) Fission is accompanied by release of neutrons and gamma rays. 3) About 200 MeV energy is released in fission of U²³⁵. 4) Energy released mainly as kinetic energy of neutrons and gamma radiation.",
+   o:["1, 2, 3 and 4 only","3 and 4 only","2, 3 and 4 only","1, 2 and 4 only"],a:0,
+   e:"All four statements are correct: U²³⁵ + n → fission products + 3n + γ-rays + ~200 MeV. Fission occurs when neutron strikes U²³⁵; it releases neutrons and gamma rays; about 200 MeV is released; and this energy appears mainly as kinetic energy of fission fragments, neutrons and gamma radiation."},
+
+  {s:"Nuclear Power Plant",n:44,
+   q:"An isotope without any neutron is:",
+   o:["Tritium","Deuterium","Protium","None of these"],a:2,
+   e:"Protium (¹H) is the simplest atom — it contains a single proton, a single electron, and NO neutrons. It is the only stable atom with no neutron. Deuterium has 1 neutron; Tritium has 2 neutrons."},
+
+  {s:"Nuclear Power Plant",n:45,
+   q:"Uranium (Z=92, A=238) emits an α particle. The product has A and Z:",
+   o:["236, 92","234, 90","238, 90","236, 90"],a:1,
+   e:"An α particle is ₂He⁴. When emitted: Atomic number (Z) decreases by 2: 92−2 = 90. Mass number (A) decreases by 4: 238−4 = 234. So the product is ₉₀Th²³⁴ (Thorium-234)."},
+
+  {s:"Nuclear Power Plant",n:46,
+   q:"In what form is the initial energy released (200 MeV per fission) in a slow thermal nuclear reactor?",
+   o:["Heat energy","Electromagnetic radiation","Kinetic energy of particles and electromagnetic radiation","Kinetic and sound energy"],a:2,
+   e:"Energy from fission of uranium nucleus is released mainly as kinetic energy of the neutrons and fission fragments, plus gamma radiation (electromagnetic radiation). So it is kinetic energy of particles AND electromagnetic radiation combined."},
+
+  {s:"Nuclear Power Plant",n:47,
+   q:"Most penetrating radiation of radioactive element is:",
+   o:["α rays","γ rays","β rays","X rays"],a:1,
+   e:"γ (gamma) rays are the most penetrating radioactive rays of any radioactive element. γ rays are electrically neutral, travel at the speed of light, and are very short wavelength electromagnetic waves. α rays are least penetrating; β rays are intermediate."},
+
+  {s:"Nuclear Power Plant",n:48,
+   q:"The power output of a nuclear power station is proportional to:",
+   o:["The rate at which fission reaction occurs","Square root of the rate at which fission reaction occurs","Square of the rate at which fission reaction occurs","None"],a:0,
+   e:"The power output of a nuclear power station is directly proportional to the rate at which fission reactions occur. More fissions per second → more heat generated → more steam → more electrical power output."},
+
+  {s:"Nuclear Power Plant",n:49,
+   q:"Solar radiation is 200 J/m² per unit time. Find the area of PV cells needed to generate power for: desktop 400W, geyser 1kW, toaster 500W. Assume PV efficiency 25%.",
+   o:["38 m²","8 m²","5 m²","20 m²"],a:0,
+   e:"Total output power = 400+1000+500 = 1900 W. Using: Total area = Total output power / (η% × Solar radiation) = 1900 / (0.25 × 200) = 1900/50 = 38 m²."},
+
+  {s:"Nuclear Power Plant",n:50,
+   q:"Which of the following is NOT essential in a nuclear-fueled power producing system?",
+   o:["Equipment to convert thermal energy to electric power","A coolant system to remove the heat produced","A coolant system to transfer the heat produced","A controlled fusion heat source"],a:3,
+   e:"A controlled FUSION heat source is NOT essential in nuclear power plants. Nuclear plants use FISSION (not fusion). Essential components are: reactor (fission heat source), coolant system, heat exchanger, turbine-generator, and control systems."},
+
+  {s:"Nuclear Power Plant",n:51,
+   q:"1 kg of atomic material (uranium) can produce as much energy as produced by burning:",
+   o:["300 tonnes of high grade coal","3,300 tonnes of high grade coal","3,000 tonnes of high grade coal","30,000 tonnes of high grade coal"],a:2,
+   e:"1 kg of uranium can produce as much energy as burning 3,000 tonnes of high grade coal. This enormous energy density is the key advantage of nuclear fuel — very small mass of fuel produces massive energy via fission."},
+
+  {s:"Nuclear Power Plant",n:52,
+   q:"Which of the following is an advantage of nuclear power plants?",
+   o:["The maintenance cost is always low","Its capital cost is always high","Its operation is more reliable","The disposal of fission products is smooth"],a:2,
+   e:"Advantages of nuclear power plants: low greenhouse gas emission, powerful and efficient, highly reliable operation, low fuel cost. Note: capital cost is high (not an advantage), maintenance cost is also high, and disposal of fission products is a major challenge."},
+
+  {s:"Nuclear Power Plant",n:53,
+   q:"______ is not one of the main components of a nuclear power plant.",
+   o:["Steam generator","Extender","Nuclear reactor","Electric generator"],a:1,
+   e:"'Extender' is not a component of a nuclear power plant. Main components are: Fuel, Moderator, Coolant, Pressure tube, Control rods, Steam generator, Nuclear reactor, Electric generator."},
+
+  {s:"Nuclear Power Plant",n:54,
+   q:"Three mutual conversions of energy forms occur at nuclear power plants. They are:",
+   o:["Nuclear→thermal→heat→electric energy","Chemical→nuclear→mechanical→electric energy","Nuclear→thermal→mechanical→electric energy","Nuclear→chemical→mechanical→electric energy"],a:2,
+   e:"Three mutual conversions at nuclear power plant: 1) Nuclear energy (fission) → Thermal energy (heat in reactor), 2) Thermal energy → Mechanical energy (steam drives turbine), 3) Mechanical energy → Electrical energy (generator). So: Nuclear → Thermal → Mechanical → Electric."},
+
+  // ── SECTION V: Diesel Engine Power Plant ────────────────────────────────
+  {s:"Diesel Engine Power Plant",n:1,
+   q:"The expression for efficiency of a heat engine converter is defined by:",
+   o:["Heat in / Work out","Work out / Heat in","Heat rejected / Fuel in","Heat rejected / Heat in"],a:1,
+   e:"Efficiency is always expressed as the ratio of useful output to input. For a heat engine: Efficiency = Work out / Heat in. This is the fundamental thermodynamic efficiency definition."},
+
+  {s:"Diesel Engine Power Plant",n:2,
+   q:"For a diesel generating station, the useful life is expected to be around:",
+   o:["20 to 50 years","15 to 20 years","50 to 75 years","75 to 100 years"],a:1,
+   e:"The useful life of a diesel generating station is 15 to 20 years. For comparison: hydroelectric power generating station ≈ 50 years; thermal power plant ≈ 25 years."},
+
+  {s:"Diesel Engine Power Plant",n:3,
+   q:"With respect to liquid fuels, which statement is INCORRECT?",
+   o:["The combustion of liquid fuels is uniform","The handling of liquid fuels is easier and they require less storage space","Liquid fuels leave very large quantity of ash after burning as compared to solid fuels","The firing of liquid fuels can be easily controlled"],a:2,
+   e:"Liquid fuels (petroleum products) leave very LITTLE ash after burning, not a large quantity. Solid fuels like coal leave large amounts of ash. Liquid fuels burn cleanly. All other options correctly describe liquid fuel properties."},
+
+  {s:"Diesel Engine Power Plant",n:4,
+   q:"What is the ranging capacity of the diesel plant?",
+   o:["100–1175 kW","150–750 kW","150–4500 kW","75–3750 kW"],a:3,
+   e:"The ranging capacity of a diesel power plant is 75–3750 kW. A generating station in which diesel engine is used as the prime mover for the generation of electrical energy is known as a diesel power station."},
+
+  {s:"Diesel Engine Power Plant",n:5,
+   q:"A diesel engine power plant has one 700 kW and two 500 kW generating units. Fuel consumption = 0.25 kg/kWh. Plant capacity factor = 40%. Estimate the fuel oil required per day.",
+   o:["4080 kg","4000 kg","4209 kg","5230 kg"],a:0,
+   e:"Total energy for 24hrs = (700 + 2×500) × 24 = 1700×24 = 40800 kWh. Fuel consumption = 40800 × 0.25 = 10200 kg. Fuel oil required = 10200 × plant capacity factor = 10200 × 0.4 = 4080 kg."},
+
+  {s:"Diesel Engine Power Plant",n:6,
+   q:"A diesel power station has fuel consumption of 0.215 kg/kWh; calorific value of fuel = 10,000 kcal/kg. Determine the overall efficiency.",
+   o:["40%","30%","45%","55%"],a:0,
+   e:"Heat equivalent of 1 kWh = 860 kcal. Electrical output = 860 kcal/kWh. Heat of combustion = 10,000 × 0.215 = 2150 kcal/kWh. Overall efficiency = (860/2150) × 100 = 40%."},
+
+  {s:"Diesel Engine Power Plant",n:7,
+   q:"Which of the following power plants has the highest running cost?",
+   o:["Diesel power plant","Hydro power plant","Thermal power plant","Gas power plant"],a:0,
+   e:"Running cost order (highest to lowest): Diesel > Thermal > Nuclear > Hydro. Diesel fuel is very expensive compared to coal, making diesel power plants economically unsuitable for base load. They are used only for emergency/standby/peak load."},
+
+  {s:"Diesel Engine Power Plant",n:8,
+   q:"A diesel plant has good efficiency at:",
+   o:["Plant load","Half load","Full load","None of the above"],a:2,
+   e:"Diesel power plants have good efficiency at FULL LOAD. Advantages: simple design, requires very small space, can be designed for portable use, and has quick starting facility — small diesel generators can be started within seconds."},
+
+  {s:"Diesel Engine Power Plant",n:9,
+   q:"Mechanical efficiency of a diesel engine is defined as:",
+   o:["BHP/IHP","IHP/BHP","IHP−BHP","BHP×IHP"],a:0,
+   e:"Mechanical efficiency ηm = BHP/IHP, where BHP = Brake Horse Power (useful output at shaft) and IHP = Indicated Horse Power (power developed in cylinder). BHP is always less than IHP due to friction losses."},
+
+  {s:"Diesel Engine Power Plant",n:10,
+   q:"A diesel power station spends 0.25 kg/kWh fuel; calorific value = 10,000 kcal/kg. What is the overall efficiency?",
+   o:["25%","30%","34.4%","100%"],a:2,
+   e:"Heat of combustion = 10000 × 0.25 = 2500 kcal/kWh. Electrical output = 860 kcal/kWh. Overall efficiency = (860/2500) × 100 = 34.4%."},
+
+  {s:"Diesel Engine Power Plant",n:11,
+   q:"A diesel power station has fuel consumption 0.28 kg/kWh; calorific value = 10,000 kcal/kg; heat equivalent 1 kWh = 860 kcal. The overall efficiency is:",
+   o:["45.8%","53.2%","65.7%","30.7%"],a:3,
+   e:"Heat of combustion = 10000 × 0.28 = 2800 kcal/kWh. Overall efficiency = (860/2800) × 100 = 30.7%."},
+
+  {s:"Diesel Engine Power Plant",n:12,
+   q:"In a diesel engine, the governor controls the:",
+   o:["Fuel flow rate","Fuel temperature","Fuel pressure","Fuel volume"],a:0,
+   e:"In a diesel engine, the governor controls the fuel flow rate to maintain constant speed of the shaft regardless of the load imposed on the generator. Governor ensures the engine runs at constant rated speed."},
+
+  {s:"Diesel Engine Power Plant",n:13,
+   q:"Usually, diesel power station is used where demand of power is:",
+   o:["Very high","High","None of these","Less"],a:3,
+   e:"Diesel power station is used where demand of power is LESS, due to high running cost. It is mostly used as: emergency supply station, standby station for important loads, and for remote locations where other power sources are unavailable."},
+
+  {s:"Diesel Engine Power Plant",n:14,
+   q:"Which type of power station can be located at any place?",
+   o:["Diesel power station","Nuclear power station","Hydroelectric power station","Steam power station"],a:0,
+   e:"Diesel power station can be located at any place because it is small in size, uses stored liquid fuel (no need for water/coal supply), needs no large infrastructure, and can be easily transported and installed anywhere."},
+
+  {s:"Diesel Engine Power Plant",n:15,
+   q:"What is the efficiency of diesel power station?",
+   o:["53–56%","22–27%","85–90%","35–42%"],a:3,
+   e:"The efficiency of a Diesel Power Station is 35–42%. Comparison: Hydro power plant: 85–95%; Nuclear power plant: 30–37%; Steam power plant: 29%; Gas power plant: 40%."},
+
+  {s:"Diesel Engine Power Plant",n:16,
+   q:"Which of the following part is NOT used in diesel power station?",
+   o:["Lubricating system","Fuel supply system","Steam generating system","Intake air system"],a:2,
+   e:"Steam generating system is NOT part of diesel power station — that belongs to thermal/steam power plants. Diesel power station auxiliary systems include: lubricating system, fuel supply system, intake air system, exhaust system, and cooling system."},
+
+  {s:"Diesel Engine Power Plant",n:17,
+   q:"A diesel power station: fuel consumption = 0.28 kg/kWh, calorific value = 10,000 kcal/kg, alternator efficiency = 95%. Determine efficiency of the engine.",
+   o:["30.7%","32.3%","63%","28%"],a:1,
+   e:"Overall efficiency = 860/2800 = 0.307. Since: Overall efficiency = engine efficiency × alternator efficiency. Engine efficiency = 0.307/0.95 = 0.323 = 32.3%."},
+
+  {s:"Diesel Engine Power Plant",n:18,
+   q:"Which of the following fuel has least calorific value?",
+   o:["LPG","Hydrogen","Wood","Kerosene oil"],a:2,
+   e:"Wood has the lowest calorific value among the options. Calorific value comparison: Hydrogen (~34,000 kcal/kg) > LPG (~11,900 kcal/kg) > Kerosene (~10,500 kcal/kg) > Wood (~3,500–4,500 kcal/kg)."},
+
+  {s:"Diesel Engine Power Plant",n:19,
+   q:"Which type of product is used to make insulation in spark plugs?",
+   o:["Nickel alloy","None of these","Porcelain","Glass fiber"],a:2,
+   e:"Porcelain insulation is used in spark plugs. A spark plug delivers electric current from the ignition system to the combustion chamber. Porcelain (ceramic) provides excellent electrical insulation, high temperature resistance, and mechanical strength."},
+
+  {s:"Diesel Engine Power Plant",n:20,
+   q:"Which of the following is NOT part of a diesel engine power plant?",
+   o:["Cooling tower","Penstock","Oil pump","Strainer"],a:1,
+   e:"Penstock is NOT part of a diesel power plant — it is a component of hydro power plant (pipe carrying water to turbines). Diesel power plant components include: diesel engine, alternator, cooling system, fuel system, lubricating system, air intake system, exhaust system."},
+
+  {s:"Diesel Engine Power Plant",n:21,
+   q:"The mechanical heart of a diesel engine is the:",
+   o:["Engine starting system","Fuel injection system","Air intake system","Exhaust system"],a:1,
+   e:"The fuel injection system is called the mechanical heart of a diesel engine. By pressurising and injecting the fuel, the system forces it into air that has been compressed to high pressure in the combustion chamber, enabling efficient combustion."},
+
+  {s:"Diesel Engine Power Plant",n:22,
+   q:"________ is NOT one of the application fields of a diesel power plant.",
+   o:["Central stations with capacity of 10–50 MW","Mobile plants","Standby units","Peak load plant"],a:0,
+   e:"'Central stations with capacity of 10–50 MW' is NOT a correct application. Diesel power plants are used for: mobile plants (portable power), standby/emergency units, peak load plants, and central stations with small capacity of 2 to 50 MW (not 10-50 MW as stated)."},
+
+  {s:"Diesel Engine Power Plant",n:23,
+   q:"Gas/diesel/pumped storage plants are used as:",
+   o:["Base load plants","Peak load plant","Both (a) and (b)","None of these"],a:1,
+   e:"Gas, diesel and pumped storage plants are used as PEAK LOAD plants. They can start quickly and shut down quickly to meet peak demands. Base load is relatively stable; peak load is higher demand for shorter periods and is far less predictable."},
+
+  // ── SECTION VI: Gas Turbine Power Plant ─────────────────────────────────
+  {s:"Gas Turbine Power Plant",n:1,
+   q:"Which application is INCORRECT for gas turbine plants in power plant engineering?",
+   o:["To work as combination plants with conventional steam boilers","To supply mechanical drive of auxiliaries","To drive generators and supply peak load in steam, diesel or hydro plants","To act as good part load efficiency power plant"],a:3,
+   e:"Gas turbines have POOR part load efficiency — this is actually a disadvantage. Correct applications are: combination with steam boilers (combined cycle), driving auxiliaries, and supplying peak load. Good part load efficiency is NOT an application of gas turbines."},
+
+  {s:"Gas Turbine Power Plant",n:2,
+   q:"Which of the following power plants has the lowest initial cost?",
+   o:["Hydel power plant","Thermal power plant","Gas power plant","Nuclear power plant"],a:2,
+   e:"Initial cost order (lowest to highest): Gas power plant < Diesel power plant < Steam/Thermal power plant < Nuclear power plant < Hydro power plant. Gas turbine plants have lowest initial cost because they have fewer components and simpler construction."},
+
+  {s:"Gas Turbine Power Plant",n:3,
+   q:"Working fluid in a gas turbine plant is generally compressed in which compressor?",
+   o:["Reciprocating, single stage","Reciprocating, multi stage","Rotary, single stage","Rotary, multi stage"],a:3,
+   e:"Working fluid in a gas turbine plant is compressed in a ROTARY, MULTI-STAGE compressor. Rotary (axial or centrifugal) compressors are used because they can handle large volumes of air at high speed, which is required for gas turbine operation."},
+
+  {s:"Gas Turbine Power Plant",n:4,
+   q:"A gas turbine power plant is best suited for:",
+   o:["Base load","Peak load","Emergency purpose","None of the above"],a:1,
+   e:"A gas turbine power plant is most suitable for PEAK LOADS. Reasons: quick start capability (can be started in minutes), fast response to load changes, no warm-up period needed, and relatively easy shutdown."},
+
+  {s:"Gas Turbine Power Plant",n:5,
+   q:"Why is a regenerator used in a gas turbine power plant?",
+   o:["To produce extra heat","To produce high pressure in chamber","To produce high temperature","To recover heat from exhaust gases"],a:3,
+   e:"A regenerator in gas turbine power plants recovers heat from the exhaust gases and uses it to preheat the compressed air before entering the combustor. This increases thermal efficiency and power output by reducing fuel consumption."},
+
+  {s:"Gas Turbine Power Plant",n:6,
+   q:"What is used as a prime mover in gas turbine plant?",
+   o:["Gas turbine","Diesel","Water","Pelton turbine"],a:0,
+   e:"Gas turbine is used as prime mover in gas turbine power plant. A turbine is a machine with blades that rotates the shaft. Prime movers are machines (gas turbines, steam turbines, electric motors) connected to a power generator to generate power."},
+
+  {s:"Gas Turbine Power Plant",n:7,
+   q:"Capital cost of a gas turbine plant is _______ than that of a steam power plant of same capacity.",
+   o:["Same","Less","More","Irrelevant"],a:1,
+   e:"The capital cost of a gas turbine plant is LESS than that of a steam power plant of same capacity. This is because gas turbine plants don't need boilers, complex steam systems, condensers, or large cooling water arrangements."},
+
+  {s:"Gas Turbine Power Plant",n:8,
+   q:"A gas turbine works on:",
+   o:["Carnot cycle","Brayton cycle","Dual cycle","Rankine cycle"],a:1,
+   e:"Gas turbines work on the BRAYTON cycle (also called the Joule cycle). In this cycle, air is compressed, mixed with fuel, burned at constant pressure, and the hot gases expand through the turbine producing work. Rankine cycle is for steam; Carnot is theoretical maximum efficiency cycle."},
+
+  {s:"Gas Turbine Power Plant",n:9,
+   q:"Which is NOT an advantage of gas turbine power plants over diesel power plants?",
+   o:["Poor quality fuels can be used","Good part load efficiency","Less space requirements","Capital cost considerably less"],a:1,
+   e:"'Good part load efficiency' is NOT an advantage of gas turbines over diesel plants — gas turbines actually have POOR part load efficiency. Advantages of gas turbines over diesel: can use poor quality fuels, less space, lower capital cost, longer life, higher mechanical efficiency, and larger work per kg of air."},
+
+  {s:"Gas Turbine Power Plant",n:10,
+   q:"Which point should NOT be given due consideration while selecting the site for a gas turbine plant?",
+   o:["The distance from the nearest power plant","Availability of labour","The bearing capacity of the land should be high","Availability of means of transport"],a:0,
+   e:"'Distance from nearest power plant' should NOT be a primary consideration for site selection. Important factors for gas turbine plant site: proximity to load centre (minimise transmission losses), availability of labour, bearing capacity of land, and availability of transport for fuel."},
+
+  {s:"Gas Turbine Power Plant",n:11,
+   q:"A simple gas turbine plant does NOT consist of:",
+   o:["The combustor","Auxiliaries such as starting device, fuel system, oil system","Turbine","An expander mounted on the same shaft"],a:3,
+   e:"A simple gas turbine plant consists of: (1) reaction type non-condensing turbine, (2) a compressor mounted on the same shaft, (3) the combustion chamber, (4) auxiliaries. An 'expander mounted on the same shaft' as a separate component is NOT a correct description — the turbine itself is the expander."},
+
+  {s:"Gas Turbine Power Plant",n:12,
+   q:"Which is an INCORRECT advantage of gas turbine power plant over steam power plants?",
+   o:["Gas turbine plant as peak load plant is more preferable as it can be brought on load quickly","Storage of fuel is much smaller and handling is easy","The thermal efficiency of gas turbine plant increased below 550°C","Gas turbine plants can work economically for short running hours"],a:2,
+   e:"'Thermal efficiency of gas turbine plant increased BELOW 550°C' is INCORRECT — thermal efficiency of gas turbine plants actually DECREASES below 550°C. Above 550°C is where gas turbines are thermally efficient. All other options are correct advantages."},
+
+  {s:"Gas Turbine Power Plant",n:13,
+   q:"Which is an INCORRECT advantage of gas turbine power plants over diesel power plants?",
+   o:["Gas turbine power plants have lower installation and maintenance cost","The work developed per kg of air is large","Gas turbine power plants have a comparatively longer life","Gas turbine power plants display higher mechanical efficiency"],a:2,
+   e:"'Gas turbine power plants have a comparatively LONGER life' is INCORRECT. Gas turbines actually have SHORTER life than diesel power plants due to high-temperature operation causing thermal fatigue and blade erosion. All other options correctly describe gas turbine advantages over diesel."},
+
+  {s:"Gas Turbine Power Plant",n:14,
+   q:"Carnot cycle comprises of:",
+   o:["Two isothermal processes and three constant pressure processes","Two isothermal processes and two constant pressure processes","Two isentropic processes and two constant volume processes","Two isentropic processes and two constant pressure processes"],a:3,
+   e:"The Carnot cycle consists of: (1) Isothermal expansion (heat addition), (2) Adiabatic/Isentropic expansion, (3) Isothermal compression (heat rejection), (4) Adiabatic/Isentropic compression. So it has two isothermal AND two isentropic (adiabatic) processes. The constant pressure description here refers to the isothermal processes in terms of their boundary conditions."},
+
+  // ── SECTION VII: Combined Working of Power Plant ─────────────────────────
+  {s:"Combined Working of Power Plants",n:1,
+   q:"Choose the INCORRECT statement with respect to solid fuels and liquid fuels used in power generation.",
+   o:["Liquid fuels require special types of burners for burning","The waste product of solid fuels is a large quantity of ash","Handling of solid fuels is easier, and they require less storage space","Solid fuels have higher percentage of moisture and consequently burn with great difficulty"],a:2,
+   e:"'Handling of solid fuels is easier and requires less storage space' is INCORRECT. Actually, liquid fuels are easier to handle and require less storage space. Solid fuels (coal, wood) require large storage areas, mechanical handling systems, and are more difficult to manage."},
+
+  {s:"Combined Working of Power Plants",n:2,
+   q:"In a power station with multiple generator units in parallel, when load changes, system frequency is controlled by:",
+   o:["Adjusting the steam input to the units","Adjusting the field excitation of the generators","Changing the load divisions between the units","Injecting reactive power at the station bus-bar"],a:0,
+   e:"When load changes, system frequency is controlled by adjusting the STEAM INPUT to the turbine units. More load → more steam needed → governor opens steam valve → more generation → frequency maintained. Field excitation controls voltage, not frequency."},
+
+  {s:"Combined Working of Power Plants",n:3,
+   q:"Power generated by two plants: P₁=50 MW, P₂=40 MW. Loss coefficients: B₁₁=0.001, B₂₂=0.0025, B₁₂=−0.0005. Power loss will be:",
+   o:["5.5 MW","6.5 MW","4.5 MW","8.5 MW"],a:2,
+   e:"PL = B₁₁P₁² + 2B₁₂P₁P₂ + B₂₂P₂² = 0.001×(50)² + 2×(−0.0005)×50×40 + 0.0025×(40)² = 2.5 + (−2) + 4 = 4.5 MW."},
+
+  {s:"Combined Working of Power Plants",n:4,
+   q:"Pumped storage plants in interconnected power systems serve to: 1) Increase load factor of steam plant. 2) Provide added capacity to meet peak loads. 3) Decrease load factor of steam plant. 4) Provide added capacity to meet base loads.",
+   o:["1, 2, 3 and 4","1 and 3 only","1 and 2 only","3 and 4 only"],a:2,
+   e:"Pumped storage plants: (1) INCREASE load factor of steam plant — during off-peak, steam plant runs at full capacity to pump water; (2) Provide added capacity to MEET PEAK LOADS — stored water releases through turbines during peak demand. Statements 3 and 4 are incorrect."},
+
+  {s:"Combined Working of Power Plants",n:5,
+   q:"Compressor used in gas turbines is:",
+   o:["Reciprocating compressor","Plunger type compressor","Screw compressor","Multistage axial flow compressor"],a:3,
+   e:"Multistage axial flow compressor is used in gas turbines. Axial compressors are used in medium-to-large thrust gas turbine engines because the alternative centrifugal unit would be too heavy and too large in cross-sectional area. Multiple stages provide high compression ratio."},
+
+  {s:"Combined Working of Power Plants",n:6,
+   q:"A 'Pumped storage hydro-electric plant' consists of:",
+   o:["A synchronous machine and a multistage centrifugal pump on one shaft","A synchronous machine, a reaction turbine, and a multistage centrifugal pump all on one shaft","An induction generator, a synchronous machine and a reaction turbine, all on one shaft","An induction generator, a synchronous machine, and a multistage centrifugal pump, all on one shaft"],a:1,
+   e:"A pumped storage hydro-electric plant consists of a synchronous machine (acts as generator or motor), a reaction turbine (acts as turbine or pump-turbine), and a multistage centrifugal pump, all on one shaft. During peak hours it generates; during off-peak it pumps water up."},
+
+  {s:"Combined Working of Power Plants",n:7,
+   q:"What is the effect of interconnecting power stations?",
+   o:["It reduces the overall cost of power supply by reducing spare generating capacity and increasing reliability","It increases overall cost","It has no appreciable cost benefit to stations","None of the above"],a:0,
+   e:"Interconnecting power stations: reduces overall cost by reducing spare generating capacity needed, increases reliability through mutual support, allows better load sharing, enables diverse generation mix (hydro, thermal, nuclear), and improves load frequency control."},
+
+  {s:"Combined Working of Power Plants",n:8,
+   q:"When a 'pumped storage' power plant is operated in conjunction with a steam power plant:",
+   o:["The operating cost of the steam plant becomes optimum","Load factor of the steam plant is increased","Chances of tripping of the system decrease because of heterogeneous plant types","Operation of storage plant in pumping-mode during low-load period improves steam-plant stability"],a:1,
+   e:"When pumped storage operates with steam plant: During low-load (off-peak) period, pumped storage pumps water up using excess steam plant generation → steam plant operates closer to full load → LOAD FACTOR of steam plant is INCREASED. This improves overall economics."},
+
+  {s:"Combined Working of Power Plants",n:9,
+   q:"Combined cycle power plants may need:",
+   o:["MHD generator","Thermionic converter","Thermoelectric generator","All of the above"],a:3,
+   e:"Combined cycle power plants may incorporate: (1) MHD (Magneto-Hydro-Dynamic) generators for direct conversion of hot gas kinetic energy, (2) Thermionic converters for direct heat-to-electricity conversion, (3) Thermoelectric generators. All are used to maximize efficiency by using waste heat at different temperature levels."},
+
+  {s:"Combined Working of Power Plants",n:10,
+   q:"As per Electricity Act, __________ means a process which simultaneously produces two or more forms of useful energy (including electricity).",
+   o:["Cogeneration","Power generation","Captive Power Plant","None of the above"],a:0,
+   e:"Cogeneration (also called Combined Heat and Power, CHP) is defined as a process that simultaneously produces two or more forms of useful energy (including electricity). Example: a plant that produces both electricity and useful heat/steam from the same fuel source."},
+
+  {s:"Combined Working of Power Plants",n:11,
+   q:"The objective function to the optimisation problem in a hydro-thermal system becomes:",
+   o:["Only minimise the fuel cost of thermal plants","Only minimise the time of operation","Only minimise the water availability of hydro-generation","A, B and C"],a:0,
+   e:"In a hydro-thermal system optimisation, the objective function is to MINIMISE THE FUEL COST OF THERMAL PLANTS. Hydro generation uses water (free fuel) so the goal is to maximise hydro generation within water constraints and minimise expensive thermal fuel consumption."},
+
+  // ── SECTION VIII: Non-Conventional Sources of Energy (Q1–39) ─────────────
+  {s:"Non-Conventional Sources of Energy",n:1,
+   q:"Which of the following is NOT a parameter of solar cell data sheet?",
+   o:["Voltage at maximum power point","Short circuit voltage","Short circuit current","Current at maximum power point"],a:1,
+   e:"The solar panel datasheet includes: Short circuit current (Isc), Open circuit voltage (Voc), voltage at maximum power point (Vmp), current at maximum power point (Imp), and rated power. 'SHORT CIRCUIT VOLTAGE' is NOT a standard parameter — it does not exist as a meaningful electrical parameter."},
+
+  {s:"Non-Conventional Sources of Energy",n:2,
+   q:"Which of the following is a conventional way of generating electrical energy?",
+   o:["Tidal power","Wind power","Thermal power","Solar power"],a:2,
+   e:"Conventional energy includes power plants using fossil fuels (natural gas, coal) — Thermal power is conventional. Renewable/non-conventional: solar, wind, geothermal, biomass, small hydro, tidal. Thermal power using coal is classified as conventional (non-renewable)."},
+
+  {s:"Non-Conventional Sources of Energy",n:3,
+   q:"In fuel cell, the ________ energy is converted into electrical energy.",
+   o:["Mechanical","Chemical","Heat","Sound"],a:1,
+   e:"In a fuel cell, CHEMICAL energy is converted into electrical energy by electrochemical reaction. The cell has no moving parts. Fuel cells work like batteries but do not run down or need recharging — they generate electricity as long as fuel (usually hydrogen) is supplied."},
+
+  {s:"Non-Conventional Sources of Energy",n:4,
+   q:"Which of the following methods is used for measurement of solar radiation data?",
+   o:["Frequency meter","Power factor meter","Astrology","Numerical weather prediction"],a:3,
+   e:"Numerical Weather Prediction (NWP) data is the most common form used for solar radiation measurement. NWP focuses on taking current observations of weather and processing these data with computer models to forecast the future state of weather, including solar irradiance."},
+
+  {s:"Non-Conventional Sources of Energy",n:5,
+   q:"Which of the following is NOT a source of electrical energy generation?",
+   o:["Solar","Leaf","Wind","Coal"],a:1,
+   e:"'Leaf' cannot be used directly as a source of electrical energy generation. There is no technology currently that directly generates electricity from a leaf. Solar, wind, and coal are all established sources of electrical energy generation."},
+
+  {s:"Non-Conventional Sources of Energy",n:6,
+   q:"The energy radiated by Sun on a bright sunny day is approximately:",
+   o:["700 W/m²","800 W/m²","1 kW/m²","2 kW/m²"],a:2,
+   e:"The energy radiated by the Sun on a bright sunny day is approximately 1 kW/m² (1000 W/m²). This is the standard test condition (STC) used for rating solar panels. The actual solar constant outside Earth's atmosphere is about 1361 W/m²."},
+
+  {s:"Non-Conventional Sources of Energy",n:7,
+   q:"The instrument used for measurement of solar irradiation is:",
+   o:["Ammeter","Voltmeter","Sun meter","Pyranometer"],a:3,
+   e:"A PYRANOMETER is a type of actinometer used for measuring solar irradiance on a planar surface. It measures solar radiation flux density (W/m²) from the hemisphere above within a wavelength range of 0.3 μm to 3 μm. It does not require power to operate in basic form."},
+
+  {s:"Non-Conventional Sources of Energy",n:8,
+   q:"The battery is required in which type of solar power plant?",
+   o:["Grid connected","Standalone","Anti-islanding","LVRT"],a:1,
+   e:"A STANDALONE solar system requires batteries for energy storage. It is independent of the electricity grid, with energy produced stored in batteries for use when solar generation is insufficient. Grid-connected systems export excess power to the grid instead of storing in batteries."},
+
+  {s:"Non-Conventional Sources of Energy",n:9,
+   q:"The main reason for electricity generation using a solar power plant is:",
+   o:["High efficiency of hydro power plants","High efficiency of thermal power plants","High efficiency of nuclear power plants","Greenhouse gas emission"],a:3,
+   e:"The main reason for promoting solar power is to combat GREENHOUSE GAS EMISSIONS from conventional power plants. Solar power produces zero emissions during operation. Main greenhouse gases: CO₂, CH₄, H₂O vapor, O₃, N₂O, CFCs."},
+
+  {s:"Non-Conventional Sources of Energy",n:10,
+   q:"The basic material used for making a solar cell is:",
+   o:["Steel","Silver","Silica (Silicon)","Gold"],a:2,
+   e:"Silicon (Silica) is the basic material used for making solar cells. In 90% of solar cells, silicon is used. Types used: Crystalline Silicon (C-Si), Amorphous Silicon (a-Si). Other materials: Gallium arsenide (GaAs), Organo-metallics. Silicon is abundant, well-understood, and cost-effective."},
+
+  {s:"Non-Conventional Sources of Energy",n:11,
+   q:"In a solar PV plant, if solar array is producing energy of 136.8 Ah and daily peak sun hour is 5, what will be the PV array output current?",
+   o:["27.3 A","0.273 A","2.73 A","273 A"],a:0,
+   e:"Ampere-hour energy: Ah = I × T. Given Ah = 136.8, T = 5 hours (peak sun hours). PV array output current I = Ah/T = 136.8/5 = 27.36 A ≈ 27.3 A."},
+
+  {s:"Non-Conventional Sources of Energy",n:12,
+   q:"In solar cell manufacturing, anti-reflective coating is done:",
+   o:["For increase in heating","For reduction in reflection","For increase in reflection","For reduction in heating"],a:1,
+   e:"Anti-reflective (AR) coating is applied FOR REDUCTION IN REFLECTION. A bare silicon solar cell reflects over 30% of incident light. AR coating (silicon nitride or titanium oxide) reduces this reflection, allowing more light to be absorbed by the cell, increasing efficiency."},
+
+  {s:"Non-Conventional Sources of Energy",n:13,
+   q:"If a solar cell has more than one junction, then it is known as:",
+   o:["Multi junction solar cell","Multi current solar cell","Single junction solar cell","Multi thermal solar cell"],a:0,
+   e:"A MULTI-JUNCTION solar cell consists of several individual semiconductor junctions (sub-cells) stacked together and connected in series to obtain higher voltage. Each junction absorbs a different part of the solar spectrum. With two sub-cells, it is called a Tandem Cell."},
+
+  {s:"Non-Conventional Sources of Energy",n:14,
+   q:"Which of the following is NOT a type of system used for electricity generation?",
+   o:["Solar photovoltaic grid connected","Solar water heater","Solar photovoltaic","Solar thermal power"],a:1,
+   e:"SOLAR WATER HEATER is used to heat water, NOT for electricity generation. It converts solar energy to thermal energy for hot water supply. Solar PV (grid-connected or standalone) and Solar Thermal Power (with steam turbine) are electricity generation systems."},
+
+  {s:"Non-Conventional Sources of Energy",n:15,
+   q:"Solar efficiency can be increased by which of the following methods?",
+   o:["By adding insulating material","By reduction in carrier recombination","By providing proper cooling","By providing shading"],a:1,
+   e:"Solar efficiency is increased by REDUCTION IN CARRIER RECOMBINATION. Carrier recombination decreases the intensity of the photovoltaic process — when electrons recombine with holes before reaching the external circuit, useful current is lost. Reducing recombination increases current output and efficiency."},
+
+  {s:"Non-Conventional Sources of Energy",n:16,
+   q:"Which of the following is NOT an advantage of solar energy?",
+   o:["It is renewable","It is available free of cost","It is available in abundance","E-waste problem can be solved"],a:3,
+   e:"'E-waste problem can be solved' is NOT an advantage of solar energy — actually, disposal of old solar panels creates an emerging E-WASTE problem. Advantages of solar energy: renewable, free of cost (sunshine), available in abundance, pollution-free during operation, no moving parts."},
+
+  {s:"Non-Conventional Sources of Energy",n:17,
+   q:"The saw damage in solar cells can be removed by:",
+   o:["Water etching","Chemical etching","Thermal etching","Humidity etching"],a:1,
+   e:"CHEMICAL ETCHING (wet chemical etching in alkaline potassium hydroxide KOH solution) is used to remove saw damage from as-cut silicon wafers. This avoids expensive lapping and polishing processes and also reduces step-wise recombination losses."},
+
+  {s:"Non-Conventional Sources of Energy",n:18,
+   q:"Which of the following is NOT a utility treated in the energy audit system?",
+   o:["Steam","Electricity","Chilled Water","Wind"],a:3,
+   e:"WIND is NOT a utility treated in energy audit systems. Energy audit tracks: steam consumption, electricity consumption, chilled water, fuel consumption, water consumption, input materials, and process-related energy. Wind is an external natural resource, not an internal utility."},
+
+  {s:"Non-Conventional Sources of Energy",n:19,
+   q:"The battery in solar street light is used for:",
+   o:["Providing mechanical support","Providing strength to the pillar","Providing thermal control","Providing back up electrical power"],a:3,
+   e:"The battery in solar street light is charged during daytime and used at night for lighting — PROVIDING BACK UP ELECTRICAL POWER. This stored energy allows the street light to operate when there is no solar generation (night or cloudy periods)."},
+
+  {s:"Non-Conventional Sources of Energy",n:20,
+   q:"Which of the following electrical parameters is NOT used for energy audit?",
+   o:["Steam","Kilowatt","Power Factor","Frequency"],a:0,
+   e:"STEAM is not an electrical parameter — it is a thermal/mechanical utility. Electrical parameters used in energy audit include: Kilowatt (power), Power Factor, Frequency, Efficiency, Power Loss, kVAh consumption, and harmonic distortion."},
+
+  {s:"Non-Conventional Sources of Energy",n:21,
+   q:"The measurement for electricity is done in a grid connected solar street light system by using:",
+   o:["Voltmeter","Normal meter","Bidirectional meter","Ammeter"],a:2,
+   e:"A BIDIRECTIONAL meter is used in grid-connected solar systems. It measures: (1) Electricity IMPORTED from grid (when solar generation < load demand), (2) Electricity EXPORTED to grid (when solar generation > load demand). Data stored in separate import/export registers."},
+
+  {s:"Non-Conventional Sources of Energy",n:22,
+   q:"While installing a solar PV panel, which angle plays a significant role?",
+   o:["Meridian angle","Masdar angle","Equator angle","Azimuthal angle"],a:3,
+   e:"AZIMUTHAL ANGLE plays a significant role in solar PV panel installation. It is the compass angle of the sun as it moves through the sky east to west. At solar noon, azimuth = 0°. The sun's position can be plotted using azimuth and zenith angles, which determine optimal panel orientation."},
+
+  {s:"Non-Conventional Sources of Energy",n:23,
+   q:"In the industrial solar cell process, which gas is used for emitter diffusion?",
+   o:["KCl₃","POCl₃","H₂Cl₃","NaCl₃"],a:1,
+   e:"POCl₃ (Phosphorous Oxychloride) is used for emitter diffusion in solar cell manufacturing. It serves as a liquid dopant precursor for junction formation in P-Type silicon solar cells. Low pressure POCl₃ diffusion processes enable significant cost savings."},
+
+  {s:"Non-Conventional Sources of Energy",n:24,
+   q:"The converter used in solar PV power plants is named as:",
+   o:["Thermal inverter","Solar thermal inverter","Hydro inverter","Solar inverter"],a:3,
+   e:"A SOLAR INVERTER (or PV inverter) is the converter used in solar PV power plants. It converts the variable DC output of PV solar panels into utility frequency AC that can be fed into the commercial electrical grid or used by local off-grid electrical networks."},
+
+  {s:"Non-Conventional Sources of Energy",n:25,
+   q:"Which of the following database is NOT used for solar radiation measurement?",
+   o:["WRDC by WMO","Solar GIS","Big data centre database","Meteonorm"],a:2,
+   e:"'Big data centre database' is NOT a recognised solar radiation database. Established databases: (1) WRDC by WMO — World Radiation Data Centre, (2) Solar GIS — solar irradiance data and online apps, (3) Meteonorm — widely used solar radiation data source developed by Meteotest."},
+
+  {s:"Non-Conventional Sources of Energy",n:26,
+   q:"Under which scheme of Government of India are solar parks encouraged to be set up?",
+   o:["Solar Park Scheme","Solar PV scheme","Solar Heat Scheme","Solar Grid Scheme"],a:0,
+   e:"The Ministry of New & Renewable Energy launched the SOLAR PARK SCHEME on 12-12-2014. It proposed setting up at least 25 solar parks and ultra mega solar power projects targeting over 20,000 MW of solar power installed capacity within 5 years starting from 2014-15."},
+
+  {s:"Non-Conventional Sources of Energy",n:27,
+   q:"The efficiency of a solar cell is:",
+   o:["High","Very high","Low","Very low"],a:2,
+   e:"The efficiency of solar cells is LOW. Polycrystalline solar PV systems operate at efficiency of 13–16%; monocrystalline at 17–22%. Typical commercial solar cell efficiency is 15%. This is due to lower purity of materials, incomplete light absorption, and recombination losses."},
+
+  {s:"Non-Conventional Sources of Energy",n:28,
+   q:"Which of the following is the disadvantage of tidal energy?",
+   o:["Renewable","Inexhaustible","Constructed close to land","Predictable energy"],a:2,
+   e:"'Constructed close to land' is a DISADVANTAGE of tidal energy — tidal barrages must be built near coastlines which have high tidal ranges, limiting suitable locations. Also, they can affect marine ecosystems. Renewable, inexhaustible, and predictable energy are actually ADVANTAGES of tidal energy."},
+
+  {s:"Non-Conventional Sources of Energy",n:29,
+   q:"Photovoltaic cells are ______ materials.",
+   o:["Superconductor","Conductor","Semiconductor","Bad conductor"],a:2,
+   e:"Photovoltaic cells are SEMICONDUCTOR materials — typically silicon. When light photons hit the semiconductor, they knock electrons loose (photoelectric effect), creating electron-hole pairs that generate current. Common single junction silicon PV cell produces about 0.5–0.6 V open circuit voltage."},
+
+  {s:"Non-Conventional Sources of Energy",n:30,
+   q:"Which is a non-conventional source of energy?",
+   o:["Fossil fuels","Radioactive substances","Geothermal, ocean tides and waves","Water"],a:2,
+   e:"Geothermal energy, ocean tides, and ocean waves are NON-CONVENTIONAL (renewable) sources of energy. They are replenished by natural processes continuously, don't pollute the environment, and require less expenditure after installation. Fossil fuels and radioactive substances are conventional/non-renewable."},
+
+  {s:"Non-Conventional Sources of Energy",n:31,
+   q:"Which of the following forms of energy has long-term (next 50 years) estimated availability?",
+   o:["Low-temperature heating from solar energy","Synthetic oil and alcohols from coal","Photovoltaic production of electricity","Coal"],a:2,
+   e:"PHOTOVOLTAIC PRODUCTION OF ELECTRICITY has long-term availability because sunlight is a renewable energy source that will be available for billions of years. Coal, synthetic fuels from coal, and even low-temperature solar heating have more limited long-term prospects."},
+
+  {s:"Non-Conventional Sources of Energy",n:32,
+   q:"Which best describes or defines BIOMASS?",
+   o:["Massive living things","Inorganic matter that can be converted to fuel","Organic matter that can be converted to fuel","Petroleum"],a:2,
+   e:"BIOMASS is renewable ORGANIC MATERIAL that comes from plants and animals and can be converted into fuel. Biomass sources include: wood and wood processing waste, agricultural crops and waste materials, animal manure and human sewage. It is burned or converted to biogas/liquid fuels."},
+
+  {s:"Non-Conventional Sources of Energy",n:33,
+   q:"Which best describes or defines GEOTHERMAL ENERGY?",
+   o:["Heat energy from volcanic eruptions","Heat energy from hot springs","Heat energy from inside the earth","Heat energy from rocks on Earth's surface"],a:2,
+   e:"GEOTHERMAL ENERGY is a form of energy conversion in which HEAT ENERGY FROM INSIDE THE EARTH is captured and harnessed for cooking, bathing, space heating, electrical power generation, and other uses. It comes from the natural radioactive decay of minerals and residual heat from Earth's formation."},
+
+  {s:"Non-Conventional Sources of Energy",n:34,
+   q:"A group of solar collectors connected together is called a:",
+   o:["Solar cell","Solar array","Solar centre","Solar concentrator"],a:1,
+   e:"A group of solar panels or solar collectors connected together is called a SOLAR ARRAY. Individual photovoltaic cells → grouped into solar panels → multiple panels connected → solar array. A solar array starts with solar cells, grouped into panels, then connected as an array."},
+
+  {s:"Non-Conventional Sources of Energy",n:35,
+   q:"The main disadvantage of wind power is that:",
+   o:["It is available only in coastal areas","Wind energy systems are noisy when in operation","Large land area is required","The capacity utilization is less"],a:3,
+   e:"The MAIN disadvantage of wind power is LOW CAPACITY UTILIZATION (capacity factor typically 25–40%). Wind is intermittent — it doesn't blow at rated speed all the time. Other disadvantages: not a constant energy source, not profitable use of land, noise pollution, threat to wildlife."},
+
+  {s:"Non-Conventional Sources of Energy",n:36,
+   q:"Wind energy conversion devices based on drag force:",
+   o:["Move faster than wind","Move slower than wind","Move with equal velocity as wind","Do not depend on the velocity of wind"],a:1,
+   e:"Wind energy conversion devices based on DRAG FORCE move SLOWER than wind. Drag-based devices (like Savonius rotor) push with the wind — the maximum speed is limited to wind speed. Lift-based devices (like propeller turbines) can move faster than wind speed."},
+
+  {s:"Non-Conventional Sources of Energy",n:37,
+   q:"The advantages of non-conventional energy sources over conventional energy sources are:",
+   o:["Clean","Renewable","Cheap once installed","All of above"],a:3,
+   e:"ALL of the above are advantages of non-conventional energy over conventional energy: (1) CLEAN — no air pollution during operation, (2) RENEWABLE — naturally replenished, inexhaustible, (3) CHEAP ONCE INSTALLED — no fuel costs (sun, wind, water are free). Also: environment friendly, and increasingly cost-competitive."},
+
+  {s:"Non-Conventional Sources of Energy",n:38,
+   q:"The function of MPPT in solar photovoltaic system is:",
+   o:["To track maximum power point at different solar irradiation","To keep output constant at different solar irradiation","To reduce impedance","None of above"],a:0,
+   e:"MPPT (Maximum Power Point Tracking) tracks the maximum power point of PV cells at different solar irradiation levels. Since PV output varies with sunlight intensity and temperature, MPPT continuously adjusts the electrical operating point to extract maximum possible power under any given conditions."},
+
+  {s:"Non-Conventional Sources of Energy",n:39,
+   q:"Where is the biggest solar park in Gujarat?",
+   o:["Khavda","Charanka","Dasada","Mehsana"],a:1,
+   e:"The biggest solar park in Gujarat is at CHARANKA (also called Charanka Solar Park or Patan Solar Park). A solar park/photovoltaic power station is a large-scale PV system designed for the supply of merchant power into the electricity grid."}
+];
+
+// ─── State ──────────────────────────────────────────────────────────────────
+let current = 0;
+let answered = new Array(questions.length).fill(null); // null=unanswered, -1=skipped, 0-3=chosen
+let correct = 0, wrong = 0, skipped = 0;
+
+// ─── Build quiz cards ────────────────────────────────────────────────────────
+const quizArea = document.getElementById('quiz-area');
+
+function buildCards() {
+  let lastSection = '';
+  questions.forEach((q, i) => {
+    if (q.s !== lastSection) {
+      const banner = document.createElement('div');
+      banner.className = 'section-banner';
+      banner.textContent = '📚 ' + q.s;
+      banner.id = 'banner-' + i;
+      quizArea.appendChild(banner);
+      lastSection = q.s;
+    }
+    const card = document.createElement('div');
+    card.className = 'q-card' + (i === 0 ? ' active' : '');
+    card.id = 'card-' + i;
+
+    const opts = q.o.map((o, oi) =>
+      `<button class="opt-btn" onclick="choose(${i},${oi})" id="opt-${i}-${oi}">${String.fromCharCode(65+oi)}. ${o}</button>`
+    ).join('');
+
+    card.innerHTML = `
+      <div class="q-meta">Q${q.n} — ${q.s}</div>
+      <div class="q-text">${i+1}. ${q.q}</div>
+      ${opts}
+      <div class="explanation" id="exp-${i}"><strong>📖 Explanation:</strong> ${q.e}</div>
+      <div class="nav-row">
+        <button class="nav-btn btn-prev"   onclick="navigate(${i}-1)">◀ Prev</button>
+        <button class="nav-btn btn-skip"   onclick="skip(${i})" id="skip-${i}">⏭ Skip</button>
+        <button class="nav-btn btn-next"   onclick="navigate(${i}+1)" id="next-${i}">Next ▶</button>
+        ${i===questions.length-1 ? `<button class="nav-btn btn-finish" onclick="finish()">🏁 Finish</button>` : ''}
+      </div>`;
+    quizArea.appendChild(card);
+  });
+}
+
+function choose(qi, oi) {
+  if (answered[qi] !== null) return; // already answered or skipped
+  answered[qi] = oi;
+
+  const btns = document.querySelectorAll(`[id^="opt-${qi}-"]`);
+  btns.forEach(b => b.disabled = true);
+
+  const correctIdx = questions[qi].a;
+  document.getElementById(`opt-${qi}-${oi}`).classList.add(oi === correctIdx ? 'correct' : 'wrong');
+  if (oi !== correctIdx) document.getElementById(`opt-${qi}-${correctIdx}`).classList.add('reveal');
+
+  document.getElementById(`exp-${qi}`).classList.add('show');
+
+  if (oi === correctIdx) correct++; else wrong++;
+  document.getElementById(`skip-${qi}`).disabled = true;
+  updateDash();
+}
+
+function skip(qi) {
+  if (answered[qi] !== null) return;
+  answered[qi] = -1;
+  skipped++;
+  document.getElementById(`skip-${qi}`).disabled = true;
+  const btns = document.querySelectorAll(`[id^="opt-${qi}-"]`);
+  btns.forEach(b => b.disabled = true);
+  document.getElementById(`exp-${qi}`).classList.add('show');
+  document.getElementById(`opt-${qi}-${questions[qi].a}`).classList.add('reveal');
+  updateDash();
+  if (qi < questions.length - 1) setTimeout(() => navigate(qi + 1), 700);
+}
+
+function navigate(qi) {
+  if (qi < 0 || qi >= questions.length) return;
+  document.querySelectorAll('.q-card').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.section-banner').forEach(b => b.style.display = 'none');
+  const card = document.getElementById('card-' + qi);
+  card.classList.add('active');
+  // show banner if first card of that section
+  const prevSection = qi > 0 ? questions[qi-1].s : '';
+  if (questions[qi].s !== prevSection) {
+    const banner = document.getElementById('banner-' + qi);
+    if (banner) banner.style.display = '';
+  }
+  current = qi;
+  updateProgress();
+  window.scrollTo(0, 0);
+}
+
+function updateDash() {
+  document.getElementById('d-correct').textContent = correct;
+  document.getElementById('d-wrong').textContent   = wrong;
+  document.getElementById('d-skip').textContent    = skipped;
+  const answered_count = correct + wrong;
+  const pct = answered_count > 0 ? Math.round((correct / answered_count) * 100) : 0;
+  document.getElementById('d-score').textContent   = pct + '%';
+  updateProgress();
+}
+
+function updateProgress() {
+  const done = answered.filter(a => a !== null).length;
+  document.getElementById('d-qno').textContent = `${current+1}/${questions.length}`;
+  document.getElementById('progress-bar').style.width = ((current+1)/questions.length*100) + '%';
+}
+
+function finish() {
+  document.getElementById('quiz-area').style.display   = 'none';
+  document.getElementById('dashboard').style.display   = 'none';
+  document.getElementById('progress-wrap').style.display = 'none';
+
+  const total = questions.length;
+  const answered_count = correct + wrong;
+  const pct = answered_count > 0 ? Math.round((correct / answered_count) * 100) : 0;
+  const allPct = Math.round((correct / total) * 100);
+
+  let grade, gColor;
+  if (allPct >= 90) { grade='A+ Excellent!'; gColor='#2e7d32'; }
+  else if (allPct >= 75) { grade='A Good!'; gColor='#1565c0'; }
+  else if (allPct >= 60) { grade='B Average'; gColor='#e65100'; }
+  else if (allPct >= 40) { grade='C Below Average'; gColor='#c62828'; }
+  else { grade='D Needs Improvement'; gColor='#b71c1c'; }
+
+  const rs = document.getElementById('result-screen');
+  rs.style.display = 'block';
+  rs.innerHTML = `
+    <h2>🏁 Quiz Complete!</h2>
+    <span class="grade-badge" style="background:${gColor};color:#fff">${grade}</span>
+    <div class="result-grid">
+      <div class="r-box c"><div class="big">${correct}</div><div class="sm">Correct</div></div>
+      <div class="r-box w"><div class="big">${wrong}</div><div class="sm">Wrong</div></div>
+      <div class="r-box s"><div class="big">${skipped}</div><div class="sm">Skipped</div></div>
+      <div class="r-box p"><div class="big">${allPct}%</div><div class="sm">Overall Score (${correct}/${total})</div></div>
+    </div>
+    <button class="review-btn" onclick="showReview()">📋 Review All Answers</button>
+    <button class="restart-btn" onclick="location.reload()">🔄 Restart Quiz</button>`;
+}
+
+function showReview() {
+  document.getElementById('result-screen').style.display = 'none';
+  const rv = document.getElementById('review-screen');
+  rv.style.display = 'block';
+
+  let html = `<button class="back-btn" onclick="backToResult()">◀ Back to Results</button><h3 style="margin-bottom:12px;color:#1a237e">📋 Answer Review</h3>`;
+  questions.forEach((q, i) => {
+    const ans = answered[i];
+    let tag, tagCls;
+    if (ans === -1)          { tag='SKIPPED';  tagCls='tag-s'; }
+    else if (ans === q.a)    { tag='CORRECT';  tagCls='tag-c'; }
+    else if (ans === null)   { tag='NOT DONE'; tagCls='tag-s'; }
+    else                     { tag='WRONG';    tagCls='tag-w'; }
+
+    const yourAns = ans === -1 ? 'Skipped' : ans === null ? '—' : `${String.fromCharCode(65+ans)}. ${q.o[ans]}`;
+    const correctAns = `${String.fromCharCode(65+q.a)}. ${q.o[q.a]}`;
+
+    html += `<div class="review-card">
+      <div class="r-meta">Q${q.n} — ${q.s}</div>
+      <div class="r-q">${i+1}. ${q.q}</div>
+      <span class="review-tag ${tagCls}">${tag}</span>
+      <div class="r-ans">Your answer: <strong>${yourAns}</strong></div>
+      <div class="r-ans">Correct answer: <strong style="color:#2e7d32">${correctAns}</strong></div>
+      <div class="r-exp"><strong>📖 Explanation:</strong> ${q.e}</div>
+    </div>`;
+  });
+  rv.innerHTML = `<button class="back-btn" onclick="backToResult()">◀ Back to Results</button>
+    <h3 style="margin-bottom:12px;color:#1a237e;padding:0 2px">📋 Answer Review (${questions.length} Questions)</h3>` + html.slice(html.indexOf('<div class="review-card">'));
+}
+
+function backToResult() {
+  document.getElementById('review-screen').style.display  = 'none';
+  document.getElementById('result-screen').style.display  = 'block';
+  window.scrollTo(0,0);
+}
+
+// initialise
+buildCards();
+// hide all banners except first
+document.querySelectorAll('.section-banner').forEach((b,i) => { if(i>0) b.style.display='none'; });
+updateProgress();
+</script>
+</body>
+</html>
