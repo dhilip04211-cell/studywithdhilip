@@ -1,0 +1,35 @@
+name: React CI
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Debug - List all files
+        # This will show us exactly where your package.json is located
+        run: ls -R
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+
+      - name: Install and Build
+        # If your folder is named "my-react-app", change 'SUBFOLDER_NAME' below
+        # run: cd SUBFOLDER_NAME && npm install && npm run build --if-present
+        run: |
+          if [ -f "package.json" ]; then
+            npm install && npm run build --if-present
+          else
+            echo "Searching for package.json in subdirectories..."
+            cd $(find . -name package.json -printf '%h' -quit) && npm install && npm run build --if-present
+          fi
