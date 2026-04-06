@@ -18,16 +18,19 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
-          # Caching is disabled to prevent "lock file not found" errors
-          # If you add package-lock.json later, you can re-enable this.
 
       - name: Install dependencies
-        # Changed from 'npm ci' to 'npm install' because ci requires a lock file
         run: npm install
 
       - name: Run build
-        # This ensures your .jsx files compile correctly without errors
         run: npm run build --if-present
 
       - name: Run tests
         run: npm test --if-present
+
+      - name: Upload Build Artifact
+        # This saves your 'dist' or 'build' folder to GitHub
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-files
+          path: ./dist # Change this to 'build' if you use Create React App
