@@ -1,6 +1,6 @@
 import React from "react";
 import { HashRouter, Routes, Route, Link } from "react-router-dom";
-import PPPartOne from "./PPPart-1";
+import PPPartOne from "./PPPpart-1";
 import PartFourFive from "./PartFourFive";
 
 function Home() {
