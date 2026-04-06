@@ -23,9 +23,29 @@
     <script type="text/babel">
         function StudyComponent() {
 
-          import { useState, useEffect } from "react";
-
-const questions = [
+          const [questions, setQuestions] = React.useState([
+  // SECTION I - Power Plant Cycle
+  {
+    id: 1, section: "I. Power Plant Cycle",
+    q: "The frequency of emf generation in India is:",
+    options: ["60 Hz", "230 Hz", "50 Hz", "55 Hz"],
+    answer: 2,
+    explanation: "The frequency of emf generation in India is 50 Hz. Different countries have different standards; for example, America uses 60 Hz."
+  },
+  {
+    id: 2, section: "I. Power Plant Cycle",
+    q: "What is the aim of all energy conservation techniques?",
+    options: ["To promote non-renewable energy sources", "To replace old equipment with new ones", "To experiment with new energy sources", "To reduce energy losses"],
+    answer: 3,
+    explanation: "The main aim of energy conservation techniques is to reduce energy losses."
+  },
+  {
+    id: 3, section: "I. Power Plant Cycle",
+    q: "Base load of a power station stands for?",
+    options: ["12–24 hours/day", "2–4 hours/day", "8–12 hours/day", "4–8 hours/day"],
+    answer: 0,
+    explanation: "Base load is the minimum level of demand on an electrical supply system over 24 hours. Base load power sources generate dependable power to consistently meet demand."
+  },
   // SECTION I - Power Plant Cycle
   {
     id: 1, section: "I. Power Plant Cycle",
@@ -1021,14 +1041,14 @@ const questions = [
 const TOTAL = questions.length;
 
 export default function PowerPlantQuizPart1() {
-  const [current, setCurrent] = useState(0);
-  const [selected, setSelected] = useState(null);
-  const [revealed, setRevealed] = useState(false);
-  const [score, setScore] = useState(0);
-  const [finished, setFinished] = useState(false);
-  const [answers, setAnswers] = useState([]);
-  const [showReview, setShowReview] = useState(false);
-  const [reviewIndex, setReviewIndex] = useState(0);
+  const [current, setCurrent] = React.useState(0);
+  const [selected, setSelected] = React.useState(null);
+  const [revealed, setRevealed] = React.useState(false);
+  const [score, setScore] = React.useState(0);
+  const [finished, setFinished] = React.useState(false);
+  const [answers, setAnswers] = React.useState([]);
+  const [showReview, setShowReview] = React.useState(false);
+  const [reviewIndex, setReviewIndex] = React.useState(0);
 
   const q = questions[current];
 
@@ -1216,17 +1236,6 @@ export default function PowerPlantQuizPart1() {
     </div>
   );
 }
-          
-            return (
-                <div className="card">
-                    <h1>Assistant Engineer (EEE)</h1>
-                    <p>This page is running React directly in the browser!</p>
-                    <button className="btn" onClick={() => alert('Study Hard!')}>
-                        Start Learning
-                    </button>
-                </div>
-            );
-        }
 
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<StudyComponent />);
