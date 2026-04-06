@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>சேர்த்து எழுதுதல் - TAF IAS Academy</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@300;400;600;700&family=Noto+Serif+Tamil:wght@400;700&display=swap');
+
+  :root {
+    --bg: #fdf6ec;
+    --card: #ffffff;
+    --header-bg: #1a1a2e;
+    --accent: #c0392b;
+    --accent2: #e67e22;
+    --text: #2c2c2c;
+    --muted: #666;
+    --border: #e0d5c5;
+    --section-bg: #fff8f0;
+    --highlight: #fef3e2;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans Tamil', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--header-bg);
+    color: white;
+    padding: 28px 24px 20px;
+    text-align: center;
+    border-bottom: 4px solid var(--accent);
+  }
+
+  header .academy-name {
+    font-size: 1.05rem;
+    color: #aaa;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  header h1 {
+    font-family: 'Noto Serif Tamil', serif;
+    font-size: 2rem;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+
+  header .subtitle {
+    color: var(--accent2);
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  .lesson-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    padding: 4px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    margin-top: 10px;
+    font-weight: 600;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 28px 16px 60px;
+  }
+
+  .section-header {
+    background: var(--header-bg);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px 8px 0 0;
+    font-family: 'Noto Serif Tamil', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-left: 5px solid var(--accent);
+    margin-top: 32px;
+  }
+
+  .section-header span {
+    color: var(--accent2);
+  }
+
+  .words-grid {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    padding: 16px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 6px 20px;
+    box-shadow: var(--shadow);
+  }
+
+  .word-entry {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 8px;
+    border-radius: 4px;
+    transition: background 0.15s;
+    font-size: 0.93rem;
+  }
+
+  .word-entry:hover {
+    background: var(--highlight);
+  }
+
+  .star {
+    color: var(--accent);
+    font-size: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .word-left {
+    color: #333;
+    font-weight: 500;
+  }
+
+  .arrow {
+    color: var(--muted);
+    font-size: 0.8rem;
+    flex-shrink: 0;
+  }
+
+  .word-right {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* QA Section */
+  .qa-section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 32px;
+    box-shadow: var(--shadow);
+  }
+
+  .qa-header {
+    font-family: 'Noto Serif Tamil', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--header-bg);
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 10px;
+    margin-bottom: 18px;
+    text-align: center;
+  }
+
+  .qa-subheader {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--accent);
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  .question-block {
+    background: var(--section-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+
+  .question-text {
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+  }
+
+  .q-number {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 24px;
+    font-size: 0.8rem;
+    margin-right: 8px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-top: 6px;
+  }
+
+  .option {
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: white;
+    font-size: 0.88rem;
+    display: flex;
+    gap: 6px;
+  }
+
+  .option-letter {
+    color: var(--muted);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .answers-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    background: var(--header-bg);
+    padding: 14px 20px;
+    border-radius: 8px;
+    margin-top: 16px;
+    align-items: center;
+  }
+
+  .answers-label {
+    color: var(--accent2);
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+
+  .ans-chip {
+    background: white;
+    color: var(--header-bg);
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .ans-chip span {
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .toc {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin-bottom: 28px;
+    box-shadow: var(--shadow);
+  }
+
+  .toc h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--header-bg);
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+  }
+
+  .toc-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .toc-link {
+    background: var(--highlight);
+    border: 1px solid var(--border);
+    color: var(--accent);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.15s;
+  }
+
+  .toc-link:hover {
+    background: var(--accent);
+    color: white;
+  }
+
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+
+  .search-bar input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 0.95rem;
+    font-family: 'Noto Sans Tamil', sans-serif;
+    color: var(--text);
+    background: transparent;
+  }
+
+  .search-bar svg {
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+
+  .word-entry.hidden { display: none; }
+
+  footer {
+    text-align: center;
+    padding: 20px;
+    color: var(--muted);
+    font-size: 0.82rem;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+
+  @media (max-width: 600px) {
+    .words-grid { grid-template-columns: 1fr; }
+    .options-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="academy-name">TAF IAS Academy — பொதுத்தமிழ் (புதிய பாடத்திட்டம்)</div>
+  <h1>சேர்த்து எழுதுதல்</h1>
+  <div class="subtitle">Serthu Ezhuthugal — Tamil Compound Words</div>
+  <div class="lesson-tag">பாடம் 1.1.2</div>
+</header>
+
+<div class="container">
+
+  <!-- Search -->
+  <div class="search-bar">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="searchInput" placeholder="தேடுக... (Search words)" oninput="filterWords()" />
+  </div>
+
+  <!-- TOC -->
+  <div class="toc">
+    <h2>பகுதிகள் / Sections</h2>
+    <div class="toc-links">
+      <a class="toc-link" href="#new-book">புதிய புத்தகம் — பகுதி 1</a>
+      <a class="toc-link" href="#new-book-2">புதிய புத்தகம் — பகுதி 2</a>
+      <a class="toc-link" href="#new-book-3">புதிய புத்தகம் — பகுதி 3</a>
+      <a class="toc-link" href="#new-book-4">புதிய புத்தகம் — பகுதி 4</a>
+      <a class="toc-link" href="#new-book-5">புதிய புத்தகம் — பகுதி 5</a>
+      <a class="toc-link" href="#new-book-6">புதிய புத்தகம் — பகுதி 6</a>
+      <a class="toc-link" href="#new-book-7">புதிய புத்தகம் — பகுதி 7</a>
+      <a class="toc-link" href="#new-book-8">புதிய புத்தகம் — பகுதி 8</a>
+      <a class="toc-link" href="#new-book-9">புதிய புத்தகம் — பகுதி 9</a>
+      <a class="toc-link" href="#new-book-10">புதிய புத்தகம் — பகுதி 10</a>
+      <a class="toc-link" href="#new-book-11">புதிய புத்தகம் — பகுதி 11</a>
+      <a class="toc-link" href="#new-book-12">புதிய புத்தகம் — பகுதி 12</a>
+      <a class="toc-link" href="#old-book">பழைய புத்தகம்</a>
+      <a class="toc-link" href="#tnpsc-qa">TNPSC வினாக்கள்</a>
+    </div>
+  </div>
+
+  <!-- ===== PAGE 35 LEFT ===== -->
+  <div id="new-book">
+    <div class="section-header">சேர்த்து எழுதுக — <span>புதிய புத்தகம் (பகுதி 1)</span></div>
+    <div class="words-grid" id="grid1">
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நிலவு + என்று</span><span class="arrow">→</span><span class="word-right">நிலவென்று</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தமிழ் + எங்கள்</span><span class="arrow">→</span><span class="word-right">தமிழெங்கள்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பாட்டு + இருக்கும்</span><span class="arrow">→</span><span class="word-right">பாட்டிருக்கும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">எட்டு + திசை</span><span class="arrow">→</span><span class="word-right">எட்டுத்திசை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கொங்கு + அலர்</span><span class="arrow">→</span><span class="word-right">கொங்கலர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அவன் + அளிபோல்</span><span class="arrow">→</span><span class="word-right">அவனளிபோல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">முத்து + சுடர்</span><span class="arrow">→</span><span class="word-right">முத்துச்சுடர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நீலா + ஒளி</span><span class="arrow">→</span><span class="word-right">நீலாவொளி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தரை + இறங்கும்</span><span class="arrow">→</span><span class="word-right">தரையிறங்கும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வழி + தடம்</span><span class="arrow">→</span><span class="word-right">வழித்தடம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஏன் + என்று</span><span class="arrow">→</span><span class="word-right">ஏனென்று</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஓடதம் + ஆம்</span><span class="arrow">→</span><span class="word-right">ஓடதமாம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நீலம் + வான்</span><span class="arrow">→</span><span class="word-right">நீல்வான்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">செயல் + இழக்க</span><span class="arrow">→</span><span class="word-right">செயலிழக்க</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">எதிர் + ஒலிக்க</span><span class="arrow">→</span><span class="word-right">எதிரொலிக்க</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தம் + உயிர்</span><span class="arrow">→</span><span class="word-right">தம்முயிர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இன்புற்று + இருக்க</span><span class="arrow">→</span><span class="word-right">இன்புற்றிருக்க</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இனிமை + உயிர்</span><span class="arrow">→</span><span class="word-right">இன்னுயிர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மலை + எலாம்</span><span class="arrow">→</span><span class="word-right">மலையெலாம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">சிறப்பு + உடையார்</span><span class="arrow">→</span><span class="word-right">சிறப்புடையார்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">காடு + ஆறு</span><span class="arrow">→</span><span class="word-right">காட்டாறு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அறிவு + உடைமை</span><span class="arrow">→</span><span class="word-right">அறிவுடைமை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இவை + எட்டும்</span><span class="arrow">→</span><span class="word-right">இவையெட்டும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வாழை + இலை</span><span class="arrow">→</span><span class="word-right">வாழையிலை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கை + அமர்த்தி</span><span class="arrow">→</span><span class="word-right">கையமர்த்தி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பொங்கல் + அன்று</span><span class="arrow">→</span><span class="word-right">பொங்கலன்று</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பயன் + இலா</span><span class="arrow">→</span><span class="word-right">பயனிலா</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நாடு + என்ற</span><span class="arrow">→</span><span class="word-right">நாடென்ற</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கலம் + ஏறி</span><span class="arrow">→</span><span class="word-right">கலமேறி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பெருமை + வானம்</span><span class="arrow">→</span><span class="word-right">பெருவானம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அடிக்கும் + அலை</span><span class="arrow">→</span><span class="word-right">அடிக்குமலை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வணிகம் + சாத்து</span><span class="arrow">→</span><span class="word-right">வணிகச்சாத்து</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பண்டம் + மாற்று</span><span class="arrow">→</span><span class="word-right">பண்டமாற்று</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வான் + ஒலி</span><span class="arrow">→</span><span class="word-right">வானொலி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கிழங்கு + எடுக்கும்</span><span class="arrow">→</span><span class="word-right">கிழங்கெடுக்கும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நேற்று + இரவு</span><span class="arrow">→</span><span class="word-right">நேற்றிரவு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நேரம் + ஆகி</span><span class="arrow">→</span><span class="word-right">நேரமாகி</span></div>
+    </div>
+  </div>
+
+  <!-- ===== PAGE 35 RIGHT ===== -->
+  <div id="new-book-2">
+    <div class="section-header">சேர்த்து எழுதுக — <span>புதிய புத்தகம் (பகுதி 2)</span></div>
+    <div class="words-grid" id="grid2">
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வேட்டை + ஆடிய</span><span class="arrow">→</span><span class="word-right">வேட்டையாடிய</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கல் + அலை</span><span class="arrow">→</span><span class="word-right">கல்லலை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இன்று + ஆகி</span><span class="arrow">→</span><span class="word-right">இன்றாகி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">என்று + உரைக்கும்</span><span class="arrow">→</span><span class="word-right">என்றுரைக்கும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">எவன் + ஒருவன்</span><span class="arrow">→</span><span class="word-right">எவனொருவன்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வார்ப்பு + எனில்</span><span class="arrow">→</span><span class="word-right">வார்ப்பெனில்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கட்டி + அடித்தல்</span><span class="arrow">→</span><span class="word-right">கட்டியடித்தல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">எழுத்து + ஆணி</span><span class="arrow">→</span><span class="word-right">எழுத்தாணி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மாரி + ஒன்று</span><span class="arrow">→</span><span class="word-right">மாரியொன்று</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஓடை + எல்லாம்</span><span class="arrow">→</span><span class="word-right">ஓடையெல்லாம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இன்பு + உருகு</span><span class="arrow">→</span><span class="word-right">இன்புருகு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அறம் + கதிர்</span><span class="arrow">→</span><span class="word-right">அறக்கதிர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கண் + இல்லது</span><span class="arrow">→</span><span class="word-right">கண்ணில்லது</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இவை + இல்லாது</span><span class="arrow">→</span><span class="word-right">இவையில்லாது</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">முதுமை + மொழி</span><span class="arrow">→</span><span class="word-right">முதுமொழி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வானம் + அறிந்த</span><span class="arrow">→</span><span class="word-right">வானமறிந்த</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">சீர்க்கு + ஏற்ப</span><span class="arrow">→</span><span class="word-right">சீர்க்கேற்ப</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஓடை + ஆட</span><span class="arrow">→</span><span class="word-right">ஓடையாட</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பால் + ஊறும்</span><span class="arrow">→</span><span class="word-right">பாலூறும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நெடுமை + தேர்</span><span class="arrow">→</span><span class="word-right">நெடுந்தேர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தாம் + இணி</span><span class="arrow">→</span><span class="word-right">தாமினி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இடம் + எங்கும்</span><span class="arrow">→</span><span class="word-right">இடமெங்கும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">முழுவு + அதிர</span><span class="arrow">→</span><span class="word-right">முழுவதிர</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">என்று + ஆய்ந்து</span><span class="arrow">→</span><span class="word-right">என்றாய்ந்து</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கதிர் + ஈன</span><span class="arrow">→</span><span class="word-right">கதிரீன</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கால் + இறங்கி</span><span class="arrow">→</span><span class="word-right">காலிறங்கி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">போல் + உடன்றன</span><span class="arrow">→</span><span class="word-right">போலுடன்றன</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நம்பர்க்கு + அங்கு</span><span class="arrow">→</span><span class="word-right">நம்பர்க்கங்கு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">உள் + இருக்கும்</span><span class="arrow">→</span><span class="word-right">உள்ளிருக்கும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">எண் + என்ப</span><span class="arrow">→</span><span class="word-right">எண்ணென்ப</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கண் + உடையார்</span><span class="arrow">→</span><span class="word-right">கண்ணுடையார்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">என் + உள்ளம்</span><span class="arrow">→</span><span class="word-right">என்னுள்ளம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பெருமை + அறிவு</span><span class="arrow">→</span><span class="word-right">பேரறிவு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">புகழ் + ஆரம்</span><span class="arrow">→</span><span class="word-right">புகழாரம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நம் + தமிழ்</span><span class="arrow">→</span><span class="word-right">நந்தமிழ்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பெருமை + இன்பம்</span><span class="arrow">→</span><span class="word-right">பேரின்பம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நன்மை + நூல்</span><span class="arrow">→</span><span class="word-right">நன்னூல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மண் + உயிர்</span><span class="arrow">→</span><span class="word-right">மண்ணுயிர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மலர் + தமிழ்</span><span class="arrow">→</span><span class="word-right">மலர்த்தமிழ்</span></div>
+    </div>
+  </div>
+
+  <!-- ===== PAGE 36 LEFT ===== -->
+  <div id="new-book-3">
+    <div class="section-header">சேர்த்து எழுதுக — <span>புதிய புத்தகம் (பகுதி 3)</span></div>
+    <div class="words-grid" id="grid3">
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வான் + ஒலி</span><span class="arrow">→</span><span class="word-right">வானொலி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">சொல் + பிழை</span><span class="arrow">→</span><span class="word-right">சொற்பிழை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">சுயம் + வரம்</span><span class="arrow">→</span><span class="word-right">சுயம்வரம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மாசு + இலா</span><span class="arrow">→</span><span class="word-right">மாசிலா</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அருள் + என்றாள்</span><span class="arrow">→</span><span class="word-right">அருளென்றாள்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">செம்மை + தாமரை</span><span class="arrow">→</span><span class="word-right">செந்தாமரை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வான் + உறு</span><span class="arrow">→</span><span class="word-right">வானுறு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பழம் + தான்</span><span class="arrow">→</span><span class="word-right">பழந்தான்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பாரதம் + தாய்</span><span class="arrow">→</span><span class="word-right">பாரத்தாய்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">செய்மை + உற்ற</span><span class="arrow">→</span><span class="word-right">செய்மையுற்ற</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தொழில் + பயிற்சி</span><span class="arrow">→</span><span class="word-right">தொழிற்பயிற்சி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தமிழ் + பண்பு</span><span class="arrow">→</span><span class="word-right">தமிழ்ப்பண்பு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பெருமை + ஆசிரியர்</span><span class="arrow">→</span><span class="word-right">பேராசிரியர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">எட்டு + தொகை</span><span class="arrow">→</span><span class="word-right">எட்டுத்தொகை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">சிறப்பு + இடம்</span><span class="arrow">→</span><span class="word-right">சிறப்பிடம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நிழல் + பாலை</span><span class="arrow">→</span><span class="word-right">நிழற்பாலை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நடிப்பு + கலை</span><span class="arrow">→</span><span class="word-right">நடிப்புக்கலை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அன்பு + உடைமை</span><span class="arrow">→</span><span class="word-right">அன்புடைமை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மக்கள் + பண்பு</span><span class="arrow">→</span><span class="word-right">மக்கட்பண்பு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">திரிந்து + அற்று</span><span class="arrow">→</span><span class="word-right">திரிந்தற்று</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பண்பு + ஒத்தல்</span><span class="arrow">→</span><span class="word-right">பண்பொத்தல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பண்பு + இலான்</span><span class="arrow">→</span><span class="word-right">பண்பிலான்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நேர் + உற</span><span class="arrow">→</span><span class="word-right">நேருற</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">காலம் + தோறும்</span><span class="arrow">→</span><span class="word-right">காலந்தோறும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">செம்மை + ஞாயிறு</span><span class="arrow">→</span><span class="word-right">செஞ்ஞாயிறு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மயில் + பொறி</span><span class="arrow">→</span><span class="word-right">மயிற்பொறி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பெருமை + புலமை</span><span class="arrow">→</span><span class="word-right">பெரும்புலமை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">உறுதி + உரை</span><span class="arrow">→</span><span class="word-right">உறுதியுரை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">உணவு + இன்றி</span><span class="arrow">→</span><span class="word-right">உணவின்றி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">சொல் + பொழிவு</span><span class="arrow">→</span><span class="word-right">சொற்பொழிவு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">உருவம் + சிலை</span><span class="arrow">→</span><span class="word-right">உருவச்சிலை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அங்கும் + இங்கும்</span><span class="arrow">→</span><span class="word-right">அங்குமிங்கும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வால் + எங்கே</span><span class="arrow">→</span><span class="word-right">வாலெங்கே</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">குரங்கு + அரசர்</span><span class="arrow">→</span><span class="word-right">குரங்கரசர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இல்லாது + இயங்கும்</span><span class="arrow">→</span><span class="word-right">இல்லாதியங்கும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">விடுதலை + உணர்வு</span><span class="arrow">→</span><span class="word-right">விடுதலையுணர்வு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அறம் + போராட்டம்</span><span class="arrow">→</span><span class="word-right">அறப்போராட்டம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இயற்கை + அன்னை</span><span class="arrow">→</span><span class="word-right">இயற்கையன்னை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">சொல் + ஆராய்ச்சி</span><span class="arrow">→</span><span class="word-right">சொல்லாராய்ச்சி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நெஞ்சு + இளைத்தவர்</span><span class="arrow">→</span><span class="word-right">நெஞ்சிளைத்தவர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மருத்துவம் + துறை</span><span class="arrow">→</span><span class="word-right">மருத்துவத்துறை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மானம் + இல்லாமல்</span><span class="arrow">→</span><span class="word-right">மானமில்லாமல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">உள்ளுவது + எல்லாம்</span><span class="arrow">→</span><span class="word-right">உள்ளுவதெல்லாம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஒப்புமை + இல்லாத</span><span class="arrow">→</span><span class="word-right">ஒப்புமையில்லாத</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மயிரிகள் + அல்லராய்</span><span class="arrow">→</span><span class="word-right">மயிரிகளல்லராய்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வாசல் + அலங்காரம்</span><span class="arrow">→</span><span class="word-right">வாசலலங்காரம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">முறை + எனப்படுவது</span><span class="arrow">→</span><span class="word-right">முறையெனப்படுவது</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கயிறு + கட்டில்</span><span class="arrow">→</span><span class="word-right">கயிற்றுக்கட்டில்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பகவன் + என்றாலும்</span><span class="arrow">→</span><span class="word-right">பகவனென்றாலும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இவை + எல்லாம்</span><span class="arrow">→</span><span class="word-right">இவையெல்லாம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அறிந்தது + அனைத்தும்</span><span class="arrow">→</span><span class="word-right">அறிந்ததனைத்தும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கற்றனைது + ஊறும்</span><span class="arrow">→</span><span class="word-right">கற்றனைதூறும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பருத்தி + எல்லாம்</span><span class="arrow">→</span><span class="word-right">பருத்தியெல்லாம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">சிலம்பு + அதிகாரம்</span><span class="arrow">→</span><span class="word-right">சிலப்பதிகாரம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கணினி + தமிழ்</span><span class="arrow">→</span><span class="word-right">கணினித்தமிழ்</span></div>
+    </div>
+  </div>
+
+  <!-- ===== PAGE 37 LEFT ===== -->
+  <div id="new-book-4">
+    <div class="section-header">சேர்த்து எழுதுக — <span>புதிய புத்தகம் (பகுதி 4)</span></div>
+    <div class="words-grid" id="grid4">
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நிகர் + அற்று (இதற்கு சமனாக வேறொன்று இல்லை)</span><span class="arrow">→</span><span class="word-right">நிகரற்று</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பெருமை + அறிஞர்</span><span class="arrow">→</span><span class="word-right">பேரறிஞர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பொன் + ஆகி</span><span class="arrow">→</span><span class="word-right">பொன்னாகி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மணி + ஆகி</span><span class="arrow">→</span><span class="word-right">மணியாகி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">போகம் + ஆகி</span><span class="arrow">→</span><span class="word-right">போகமாகி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">முழுது + ஆகி</span><span class="arrow">→</span><span class="word-right">முழுதாகி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மாசு + இலன்</span><span class="arrow">→</span><span class="word-right">மாசிலன்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மகன் + கு</span><span class="arrow">→</span><span class="word-right">மகற்கு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மகற்கு + ஆற்றும்</span><span class="arrow">→</span><span class="word-right">மகற்காற்றும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஆற்றும் + உதவி</span><span class="arrow">→</span><span class="word-right">ஆற்றுமுதவி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கொல் + எனும்</span><span class="arrow">→</span><span class="word-right">கொல்லெனும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தான் + உண்டல்</span><span class="arrow">→</span><span class="word-right">தானுண்டல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">முகம் + திரிந்து</span><span class="arrow">→</span><span class="word-right">முகந்திரிந்து</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பத்து + அடுத்த</span><span class="arrow">→</span><span class="word-right">பத்தடுத்த</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பிறப்பு + ஒக்கும்</span><span class="arrow">→</span><span class="word-right">பிறப்பொக்கும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">சிறப்பு + ஒவ்வா</span><span class="arrow">→</span><span class="word-right">சிறப்பொவ்வா</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">உழுது + உண்டு</span><span class="arrow">→</span><span class="word-right">உழுதுண்டு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நான்கு + திசை</span><span class="arrow">→</span><span class="word-right">நாற்றிசை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஆறு + உணா</span><span class="arrow">→</span><span class="word-right">ஆற்றுணா</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">செல் + நீர்</span><span class="arrow">→</span><span class="word-right">சென்னீர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வெம்மை + நீர்</span><span class="arrow">→</span><span class="word-right">வெந்நீர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இரப்பார்க்கு + ஈந்து</span><span class="arrow">→</span><span class="word-right">இரப்பார்க்கீந்து</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பசுமை + தொடி</span><span class="arrow">→</span><span class="word-right">பைந்தொடி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அழல் + கதிரால்</span><span class="arrow">→</span><span class="word-right">அழற்கதிரால்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தண் + என்</span><span class="arrow">→</span><span class="word-right">தண்ணென்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நாள் + தோறும்</span><span class="arrow">→</span><span class="word-right">நாடோறும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நன்று + ஆகும்</span><span class="arrow">→</span><span class="word-right">நன்றாகும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தீம் + கனி</span><span class="arrow">→</span><span class="word-right">தீங்கனி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இளமை + தளிர்</span><span class="arrow">→</span><span class="word-right">இளந்தளிர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அருமை + கலை</span><span class="arrow">→</span><span class="word-right">அருங்கலை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கோது + அறு</span><span class="arrow">→</span><span class="word-right">கோதறு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இளமை + குழவி</span><span class="arrow">→</span><span class="word-right">இளங்குழவி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நன்மை + நயம்</span><span class="arrow">→</span><span class="word-right">நன்னயம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பன் + அரும்</span><span class="arrow">→</span><span class="word-right">பன்னரும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பல + மணி</span><span class="arrow">→</span><span class="word-right">பன்மணி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கமலம் + கண்ணன்</span><span class="arrow">→</span><span class="word-right">கமலக் கண்ணன்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பல + பல</span><span class="arrow">→</span><span class="word-right">பற்பல</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பல + சுவை</span><span class="arrow">→</span><span class="word-right">பல்சுவை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">செம்மை + கால்</span><span class="arrow">→</span><span class="word-right">செங்கால்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தெற்கு + திசை</span><span class="arrow">→</span><span class="word-right">தென்றிசை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வடக்கு + திசை</span><span class="arrow">→</span><span class="word-right">வடதிசை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கொழுமை + கொடி</span><span class="arrow">→</span><span class="word-right">கொழுங்கொடி</span></div>
+    </div>
+  </div>
+
+  <!-- ===== PAGE 37 RIGHT ===== -->
+  <div id="new-book-5">
+    <div class="section-header">சேர்த்து எழுதுக — <span>புதிய புத்தகம் (பகுதி 5)</span></div>
+    <div class="words-grid" id="grid5">
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பசுமை + தழை</span><span class="arrow">→</span><span class="word-right">பசுந்தழை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கொழுமை + சாறு</span><span class="arrow">→</span><span class="word-right">கொழுஞ்சாறு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நறுமை + தேன்</span><span class="arrow">→</span><span class="word-right">நறுந்தேன்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">செழுமை + திணை</span><span class="arrow">→</span><span class="word-right">செழுந்திணை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கயல் + க (ண்) ணி</span><span class="arrow">→</span><span class="word-right">கயற்கணி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஆடும்போதே + இரையும்</span><span class="arrow">→</span><span class="word-right">ஆடும்போதேயிரையும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பிண்ணாக்கும் + உண்டாம், (பிள் + நாக்கும் + உண்டாம்)</span><span class="arrow">→</span><span class="word-right">பிண்ணாக்குமுண்டாம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பாம்பு + எள் + எனவே</span><span class="arrow">→</span><span class="word-right">பாம்பெள்ளெனவே</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நடந்து + அலைந்த</span><span class="arrow">→</span><span class="word-right">நடந்தலைந்த</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">செம்மை + சொல்லை</span><span class="arrow">→</span><span class="word-right">செஞ்சொல்லை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நினைந்து + உருகும்</span><span class="arrow">→</span><span class="word-right">நினைந்துருகும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கொடுமை + காலால்</span><span class="arrow">→</span><span class="word-right">கொடுங்காலால்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">காது + இலை</span><span class="arrow">→</span><span class="word-right">காதிலை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கிரணம் + கை</span><span class="arrow">→</span><span class="word-right">கிரணக்கை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">புள் + கள்</span><span class="arrow">→</span><span class="word-right">புட்கள்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கதியோடும் + ஆடி</span><span class="arrow">→</span><span class="word-right">கதியோடுமாடி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தருக்கள் + எல்லாம்</span><span class="arrow">→</span><span class="word-right">தருக்களெல்லாம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பூதம் + தம் + தொழில்</span><span class="arrow">→</span><span class="word-right">பூதந்தந்தொழில்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">செய்து + ஏத்தும்</span><span class="arrow">→</span><span class="word-right">செய்தேத்தும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கல் + ஒலி</span><span class="arrow">→</span><span class="word-right">கடலொலி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வாழ்த்தா (த) து + என்னே</span><span class="arrow">→</span><span class="word-right">வாழ்த்தா தென்னே</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நடவு + இகந்து + ஆம்</span><span class="arrow">→</span><span class="word-right">நடவிகந்தாம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அமைந்து + ஒரு + பால்</span><span class="arrow">→</span><span class="word-right">அமைந்தொருபால்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">சான்றோர்க்கு + அணி</span><span class="arrow">→</span><span class="word-right">சான்றோர்க்கணி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">திரு + செற்று</span><span class="arrow">→</span><span class="word-right">திருச்செற்று</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தீ + உழி</span><span class="arrow">→</span><span class="word-right">தீயுழி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நட்பு + ஆடல்</span><span class="arrow">→</span><span class="word-right">நட்பாடல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தம் + குற்றம்</span><span class="arrow">→</span><span class="word-right">தாங்குற்றம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தீது + உண்டோ</span><span class="arrow">→</span><span class="word-right">தீதுண்டோ</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அருள் + செல்வம்</span><span class="arrow">→</span><span class="word-right">அருட்செல்வம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பொருள் + செல்வம்</span><span class="arrow">→</span><span class="word-right">பொருட்செல்வம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அருள் + இலார்க்கு</span><span class="arrow">→</span><span class="word-right">அருளிலார்க்கு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அ + உலகம்</span><span class="arrow">→</span><span class="word-right">அவ்வுலகம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பொருள் + இலார்க்கு</span><span class="arrow">→</span><span class="word-right">பொருளிலார்க்கு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இ + உலகம்</span><span class="arrow">→</span><span class="word-right">இவ்வுலகம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இல் + ஆகி + ஆங்கு</span><span class="arrow">→</span><span class="word-right">இல்லாகியாங்கு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நிலத்து + இயல்பால்</span><span class="arrow">→</span><span class="word-right">நிலத்தியல்பால்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அற்று + ஆகும்</span><span class="arrow">→</span><span class="word-right">அற்றாகும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இனத்து + இயல்பு + அது</span><span class="arrow">→</span><span class="word-right">இனத்தியல்பது</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நன்மை + இனம்</span><span class="arrow">→</span><span class="word-right">நல்லினம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">துணை + இல்லை</span><span class="arrow">→</span><span class="word-right">துணையில்லை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தீமை + இனம்</span><span class="arrow">→</span><span class="word-right">தீயினம்</span></div>
+    </div>
+  </div>
+
+  <!-- ===== PAGE 38 LEFT ===== -->
+  <div id="new-book-6">
+    <div class="section-header">சேர்த்து எழுதுக — <span>புதிய புத்தகம் (பகுதி 6)</span></div>
+    <div class="words-grid" id="grid6">
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அன்பு + அறிவு</span><span class="arrow">→</span><span class="word-right">அன்பறிவு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அவா + இன்மை</span><span class="arrow">→</span><span class="word-right">அவாவின்மை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நன்கு + உடையான்</span><span class="arrow">→</span><span class="word-right">நன்குடையான்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கரைந்து + உண்ணும்</span><span class="arrow">→</span><span class="word-right">கரைந்துண்ணும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இயல்பு + என்பான்</span><span class="arrow">→</span><span class="word-right">இயல்பென்பான்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தகை + அவாய்</span><span class="arrow">→</span><span class="word-right">தகையவாய்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மொழிவது + ஆம்</span><span class="arrow">→</span><span class="word-right">மொழிவதாம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">சோர்வு + இலன்</span><span class="arrow">→</span><span class="word-right">சோர்விலன்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வினை + ஆக்கி</span><span class="arrow">→</span><span class="word-right">வினையாக்கி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பகை + அகத்து</span><span class="arrow">→</span><span class="word-right">பகையகத்து</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பொருள் + அல்லவரை</span><span class="arrow">→</span><span class="word-right">பொருளல்லவரை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பொருள் + ஆக</span><span class="arrow">→</span><span class="word-right">பொருளாக</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பொருள் + அல்லது</span><span class="arrow">→</span><span class="word-right">பொருளல்லது</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மாசு + அற்றார்</span><span class="arrow">→</span><span class="word-right">மாசற்றார்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஒன்று + ஈத்தும்</span><span class="arrow">→</span><span class="word-right">ஒன்றீத்தும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஒப்பு + இலார்</span><span class="arrow">→</span><span class="word-right">ஒப்பிலார்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மக்கள் + பண்பு</span><span class="arrow">→</span><span class="word-right">மக்கட்பண்பு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பண்பு + இலான்</span><span class="arrow">→</span><span class="word-right">பண்பிலான்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பெருமை + செல்வம்</span><span class="arrow">→</span><span class="word-right">பெருஞ்செல்வம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நன்மை + பால்</span><span class="arrow">→</span><span class="word-right">நன்பால்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கலம் + தீமை</span><span class="arrow">→</span><span class="word-right">கலந்தீமை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">திரிந்து + அற்று</span><span class="arrow">→</span><span class="word-right">திரிந்தற்று</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">எளிது + அரிது</span><span class="arrow">→</span><span class="word-right">எளிதரிது</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">செல் + தல்</span><span class="arrow">→</span><span class="word-right">சேறல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நிலை + அரிது</span><span class="arrow">→</span><span class="word-right">நிலையரிது</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வெல் + தல்</span><span class="arrow">→</span><span class="word-right">வேறல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கடன் + பட்டார்</span><span class="arrow">→</span><span class="word-right">கடம்பட்டார்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">காப்பு + இல்லார்</span><span class="arrow">→</span><span class="word-right">காப்பில்லார்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கைத்து(கையகத்து)+இல்லார்</span><span class="arrow">→</span><span class="word-right">கைத்தில்லார்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தம் + கால்</span><span class="arrow">→</span><span class="word-right">தாங்கால்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மூப்பு + இல்லார்க்கு</span><span class="arrow">→</span><span class="word-right">மூப்பில்லார்க்கு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஈத்து + உண்பார்</span><span class="arrow">→</span><span class="word-right">ஈத்துண்பார்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இனிமை + சொல்</span><span class="arrow">→</span><span class="word-right">இன்சொல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மென்பு(மென்மை)+உடையார்</span><span class="arrow">→</span><span class="word-right">மென்புடையார்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கழிவு + இரக்கம்</span><span class="arrow">→</span><span class="word-right">கழிவிரக்கம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கதழ்வு + ஆளார்</span><span class="arrow">→</span><span class="word-right">கதழ்வாளார்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நன்மை + அறன்</span><span class="arrow">→</span><span class="word-right">நல்லறன்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நாள் + அணி</span><span class="arrow">→</span><span class="word-right">நாளணி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">உரை + அதனை</span><span class="arrow">→</span><span class="word-right">உரையதனை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நன்மை + இனம்</span><span class="arrow">→</span><span class="word-right">நல்லினம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பொறை + ஆளர்</span><span class="arrow">→</span><span class="word-right">பொறையாளர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நன்மை + நாப்பண்</span><span class="arrow">→</span><span class="word-right">நன்னாப்பண்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">யான் + உன்</span><span class="arrow">→</span><span class="word-right">யானுன்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வீறு + அழிப்பன்</span><span class="arrow">→</span><span class="word-right">வீறழிப்பன்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மை + அணி</span><span class="arrow">→</span><span class="word-right">மையணி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இன்று + உன்</span><span class="arrow">→</span><span class="word-right">இன்றுன்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மெய்யனே + என்று</span><span class="arrow">→</span><span class="word-right">மெய்யனேயென்று</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கொண்டு + அன்பு</span><span class="arrow">→</span><span class="word-right">கொண்டன்பு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பொய் + அறு</span><span class="arrow">→</span><span class="word-right">பொய்யறு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">புக்கு + இனிது</span><span class="arrow">→</span><span class="word-right">புக்கினிது</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">சிதர் + அசைத்து</span><span class="arrow">→</span><span class="word-right">சிதரசைத்து</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வெண்மை + மதி</span><span class="arrow">→</span><span class="word-right">வெண்மதி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வெள்ளை(வெண்மை)+வாய்</span><span class="arrow">→</span><span class="word-right">வெள்வாய்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அருமை + மறை</span><span class="arrow">→</span><span class="word-right">அருமறை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தேய்ந்து + அழுந்திய</span><span class="arrow">→</span><span class="word-right">தேய்ந்தழுந்திய</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பாங்கு + உறை</span><span class="arrow">→</span><span class="word-right">பாங்குறை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இனிமை + இசை</span><span class="arrow">→</span><span class="word-right">இன்னிசை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">சிறிது + எழிழி</span><span class="arrow">→</span><span class="word-right">சிறிதெழிழி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மடுத்து + யார் + அவன்</span><span class="arrow">→</span><span class="word-right">மடுத்தியாரவன்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வண்டு + அறை</span><span class="arrow">→</span><span class="word-right">வண்டறை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பண் + தரு</span><span class="arrow">→</span><span class="word-right">பண்டரு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தசை + எலாம்</span><span class="arrow">→</span><span class="word-right">தசையெலாம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வெம்மை + விறகு</span><span class="arrow">→</span><span class="word-right">வெவ்விறகு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பாடு + என</span><span class="arrow">→</span><span class="word-right">பாடென</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மூன்று + நீர்</span><span class="arrow">→</span><span class="word-right">முந்நீர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பொருப்பு + இழி</span><span class="arrow">→</span><span class="word-right">பொருப்பிழி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அருள் + கடல்</span><span class="arrow">→</span><span class="word-right">அருட்கடல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மருள் + கெட</span><span class="arrow">→</span><span class="word-right">மருட்கெட</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பல + பொறி</span><span class="arrow">→</span><span class="word-right">பல்பொறி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தம் + தம்</span><span class="arrow">→</span><span class="word-right">தத்தம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஆடல் + ஏறு + அழகர்</span><span class="arrow">→</span><span class="word-right">ஆடலேற்றழகர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">குலத்து + இவனை</span><span class="arrow">→</span><span class="word-right">குலத்திவனை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஆகாது + இனி</span><span class="arrow">→</span><span class="word-right">ஆகாதினி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">யாது + எனவே</span><span class="arrow">→</span><span class="word-right">யாதெனவே</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வெண்மை + ஆடு</span><span class="arrow">→</span><span class="word-right">வெள்ளாடு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மயக்கு + ஒழிய</span><span class="arrow">→</span><span class="word-right">மயக்கொழிய</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஆகாது + என்றான்</span><span class="arrow">→</span><span class="word-right">ஆகாதென்றான்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தீண்ட + ஒண்ணா</span><span class="arrow">→</span><span class="word-right">தீண்டவொண்ணா</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மனிதன் + என்றான்</span><span class="arrow">→</span><span class="word-right">மனிதனென்றான்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நிலத்து + உயிர்</span><span class="arrow">→</span><span class="word-right">நிலத்துயிர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வாங்கி + உண்டு</span><span class="arrow">→</span><span class="word-right">வாங்கியுண்டு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அரக்கு + ஆம்பல்</span><span class="arrow">→</span><span class="word-right">அரக்காம்பல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வாய் + அவிழ</span><span class="arrow">→</span><span class="word-right">வாயவிழ</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பார்ப்பு + ஓடுக்கும்</span><span class="arrow">→</span><span class="word-right">பார்ப்பொடுக்கும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">புள் + இனம்</span><span class="arrow">→</span><span class="word-right">புள்ளினம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பூ + புனல்</span><span class="arrow">→</span><span class="word-right">பூம்புனல்</span></div>
+    </div>
+  </div>
+
+  <!-- ===== OLD BOOK SECTION ===== -->
+  <div id="old-book">
+    <div class="section-header">சேர்த்து எழுதுக — <span>பழைய புத்தகம்</span></div>
+    <div class="words-grid" id="grid-old">
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஆடாது + அசையாது</span><span class="arrow">→</span><span class="word-right">ஆடாதசையாது</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கறுப்பு + உடை</span><span class="arrow">→</span><span class="word-right">கறுப்புடை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஓசை + இன்றி</span><span class="arrow">→</span><span class="word-right">ஓசையின்றி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பால் + அன்னம்</span><span class="arrow">→</span><span class="word-right">பாலன்னம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">முகம் + களித்தல்</span><span class="arrow">→</span><span class="word-right">முகங்களித்தல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">முகம் + கடுத்தல்</span><span class="arrow">→</span><span class="word-right">முகங்கடுத்தல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கடுமை + பசி</span><span class="arrow">→</span><span class="word-right">கடும்பசி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கணிப்பு + அரிய (முடிவெடுக்க இயலாத)</span><span class="arrow">→</span><span class="word-right">கணிப்பரிய</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தணிப்பு+அரிய(அடங்காத) — தணிப்பரிய</span><span class="arrow">→</span><span class="word-right">தணிப்பரிய</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வேம்பு + இலை</span><span class="arrow">→</span><span class="word-right">வேப்பிலை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">காப்பது + அவை</span><span class="arrow">→</span><span class="word-right">காப்பதவை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மலர் + பாதம் (மலர் போன்ற பாதம்)</span><span class="arrow">→</span><span class="word-right">மலர்ப்பாதம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பொன் + ஆக்கி</span><span class="arrow">→</span><span class="word-right">பொன்னாக்கி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தழைத்து + ஓங்க</span><span class="arrow">→</span><span class="word-right">தழைத்தோங்க</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">செயல் + ஆற்று</span><span class="arrow">→</span><span class="word-right">செயலாற்று</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தேன் + ஊற்று</span><span class="arrow">→</span><span class="word-right">தேனூற்று</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பொருள் + ஈட்டும்</span><span class="arrow">→</span><span class="word-right">பொருளீட்டும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கவர்ச்சி + அற்ற</span><span class="arrow">→</span><span class="word-right">கவர்ச்சியற்ற</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">செம்மை + நீர் (சிவப்பு நீர்)</span><span class="arrow">→</span><span class="word-right">செந்நீர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அன்பு + அணைப்பு</span><span class="arrow">→</span><span class="word-right">அன்பணைப்பு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">குறுமை + ஏவல்</span><span class="arrow">→</span><span class="word-right">குற்றேவல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அறம் + இலக்கியம் (நல்ல நெறிகளை கூறும் இலக்கியம்)</span><span class="arrow">→</span><span class="word-right">அறவிலக்கியம்</span></div>
+    </div>
+  </div>
+
+  <!-- More sections from pages 39-46 -->
+  <div id="new-book-7">
+    <div class="section-header">சேர்த்து எழுதுக — <span>புதிய புத்தகம் (பகுதி 7 — பக்கம் 39)</span></div>
+    <div class="words-grid" id="grid7">
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நன்மை + நடை</span><span class="arrow">→</span><span class="word-right">நன்னடை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நிலம் + எல்லாம்</span><span class="arrow">→</span><span class="word-right">நிலமெல்லாம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வீழ்ந்து + இங்கே</span><span class="arrow">→</span><span class="word-right">வீழ்ந்திங்கே</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">உனக்கு + ஒருநாள்</span><span class="arrow">→</span><span class="word-right">உனக்கொருநாள்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தேம்பி + அழ</span><span class="arrow">→</span><span class="word-right">தேம்பியழ</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மனம் + உருகி</span><span class="arrow">→</span><span class="word-right">மனமுருகி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அன்புக்கு + அடங்குவதில்</span><span class="arrow">→</span><span class="word-right">அன்புக்கடங்குவதில்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">சுகம் + அடையும்</span><span class="arrow">→</span><span class="word-right">சுகமடையும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஆர்த்து + எழுவோம்</span><span class="arrow">→</span><span class="word-right">ஆர்த்தெழுவோம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கொடுத்தது + எலாம்</span><span class="arrow">→</span><span class="word-right">கொடுத்ததெலாம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">போதும் + இனி</span><span class="arrow">→</span><span class="word-right">போதுமினி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நலன் + அழித்து</span><span class="arrow">→</span><span class="word-right">நலனழித்து</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வந்து + இங்கே</span><span class="arrow">→</span><span class="word-right">வந்திங்கே</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மண்டும் + இருள்</span><span class="arrow">→</span><span class="word-right">மண்டுமிருள்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">குணத்தவர் + ஏன்</span><span class="arrow">→</span><span class="word-right">குணத்தவரேன்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">குளத்தினில் + ஏன்</span><span class="arrow">→</span><span class="word-right">குளத்தினிலேன்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பெற்று + எடுத்த</span><span class="arrow">→</span><span class="word-right">பெற்றெடுத்த</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பண்பில் + உயர்</span><span class="arrow">→</span><span class="word-right">பண்பிலுயர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கை + திடி</span><span class="arrow">→</span><span class="word-right">கைத்திடி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பாடும் + குயில்</span><span class="arrow">→</span><span class="word-right">பாடுங்குயில்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">காடு + மரங்கள்</span><span class="arrow">→</span><span class="word-right">காட்டு மரங்கள்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இயற்கை + சூழல்</span><span class="arrow">→</span><span class="word-right">இயற்கைச்சூழல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மனம் + எனும்</span><span class="arrow">→</span><span class="word-right">மனமெனும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மதி + எனும்</span><span class="arrow">→</span><span class="word-right">மதியெனும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கோலை + ஊன்றி</span><span class="arrow">→</span><span class="word-right">கோலையூன்றி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">சினம் + எனும்</span><span class="arrow">→</span><span class="word-right">சினமெனும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">போது + அறிய</span><span class="arrow">→</span><span class="word-right">போதறிய</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">சரண் + அல்லால்</span><span class="arrow">→</span><span class="word-right">சரணல்லால்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">சரண் + இல்லை</span><span class="arrow">→</span><span class="word-right">சரணில்லை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மற்று + அவள்தன்</span><span class="arrow">→</span><span class="word-right">மற்றவள்தன்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">போன்று + இருந்தேனே</span><span class="arrow">→</span><span class="word-right">போன்றிருந்தேனே</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இறை + அருள்</span><span class="arrow">→</span><span class="word-right">இறையருள்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இறை + என்று</span><span class="arrow">→</span><span class="word-right">இறையென்று</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மண் + இடத்து</span><span class="arrow">→</span><span class="word-right">மண்ணிடத்து</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">விண் + இடத்து</span><span class="arrow">→</span><span class="word-right">விண்ணிடத்து</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">சுத்தம் + இலா</span><span class="arrow">→</span><span class="word-right">சுத்திலா</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இன்பம் + நிலை</span><span class="arrow">→</span><span class="word-right">இன்பநிலை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கரவு + இ(ல்)லா</span><span class="arrow">→</span><span class="word-right">கரவிலா</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நன்மை + நாள்</span><span class="arrow">→</span><span class="word-right">நன்னாள்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">திரு + உருவம்</span><span class="arrow">→</span><span class="word-right">திருவுருவம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">உடைத்து + எறிந்த</span><span class="arrow">→</span><span class="word-right">உடைத்தெறிந்த</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">காட்டினார் + இல்லை</span><span class="arrow">→</span><span class="word-right">காட்டினாரில்லை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நமது + என்பது + அறிந்தோம்</span><span class="arrow">→</span><span class="word-right">நமதென்பதறிந்தோம்</span></div>
+      <!-- Page 39 left continued -->
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கூல் + உளை</span><span class="arrow">→</span><span class="word-right">கூலுளை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நன்மை + அறம்</span><span class="arrow">→</span><span class="word-right">நல்லறம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மின் + ஆர்</span><span class="arrow">→</span><span class="word-right">மின்னார்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தெற்கு + புலியூர்</span><span class="arrow">→</span><span class="word-right">தென்புலியூர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">செம்மை + புலி</span><span class="arrow">→</span><span class="word-right">செம்புலி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கன்னல் + எனத் தகும்</span><span class="arrow">→</span><span class="word-right">கன்னலெனத்தகும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இனிமை + அமுதம் + தமிழ்</span><span class="arrow">→</span><span class="word-right">இன்னமுதத் தமிழ்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பெற்று + அருள்</span><span class="arrow">→</span><span class="word-right">பெற்றருள்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">செம்மை + தமிழ்</span><span class="arrow">→</span><span class="word-right">செந்தமிழ்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மன்னவர் + அன்னவர் + எல்லாம்</span><span class="arrow">→</span><span class="word-right">மன்னவரன்னவரெல்லாம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பசுமை + தமிழே</span><span class="arrow">→</span><span class="word-right">பைந்தமிழே</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தேடுதல் + அற்று + உயர்</span><span class="arrow">→</span><span class="word-right">தேடுதலற்றுயர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வண்மை + தமிழே</span><span class="arrow">→</span><span class="word-right">வண்டமிழே</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">முன்னிய + எல்லாம்</span><span class="arrow">→</span><span class="word-right">முன்னிய வெல்லாம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மொய்ம்பு + உளது</span><span class="arrow">→</span><span class="word-right">மொய்ம்புளது</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மூன்று + உலகு</span><span class="arrow">→</span><span class="word-right">மூவுலகு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மூன்று + தமிழே</span><span class="arrow">→</span><span class="word-right">முத்தமிழே</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">விரித்து + உரை</span><span class="arrow">→</span><span class="word-right">விரித்துரை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">எம் + தந்தாய்</span><span class="arrow">→</span><span class="word-right">எந்தாய்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">எங்கள் + அருள் + பிரகாச</span><span class="arrow">→</span><span class="word-right">எங்களருட்பிரகாச</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வண்டு + இனம்</span><span class="arrow">→</span><span class="word-right">வண்டினம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கா + அலரை</span><span class="arrow">→</span><span class="word-right">காவலரை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அரிவை + அம் + பாகத்தான், அரி + வை + அம்பு + ஆகத்தான்</span><span class="arrow">→</span><span class="word-right">அரிவையம் பாகத்தான்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அரண் + ஒரு</span><span class="arrow">→</span><span class="word-right">அரணொரு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மூன்று + எய்தோன்</span><span class="arrow">→</span><span class="word-right">மூன்றெய்தோன்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஏற்றம் + பாட்டு</span><span class="arrow">→</span><span class="word-right">ஏற்றப்பாட்டு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வரும் + கிழக்கே</span><span class="arrow">→</span><span class="word-right">வருங்கிழக்கே</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வெள்ளம் + கண்ட</span><span class="arrow">→</span><span class="word-right">வெள்ளங்கண்ட</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஆற்றை + கண்ட</span><span class="arrow">→</span><span class="word-right">ஆற்றைக்கண்ட</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">குளத்தை + கண்ட</span><span class="arrow">→</span><span class="word-right">குளத்தைக் கண்ட</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">யாம் + அறிந்த</span><span class="arrow">→</span><span class="word-right">யாமறிந்த</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இனிது + ஆவது + எங்கும்</span><span class="arrow">→</span><span class="word-right">இனிதாவதெங்கும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">உலகு + அனைத்தும்</span><span class="arrow">→</span><span class="word-right">உலகனைத்தும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நாமம் + அது</span><span class="arrow">→</span><span class="word-right">நாமது</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தமிழர் + என</span><span class="arrow">→</span><span class="word-right">தமிழரென</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கொண்டு + இங்கு</span><span class="arrow">→</span><span class="word-right">கொண்டிங்கு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தேன் + மதுரம்</span><span class="arrow">→</span><span class="word-right">தேமதுரம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தமிழ் + ஓசை</span><span class="arrow">→</span><span class="word-right">தமிழோசை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">உலகம் + எலாம்</span><span class="arrow">→</span><span class="word-right">உலகமெலாம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">குறுமை + நகை</span><span class="arrow">→</span><span class="word-right">குறுநகை</span></div>
+    </div>
+  </div>
+
+  <!-- Page 39 right & 40 -->
+  <div id="new-book-8">
+    <div class="section-header">சேர்த்து எழுதுக — <span>புதிய புத்தகம் (பகுதி 8 — பக்கம் 39-40)</span></div>
+    <div class="words-grid" id="grid8">
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தெளி + பொருள்</span><span class="arrow">→</span><span class="word-right">தெளிபொருள்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மோது + திரை</span><span class="arrow">→</span><span class="word-right">மோதுதிரை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">சக்தி + பாடினான்</span><span class="arrow">→</span><span class="word-right">சக்திபாடினான்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கோடை + சென்றான்</span><span class="arrow">→</span><span class="word-right">கோடைசென்றான்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">யானை + காத்து</span><span class="arrow">→</span><span class="word-right">யானைகாத்து</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஒன்று + கொடு</span><span class="arrow">→</span><span class="word-right">ஒன்றுகொடு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இரு + சீர்</span><span class="arrow">→</span><span class="word-right">இருசீர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மூன்று + கிளி</span><span class="arrow">→</span><span class="word-right">மூன்றுகிளி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நான்கு + சக்கரம்</span><span class="arrow">→</span><span class="word-right">நான்குசக்கரம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஏழு + கடல்</span><span class="arrow">→</span><span class="word-right">ஏழுகடல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நாடு + எலாம்</span><span class="arrow">→</span><span class="word-right">நாடெலாம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நல்குரவு + ஒழிய</span><span class="arrow">→</span><span class="word-right">நல்குரவொழிய</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வீடு + என</span><span class="arrow">→</span><span class="word-right">வீடென</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அருமை + பொருள்</span><span class="arrow">→</span><span class="word-right">அரும்பொருள்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">திரு + அருள்</span><span class="arrow">→</span><span class="word-right">திருவருள்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நிகர் + அற்ற</span><span class="arrow">→</span><span class="word-right">நிகரற்ற</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஒளி + அன்ன</span><span class="arrow">→</span><span class="word-right">ஒளியன்ன</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மறைவு + அற்ற</span><span class="arrow">→</span><span class="word-right">மறைவற்ற</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நன்மை + அறம்</span><span class="arrow">→</span><span class="word-right">நல்லறம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இவ் + இரண்டு</span><span class="arrow">→</span><span class="word-right">இவ்விரண்டு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அது + அல்லது + ஊதியம்</span><span class="arrow">→</span><span class="word-right">அதுவல்லதூதியம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இரப்பார்க்கு+ஒன்று+ஈவார்</span><span class="arrow">→</span><span class="word-right">இரப்பார்க்கொன்றீவார்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">உலகத்து + உயர்ந்த</span><span class="arrow">→</span><span class="word-right">உலகத்துயர்ந்த</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நிற்பது + ஒன்று + இல்</span><span class="arrow">→</span><span class="word-right">நிற்பதொன்றில்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">புத்தேன் + உலகு</span><span class="arrow">→</span><span class="word-right">புத்தேளுலகு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">உளது + ஆகும்</span><span class="arrow">→</span><span class="word-right">உளதாகும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வித்தகர்க்கு + அல்லால்</span><span class="arrow">→</span><span class="word-right">வித்தகர்க்கல்லால்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தம் + நோவார்</span><span class="arrow">→</span><span class="word-right">தந்நோவார்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நோவது + எவன்</span><span class="arrow">→</span><span class="word-right">நோவதெவன்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வசை + என்ப</span><span class="arrow">→</span><span class="word-right">வசையென்ப</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வையத்தார்க்கு + எல்லாம்</span><span class="arrow">→</span><span class="word-right">வையத்தார்க்கெல்லாம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வண்மை + பயன்</span><span class="arrow">→</span><span class="word-right">வண்பயன்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வசை + ஒழிய</span><span class="arrow">→</span><span class="word-right">வசையொழிய</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">காக்கின் + என்</span><span class="arrow">→</span><span class="word-right">காக்கினென்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இல் + அதனின்</span><span class="arrow">→</span><span class="word-right">இல்லதனின்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இனம் + என்னும்</span><span class="arrow">→</span><span class="word-right">இனமென்னும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நிலத்து + அரைந்தான்</span><span class="arrow">→</span><span class="word-right">நிலத்தரைந்தான்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இணர் + ளி</span><span class="arrow">→</span><span class="word-right">இணரளி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தோய்வு + அன்ன</span><span class="arrow">→</span><span class="word-right">தோய்வன்ன</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">உள்ளியது + எல்லாம்</span><span class="arrow">→</span><span class="word-right">உள்ளியதெல்லாம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">உடன் + எய்தும்</span><span class="arrow">→</span><span class="word-right">உடனெய்தும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இறந்தார் + அனையர்</span><span class="arrow">→</span><span class="word-right">இறந்தாரனையர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">சிறுமை + படை</span><span class="arrow">→</span><span class="word-right">சிறுபடை</span></div>
+      <!-- Page 40 left -->
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நாடு + உண்டு</span><span class="arrow">→</span><span class="word-right">நாடுண்டு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">புகழ் + ஒளி</span><span class="arrow">→</span><span class="word-right">புகழொளி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வெருண்டு + ஓட</span><span class="arrow">→</span><span class="word-right">வெருண்டோட</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பகுத்து + உண்டு</span><span class="arrow">→</span><span class="word-right">பகுத்துண்டு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பல + உயிர்</span><span class="arrow">→</span><span class="word-right">பல்லுயிர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அருமை + இருள்</span><span class="arrow">→</span><span class="word-right">ஆரிருள்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">சாகும் + துணை</span><span class="arrow">→</span><span class="word-right">சாந்துணை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">எழுச்சி + ஊட்டி</span><span class="arrow">→</span><span class="word-right">எழுச்சியூட்டி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தட்டி + எழுப்பிய</span><span class="arrow">→</span><span class="word-right">தட்டெழுப்பிய</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இவருக்கு + இட்ட</span><span class="arrow">→</span><span class="word-right">இவருக்கிட்ட</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இயற்கை + எய்தினார்</span><span class="arrow">→</span><span class="word-right">இயற்கையெய்தினார்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வண்டி + ஓட்டி</span><span class="arrow">→</span><span class="word-right">வண்டியோட்டி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">சொல் + ஆய்வை</span><span class="arrow">→</span><span class="word-right">சொல்லாய்வை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வாழ் + நாள்</span><span class="arrow">→</span><span class="word-right">வாணாள்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பாட்டு + இயல்</span><span class="arrow">→</span><span class="word-right">பாட்டியல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பா + இனங்கள்</span><span class="arrow">→</span><span class="word-right">பாவினங்கள்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பரணி + ஆகும்</span><span class="arrow">→</span><span class="word-right">பரணியாகும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">விடுவோம் + ஆனால்</span><span class="arrow">→</span><span class="word-right">விடுவோமானால்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">எள் + நெய்</span><span class="arrow">→</span><span class="word-right">எண்ணெய்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தண்மை + நீர்</span><span class="arrow">→</span><span class="word-right">தண்ணீர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மணி + ஒலி</span><span class="arrow">→</span><span class="word-right">மணியொலி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தீ + அணைப்பான்</span><span class="arrow">→</span><span class="word-right">தீயணைப்பான்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஒப்பு + அற்ற</span><span class="arrow">→</span><span class="word-right">ஒப்பற்ற</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அரங்கு + ஏற்றம்</span><span class="arrow">→</span><span class="word-right">அரங்கேற்றம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மூன்று + பழங்கள்</span><span class="arrow">→</span><span class="word-right">முப்பழங்கள்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பழம் + சாறு</span><span class="arrow">→</span><span class="word-right">பழச்சாறு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">உள் + பொருள்</span><span class="arrow">→</span><span class="word-right">உட்பொருள்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">என்ன + என்று</span><span class="arrow">→</span><span class="word-right">என்னவென்று</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நூறு + ஆண்டு</span><span class="arrow">→</span><span class="word-right">நூற்றாண்டு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பெற்று + இருந்தார்</span><span class="arrow">→</span><span class="word-right">பெற்றிருந்தார்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வெளி + ஏறுவார்</span><span class="arrow">→</span><span class="word-right">வெளியேறுவார்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தனி + ஒருவர்</span><span class="arrow">→</span><span class="word-right">தனியொருவர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பங்கு + ஏற்கும்</span><span class="arrow">→</span><span class="word-right">பங்கேற்கும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தனி + ஒருவர்</span><span class="arrow">→</span><span class="word-right">தனியொருவர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஊர் + புறம்</span><span class="arrow">→</span><span class="word-right">ஊர்ப்புறம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">உள் + அரங்கம்</span><span class="arrow">→</span><span class="word-right">உள்ளரங்கம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நோய் + இன்றி</span><span class="arrow">→</span><span class="word-right">நோயின்றி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நோய் + அற்ற</span><span class="arrow">→</span><span class="word-right">நோயற்ற</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">குறைவு + அற்ற</span><span class="arrow">→</span><span class="word-right">குறைவற்ற</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வெறுமை + இலை</span><span class="arrow">→</span><span class="word-right">வெற்றிலை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மண் + ஏரல்</span><span class="arrow">→</span><span class="word-right">மண்ணேரல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">உரம் + ஊட்டும்</span><span class="arrow">→</span><span class="word-right">உரமூட்டும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நன்மை + எள் + நெய்</span><span class="arrow">→</span><span class="word-right">நல்லெண்ணெய்</span></div>
+    </div>
+  </div>
+
+  <!-- Pages 40 right -->
+  <div id="new-book-9">
+    <div class="section-header">சேர்த்து எழுதுக — <span>புதிய புத்தகம் (பகுதி 9 — பக்கம் 40)</span></div>
+    <div class="words-grid" id="grid9">
+      <div class="word-entry"><span class="star">★</span><span class="word-left">முள் + இருக்கும்</span><span class="arrow">→</span><span class="word-right">முள்ளிருக்கும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அழுக்கு + ஆறு</span><span class="arrow">→</span><span class="word-right">அழுக்காறு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பறை + அறை</span><span class="arrow">→</span><span class="word-right">பறையறை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அழகு + அற்ற</span><span class="arrow">→</span><span class="word-right">அழகற்ற</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பசுமை + தமிழ்</span><span class="arrow">→</span><span class="word-right">பைந்தமிழ்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அருமை + கான்</span><span class="arrow">→</span><span class="word-right">அருங்கான்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">விண் + ஆதி</span><span class="arrow">→</span><span class="word-right">விண்ணாதி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பூதம் + எலாம்</span><span class="arrow">→</span><span class="word-right">பூதமெலாம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கண்ட + அன்பர்</span><span class="arrow">→</span><span class="word-right">கண்டவன்பர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அருள் + தனை</span><span class="arrow">→</span><span class="word-right">அருடனை, அருட்தனை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தெற்கு + நாடு</span><span class="arrow">→</span><span class="word-right">தென்னாடு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வண்மை + தமிழ்</span><span class="arrow">→</span><span class="word-right">வண்டமிழ்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நன்மை + மொழி</span><span class="arrow">→</span><span class="word-right">நன்மொழி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தனி + தமிழ்</span><span class="arrow">→</span><span class="word-right">தனித்தமிழ்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தண்மை + தமிழ்</span><span class="arrow">→</span><span class="word-right">தண்டமிழ்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வான் + நின்று</span><span class="arrow">→</span><span class="word-right">வானின்று</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தான் + அமிழ்தம்</span><span class="arrow">→</span><span class="word-right">தானமிழ்தம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">என்று + உணரற்பாற்று</span><span class="arrow">→</span><span class="word-right">என்றுணரற்பாற்று</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">துப்பு + ஆய</span><span class="arrow">→</span><span class="word-right">துப்பாய</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">துப்பு + ஆக்கி</span><span class="arrow">→</span><span class="word-right">துப்பாக்கி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வியன் + உலகம்</span><span class="arrow">→</span><span class="word-right">வியனுலகம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நின்று + உடற்றும்</span><span class="arrow">→</span><span class="word-right">நின்றுடற்றும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வளம் + குன்றி</span><span class="arrow">→</span><span class="word-right">வளங்குன்றி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மற்று + ஆங்கே</span><span class="arrow">→</span><span class="word-right">மற்றாங்கே</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பசுமை + புல்</span><span class="arrow">→</span><span class="word-right">பசும்புல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">காண்பரிது</span><span class="arrow">→</span><span class="word-right">காண்பரிது</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நெடுமை + கடல்</span><span class="arrow">→</span><span class="word-right">நெடுங்கடல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தழிழ்ந்து + எழிலி</span><span class="arrow">→</span><span class="word-right">தழிழ்ந்தெழிலி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வானோர்க்கும் + ஈண்டு</span><span class="arrow">→</span><span class="word-right">வானோர்க்குமீண்டு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தவம் + இரண்டும்</span><span class="arrow">→</span><span class="word-right">தவமிரண்டும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வழங்காது + எனின்</span><span class="arrow">→</span><span class="word-right">வழங்காதெனின்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நீரின்று + அமையாது</span><span class="arrow">→</span><span class="word-right">நீரின்றமையாது</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வான் + நின்று + அமையாது</span><span class="arrow">→</span><span class="word-right">வானின்றமையாது</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அமையாது + ஒழுக்கு</span><span class="arrow">→</span><span class="word-right">அமையாதொழுக்கு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">யாது + எனில்</span><span class="arrow">→</span><span class="word-right">யாதெனில்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">யாது + ஒன்றும்</span><span class="arrow">→</span><span class="word-right">யாதொன்றும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வாய்மை + இடத்த</span><span class="arrow">→</span><span class="word-right">வாய்மையிடத்த</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நெஞ்சு + அறிவு</span><span class="arrow">→</span><span class="word-right">நெஞ்சறிவு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பொய்யாது + ஒழுகின்</span><span class="arrow">→</span><span class="word-right">பொய்யாதொழுகின்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தானம் + செய்வார்</span><span class="arrow">→</span><span class="word-right">தானஞ்செய்வார்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">புகழ் + இல்லை</span><span class="arrow">→</span><span class="word-right">புகழில்லை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">புறம் + தூய்மை</span><span class="arrow">→</span><span class="word-right">புறந்தூய்மை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அகம் + தூய்மை</span><span class="arrow">→</span><span class="word-right">அகந்தூய்மை</span></div>
+    </div>
+  </div>
+
+  <!-- Pages 41-42 -->
+  <div id="new-book-10">
+    <div class="section-header">சேர்த்து எழுதுக — <span>புதிய புத்தகம் (பகுதி 10 — பக்கம் 41-42)</span></div>
+    <div class="words-grid" id="grid10">
+      <div class="word-entry"><span class="star">★</span><span class="word-left">விளக்கு + அல்ல</span><span class="arrow">→</span><span class="word-right">விளக்கல்ல</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">எனைத்து + ஒன்றும்</span><span class="arrow">→</span><span class="word-right">எனைத்தொன்றும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">புகழ் + ஓடு</span><span class="arrow">→</span><span class="word-right">புகழோடு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">என்னும் + அலர்</span><span class="arrow">→</span><span class="word-right">என்னுமலர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இடுக்கண் + படினும்</span><span class="arrow">→</span><span class="word-right">இடுக்கட்படினும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நடுக்கு + அற்ற</span><span class="arrow">→</span><span class="word-right">நடுக்கற்ற</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">காட்சி + அவர்</span><span class="arrow">→</span><span class="word-right">காட்சியவர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">எற்று + என்று</span><span class="arrow">→</span><span class="word-right">எற்றென்று</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மற்று + அன்ன</span><span class="arrow">→</span><span class="word-right">மற்றன்ன</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கடிந்து + ஒராார்</span><span class="arrow">→</span><span class="word-right">கடிந்தொராார்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பின் + பயக்கும்</span><span class="arrow">→</span><span class="word-right">பிற்பயக்கும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">செய்து + ஏமார்த்தல்</span><span class="arrow">→</span><span class="word-right">செய்தேமார்த்தல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பசுமை + மண்</span><span class="arrow">→</span><span class="word-right">பசுமண்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மண் + கலத்து + உள்</span><span class="arrow">→</span><span class="word-right">மட்கலத்துள்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பெய்து + இரிழி + அற்று</span><span class="arrow">→</span><span class="word-right">பெய்திரிழியற்று</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மாசு + அற</span><span class="arrow">→</span><span class="word-right">மாசற</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நிலத்துக்கு + அணி</span><span class="arrow">→</span><span class="word-right">நிலத்துக்கணி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வீறு + எய்தும்</span><span class="arrow">→</span><span class="word-right">வீறெய்தும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தனக்கு + அணி</span><span class="arrow">→</span><span class="word-right">தனக்கணி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">காலம் + அறிந்து</span><span class="arrow">→</span><span class="word-right">காலமறிந்து</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நன்றின்பால் + உய்த்து</span><span class="arrow">→</span><span class="word-right">நன்றின்பாலுய்த்து</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வள்ளல் + தன்மை</span><span class="arrow">→</span><span class="word-right">வள்ளன்மை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தமர் + அல்லார்</span><span class="arrow">→</span><span class="word-right">தமரல்லார்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஆ + இழை</span><span class="arrow">→</span><span class="word-right">ஆயிழை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தகவு + இலன்</span><span class="arrow">→</span><span class="word-right">தகவிலன்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கை + அத்து + உண்ண</span><span class="arrow">→</span><span class="word-right">கைத்தாண்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">செல் + உழி</span><span class="arrow">→</span><span class="word-right">செல்லுழி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மூன்று + நீர்</span><span class="arrow">→</span><span class="word-right">முந்நீர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நன்மை + மரம்</span><span class="arrow">→</span><span class="word-right">நன்மரம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பெருமை + கடல்</span><span class="arrow">→</span><span class="word-right">பெருங்கடல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஒண்மை + அழல்</span><span class="arrow">→</span><span class="word-right">ஒளளழல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">புகு + உழி</span><span class="arrow">→</span><span class="word-right">புகுழி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஒண்மை + ளி</span><span class="arrow">→</span><span class="word-right">ஒளளி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அருமை + பெறல்</span><span class="arrow">→</span><span class="word-right">அரும்பெறல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பெருமை + துன்பம்</span><span class="arrow">→</span><span class="word-right">பெருந்துன்பம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">முட்டு + ஆ + ஆள்</span><span class="arrow">→</span><span class="word-right">முட்டாள்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கடிது + எங்கு</span><span class="arrow">→</span><span class="word-right">கடிதேங்கு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பூ + கொடி</span><span class="arrow">→</span><span class="word-right">பூங்கொடி, பூக்கொடி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வலம் + கொண்டு</span><span class="arrow">→</span><span class="word-right">வலங்கொண்டு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அருமை + உயிர்</span><span class="arrow">→</span><span class="word-right">ஆருயிர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மனை + அகம்</span><span class="arrow">→</span><span class="word-right">மனையகம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பார் + அகம்</span><span class="arrow">→</span><span class="word-right">பாரகம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நான்கு + மறை</span><span class="arrow">→</span><span class="word-right">நான்மறை</span></div>
+      <!-- Page 41 right -->
+      <div class="word-entry"><span class="star">★</span><span class="word-left">முதுமை + உளர்</span><span class="arrow">→</span><span class="word-right">மூதுளர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அருமை + மறை</span><span class="arrow">→</span><span class="word-right">அருமறை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஏ + வகை</span><span class="arrow">→</span><span class="word-right">எவ்வகை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">சிந்தையால் + திரட்டி</span><span class="arrow">→</span><span class="word-right">சிந்தையாற்றிரட்டி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பொருள் + பேறு</span><span class="arrow">→</span><span class="word-right">பொருட்பேறு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நன்மை + நாள்</span><span class="arrow">→</span><span class="word-right">நன்னாள்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கோயில் + நிரம்பிட</span><span class="arrow">→</span><span class="word-right">கோயினிரம்பிட</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கல் + தளி</span><span class="arrow">→</span><span class="word-right">கற்தளி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பெருமை + செல்வம்</span><span class="arrow">→</span><span class="word-right">பெருஞ்செல்வம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நீடு + ஆலயம்</span><span class="arrow">→</span><span class="word-right">நீடாலயம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">எட்டு + திசை</span><span class="arrow">→</span><span class="word-right">எண்திசை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கோ + இல்</span><span class="arrow">→</span><span class="word-right">கோயில்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மகளிர் + உண்டு</span><span class="arrow">→</span><span class="word-right">மகளிருண்டு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அங்கு + ஓர்</span><span class="arrow">→</span><span class="word-right">அங்கோர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">போவது + இல்லை</span><span class="arrow">→</span><span class="word-right">போவதில்லை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பொறுத்து + இருந்தோம்</span><span class="arrow">→</span><span class="word-right">பொறுத்திருந்தோம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வைத்து + இழந்தான்</span><span class="arrow">→</span><span class="word-right">வைத்திழந்தான்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தீமை + அறிவு</span><span class="arrow">→</span><span class="word-right">தீயறிவு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மேலும் + மேலும்</span><span class="arrow">→</span><span class="word-right">மேன்மேலும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கட்டு + உண்டோம்</span><span class="arrow">→</span><span class="word-right">கட்டுண்டோம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பெண் + அரசி</span><span class="arrow">→</span><span class="word-right">பெண்ணரசி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வழங்குவது + இந்நெறி</span><span class="arrow">→</span><span class="word-right">வழங்குவதிந்நெறி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வீடு + ஏது</span><span class="arrow">→</span><span class="word-right">வீடேது</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">துறந்து + இங்கே</span><span class="arrow">→</span><span class="word-right">துறந்திங்கே</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">உலகு + இதனை</span><span class="arrow">→</span><span class="word-right">உலகிதனை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">செம்மை + வானம்</span><span class="arrow">→</span><span class="word-right">செவ்வானம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பழி + இஃது</span><span class="arrow">→</span><span class="word-right">பழியிஃது</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இனிமை + உயிர்</span><span class="arrow">→</span><span class="word-right">இன்னுயிர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கிளி + இனம்</span><span class="arrow">→</span><span class="word-right">கிளியினம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பசுமை + கிளி</span><span class="arrow">→</span><span class="word-right">பைங்கிளி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தமிழ் + இசை</span><span class="arrow">→</span><span class="word-right">தமிழிசை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பூ + சினை</span><span class="arrow">→</span><span class="word-right">பூஞ்சினை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">குரங்கு + இனம்</span><span class="arrow">→</span><span class="word-right">குரக்கினம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">போலம் + கை</span><span class="arrow">→</span><span class="word-right">போலங்கை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மூன்று + பழம்</span><span class="arrow">→</span><span class="word-right">முப்பழம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கடறு + இடையார்</span><span class="arrow">→</span><span class="word-right">கடற்றிடையார்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">போர் + அடித்திடும்</span><span class="arrow">→</span><span class="word-right">போரடித்திடும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கேட்டு + உழி</span><span class="arrow">→</span><span class="word-right">கேட்டுழி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">முதுமை + வெயில்</span><span class="arrow">→</span><span class="word-right">முதுவெயில்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நன்மை + வளம்</span><span class="arrow">→</span><span class="word-right">நல்வளம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வெம்மை + பாலை</span><span class="arrow">→</span><span class="word-right">வெம்பாலை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கொடுமை + வரி</span><span class="arrow">→</span><span class="word-right">கொடுவரி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வெம்மை + சுரம்</span><span class="arrow">→</span><span class="word-right">வெஞ்சுரம்</span></div>
+    </div>
+  </div>
+
+  <!-- Pages 42-46 -->
+  <div id="new-book-11">
+    <div class="section-header">சேர்த்து எழுதுக — <span>புதிய புத்தகம் (பகுதி 11 — பக்கம் 42-43)</span></div>
+    <div class="words-grid" id="grid11">
+      <div class="word-entry"><span class="star">★</span><span class="word-left">துடி + இடை</span><span class="arrow">→</span><span class="word-right">துடியிடை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">படர் + உற</span><span class="arrow">→</span><span class="word-right">படருற</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கல் + இடை</span><span class="arrow">→</span><span class="word-right">கல்லிடை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நீர் + அகம்</span><span class="arrow">→</span><span class="word-right">நீரகம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">செம்மை + நெல்</span><span class="arrow">→</span><span class="word-right">செந்நெல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பசுமை + புனல்</span><span class="arrow">→</span><span class="word-right">பைம்புனல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பெருமை + மணல்</span><span class="arrow">→</span><span class="word-right">பெருமணல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தண் + என</span><span class="arrow">→</span><span class="word-right">தண்ணென</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">விரைந்து + அசையும்</span><span class="arrow">→</span><span class="word-right">விரைந்தசையும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அ + வேளை</span><span class="arrow">→</span><span class="word-right">அவ்வேளை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பாட்டு + எழுதி</span><span class="arrow">→</span><span class="word-right">பாட்டெழுதி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மறு + அற்ற</span><span class="arrow">→</span><span class="word-right">மறுவற்ற</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">முழுமை + நிலவு</span><span class="arrow">→</span><span class="word-right">முழுநிலவு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">செற்றன்று + ஆயினும்</span><span class="arrow">→</span><span class="word-right">செற்றன்றாயினும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">செற்று + அன்று</span><span class="arrow">→</span><span class="word-right">செற்றன்று</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">செயிர்த்து + அன்று</span><span class="arrow">→</span><span class="word-right">செயிர்த்தன்று</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">உய்வு + இன்று</span><span class="arrow">→</span><span class="word-right">உய்வின்று</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கைதொமுது + ஏத்தி</span><span class="arrow">→</span><span class="word-right">கைதொமுதேத்தி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இரந்தன்று + ஆகல்</span><span class="arrow">→</span><span class="word-right">இரந்தன்றாகல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பொலம் + தார்</span><span class="arrow">→</span><span class="word-right">பொலந்தார்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மண்டும் – அமர்</span><span class="arrow">→</span><span class="word-right">மண்டமர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">திண் + தேர்</span><span class="arrow">→</span><span class="word-right">திண்டேர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கடக்கும் + தானை</span><span class="arrow">→</span><span class="word-right">கடக்குந்தானை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">முள் + ஆறு</span><span class="arrow">→</span><span class="word-right">முள்ளாறு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கல் + ஆறு</span><span class="arrow">→</span><span class="word-right">கல்லாறு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வாள் + அபயன்</span><span class="arrow">→</span><span class="word-right">வாளபயன்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அ + தரை</span><span class="arrow">→</span><span class="word-right">அத்தரை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மூன்று + தமிழ்</span><span class="arrow">→</span><span class="word-right">முத்தமிழ்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">உவந்து + உரைக்கும்</span><span class="arrow">→</span><span class="word-right">உவந்துரைக்கும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">விண்ணப்பம் + உண்டு</span><span class="arrow">→</span><span class="word-right">விண்ணப்பமுண்டு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கொடுபாய்க்கு+உறவு+என்று</span><span class="arrow">→</span><span class="word-right">கொடுபாய்க்குறவென்று</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மூன்று+இனத்தும்+உண்டோ</span><span class="arrow">→</span><span class="word-right">மூன்றினத்துமுண்டோ</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">திறம் + எல்லாம்</span><span class="arrow">→</span><span class="word-right">திறமெல்லாம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">சிந்து + என்று</span><span class="arrow">→</span><span class="word-right">சிந்தென்று</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">முற்று + உணர்ந்த</span><span class="arrow">→</span><span class="word-right">முற்றுணர்ந்த</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மூன்று + குணம்</span><span class="arrow">→</span><span class="word-right">முக்குணம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நூறு + உடையாய்</span><span class="arrow">→</span><span class="word-right">நூறுடையாய்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தெண்ணம் + அமுது</span><span class="arrow">→</span><span class="word-right">தெள்ளமுது</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பெருமை + அண்டம்</span><span class="arrow">→</span><span class="word-right">பேரண்டம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">முன் + இல்</span><span class="arrow">→</span><span class="word-right">முன்றில்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வண்டலிட்டு + ஓடும்</span><span class="arrow">→</span><span class="word-right">வண்டலிட்டோடும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பொன் + எயில்</span><span class="arrow">→</span><span class="word-right">பொன்னெயில்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">எய் + இல்</span><span class="arrow">→</span><span class="word-right">எயில்</span></div>
+      <!-- Page 42 right -->
+      <div class="word-entry"><span class="star">★</span><span class="word-left">சென்று + அலங்காரர்</span><span class="arrow">→</span><span class="word-right">சென்டலங்காரர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">எடுத்து + எறிய</span><span class="arrow">→</span><span class="word-right">எடுத்தெறிய</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கடுமை + சூல்</span><span class="arrow">→</span><span class="word-right">கடுஞ்சூல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">விலை + உண்டு</span><span class="arrow">→</span><span class="word-right">விலையுண்டு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தரம் + உண்டு</span><span class="arrow">→</span><span class="word-right">தரமுண்டு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கடல் + அலை</span><span class="arrow">→</span><span class="word-right">கடலலை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அகண்டம் + ஆக்கு</span><span class="arrow">→</span><span class="word-right">அகண்டமாக்கு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">சங்கமம் + ஆக்கு</span><span class="arrow">→</span><span class="word-right">சங்கமமாக்கு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நான் + என்று</span><span class="arrow">→</span><span class="word-right">நானென்று</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பிரிவு + இல்லை</span><span class="arrow">→</span><span class="word-right">பிரிவில்லை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பேதம் + இல்லை</span><span class="arrow">→</span><span class="word-right">பேதமில்லை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கூறுதற்கு + இல்லை</span><span class="arrow">→</span><span class="word-right">கூறுதற்கில்லை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">துணிந்து + இங்கு</span><span class="arrow">→</span><span class="word-right">துணிந்திங்கு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அன்பு + என்னும்</span><span class="arrow">→</span><span class="word-right">அன்பென்னும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அடுப்பு + அகத்து + ஏற்றி</span><span class="arrow">→</span><span class="word-right">அடுப்பகத்தேற்றி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பழது + இல்லா</span><span class="arrow">→</span><span class="word-right">பழுதில்லா</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">உழுது + இடா</span><span class="arrow">→</span><span class="word-right">உழுதிடா</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஒப்பு + அற்ற</span><span class="arrow">→</span><span class="word-right">ஒப்பற்ற</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பெருமை + இன்பம்</span><span class="arrow">→</span><span class="word-right">பேரின்பம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">துன்பு + உருத்தும்</span><span class="arrow">→</span><span class="word-right">துன்புருத்தும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">புதுமை + உலகு</span><span class="arrow">→</span><span class="word-right">புதுவுலகு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பகல் + எல்லாம்</span><span class="arrow">→</span><span class="word-right">பகலெல்லாம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஆதிக்கத்து + உயர்ந்த</span><span class="arrow">→</span><span class="word-right">ஆதிக்கத்துயர்ந்த</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நகம் + கண்</span><span class="arrow">→</span><span class="word-right">நகக்கண்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அழுக்கு + இல்லாமல்</span><span class="arrow">→</span><span class="word-right">அழுக்கில்லாமல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நறுக்கு + என்று</span><span class="arrow">→</span><span class="word-right">நறுக்கென்று</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஓய்வு + இன்றி</span><span class="arrow">→</span><span class="word-right">ஓய்வின்றி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">உழைத்து + உழைத்தே</span><span class="arrow">→</span><span class="word-right">உழைத்துழைத்தே</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">விளாங்கிற்று + அங்கே</span><span class="arrow">→</span><span class="word-right">விளாங்கிற்றங்கே</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தெற்கு + முனை</span><span class="arrow">→</span><span class="word-right">தென்முனை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மானுடர் + போர்</span><span class="arrow">→</span><span class="word-right">மானுடப்போர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">செம்மை + வாய்</span><span class="arrow">→</span><span class="word-right">செவ்வாய்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வெண்மை + நீறு</span><span class="arrow">→</span><span class="word-right">வெண்ணீறு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பொன் + பாதம்</span><span class="arrow">→</span><span class="word-right">பொற்பாதம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பெருமை + நிலம்</span><span class="arrow">→</span><span class="word-right">பெருநிலம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மலர் + அடி</span><span class="arrow">→</span><span class="word-right">மலரடி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">காட்டு + என்றும்</span><span class="arrow">→</span><span class="word-right">காட்டென்றும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஊன் + உடைய</span><span class="arrow">→</span><span class="word-right">ஊனுடைய</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பல + உயிர்க்கும்</span><span class="arrow">→</span><span class="word-right">பல்லுயிர்க்கும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">உணர்வு + அரிய</span><span class="arrow">→</span><span class="word-right">உணர்வரிய</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஞானம் + எனும்</span><span class="arrow">→</span><span class="word-right">ஞானமெனும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நின்று + என்றும்</span><span class="arrow">→</span><span class="word-right">நின்றென்றும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">எ + இடத்தும்</span><span class="arrow">→</span><span class="word-right">எவ்விடத்தும்</span></div>
+    </div>
+  </div>
+
+  <!-- Pages 43-46 continued -->
+  <div id="new-book-12">
+    <div class="section-header">சேர்த்து எழுதுக — <span>புதிய புத்தகம் (பகுதி 12 — பக்கம் 43-47)</span></div>
+    <div class="words-grid" id="grid12">
+      <div class="word-entry"><span class="star">★</span><span class="word-left">என் + நாளும்</span><span class="arrow">→</span><span class="word-right">என்னாளும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">புலியை + கொன்றான்</span><span class="arrow">→</span><span class="word-right">புலியைக்கொன்றான்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பொருளை + சேர்த்தான்</span><span class="arrow">→</span><span class="word-right">பொருளைச்சேர்த்தான்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நாலை + படி</span><span class="arrow">→</span><span class="word-right">நாலைப்படி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பகையை + துரத்து</span><span class="arrow">→</span><span class="word-right">பகையைத்துரத்து</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வீட்டுக்கு + போனான்</span><span class="arrow">→</span><span class="word-right">வீட்டுக்குப்போனான்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நண்பனுக்கு + கொடு</span><span class="arrow">→</span><span class="word-right">நண்பனுக்குக்கொடு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பூட்டுக்கு + சாவி</span><span class="arrow">→</span><span class="word-right">பூட்டுக்குச்சாவி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஊருக்கு + பாதை</span><span class="arrow">→</span><span class="word-right">ஊருக்குப்பாதை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வாக்கு + கொடு</span><span class="arrow">→</span><span class="word-right">வாக்குக்கொடு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கொக்கு + சிறகு</span><span class="arrow">→</span><span class="word-right">கொக்குச்சிறகு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பாக்கு + துள்</span><span class="arrow">→</span><span class="word-right">பாக்குத்துள்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அச்சு + பலகை</span><span class="arrow">→</span><span class="word-right">அச்சுப்பலகை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தீ + புகை</span><span class="arrow">→</span><span class="word-right">தீப்புகை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தை + பொங்கல்</span><span class="arrow">→</span><span class="word-right">தைப்பொங்கல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஈ + தலை</span><span class="arrow">→</span><span class="word-right">ஈத்தலை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பலா + சுளை</span><span class="arrow">→</span><span class="word-right">பலாச்சுளை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">உலா + பாடினான்</span><span class="arrow">→</span><span class="word-right">உலாப்பாடினான்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இரா + பகல்</span><span class="arrow">→</span><span class="word-right">இராப்பகல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கனா + திரம்</span><span class="arrow">→</span><span class="word-right">கனாத்திரம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பச்சை + பட்டு</span><span class="arrow">→</span><span class="word-right">பச்சைப்பட்டு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வட்டம் + கோட்டை</span><span class="arrow">→</span><span class="word-right">வட்டக்கோட்டை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இனி + போகலாம்</span><span class="arrow">→</span><span class="word-right">இனிப்போகலாம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தனி + காடு</span><span class="arrow">→</span><span class="word-right">தனிக்காடு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மற்று + கண்டவை</span><span class="arrow">→</span><span class="word-right">மற்றுக்கண்டவை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மற்ற + பொருள்கள்</span><span class="arrow">→</span><span class="word-right">மற்றப்பொருள்கள்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மற்றை + கூறுகள்</span><span class="arrow">→</span><span class="word-right">மற்றைக்கூறுகள்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">சால + சிறந்தது</span><span class="arrow">→</span><span class="word-right">சாலச்சிறந்தது</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தவ + பெரிது</span><span class="arrow">→</span><span class="word-right">தவப்பெரிது</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கதை + கூறினான்</span><span class="arrow">→</span><span class="word-right">கதைக்கூறினான்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">விலை + சொன்னான்</span><span class="arrow">→</span><span class="word-right">விலைச்சொன்னான்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">காடு + தாண்டினான்</span><span class="arrow">→</span><span class="word-right">காடுதாண்டினான்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">புகழ் + பெற்றான்</span><span class="arrow">→</span><span class="word-right">புகழ்பெற்றான்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தொழிலாளர் + தலைவன்</span><span class="arrow">→</span><span class="word-right">தொழிலாளர்தலைவன்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மாணாக்கர் + கூவினர்</span><span class="arrow">→</span><span class="word-right">மாணாக்கர்கூவினர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தாய் + பாடினாள்</span><span class="arrow">→</span><span class="word-right">தாய்பாடினாள்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">முழங்கின + சங்குகள்</span><span class="arrow">→</span><span class="word-right">முழங்கினசங்குகள்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பாடின + குயில்கள்</span><span class="arrow">→</span><span class="word-right">பாடினகுயில்கள்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஆர்த்தன + பறைகள்</span><span class="arrow">→</span><span class="word-right">ஆர்த்தனபறைகள்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கண்ணா + கேள்</span><span class="arrow">→</span><span class="word-right">கண்ணாக்கேள்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வேலா + செல்</span><span class="arrow">→</span><span class="word-right">வேலாச்செல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தம்பீ + பாடு</span><span class="arrow">→</span><span class="word-right">தம்பீப்பாடு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஒலி + கடல்</span><span class="arrow">→</span><span class="word-right">ஒலிகடல்</span></div>
+      <!-- Pages 44-46 -->
+      <div class="word-entry"><span class="star">★</span><span class="word-left">படிகள் + தாண்டினான்</span><span class="arrow">→</span><span class="word-right">படிகளைத்தாண்டினான்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பெரியோர் + சேர்க</span><span class="arrow">→</span><span class="word-right">பெரியோரைச்சேர்க</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பனி + துளி</span><span class="arrow">→</span><span class="word-right">பனித்துளி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பூ + அழகு</span><span class="arrow">→</span><span class="word-right">பூவழகு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மா + இலை</span><span class="arrow">→</span><span class="word-right">மாயிலை, மாவிலை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மண் + அகல்</span><span class="arrow">→</span><span class="word-right">மண்ணகல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அ + பையன்</span><span class="arrow">→</span><span class="word-right">அப்பையன்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இ + தோட்டம்</span><span class="arrow">→</span><span class="word-right">இத்தோட்டம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இ + குளம்</span><span class="arrow">→</span><span class="word-right">இக்குளம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">உ + பக்கம்</span><span class="arrow">→</span><span class="word-right">உப்பக்கம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">எ + குடம்</span><span class="arrow">→</span><span class="word-right">எக்குடம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">எ + சட்டை</span><span class="arrow">→</span><span class="word-right">எச்சட்டை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">எட்டு + கால்</span><span class="arrow">→</span><span class="word-right">எட்டுக்கால்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பத்து + பேர்</span><span class="arrow">→</span><span class="word-right">பத்துப்பேர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வாழை + பழம்</span><span class="arrow">→</span><span class="word-right">வாழைப்பழம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பசுமை + கூழ்</span><span class="arrow">→</span><span class="word-right">பைங்கூழ்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பனை + மரம்</span><span class="arrow">→</span><span class="word-right">பனைமரம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நீர் + குடம்</span><span class="arrow">→</span><span class="word-right">நீர்க்குடம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இனி + பேசு</span><span class="arrow">→</span><span class="word-right">இனிப்பேசு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பாம்பு + தோல்</span><span class="arrow">→</span><span class="word-right">பாம்புத்தோல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கட்டு + சோறு</span><span class="arrow">→</span><span class="word-right">கட்டுச்சோறு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கண் + மலர்</span><span class="arrow">→</span><span class="word-right">கண்மலர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வளம் + நூல்</span><span class="arrow">→</span><span class="word-right">வளநூல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">முள் + செடி</span><span class="arrow">→</span><span class="word-right">முட்செடி</span></div>
+      <!-- Pages 45-46 additional -->
+      <div class="word-entry"><span class="star">★</span><span class="word-left">முடிவு + எய்துகாறும்</span><span class="arrow">→</span><span class="word-right">முடிவெய்துகாறும்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தனக்கு + என்று</span><span class="arrow">→</span><span class="word-right">தனக்கென்று</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">உறுதிக்கு + உழந்தான்</span><span class="arrow">→</span><span class="word-right">உறுதிக்குழந்தான்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அவன் + தாள்</span><span class="arrow">→</span><span class="word-right">அவன்றாள்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வந்து + அசைப்ப</span><span class="arrow">→</span><span class="word-right">வந்தசைப்ப</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வெண்மை + சாமரை</span><span class="arrow">→</span><span class="word-right">வெண்சாமரை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">செம்மை + தாமரை</span><span class="arrow">→</span><span class="word-right">செந்தாமரை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">என + ஆங்கு</span><span class="arrow">→</span><span class="word-right">எனவாங்கு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மனம் + மொழி + மெய்</span><span class="arrow">→</span><span class="word-right">மனமொழிமெய்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தொடர்ந்து + எ (ம்) மை</span><span class="arrow">→</span><span class="word-right">தொடர்ந்தெம்மை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">சரண் + அல்லால்</span><span class="arrow">→</span><span class="word-right">சரணல்லால்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">சரண் + இல்லை</span><span class="arrow">→</span><span class="word-right">சரணில்லை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">திறன் + இலர்</span><span class="arrow">→</span><span class="word-right">திறனிலர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அரண் + இல்லை</span><span class="arrow">→</span><span class="word-right">அரணில்லை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பத்து + துண்டு</span><span class="arrow">→</span><span class="word-right">பத்துத்துண்டு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வரைந்த + படம்</span><span class="arrow">→</span><span class="word-right">வரைந்தபடம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">குடிக்கிற + கூழ்</span><span class="arrow">→</span><span class="word-right">குடிக்கிறக்கூழ்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பாட + தேனீ</span><span class="arrow">→</span><span class="word-right">பாடதேனீ</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">சிரிய + சட்டை</span><span class="arrow">→</span><span class="word-right">சிரியசட்டை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">எட்டு + தட்டு</span><span class="arrow">→</span><span class="word-right">எட்டுத்தட்டு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஓடா + குதிரை</span><span class="arrow">→</span><span class="word-right">ஓடாக்குதிரை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கரு + நிறத்து + அரக்கியர்</span><span class="arrow">→</span><span class="word-right">கருநிறத்தரக்கியர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நிறம் + அத்து</span><span class="arrow">→</span><span class="word-right">நிறத்து</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கடல் + துணை</span><span class="arrow">→</span><span class="word-right">கடற்றுணை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அருமை + உருவின் + நல்</span><span class="arrow">→</span><span class="word-right">அருமுருவின்நல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நன்மை + இலக்கணம்</span><span class="arrow">→</span><span class="word-right">நல்லிலக்கணம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கமலம் + கண்ணன் + ஆர்</span><span class="arrow">→</span><span class="word-right">கமலக்கண்ணனார்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அரவு + அணை</span><span class="arrow">→</span><span class="word-right">அரவணை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தேவனே + அவன்</span><span class="arrow">→</span><span class="word-right">தேவனேயவன்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வீடினது + அன்று + அறன்</span><span class="arrow">→</span><span class="word-right">வீடினதன்றன்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மாசு + உண்ட</span><span class="arrow">→</span><span class="word-right">மாசுண்ட</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வெம்மை + கதிர்</span><span class="arrow">→</span><span class="word-right">வெங்கதிர்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அறத்துக்கு+ஈறு+உண்டோ</span><span class="arrow">→</span><span class="word-right">அறத்துக்கீறுண்டோ</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">அறம் + அத்து + கு</span><span class="arrow">→</span><span class="word-right">அறத்துக்கு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பொன் + புயம்</span><span class="arrow">→</span><span class="word-right">பொற்புயம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">யாவது+இங்கு+இனி+செயல்</span><span class="arrow">→</span><span class="word-right">யாவதிங்கினிச்செயல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">கேழ் + இலாள்</span><span class="arrow">→</span><span class="word-right">கேழிலாள்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">உறும் + என்று + உன்னினேனேன்</span><span class="arrow">→</span><span class="word-right">உறுமென்றுன்னினேனேன்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வெம்மை + கனல்</span><span class="arrow">→</span><span class="word-right">வெங்கனல்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மனம் + தவம்</span><span class="arrow">→</span><span class="word-right">மனத்தவம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நன்மை + வினை</span><span class="arrow">→</span><span class="word-right">நல்வினை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஒருவர்க்கு + ஈது + ஒறுகண்</span><span class="arrow">→</span><span class="word-right">ஒருவர்க்கீதொறுகண்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பொன் + திணி</span><span class="arrow">→</span><span class="word-right">பொன்றிணி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">நெடுமை + மரம்</span><span class="arrow">→</span><span class="word-right">நெடுமரம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">பூ + சோலை</span><span class="arrow">→</span><span class="word-right">பூஞ்சோலை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">ஈண்டு + இனி + யான்</span><span class="arrow">→</span><span class="word-right">ஈண்டினியான்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">காண் + தகு</span><span class="arrow">→</span><span class="word-right">காண்டகு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">செம்மை + அடி</span><span class="arrow">→</span><span class="word-right">செவ்வடி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">வெம்மை + இரும்பு+ஆணி</span><span class="arrow">→</span><span class="word-right">வெவ்விரும்பாணி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மற்று + இரண்டு</span><span class="arrow">→</span><span class="word-right">மற்றிரண்டு</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">குரு + ஏற்றி</span><span class="arrow">→</span><span class="word-right">குருசேற்றி</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">தன் + அரிய</span><span class="arrow">→</span><span class="word-right">தன்னரிய</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">எம் + தந்தாய்</span><span class="arrow">→</span><span class="word-right">எந்தாய்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இ + தகைய</span><span class="arrow">→</span><span class="word-right">இத்தகைய</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">மனம் + நலம்</span><span class="arrow">→</span><span class="word-right">மனநலம்</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இரும்பு + முளை</span><span class="arrow">→</span><span class="word-right">இரும்புமுளை</span></div>
+      <div class="word-entry"><span class="star">★</span><span class="word-left">இண்டு + இவரே</span><span class="arrow">→</span><span class="word-right">ஈண்டிவரே</span></div>
+     </div>
+    </div>
+    <div class="answers-row">
+      <div class="answers-label">விடைகள் (Answers):</div>
+      <div class="ans-chip">1: <span>A</span></div>
+    </div>
+  </div>
+
+  <footer>
+    <p>பொதுத்தமிழ் - புதிய பாடத்திட்ட தொகுப்பு</p>
+  </footer>
+</div> </body>
+</html>

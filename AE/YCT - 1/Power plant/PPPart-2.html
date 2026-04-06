@@ -1,0 +1,2475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Power Plant Quiz – Part 2</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Noto+Sans+Tamil:wght@400;600&family=Source+Code+Pro:wght@400;600&display=swap');
+
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --card: #1a2235;
+    --border: #2a3a55;
+    --accent: #00d4ff;
+    --accent2: #ff6b35;
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #f59e0b;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --tamil: #a5f3fc;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* Animated background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 16px; }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 24px 16px 16px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 20px;
+  }
+  .header-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #00d4ff22, #ff6b3522);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: 'Source Code Pro', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    padding: 4px 14px;
+    border-radius: 2px;
+    margin-bottom: 10px;
+  }
+  .header h1 {
+    font-size: clamp(22px, 5vw, 36px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, #00d4ff, #ffffff, #ff6b35);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+  }
+  .header-tamil {
+    font-family: 'Noto Sans Tamil', sans-serif;
+    font-size: 14px;
+    color: var(--tamil);
+    margin-top: 6px;
+    opacity: 0.85;
+  }
+  .coverage-tags {
+    display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 12px;
+  }
+  .tag {
+    background: #1a2235; border: 1px solid var(--border);
+    color: var(--muted); font-size: 11px; padding: 3px 10px; border-radius: 20px;
+    font-family: 'Source Code Pro', monospace; letter-spacing: 1px;
+  }
+  .tag.thermal { border-color: #ff6b3544; color: #ff6b35; }
+  .tag.hydro { border-color: #00d4ff44; color: #00d4ff; }
+  .tag.nuclear { border-color: #22c55e44; color: #22c55e; }
+
+  /* Score bar */
+  .score-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .score-item { display: flex; flex-direction: column; align-items: center; min-width: 60px; }
+  .score-val {
+    font-size: 22px; font-weight: 700; line-height: 1;
+    font-family: 'Source Code Pro', monospace;
+  }
+  .score-lbl { font-size: 10px; color: var(--muted); letter-spacing: 2px; margin-top: 2px; }
+  .score-divider { width: 1px; height: 36px; background: var(--border); }
+  .progress-wrap { flex: 1; min-width: 120px; }
+  .progress-track {
+    height: 6px; background: var(--border); border-radius: 3px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; border-radius: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  .progress-text { font-size: 11px; color: var(--muted); margin-top: 4px; font-family: 'Source Code Pro', monospace; }
+
+  /* Section label */
+  .section-label {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 10px;
+    padding: 8px 14px;
+    background: linear-gradient(90deg, #00d4ff11, transparent);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+  }
+  .section-label span { font-size: 13px; font-weight: 600; letter-spacing: 2px; color: var(--accent); }
+  .section-label .tamil-s { font-family: 'Noto Sans Tamil', sans-serif; font-size: 12px; color: var(--tamil); margin-left: 4px; }
+
+  .section-label.hydro { border-color: #00d4ff; }
+  .section-label.hydro span { color: #00d4ff; }
+  .section-label.nuclear { border-color: #22c55e; }
+  .section-label.nuclear span { color: #22c55e; }
+  .section-label.thermal-s { border-color: var(--accent2); }
+  .section-label.thermal-s span { color: var(--accent2); }
+
+  /* Question card */
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 14px;
+    overflow: hidden;
+    transition: border-color 0.25s;
+  }
+  .q-card.answered-correct { border-color: var(--green); }
+  .q-card.answered-wrong { border-color: var(--red); }
+
+  .q-header {
+    padding: 12px 16px 8px;
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .q-num {
+    background: var(--border);
+    color: var(--accent);
+    font-family: 'Source Code Pro', monospace;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    white-space: nowrap;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+  .q-text { font-size: 15px; font-weight: 600; line-height: 1.5; flex: 1; }
+  .q-tamil {
+    font-family: 'Noto Sans Tamil', sans-serif;
+    font-size: 13px; color: var(--tamil);
+    padding: 0 16px 8px 42px;
+    line-height: 1.6;
+    opacity: 0.9;
+  }
+  .q-source { font-size: 10px; color: var(--muted); padding: 0 16px 8px 42px; font-family: 'Source Code Pro', monospace; letter-spacing: 1px; }
+
+  /* Options */
+  .options { padding: 6px 12px 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  @media (max-width: 540px) { .options { grid-template-columns: 1fr; } }
+
+  .opt-btn {
+    background: #0f1b2d;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 9px 12px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.18s;
+    display: flex; align-items: flex-start; gap: 8px;
+    color: var(--text);
+  }
+  .opt-btn:hover:not(:disabled) {
+    background: #1e2d44;
+    border-color: var(--accent);
+    color: white;
+  }
+  .opt-btn:disabled { cursor: not-allowed; }
+  .opt-btn.correct { background: #14532d; border-color: var(--green); color: #bbf7d0; }
+  .opt-btn.wrong   { background: #450a0a; border-color: var(--red);   color: #fecaca; }
+  .opt-btn.reveal  { background: #1a3a2a; border-color: #22c55e88; color: #86efac; }
+
+  .opt-key {
+    font-family: 'Source Code Pro', monospace;
+    font-weight: 600; font-size: 12px;
+    min-width: 18px; padding-top: 1px;
+    flex-shrink: 0;
+  }
+  .opt-btn.correct .opt-key { color: var(--green); }
+  .opt-btn.wrong   .opt-key { color: var(--red); }
+  .opt-btn.reveal  .opt-key { color: #22c55e; }
+
+  .opt-text { font-size: 14px; line-height: 1.4; font-weight: 500; }
+  .opt-tamil { font-family: 'Noto Sans Tamil', sans-serif; font-size: 11px; color: var(--tamil); display: block; margin-top: 2px; opacity: 0.8; }
+
+  /* Explanation */
+  .explanation {
+    margin: 0 12px 12px;
+    background: #0a1628;
+    border: 1px solid #1e3a5f;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #94a3b8;
+    display: none;
+  }
+  .explanation.show { display: block; }
+  .explanation strong { color: var(--accent); }
+  .expl-tamil { font-family: 'Noto Sans Tamil', sans-serif; font-size: 12px; color: var(--tamil); margin-top: 6px; opacity: 0.85; display: block; }
+
+  /* Nav */
+  .nav-bar {
+    position: sticky; bottom: 0;
+    background: #0a0e1aee;
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--border);
+    padding: 12px 16px;
+    display: flex; gap: 10px; align-items: center; justify-content: center;
+    flex-wrap: wrap;
+    z-index: 10;
+  }
+  .nav-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px; font-weight: 600; letter-spacing: 1px;
+    transition: all 0.18s;
+  }
+  .nav-btn:hover { background: var(--border); }
+  .nav-btn.primary {
+    background: linear-gradient(135deg, #00d4ff22, #0099bb33);
+    border-color: var(--accent); color: var(--accent);
+  }
+  .nav-btn.primary:hover { background: #00d4ff22; }
+
+  /* Result modal */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: #000000cc;
+    backdrop-filter: blur(6px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 100;
+    display: none;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 32px 28px;
+    max-width: 460px; width: 90%;
+    text-align: center;
+  }
+  .modal h2 { font-size: 26px; font-weight: 700; margin-bottom: 6px; letter-spacing: 2px; }
+  .modal .score-big {
+    font-size: 56px; font-weight: 700;
+    font-family: 'Source Code Pro', monospace;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    line-height: 1;
+    margin: 16px 0;
+  }
+  .modal .grade { font-size: 18px; margin-bottom: 16px; }
+  .modal-breakdown { display: flex; gap: 16px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+  .mb-item { background: var(--surface); border: 1px solid var(--border); padding: 10px 16px; border-radius: 8px; }
+  .mb-val { font-size: 20px; font-weight: 700; font-family: 'Source Code Pro', monospace; }
+  .mb-lbl { font-size: 10px; color: var(--muted); letter-spacing: 1px; }
+  .mb-item.c .mb-val { color: var(--green); }
+  .mb-item.w .mb-val { color: var(--red); }
+  .mb-item.s .mb-val { color: var(--yellow); }
+  .modal-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+  /* Scrolltop */
+  .scroll-top {
+    position: fixed; bottom: 80px; right: 16px;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--muted); width: 36px; height: 36px;
+    border-radius: 50%; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; transition: all 0.2s;
+    z-index: 9;
+  }
+  .scroll-top:hover { border-color: var(--accent); color: var(--accent); }
+
+  .pulse { animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+  <div class="header">
+    <div class="header-badge">TNPSC ELECTRICAL ENGINEERING</div>
+    <h1>POWER PLANT — PART 2</h1>
+    <div class="header-tamil">மின் நிலைய வினாடி வினா — பகுதி 2</div>
+    <div class="coverage-tags">
+      <span class="tag thermal">THERMAL II (Q113–123)</span>
+      <span class="tag hydro">HYDRO POWER (Q1–87)</span>
+      <span class="tag nuclear">NUCLEAR (Q1–31)</span>
+    </div>
+  </div>
+
+  <div class="score-bar">
+    <div class="score-item"><div class="score-val" id="scoreVal" style="color:var(--accent)">0</div><div class="score-lbl">SCORE</div></div>
+    <div class="score-divider"></div>
+    <div class="score-item"><div class="score-val" id="correctVal" style="color:var(--green)">0</div><div class="score-lbl">CORRECT</div></div>
+    <div class="score-divider"></div>
+    <div class="score-item"><div class="score-val" id="wrongVal" style="color:var(--red)">0</div><div class="score-lbl">WRONG</div></div>
+    <div class="score-divider"></div>
+    <div class="score-item"><div class="score-val" id="skipVal" style="color:var(--yellow)">0</div><div class="score-lbl">SKIPPED</div></div>
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-text" id="progressText">0 / 141 answered</div>
+    </div>
+  </div>
+
+  <div id="quizContainer"></div>
+
+  <div style="height:80px"></div>
+</div>
+
+<!-- Nav -->
+<div class="nav-bar">
+  <button class="nav-btn" onclick="showAll()">📋 All Questions</button>
+  <button class="nav-btn" onclick="showUnanswered()">⏭ Unanswered</button>
+  <button class="nav-btn primary" onclick="submitQuiz()">✅ Submit Quiz</button>
+  <button class="nav-btn" onclick="resetQuiz()">🔄 Reset</button>
+</div>
+
+<button class="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- Result Modal -->
+<div class="modal-overlay" id="resultModal">
+  <div class="modal">
+    <h2>QUIZ COMPLETE</h2>
+    <div class="score-big" id="modalPct">--</div>
+    <div class="grade" id="modalGrade"></div>
+    <div class="modal-breakdown">
+      <div class="mb-item c"><div class="mb-val" id="mCorrect">0</div><div class="mb-lbl">CORRECT</div></div>
+      <div class="mb-item w"><div class="mb-val" id="mWrong">0</div><div class="mb-lbl">WRONG</div></div>
+      <div class="mb-item s"><div class="mb-val" id="mSkip">0</div><div class="mb-lbl">SKIPPED</div></div>
+    </div>
+    <div class="modal-actions">
+      <button class="nav-btn primary" onclick="closeModal()">Review Answers</button>
+      <button class="nav-btn" onclick="resetQuiz()">Retake</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const questions = [
+  // ═══════════════ SECTION II — THERMAL (Q113–Q123) ═══════════════
+  {
+    section:"thermal",
+    num:"II.113",
+    en:"Boiler efficiency can be improved by an economiser by:",
+    ta:"பாய்லர் திறனை எக்கனாமைசர் மூலம் எவ்வளவு சதவீதம் மேம்படுத்தலாம்?",
+    opts:[
+      {k:"a",en:"20 percent",ta:"20 சதவீதம்"},
+      {k:"b",en:"12 to 15 percent",ta:"12 முதல் 15 சதவீதம்"},
+      {k:"c",en:"1 to 2 percent",ta:"1 முதல் 2 சதவீதம்"},
+      {k:"d",en:"4 to 10 percent",ta:"4 முதல் 10 சதவீதம்"}
+    ],
+    ans:"d",
+    exp:"An economiser reduces energy consumption and improves boiler efficiency by 4 to 10 percent.",
+    exp_ta:"எக்கனாமைசர் பாய்லர் திறனை 4 முதல் 10 சதவீதம் வரை மேம்படுத்துகிறது."
+  },
+  {
+    section:"thermal",
+    num:"II.114",
+    en:"Which of the following is NOT an advantage of thermal power plants?",
+    ta:"பின்வருவனவற்றில் வெப்ப மின் நிலையத்தின் நன்மை அல்லாதது எது?",
+    opts:[
+      {k:"a",en:"Rapidly changing load without difficulty",ta:"சுமை வேகமாக மாறும் திறன்"},
+      {k:"b",en:"Operating cost is low compared to nuclear and hydro",ta:"செயல்பாட்டு செலவு குறைவு"},
+      {k:"c",en:"Requires less space than hydro-electric plants",ta:"நீர்மின் நிலையத்தைவிட குறைந்த இடம்"},
+      {k:"d",en:"Fuel (coal) is inexpensive",ta:"எரிபொருள் (நிலக்கரி) மலிவானது"}
+    ],
+    ans:"b",
+    exp:"Operating cost of thermal power plant is HIGH compared to hydro and nuclear. Order: Diesel > Steam > Nuclear > Hydro.",
+    exp_ta:"வெப்ப மின் நிலையத்தின் இயக்கச் செலவு, நீர்மின் மற்றும் அணுமின் நிலையங்களைவிட அதிகம்."
+  },
+  {
+    section:"thermal",
+    num:"II.115",
+    en:"Ash from steam power plant is NOT used for:",
+    ta:"நீராவி மின் நிலையத்தின் சாம்பல் எதற்காக பயன்படுத்தப்படுவதில்லை?",
+    opts:[
+      {k:"a",en:"Production of concrete",ta:"கான்கிரீட் தயாரிப்பு"},
+      {k:"b",en:"Production of cement",ta:"சிமெண்ட் தயாரிப்பு"},
+      {k:"c",en:"Recovery of metals like Fe, Si, Ti",ta:"இரும்பு, சிலிக்கான் உலோக மீட்பு"},
+      {k:"d",en:"Treating neutral soils to increase crop yield",ta:"நடுநிலை மண்ணை சோதிக்க"}
+    ],
+    ans:"d",
+    exp:"Coal ash is used in concrete, cement, and metal recovery. It is NOT used for treating neutral soils.",
+    exp_ta:"சாம்பலை நடுநிலை மண்ணுக்கு பயன்படுத்துவதில்லை."
+  },
+  {
+    section:"thermal",
+    num:"II.116",
+    en:"Which is NOT a reason why mechanical coal handling is preferred over manual handling?",
+    ta:"இயந்திர நிலக்கரி கையாளுதல் கைமுறை கையாளுதலை விட விரும்பப்படுவதற்கு காரணம் அல்லாதது?",
+    opts:[
+      {k:"a",en:"Capital cost of mechanical handling is low",ta:"இயந்திர கையாளுதலின் மூலதன செலவு குறைவு"},
+      {k:"b",en:"Can be adjusted economically as needed",ta:"தேவைக்கு ஏற்ப சரிசெய்யலாம்"},
+      {k:"c",en:"Operation is easy and smooth",ta:"இயக்கம் எளிதானது"},
+      {k:"d",en:"Less labour required",ta:"குறைந்த தொழிலாளர் தேவை"}
+    ],
+    ans:"a",
+    exp:"Capital cost of mechanical handling is HIGH compared to manual handling – that is NOT an advantage.",
+    exp_ta:"இயந்திர கையாளுதலின் மூலதன செலவு அதிகம் – இது நன்மையல்ல."
+  },
+  {
+    section:"thermal",
+    num:"II.117",
+    en:"Which type is an electrical dust collector in steam power plants?",
+    ta:"நீராவி மின் நிலையங்களில் மின் தூசு சேகரிப்பான் வகை எது?",
+    opts:[
+      {k:"a",en:"Rod type",ta:"கோல் வகை"},
+      {k:"b",en:"Packed type",ta:"மூட்டை வகை"},
+      {k:"c",en:"Cyclone separators",ta:"சுழல் பிரிகை"},
+      {k:"d",en:"Spray type",ta:"தெளிப்பு வகை"}
+    ],
+    ans:"a",
+    exp:"Rod type is an electrical dust collector used in steam power plants.",
+    exp_ta:"கோல் வகை என்பது நீராவி மின் நிலையங்களில் பயன்படும் மின் தூசு சேகரிப்பான்."
+  },
+  {
+    section:"thermal",
+    num:"II.118",
+    en:"Which is NOT a component of a modern steam power plant?",
+    ta:"நவீன நீராவி மின் நிலையத்தின் கூறு அல்லாதது எது?",
+    opts:[
+      {k:"a",en:"Ash precipitators",ta:"சாம்பல் மழை கலன்"},
+      {k:"b",en:"Wagon tippler",ta:"வேகன் டிப்பர்"},
+      {k:"c",en:"Switch yard",ta:"சுவிட்ச் முற்றம்"},
+      {k:"d",en:"Induced draught mill",ta:"தூண்டல் வரைவு ஆலை"}
+    ],
+    ans:"d",
+    exp:"Induced draught mill is NOT a component of a modern steam power plant.",
+    exp_ta:"தூண்டல் வரைவு ஆலை நவீன நீராவி மின் நிலையத்தில் இல்லை."
+  },
+  {
+    section:"thermal",
+    num:"II.119",
+    en:"Which is NOT an advantage of pipeline coal transport for thermal plants?",
+    ta:"வெப்ப மின் நிலையங்களுக்கு குழாய் வழி நிலக்கரி போக்குவரத்தின் நன்மை அல்லாதது எது?",
+    opts:[
+      {k:"a",en:"Simplicity in installation and increased safety",ta:"நிறுவல் எளிமை மற்றும் பாதுகாப்பு"},
+      {k:"b",en:"Loss of coal due to theft is partially eliminated",ta:"திருட்டால் நிலக்கரி இழப்பு குறைக்கப்படுகிறது"},
+      {k:"c",en:"Manpower requirement is low",ta:"குறைந்த ஆட்பலம் தேவை"},
+      {k:"d",en:"High degree of reliability",ta:"அதிக நம்பகத்தன்மை"}
+    ],
+    ans:"b",
+    exp:"Loss due to theft and pilferage is NOT eliminated (only partially); the other options are genuine advantages.",
+    exp_ta:"திருட்டால் இழப்பு முழுமையாக நீக்கப்படவில்லை – இது நன்மை அல்ல."
+  },
+  {
+    section:"thermal",
+    num:"II.120",
+    en:"Which is NOT commonly used equipment for ash handling in large steam power plants?",
+    ta:"பெரிய நீராவி மின் நிலையங்களில் சாம்பல் கையாளுதலுக்கு பயன்படாதது எது?",
+    opts:[
+      {k:"a",en:"Pneumatic conveyor",ta:"நியூமாட்டிக் கன்வேயர்"},
+      {k:"b",en:"Trollies or rail cars",ta:"ட்ராலிகள் அல்லது ரயில் வண்டிகள்"},
+      {k:"c",en:"Belt elevator",ta:"பெல்ட் உயர்த்தி"},
+      {k:"d",en:"Bucket conveyor",ta:"கொட்டகை கன்வேயர்"}
+    ],
+    ans:"c",
+    exp:"Belt elevator is NOT used for ash handling in large/medium steam power plants.",
+    exp_ta:"பெல்ட் உயர்த்தி சாம்பல் கையாளுதலுக்கு பயன்படுவதில்லை."
+  },
+  {
+    section:"thermal",
+    num:"II.121",
+    en:"Solid lump fuels for steam boilers are handled by:",
+    ta:"நீராவி பாய்லர்களுக்கான திடப் பருக்கை எரிபொருட்கள் எதன் மூலம் கையாளப்படுகின்றன?",
+    opts:[
+      {k:"a",en:"Unit boxes",ta:"யூனிட் பெட்டிகள்"},
+      {k:"b",en:"Injectors",ta:"ஊசிகள்"},
+      {k:"c",en:"Stokers",ta:"ஸ்டோக்கர்கள்"},
+      {k:"d",en:"Burners",ta:"எரிப்பான்கள்"}
+    ],
+    ans:"c",
+    exp:"Stokers are mechanical devices used to handle and feed solid lump fuels into steam boilers.",
+    exp_ta:"ஸ்டோக்கர்கள் நீராவி பாய்லர்களுக்கு திடப் பருக்கை எரிபொருளை நிரப்பும் இயந்திர சாதனங்கள்."
+  },
+  {
+    section:"thermal",
+    num:"II.122",
+    en:"Which is NOT an essential requirement of steam power station design?",
+    ta:"நீராவி மின் நிலைய வடிவமைப்பின் அவசியமான தேவை அல்லாதது எது?",
+    opts:[
+      {k:"a",en:"Maximum capital cost",ta:"அதிகபட்ச மூலதன செலவு"},
+      {k:"b",en:"Extensibility",ta:"விரிவாக்க திறன்"},
+      {k:"c",en:"Reliability",ta:"நம்பகத்தன்மை"},
+      {k:"d",en:"Use of automatic equipment",ta:"தானியங்கி உபகரண பயன்பாடு"}
+    ],
+    ans:"a",
+    exp:"A steam power station should have LOW capital cost, not maximum. Reliability, extensibility, and automation are essential.",
+    exp_ta:"நீராவி மின் நிலையம் குறைந்த மூலதன செலவை கொண்டிருக்க வேண்டும், அதிகபட்சம் அல்ல."
+  },
+  {
+    section:"thermal",
+    num:"II.123",
+    en:"Why is ash quenched before handling in a steam power plant? Which reason is INCORRECT?",
+    ta:"நீராவி மின் நிலையத்தில் சாம்பலை கையாளும் முன் ஏன் நணைக்கப்படுகிறது? தவறான காரணம் எது?",
+    opts:[
+      {k:"a",en:"It reduces dust accompanying ash",ta:"தூசு குறைக்கப்படுகிறது"},
+      {k:"b",en:"It reduces temperature of ash",ta:"வெப்பநிலை குறைக்கப்படுகிறது"},
+      {k:"c",en:"Clinkers disintegrate on quenching",ta:"க்ளிங்கர் உடைந்துவிடும்"},
+      {k:"d",en:"Quenching maintains corrosion action of ash",ta:"நணைத்தல் சாம்பலின் அரிக்கும் செயல்பாட்டை பராமரிக்கிறது"}
+    ],
+    ans:"d",
+    exp:"Quenching does NOT maintain corrosion action – it actually helps in safe handling. The other reasons are valid.",
+    exp_ta:"நணைத்தல் அரிக்கும் செயல்பாட்டை பராமரிக்காது – இது தவறான காரணம்."
+  },
+
+  // ═══════════════ SECTION III — HYDRO POWER PLANT ═══════════════
+  {
+    section:"hydro",
+    num:"III.1",
+    en:"Francis turbine is usually used for:",
+    ta:"பிரான்சிஸ் டர்பைன் எந்த தலை உயரத்திற்கு பயன்படுகிறது?",
+    opts:[
+      {k:"a",en:"Low head up to 30m",ta:"30 மீட்டர் வரை குறைந்த தலை"},
+      {k:"b",en:"Medium head 30m to 180m",ta:"30 முதல் 180 மீட்டர் நடுத்தர தலை"},
+      {k:"c",en:"High head above 180m",ta:"180 மீட்டருக்கு மேல் உயர் தலை"},
+      {k:"d",en:"For all heads",ta:"அனைத்து தலை உயரங்களுக்கும்"}
+    ],
+    ans:"b",
+    exp:"Francis turbine is designed for medium head installations from 30m to 180m.",
+    exp_ta:"பிரான்சிஸ் டர்பைன் 30 முதல் 180 மீட்டர் நடுத்தர தலை உயரத்திற்கு வடிவமைக்கப்பட்டது."
+  },
+  {
+    section:"hydro",
+    num:"III.2",
+    en:"In a hydroelectric plant, the surge tank is provided for the protection of:",
+    ta:"நீர்மின் நிலையத்தில் சர்ஜ் தொட்டி எதைப் பாதுகாக்க அளிக்கப்படுகிறது?",
+    opts:[
+      {k:"a",en:"Fuel tank",ta:"எரிபொருள் தொட்டி"},
+      {k:"b",en:"Dam",ta:"அணை"},
+      {k:"c",en:"Power house",ta:"மின் நிலையம்"},
+      {k:"d",en:"Penstock",ta:"பென்ஸ்டாக்"}
+    ],
+    ans:"d",
+    exp:"Surge tank neutralises excess pressure rise and pressure drop conditions, protecting the penstock from water hammer.",
+    exp_ta:"சர்ஜ் தொட்டி, பென்ஸ்டாக்கில் நீர் சுத்தியல் விளைவிலிருந்து பாதுகாக்கிறது."
+  },
+  {
+    section:"hydro",
+    num:"III.3",
+    en:"Which generating station does NOT require fuel to generate electricity?",
+    ta:"மின்சாரம் தயாரிக்க எரிபொருள் தேவையில்லாத நிலையம் எது?",
+    opts:[
+      {k:"a",en:"Diesel power plant",ta:"டீசல் மின் நிலையம்"},
+      {k:"b",en:"Thermal power plant",ta:"வெப்ப மின் நிலையம்"},
+      {k:"c",en:"Nuclear power plant",ta:"அணு மின் நிலையம்"},
+      {k:"d",en:"Hydro-electric power plant",ta:"நீர்மின் நிலையம்"}
+    ],
+    ans:"d",
+    exp:"Hydro-electric power plant does not require any fuel; it uses falling water as the prime mover.",
+    exp_ta:"நீர்மின் நிலையம் எரிபொருள் தேவையில்லாமல் விழும் நீரை பயன்படுத்துகிறது."
+  },
+  {
+    section:"hydro",
+    num:"III.4",
+    en:"Impulse turbines are used in:",
+    ta:"உந்த டர்பைன்கள் எந்த நிலையங்களில் பயன்படுகின்றன?",
+    opts:[
+      {k:"a",en:"Very low head plants",ta:"மிகவும் குறைந்த தலை நிலையங்கள்"},
+      {k:"b",en:"High head plants",ta:"உயர் தலை நிலையங்கள்"},
+      {k:"c",en:"Medium head plants",ta:"நடுத்தர தலை நிலையங்கள்"},
+      {k:"d",en:"Low head plants",ta:"குறைந்த தலை நிலையங்கள்"}
+    ],
+    ans:"b",
+    exp:"Impulse turbines (like Pelton wheel) are used in high head plants where fluid hits blades at high speed.",
+    exp_ta:"உந்த டர்பைன்கள் (பெல்டன் சக்கரம் போன்றவை) உயர் தலை நிலையங்களில் பயன்படுகின்றன."
+  },
+  {
+    section:"hydro",
+    num:"III.5",
+    en:"1 million m³ of water stored at 50m above turbine (density 993 kg/m³). Energy produced is:",
+    ta:"50 மீட்டர் உயரத்தில் 10⁶ m³ நீர் சேமிக்கப்பட்டுள்ளது. உற்பத்தியாகும் ஆற்றல்?",
+    opts:[
+      {k:"a",en:"135.3 MWhr",ta:"135.3 MWhr"},
+      {k:"b",en:"130 MWhr",ta:"130 MWhr"},
+      {k:"c",en:"120 MWhr",ta:"120 MWhr"},
+      {k:"d",en:"140 MWhr",ta:"140 MWhr"}
+    ],
+    ans:"a",
+    exp:"P = ρgwH = 9.81×993×10⁶×50 ≈ 487 GW. Energy = P×(1/3600) ≈ 135.3 MWhr.",
+    exp_ta:"P = ρgwH சூத்திரம் பயன்படுத்தி ஆற்றல் = 135.3 MWhr."
+  },
+  {
+    section:"hydro",
+    num:"III.6",
+    en:"The term 'Surge Tank' is associated with which type of power plant?",
+    ta:"'சர்ஜ் தொட்டி' என்ற சொல் எந்த வகை மின் நிலையத்துடன் தொடர்புடையது?",
+    opts:[
+      {k:"a",en:"High head hydro",ta:"உயர் தலை நீர்மின்"},
+      {k:"b",en:"Low head hydro",ta:"குறைந்த தலை நீர்மின்"},
+      {k:"c",en:"Medium head hydro",ta:"நடுத்தர தலை நீர்மின்"},
+      {k:"d",en:"Thermal",ta:"வெப்ப மின்"}
+    ],
+    ans:"a",
+    exp:"Surge tank is associated with high head hydro power plants. It stabilises pressure in the penstock.",
+    exp_ta:"சர்ஜ் தொட்டி உயர் தலை நீர்மின் நிலையங்களுடன் தொடர்புடையது."
+  },
+  {
+    section:"hydro",
+    num:"III.7",
+    en:"Sudden pressure change in penstock due to sudden load reduction is avoided using:",
+    ta:"திடீர் சுமை குறைவால் பென்ஸ்டாக்கில் அழுத்த மாற்றம் தடுக்க பயன்படுவது?",
+    opts:[
+      {k:"a",en:"Tail race",ta:"வால் ஓட்டம்"},
+      {k:"b",en:"Water hammer",ta:"நீர் சுத்தியல்"},
+      {k:"c",en:"Surge tank",ta:"சர்ஜ் தொட்டி"},
+      {k:"d",en:"Spill way",ta:"சொட்டு வழி"}
+    ],
+    ans:"c",
+    exp:"Surge tank maintains water pressure in the penstock and prevents water hammer effects.",
+    exp_ta:"சர்ஜ் தொட்டி பென்ஸ்டாக்கில் நீர் சுத்தியல் விளைவை தடுக்கிறது."
+  },
+  {
+    section:"hydro",
+    num:"III.8",
+    en:"The advantage of hydro-electric over thermal power station is:",
+    ta:"வெப்ப மின் நிலையத்தை விட நீர்மின் நிலையத்தின் நன்மை என்ன?",
+    opts:[
+      {k:"a",en:"Lower initial cost",ta:"குறைந்த ஆரம்ப செலவு"},
+      {k:"b",en:"Lower operating cost",ta:"குறைந்த இயக்கச் செலவு"},
+      {k:"c",en:"Can supply power throughout the year continuously",ta:"ஆண்டு முழுவதும் தொடர்ந்து மின்சாரம்"},
+      {k:"d",en:"Can be built near the load centre",ta:"சுமை மையத்தில் கட்டலாம்"}
+    ],
+    ans:"b",
+    exp:"Hydro-electric power plant has lower OPERATING cost compared to thermal (no fuel cost).",
+    exp_ta:"நீர்மின் நிலையம் குறைந்த இயக்கச் செலவை கொண்டுள்ளது – எரிபொருள் செலவில்லை."
+  },
+  {
+    section:"hydro",
+    num:"III.9",
+    en:"Hydro-electric generators are of which rotor type?",
+    ta:"நீர்மின் ஜெனரேட்டர்கள் எந்த வகை ரோட்டரைக் கொண்டுள்ளன?",
+    opts:[
+      {k:"a",en:"Stationary field type",ta:"நிலையான புலம் வகை"},
+      {k:"b",en:"Cylindrical rotor type",ta:"உருளை ரோட்டர் வகை"},
+      {k:"c",en:"Double cage rotor type",ta:"இரட்டை கூண்டு ரோட்டர் வகை"},
+      {k:"d",en:"Salient pole type",ta:"முக்கிய துருவ வகை"}
+    ],
+    ans:"d",
+    exp:"Hydro generators run at low speeds and require many poles, hence salient pole type rotor construction is used.",
+    exp_ta:"நீர்மின் ஜெனரேட்டர்கள் குறைந்த வேகத்தில் இயங்குவதால் முக்கிய துருவ வகை ரோட்டர் பயன்படுகிறது."
+  },
+  {
+    section:"hydro",
+    num:"III.10",
+    en:"For low variable water heads, the suitable turbine with reaction and adjustable vanes is:",
+    ta:"குறைந்த நீர் தலை உயரத்திற்கு எதிர்வினை மற்றும் சரிசெய்யக்கூடிய இறகுகள் கொண்ட டர்பைன்?",
+    opts:[
+      {k:"a",en:"Francis",ta:"பிரான்சிஸ்"},
+      {k:"b",en:"Impeller",ta:"இம்பெல்லர்"},
+      {k:"c",en:"Kaplan",ta:"கேப்லன்"},
+      {k:"d",en:"Pelton",ta:"பெல்டன்"}
+    ],
+    ans:"c",
+    exp:"Kaplan turbine is used for low head, high discharge. It has adjustable runner vanes (reaction turbine).",
+    exp_ta:"கேப்லன் டர்பைன் குறைந்த தலை, அதிக வெளியேற்றத்திற்கு பயன்படுகிறது. சரிசெய்யக்கூடிய இறகுகளை கொண்டுள்ளது."
+  },
+  {
+    section:"hydro",
+    num:"III.11",
+    en:"A graphical representation of discharge vs time is called:",
+    ta:"வெளியேற்றம் மற்றும் நேரம் இடையேயான வரைபடம் என்று அழைக்கப்படுவது?",
+    opts:[
+      {k:"a",en:"Load curve",ta:"சுமை வளைவு"},
+      {k:"b",en:"Hydrograph",ta:"நீர் வரைபடம்"},
+      {k:"c",en:"Monograph",ta:"மோனோகிராஃப்"},
+      {k:"d",en:"Load duration curve",ta:"சுமை கால வளைவு"}
+    ],
+    ans:"b",
+    exp:"A hydrograph is a graph showing rate of flow (discharge) versus time for a river or channel.",
+    exp_ta:"நீர் வரைபடம் (Hydrograph) ஒரு நதி அல்லது சேனலில் நேரத்திற்கு எதிராக நீர் ஓட்டத்தை காட்டுகிறது."
+  },
+  {
+    section:"hydro",
+    num:"III.12",
+    en:"The power output from a hydro-electric power plant depends on:",
+    ta:"நீர்மின் நிலையத்தின் மின் உற்பத்தி எதை சார்ந்துள்ளது?",
+    opts:[
+      {k:"a",en:"Head, type of dam and discharge",ta:"தலை, அணை வகை மற்றும் வெளியேற்றம்"},
+      {k:"b",en:"Head, discharge and efficiency",ta:"தலை, வெளியேற்றம் மற்றும் திறன்"},
+      {k:"c",en:"Type of draft tube, turbine and efficiency",ta:"வரைவு குழாய் வகை, டர்பைன் வகை"},
+      {k:"d",en:"Type of dam, discharge and catchment area",ta:"அணை வகை, வெளியேற்றம்"}
+    ],
+    ans:"b",
+    exp:"P = 0.736×W×Q×H×η/75. Power depends on head (H), discharge (Q) and efficiency (η).",
+    exp_ta:"மின் உற்பத்தி = 0.736×W×Q×H×η/75. தலை, வெளியேற்றம், திறன் ஆகியவை மட்டுமே சார்ந்தது."
+  },
+  {
+    section:"hydro",
+    num:"III.13",
+    en:"A Pelton turbine at 300 rpm produces power at 50 Hz. Number of poles required?",
+    ta:"300 rpm-ல் இயங்கும் பெல்டன் டர்பைன் 50 Hz மின்சாரம் தர வேண்டும். எத்தனை துருவங்கள்?",
+    opts:[
+      {k:"a",en:"4",ta:"4"},
+      {k:"b",en:"8",ta:"8"},
+      {k:"c",en:"10",ta:"10"},
+      {k:"d",en:"20",ta:"20"}
+    ],
+    ans:"d",
+    exp:"P = 120f/N = 120×50/300 = 20 poles.",
+    exp_ta:"P = 120f/N = 120×50/300 = 20 துருவங்கள்."
+  },
+  {
+    section:"hydro",
+    num:"III.14",
+    en:"Hydro generator is the commercial name of:",
+    ta:"நீர்மின் ஜெனரேட்டர் என்பது எதன் வணிக பெயர்?",
+    opts:[
+      {k:"a",en:"Round rotor generator",ta:"வட்ட ரோட்டர் ஜெனரேட்டர்"},
+      {k:"b",en:"Cylindrical rotor synchronous generator",ta:"உருளை ரோட்டர் ஒத்திசைவு ஜெனரேட்டர்"},
+      {k:"c",en:"Salient pole synchronous generator",ta:"முக்கிய துருவ ஒத்திசைவு ஜெனரேட்டர்"},
+      {k:"d",en:"All the above",ta:"மேற்கூறிய அனைத்தும்"}
+    ],
+    ans:"c",
+    exp:"Hydro generator works at low speed (~300 rpm) requiring many poles – hence salient pole synchronous generator.",
+    exp_ta:"நீர்மின் ஜெனரேட்டர் குறைந்த வேகத்தில் (≈300 rpm) இயங்குவதால் முக்கிய துருவ ஒத்திசைவு ஜெனரேட்டர் என்று அழைக்கப்படுகிறது."
+  },
+  {
+    section:"hydro",
+    num:"III.15",
+    en:"Factors to be considered when selecting site for a hydel power plant:",
+    ta:"நீர்மின் நிலைய தள தேர்வில் கருத்தில் கொள்ள வேண்டியவை?",
+    opts:[
+      {k:"a",en:"Quantity of water available",ta:"கிடைக்கும் நீரின் அளவு"},
+      {k:"b",en:"Head of water",ta:"நீர் தலை உயரம்"},
+      {k:"c",en:"Accessibility of site",ta:"தளம் அணுகுவதற்கான வசதி"},
+      {k:"d",en:"All the above",ta:"மேற்கூறிய அனைத்தும்"}
+    ],
+    ans:"d",
+    exp:"All three – water quantity, head, and accessibility – must be considered for hydel plant site selection.",
+    exp_ta:"நீரின் அளவு, தலை உயரம், அணுகும் வசதி – மூன்றும் தள தேர்வில் கருத்தில் கொள்ளப்படும்."
+  },
+  {
+    section:"hydro",
+    num:"III.16",
+    en:"Specific speed of a turbine is defined as speed to develop 1 metric HP under a head of:",
+    ta:"ஒரு டர்பைனின் குறிப்பிட்ட வேகம் என்னும் வரையறை – எந்த தலை உயரத்தில் 1 மெட்ரிக் குதிரை சக்தி தரும் வேகம்?",
+    opts:[
+      {k:"a",en:"1 metric meter",ta:"1 மெட்ரிக் மீட்டர்"},
+      {k:"b",en:"1 meter",ta:"1 மீட்டர்"},
+      {k:"c",en:"1 feet",ta:"1 அடி"},
+      {k:"d",en:"1 cubic meter",ta:"1 கன மீட்டர்"}
+    ],
+    ans:"b",
+    exp:"Specific speed is the speed at which a geometrically similar turbine develops 1 metric HP under a head of 1 meter.",
+    exp_ta:"குறிப்பிட்ட வேகம் என்பது 1 மீட்டர் தலை உயரத்தில் 1 மெட்ரிக் குதிரை சக்தி தரும் வேகம்."
+  },
+  {
+    section:"hydro",
+    num:"III.17",
+    en:"Which power station can be easily started from cold conditions without warming up?",
+    ta:"எந்த மின் நிலையம் குளிர் நிலையிலிருந்து சூடேற்றாமல் எளிதில் தொடங்கலாம்?",
+    opts:[
+      {k:"a",en:"Thermal",ta:"வெப்ப மின்"},
+      {k:"b",en:"Hydro-electric",ta:"நீர்மின்"},
+      {k:"c",en:"Nuclear",ta:"அணு மின்"},
+      {k:"d",en:"Diesel",ta:"டீசல் மின்"}
+    ],
+    ans:"b",
+    exp:"Hydro-electric power plant can be started from cold conditions without any warming-up period.",
+    exp_ta:"நீர்மின் நிலையம் சூடேற்றும் காலம் தேவையின்றி குளிர் நிலையிலிருந்து தொடங்கலாம்."
+  },
+  {
+    section:"hydro",
+    num:"III.18",
+    en:"In a pumped storage plant, the efficiency of the machine as generator vs motor is:",
+    ta:"பம்ப் சேமிப்பு நிலையத்தில் ஜெனரேட்டர் மற்றும் மோட்டாராக இயங்கும் திறன்?",
+    opts:[
+      {k:"a",en:"Greater than as motor",ta:"மோட்டாரை விட அதிகம்"},
+      {k:"b",en:"Equal to as motor",ta:"மோட்டாருக்கு சமம்"},
+      {k:"c",en:"Less than as motor",ta:"மோட்டாரை விட குறைவு"},
+      {k:"d",en:"Depends on machine type",ta:"இயந்திர வகையை பொறுத்தது"}
+    ],
+    ans:"a",
+    exp:"In pumped storage, the efficiency of the machine when working as a generator is greater than when working as a motor.",
+    exp_ta:"பம்ப் சேமிப்பு நிலையத்தில் ஜெனரேட்டராக இயங்கும் திறன் மோட்டாராக இயங்குவதை விட அதிகம்."
+  },
+  {
+    section:"hydro",
+    num:"III.19",
+    en:"Which power plant is most efficient but has high initial cost?",
+    ta:"மிக அதிக திறன் கொண்டு ஆனால் அதிக ஆரம்ப செலவுடைய மின் நிலையம் எது?",
+    opts:[
+      {k:"a",en:"Diesel power plant",ta:"டீசல் மின் நிலையம்"},
+      {k:"b",en:"Nuclear power plant",ta:"அணு மின் நிலையம்"},
+      {k:"c",en:"Hydro-electric power plant",ta:"நீர்மின் நிலையம்"},
+      {k:"d",en:"Steam power plant",ta:"நீராவி மின் நிலையம்"}
+    ],
+    ans:"c",
+    exp:"Hydro-electric plant is the most efficient (85–95%) but has the highest initial cost.",
+    exp_ta:"நீர்மின் நிலையம் மிக அதிக திறன் (85–95%) கொண்டது, ஆனால் ஆரம்ப செலவும் அதிகம்."
+  },
+  {
+    section:"hydro",
+    num:"III.20",
+    en:"In a hydro power station, an enlarged body of water just above the intake used as a regulating reservoir is called:",
+    ta:"நீர்மின் நிலையத்தில் உட்கொள்ளல் மேல் உள்ள விரிவடைந்த நீர் உடல் என்று அழைக்கப்படுவது?",
+    opts:[
+      {k:"a",en:"Spillways",ta:"சொட்டு வழிகள்"},
+      {k:"b",en:"Forebay",ta:"முன் குளம்"},
+      {k:"c",en:"Reservoir",ta:"நீர்த்தேக்கம்"},
+      {k:"d",en:"Penstock",ta:"பென்ஸ்டாக்"}
+    ],
+    ans:"b",
+    exp:"Forebay is an enlarged body of water just above the intake, used as a regulating reservoir in hydro power stations.",
+    exp_ta:"முன் குளம் (Forebay) என்பது உட்கொள்ளலுக்கு மேலே உள்ள விரிவடைந்த நீர் உடல்."
+  },
+  {
+    section:"hydro",
+    num:"III.21",
+    en:"Run-off-river hydel plants are provided with pondage so that:",
+    ta:"நதி ஓட்ட நீர்மின் நிலையங்களில் குளத்தேக்கம் வழங்கப்படுவது ஏன்?",
+    opts:[
+      {k:"a",en:"Firm capacity of the plant is increased",ta:"நிலையான திறன் அதிகரிக்கப்படுகிறது"},
+      {k:"b",en:"Operating head is controlled",ta:"இயக்க தலை கட்டுப்படுத்தப்படுகிறது"},
+      {k:"c",en:"Pressure inside turbine casing stays constant",ta:"டர்பைன் கவசத்தில் அழுத்தம் மாறாமல் இருக்கும்"},
+      {k:"d",en:"Kinetic energy of water is fully utilised",ta:"நீரின் இயக்க ஆற்றல் முழுமையாக பயன்படுத்தப்படும்"}
+    ],
+    ans:"a",
+    exp:"Pondage helps cope with hour-to-hour fluctuations, increasing the firm capacity of the run-off-river plant.",
+    exp_ta:"குளத்தேக்கம் மணிக்கு மணி சுமை மாற்றங்களை சமாளிக்க உதவுகிறது, நிலையான திறனை அதிகரிக்கிறது."
+  },
+  {
+    section:"hydro",
+    num:"III.22",
+    en:"Which of the following is an example of a turbine?",
+    ta:"பின்வருவனவற்றில் டர்பைனுக்கு ஒரு எடுத்துக்காட்டு எது?",
+    opts:[
+      {k:"a",en:"Battery",ta:"மின்கலம்"},
+      {k:"b",en:"Transformer",ta:"மின்மாற்றி"},
+      {k:"c",en:"Windmill",ta:"காற்றாலை"},
+      {k:"d",en:"None of these",ta:"இவை எதுவும் இல்லை"}
+    ],
+    ans:"c",
+    exp:"A windmill converts wind energy using rotating blades – it is an example of a turbine.",
+    exp_ta:"காற்றாலை காற்றின் ஆற்றலை சுழலும் இறகுகள் மூலம் மாற்றுகிறது – இது டர்பைனுக்கு எடுத்துக்காட்டு."
+  },
+  {
+    section:"hydro",
+    num:"III.23",
+    en:"Operating speeds (rpm) of generators in thermal, nuclear and hydro plants respectively are:",
+    ta:"வெப்ப, அணு மற்றும் நீர்மின் நிலையங்களில் ஜெனரேட்டர்களின் வேகம் (rpm) முறையே?",
+    opts:[
+      {k:"a",en:"3000, 3000 and 300",ta:"3000, 3000 மற்றும் 300"},
+      {k:"b",en:"3000, 300 and 1500",ta:"3000, 300 மற்றும் 1500"},
+      {k:"c",en:"1500, 1500 and 3000",ta:"1500, 1500 மற்றும் 3000"},
+      {k:"d",en:"1000, 900 and 750",ta:"1000, 900 மற்றும் 750"}
+    ],
+    ans:"a",
+    exp:"Thermal & Nuclear: 2 poles → 3000 rpm (at 50 Hz). Hydro: 20 poles → 300 rpm (Ns = 120f/P).",
+    exp_ta:"வெப்ப & அணு: 2 துருவங்கள் → 3000 rpm. நீர்மின்: 20 துருவங்கள் → 300 rpm."
+  },
+  {
+    section:"hydro",
+    num:"III.24",
+    en:"A Kaplan turbine is:",
+    ta:"கேப்லன் டர்பைன் என்பது?",
+    opts:[
+      {k:"a",en:"Inward flow, impulse turbine",ta:"உள்நோக்கி ஓட்டம், உந்த டர்பைன்"},
+      {k:"b",en:"Outward flow, reaction turbine",ta:"வெளிநோக்கி ஓட்டம், எதிர்வினை டர்பைன்"},
+      {k:"c",en:"High head mixed flow turbine",ta:"உயர் தலை கலப்பு ஓட்ட டர்பைன்"},
+      {k:"d",en:"Low head axial flow turbine",ta:"குறைந்த தலை அச்சு ஓட்ட டர்பைன்"}
+    ],
+    ans:"d",
+    exp:"Kaplan turbine works on the principle of low head axial flow reaction. Water flows parallel to the axis of rotation.",
+    exp_ta:"கேப்லன் டர்பைன் குறைந்த தலை அச்சு ஓட்ட எதிர்வினை கொள்கையில் இயங்குகிறது."
+  },
+  {
+    section:"hydro",
+    num:"III.25",
+    en:"Trash rack, forebay, surge tank, spill way are terms involved with:",
+    ta:"குப்பை கம்பி, முன் குளம், சர்ஜ் தொட்டி, சொட்டு வழி என்பவை எந்த நிலையத்துடன் தொடர்புடையவை?",
+    opts:[
+      {k:"a",en:"Nuclear power plant",ta:"அணு மின் நிலையம்"},
+      {k:"b",en:"Thermal power plant",ta:"வெப்ப மின் நிலையம்"},
+      {k:"c",en:"Wind turbine power plant",ta:"காற்றாலை மின் நிலையம்"},
+      {k:"d",en:"Hydroelectric power plant",ta:"நீர்மின் நிலையம்"}
+    ],
+    ans:"d",
+    exp:"All these components – trash rack, forebay, surge tank, spillway – belong to a hydroelectric power plant.",
+    exp_ta:"இவை அனைத்தும் நீர்மின் நிலையத்தின் கூறுகள்."
+  },
+  {
+    section:"hydro",
+    num:"III.26",
+    en:"Hydroelectric power generation does NOT depend on:",
+    ta:"நீர்மின் உற்பத்தி எதை சார்ந்திருக்காது?",
+    opts:[
+      {k:"a",en:"Specific weight of water",ta:"நீரின் குறிப்பிட்ட எடை"},
+      {k:"b",en:"Rate of flow of water",ta:"நீர் ஓட்ட வேகம்"},
+      {k:"c",en:"Height of water head",ta:"நீர் தலை உயரம்"},
+      {k:"d",en:"Efficiency of evaporator",ta:"ஆவியாக்கியின் திறன்"}
+    ],
+    ans:"d",
+    exp:"Evaporator efficiency is relevant to steam/thermal plants, NOT to hydroelectric power generation.",
+    exp_ta:"ஆவியாக்கியின் திறன் நீர்மின் உற்பத்தியை சார்ந்திருக்காது – அது நீராவி நிலையத்தில் பயன்படுகிறது."
+  },
+  {
+    section:"hydro",
+    num:"III.27",
+    en:"Which plant has high initial cost, low running and maintenance cost and no standby losses?",
+    ta:"அதிக ஆரம்ப செலவு, குறைந்த இயக்கச் செலவு மற்றும் காத்திருப்பு இழப்பு இல்லாத நிலையம்?",
+    opts:[
+      {k:"a",en:"Nuclear power plant",ta:"அணு மின் நிலையம்"},
+      {k:"b",en:"Steam power plant",ta:"நீராவி மின் நிலையம்"},
+      {k:"c",en:"Hydro-electric power plant",ta:"நீர்மின் நிலையம்"},
+      {k:"d",en:"Diesel power plant",ta:"டீசல் மின் நிலையம்"}
+    ],
+    ans:"c",
+    exp:"Hydro-electric plant: high initial cost, low running & maintenance cost, eco-friendly hence no standby losses.",
+    exp_ta:"நீர்மின் நிலையம்: அதிக ஆரம்ப செலவு, குறைந்த இயக்கச் செலவு, சூழல் நட்பான காரணத்தால் காத்திருப்பு இழப்பு இல்லை."
+  },
+  {
+    section:"hydro",
+    num:"III.28",
+    en:"In P = QHgρ, with H in metres and g in m/s², the unit of Q (flow rate) is:",
+    ta:"P = QHgρ சமன்பாட்டில் H மீட்டரில், g m/s²-ல் இருந்தால், Q-ன் அலகு என்ன?",
+    opts:[
+      {k:"a",en:"Meter per hour",ta:"மீட்டர் / மணி நேரம்"},
+      {k:"b",en:"Cubic meter per second",ta:"கன மீட்டர் / வினாடி"},
+      {k:"c",en:"Square meter per second",ta:"சதுர மீட்டர் / வினாடி"},
+      {k:"d",en:"Meter per second",ta:"மீட்டர் / வினாடி"}
+    ],
+    ans:"b",
+    exp:"From dimensional analysis of P = ρgQH (W), Q must be in m³/s (cubic meters per second).",
+    exp_ta:"பரிமாண பகுப்பாய்வில் P = ρgQH, Q-ன் அலகு m³/s (கன மீட்டர் / வினாடி)."
+  },
+  {
+    section:"hydro",
+    num:"III.29",
+    en:"A penstock is a tube that:",
+    ta:"பென்ஸ்டாக் என்பது?",
+    opts:[
+      {k:"a",en:"Brings water to turbines",ta:"டர்பைன்களுக்கு நீரை கொண்டு செல்லும் குழாய்"},
+      {k:"b",en:"Controls spillway flow",ta:"சொட்டு வழி ஓட்டத்தை கட்டுப்படுத்தும்"},
+      {k:"c",en:"Stores water temporarily",ta:"தற்காலிகமாக நீரை சேமிக்கும்"},
+      {k:"d",en:"Drives the generator directly",ta:"ஜெனரேட்டரை நேரடியாக இயக்கும்"}
+    ],
+    ans:"a",
+    exp:"A penstock is an enclosed pipe/tube that delivers water from the reservoir to the hydro turbines.",
+    exp_ta:"பென்ஸ்டாக் நீர்த்தேக்கத்திலிருந்து நீரை நீர்மின் டர்பைன்களுக்கு கொண்டு செல்லும் குழாய்."
+  },
+  {
+    section:"hydro",
+    num:"III.30",
+    en:"The main source of a hydro-electric power station is:",
+    ta:"நீர்மின் நிலையத்தின் முக்கிய ஆதாரம் என்ன?",
+    opts:[
+      {k:"a",en:"Coal",ta:"நிலக்கரி"},
+      {k:"b",en:"Generator",ta:"ஜெனரேட்டர்"},
+      {k:"c",en:"Water",ta:"நீர்"},
+      {k:"d",en:"Nuclear",ta:"அணு"}
+    ],
+    ans:"c",
+    exp:"Water is the main fuel/source for a hydro-electric power station.",
+    exp_ta:"நீர்மின் நிலையத்தின் முக்கிய எரிபொருள் / ஆதாரம் நீர்."
+  },
+  {
+    section:"hydro",
+    num:"III.31",
+    en:"Hydel alternators have more poles than thermal alternators because:",
+    ta:"நீர்மின் மாறு மின்னிகளுக்கு வெப்ப மின் நிலைய மாறு மின்னிகளை விட அதிக துருவங்கள் ஏன்?",
+    opts:[
+      {k:"a",en:"Speed of prime mover can be changed",ta:"முன்னோடி இயக்கியின் வேகம் மாற்றலாம்"},
+      {k:"b",en:"Power can be changed as per demand",ta:"தேவைக்கு ஏற்ப மின்சாரம் மாற்றலாம்"},
+      {k:"c",en:"Speed of prime mover (hydro turbine) is less",ta:"முன்னோடி இயக்கியின் வேகம் குறைவு"},
+      {k:"d",en:"Power generated is less",ta:"மின் உற்பத்தி குறைவு"}
+    ],
+    ans:"c",
+    exp:"Hydro turbines run at low speed. Since N = 120f/P, more poles are needed to maintain 50 Hz.",
+    exp_ta:"நீர் டர்பைன் குறைந்த வேகத்தில் இயங்குவதால், 50 Hz-ஐ பராமரிக்க அதிக துருவங்கள் தேவை."
+  },
+  {
+    section:"hydro",
+    num:"III.32",
+    en:"Water hammer effect is expected in a:",
+    ta:"நீர் சுத்தியல் விளைவு எங்கு எதிர்பார்க்கப்படுகிறது?",
+    opts:[
+      {k:"a",en:"Draft tube",ta:"வரைவு குழாய்"},
+      {k:"b",en:"Penstock",ta:"பென்ஸ்டாக்"},
+      {k:"c",en:"Surge tank",ta:"சர்ஜ் தொட்டி"},
+      {k:"d",en:"Turbine casing",ta:"டர்பைன் கவசம்"}
+    ],
+    ans:"b",
+    exp:"Water hammer (sudden pressure surge) occurs in the penstock due to sudden load changes or valve closure.",
+    exp_ta:"திடீர் சுமை மாற்றம் அல்லது வால்வு மூடல் காரணமாக பென்ஸ்டாக்கில் நீர் சுத்தியல் ஏற்படுகிறது."
+  },
+  {
+    section:"hydro",
+    num:"III.33",
+    en:"What is the function of a turbine in a hydro power plant?",
+    ta:"நீர்மின் நிலையத்தில் டர்பைனின் செயல்பாடு என்ன?",
+    opts:[
+      {k:"a",en:"Produce electrical power",ta:"மின் ஆற்றல் உற்பத்தி"},
+      {k:"b",en:"Produce hydropower",ta:"நீர் ஆற்றல் உற்பத்தி"},
+      {k:"c",en:"Produce heat power",ta:"வெப்ப ஆற்றல் உற்பத்தி"},
+      {k:"d",en:"Produce mechanical power",ta:"இயந்திர ஆற்றல் உற்பத்தி"}
+    ],
+    ans:"d",
+    exp:"A turbine converts water energy into mechanical energy. The generator then converts mechanical to electrical energy.",
+    exp_ta:"டர்பைன் நீரின் ஆற்றலை இயந்திர ஆற்றலாக மாற்றுகிறது. ஜெனரேட்டர் அதை மின் ஆற்றலாக மாற்றுகிறது."
+  },
+  {
+    section:"hydro",
+    num:"III.34",
+    en:"Which of the following water turbines is NOT a reaction turbine?",
+    ta:"பின்வரும் நீர் டர்பைன்களில் எதிர்வினை டர்பைன் அல்லாதது எது?",
+    opts:[
+      {k:"a",en:"Pelton wheel",ta:"பெல்டன் சக்கரம்"},
+      {k:"b",en:"Kaplan turbine",ta:"கேப்லன் டர்பைன்"},
+      {k:"c",en:"Propeller turbine",ta:"புரோப்பெல்லர் டர்பைன்"},
+      {k:"d",en:"Francis turbine",ta:"பிரான்சிஸ் டர்பைன்"}
+    ],
+    ans:"a",
+    exp:"Pelton wheel is an impulse turbine. Kaplan, Propeller, and Francis are reaction turbines.",
+    exp_ta:"பெல்டன் சக்கரம் ஒரு உந்த டர்பைன். கேப்லன், புரோப்பெல்லர், பிரான்சிஸ் எதிர்வினை டர்பைன்கள்."
+  },
+  {
+    section:"hydro",
+    num:"III.35",
+    en:"Hydro plant: 5×10⁶ m³ reservoir at 200m head, 75% efficiency. Total energy available?",
+    ta:"5×10⁶ m³ நீர்த்தேக்கம், 200m தலை, 75% திறன். கிடைக்கும் மொத்த ஆற்றல்?",
+    opts:[
+      {k:"a",en:"2 × 10⁴ kWh",ta:"2 × 10⁴ kWh"},
+      {k:"b",en:"2 × 10⁵ kWh",ta:"2 × 10⁵ kWh"},
+      {k:"c",en:"2 × 10⁶ kWh",ta:"2 × 10⁶ kWh"},
+      {k:"d",en:"2 × 10⁷ kWh",ta:"2 × 10⁷ kWh"}
+    ],
+    ans:"c",
+    exp:"E = W×H×η = 5×10⁶×1000×9.81×200×0.75 / (3600×1000) ≈ 2.04×10⁶ kWh.",
+    exp_ta:"E = W×H×η கொண்டு கணக்கிட்டால் ≈ 2×10⁶ kWh."
+  },
+  {
+    section:"hydro",
+    num:"III.36",
+    en:"Surge tanks are provided in high/medium head hydro plants when considerably _____ is required:",
+    ta:"உயர்/நடுத்தர தலை நீர்மின் நிலையங்களில் சர்ஜ் தொட்டி எப்போது அளிக்கப்படுகிறது?",
+    opts:[
+      {k:"a",en:"Large steam turbine",ta:"பெரிய நீராவி டர்பைன்"},
+      {k:"b",en:"Short penstock",ta:"குட்டையான பென்ஸ்டாக்"},
+      {k:"c",en:"Long penstock",ta:"நீண்ட பென்ஸ்டாக்"},
+      {k:"d",en:"Short thermal system",ta:"குட்டையான வெப்ப அமைப்பு"}
+    ],
+    ans:"c",
+    exp:"Surge tanks are provided in high/medium head hydro plants when a considerably long penstock is required.",
+    exp_ta:"நீண்ட பென்ஸ்டாக் தேவைப்படும்போது சர்ஜ் தொட்டி அளிக்கப்படுகிறது."
+  },
+  {
+    section:"hydro",
+    num:"III.37",
+    en:"Low head plants generally use:",
+    ta:"குறைந்த தலை நிலையங்கள் பொதுவாக எந்த டர்பைன் பயன்படுத்துகின்றன?",
+    opts:[
+      {k:"a",en:"Pelton turbines",ta:"பெல்டன் டர்பைன்கள்"},
+      {k:"b",en:"Francis turbines",ta:"பிரான்சிஸ் டர்பைன்கள்"},
+      {k:"c",en:"Kaplan turbines",ta:"கேப்லன் டர்பைன்கள்"},
+      {k:"d",en:"Both (a) and (b)",ta:"(a) மற்றும் (b) இரண்டும்"}
+    ],
+    ans:"c",
+    exp:"Kaplan turbine → Low head. Francis turbine → Medium head. Pelton turbine → High head.",
+    exp_ta:"கேப்லன் டர்பைன் → குறைந்த தலை. பிரான்சிஸ் → நடுத்தர தலை. பெல்டன் → உயர் தலை."
+  },
+  {
+    section:"hydro",
+    num:"III.38",
+    en:"The power generating station which uses the potential energy of water is called:",
+    ta:"நீரின் நிலை ஆற்றலை பயன்படுத்தும் மின் நிலையம்?",
+    opts:[
+      {k:"a",en:"Hydro power station",ta:"நீர்மின் நிலையம்"},
+      {k:"b",en:"Thermal power station",ta:"வெப்ப மின் நிலையம்"},
+      {k:"c",en:"Atomic power station",ta:"அணு மின் நிலையம்"},
+      {k:"d",en:"Nuclear power station",ta:"கதிரியக்க மின் நிலையம்"}
+    ],
+    ans:"a",
+    exp:"Hydro power station uses the potential energy of water stored at height to generate electricity.",
+    exp_ta:"நீர்மின் நிலையம் உயரத்தில் சேமிக்கப்பட்ட நீரின் நிலை ஆற்றலை மின்சாரமாக மாற்றுகிறது."
+  },
+  {
+    section:"hydro",
+    num:"III.39",
+    en:"In hydro power plants:",
+    ta:"நீர்மின் நிலையங்களில்:",
+    opts:[
+      {k:"a",en:"Initial cost high, operational cost low",ta:"ஆரம்ப செலவு அதிகம், இயக்கச் செலவு குறைவு"},
+      {k:"b",en:"Both initial and operational cost high",ta:"ஆரம்ப மற்றும் இயக்கச் செலவு இரண்டும் அதிகம்"},
+      {k:"c",en:"Initial cost low, operational cost high",ta:"ஆரம்ப செலவு குறைவு, இயக்கச் செலவு அதிகம்"},
+      {k:"d",en:"Both initial and operational cost low",ta:"இரண்டும் குறைவு"}
+    ],
+    ans:"a",
+    exp:"Hydro plants have HIGH initial cost (dam construction etc.) but LOW operational cost (water is free fuel).",
+    exp_ta:"நீர்மின் நிலையங்களில் ஆரம்ப செலவு அதிகம் (அணை கட்டுமானம்), ஆனால் இயக்கச் செலவு குறைவு (நீர் இலவசம்)."
+  },
+  {
+    section:"hydro",
+    num:"III.40",
+    en:"In a power plant, the speed of turbine is controlled by:",
+    ta:"மின் நிலையத்தில் டர்பைனின் வேகம் எதன் மூலம் கட்டுப்படுத்தப்படுகிறது?",
+    opts:[
+      {k:"a",en:"Valve house",ta:"வால்வு கட்டிடம்"},
+      {k:"b",en:"Governor",ta:"கவர்னர்"},
+      {k:"c",en:"Power house",ta:"மின் நிலையம்"},
+      {k:"d",en:"Air pressure",ta:"காற்று அழுத்தம்"}
+    ],
+    ans:"b",
+    exp:"A governor controls the speed of the turbine by varying the water flow to maintain constant speed/frequency.",
+    exp_ta:"கவர்னர் நீர் ஓட்டத்தை மாற்றி டர்பைன் வேகத்தை கட்டுப்படுத்துகிறது."
+  },
+  {
+    section:"hydro",
+    num:"III.41",
+    en:"In hydro plants with closed conduits, _____ limits abnormal pressure:",
+    ta:"நீர்மின் நிலையங்களில் மூடிய குழாய்கள் பயன்படும்போது அசாதாரண அழுத்தத்தை கட்டுப்படுத்துவது?",
+    opts:[
+      {k:"a",en:"Penstocks",ta:"பென்ஸ்டாக்கள்"},
+      {k:"b",en:"Surge tank",ta:"சர்ஜ் தொட்டி"},
+      {k:"c",en:"Headworks",ta:"தலை அமைப்புகள்"},
+      {k:"d",en:"Spillways",ta:"சொட்டு வழிகள்"}
+    ],
+    ans:"b",
+    exp:"Surge tanks are the most common means of protecting against excessive water hammer pressure in closed conduits.",
+    exp_ta:"சர்ஜ் தொட்டி மூடிய குழாய்களில் அதிக நீர் சுத்தியல் அழுத்தத்திலிருந்து பாதுகாக்கிறது."
+  },
+  {
+    section:"hydro",
+    num:"III.42",
+    en:"Francis and Kaplan turbines fall under the category of:",
+    ta:"பிரான்சிஸ் மற்றும் கேப்லன் டர்பைன்கள் எந்த வகையை சேர்ந்தவை?",
+    opts:[
+      {k:"a",en:"Impulse turbine",ta:"உந்த டர்பைன்"},
+      {k:"b",en:"Reaction turbine",ta:"எதிர்வினை டர்பைன்"},
+      {k:"c",en:"Axial flow",ta:"அச்சு ஓட்டம்"},
+      {k:"d",en:"Impulse and reaction combined",ta:"உந்த மற்றும் எதிர்வினை இணைந்தது"}
+    ],
+    ans:"b",
+    exp:"Both Francis and Kaplan turbines are reaction turbines used in hydro power plants.",
+    exp_ta:"பிரான்சிஸ் மற்றும் கேப்லன் இரண்டும் எதிர்வினை டர்பைன் வகைகள்."
+  },
+  {
+    section:"hydro",
+    num:"III.43",
+    en:"At very high head hydro-electric plants, which turbine is used?",
+    ta:"மிக உயர் தலை நீர்மின் நிலையங்களில் எந்த டர்பைன் பயன்படுகிறது?",
+    opts:[
+      {k:"a",en:"Francis turbine",ta:"பிரான்சிஸ் டர்பைன்"},
+      {k:"b",en:"Propeller turbine",ta:"புரோப்பெல்லர் டர்பைன்"},
+      {k:"c",en:"Pelton wheel",ta:"பெல்டன் சக்கரம்"},
+      {k:"d",en:"Kaplan turbine",ta:"கேப்லன் டர்பைன்"}
+    ],
+    ans:"c",
+    exp:"Pelton wheel is used for high head (>180m) and low discharge. It is a tangential flow impulse turbine.",
+    exp_ta:"பெல்டன் சக்கரம் உயர் தலை (>180m) மற்றும் குறைந்த வெளியேற்றத்திற்கு பயன்படுகிறது."
+  },
+  {
+    section:"hydro",
+    num:"III.44",
+    en:"The turbine shown with buckets and spear nozzle is:",
+    ta:"கொட்டகை மற்றும் ஈட்டி முனை உள்ள டர்பைன் எது?",
+    opts:[
+      {k:"a",en:"Francis",ta:"பிரான்சிஸ்"},
+      {k:"b",en:"Curtis",ta:"கர்டிஸ்"},
+      {k:"c",en:"Kaplan",ta:"கேப்லன்"},
+      {k:"d",en:"Pelton Wheel",ta:"பெல்டன் சக்கரம்"}
+    ],
+    ans:"d",
+    exp:"Pelton wheel has bucket-shaped blades. A spear in the nozzle controls water striking the buckets.",
+    exp_ta:"பெல்டன் சக்கரம் கொட்டகை வடிவ இறகுகளை கொண்டுள்ளது. முனையில் ஈட்டி நீர் ஓட்டத்தை கட்டுப்படுத்துகிறது."
+  },
+  {
+    section:"hydro",
+    num:"III.45",
+    en:"Kaplan turbine is a _______ turbine and water collides ______ with the turbine blade:",
+    ta:"கேப்லன் டர்பைன் _______ வகை மற்றும் நீர் _______ டர்பைன் இறகுகளை தாக்குகிறது:",
+    opts:[
+      {k:"a",en:"Impulse, vertically",ta:"உந்த, செங்குத்தாக"},
+      {k:"b",en:"Reaction, axially",ta:"எதிர்வினை, அச்சு வழியாக"},
+      {k:"c",en:"Reaction, vertically",ta:"எதிர்வினை, செங்குத்தாக"},
+      {k:"d",en:"Impulse, axially",ta:"உந்த, அச்சு வழியாக"}
+    ],
+    ans:"b",
+    exp:"Kaplan turbine is a reaction turbine; water flows axially (parallel to the rotation axis).",
+    exp_ta:"கேப்லன் டர்பைன் எதிர்வினை வகை; நீர் அச்சு வழியாக (சுழல் அச்சுக்கு இணையாக) ஓடுகிறது."
+  },
+  {
+    section:"hydro",
+    num:"III.46",
+    en:"Sluice gates and automated isolating valves are components of:",
+    ta:"கதவு வழிகள் மற்றும் தன்னியக்க தனிமைப்படுத்தல் வால்வுகள் எந்த கூறின் பாகங்கள்?",
+    opts:[
+      {k:"a",en:"Valve-House",ta:"வால்வு கட்டிடம்"},
+      {k:"b",en:"Head race",ta:"தலை ஓட்டம்"},
+      {k:"c",en:"Spill Way",ta:"சொட்டு வழி"},
+      {k:"d",en:"Penstock",ta:"பென்ஸ்டாக்"}
+    ],
+    ans:"a",
+    exp:"Sluice gates and automated isolating valves are components of the Valve-House in hydro plants.",
+    exp_ta:"கதவு வழிகள் மற்றும் தன்னியக்க வால்வுகள் வால்வு கட்டிடத்தின் பாகங்கள்."
+  },
+  {
+    section:"hydro",
+    num:"III.47",
+    en:"Hydel energy means:",
+    ta:"நீர்மின் ஆற்றல் என்பது:",
+    opts:[
+      {k:"a",en:"Solar energy",ta:"சூரிய ஆற்றல்"},
+      {k:"b",en:"Wind energy",ta:"காற்று ஆற்றல்"},
+      {k:"c",en:"Water energy",ta:"நீர் ஆற்றல்"},
+      {k:"d",en:"Nuclear energy",ta:"அணு ஆற்றல்"}
+    ],
+    ans:"c",
+    exp:"'Hydel' comes from 'hydraulic' and refers to water energy used for electricity generation.",
+    exp_ta:"'நீர்மின்' என்பது நீரின் ஆற்றலை மின்சார உற்பத்திக்கு பயன்படுத்துவதைக் குறிக்கிறது."
+  },
+  {
+    section:"hydro",
+    num:"III.48",
+    en:"Efficiency of flat plate solar collectors is usually:",
+    ta:"தட்டு வடிவ சூரிய சேகரிப்பிகளின் திறன் பொதுவாக எவ்வளவு?",
+    opts:[
+      {k:"a",en:"20–30%",ta:"20–30%"},
+      {k:"b",en:"30–50%",ta:"30–50%"},
+      {k:"c",en:"50–70%",ta:"50–70%"},
+      {k:"d",en:"70–90%",ta:"70–90%"}
+    ],
+    ans:"b",
+    exp:"The efficiency of flat plate solar collectors is usually 30–50%.",
+    exp_ta:"தட்டு வடிவ சூரிய சேகரிப்பிகளின் திறன் பொதுவாக 30–50% ஆகும்."
+  },
+  {
+    section:"hydro",
+    num:"III.49",
+    en:"Installed capacity of micro hydel power plants is about:",
+    ta:"சிறிய நீர்மின் நிலையங்களின் நிறுவிய திறன் சுமார் எவ்வளவு?",
+    opts:[
+      {k:"a",en:"100 kW",ta:"100 kW"},
+      {k:"b",en:"2000 kW",ta:"2000 kW"},
+      {k:"c",en:"6000 kW",ta:"6000 kW"},
+      {k:"d",en:"15000 kW",ta:"15000 kW"}
+    ],
+    ans:"a",
+    exp:"Micro hydel power plants have installed capacity of about 100 kW.",
+    exp_ta:"சிறிய நீர்மின் நிலையங்களின் நிறுவிய திறன் சுமார் 100 kW."
+  },
+  {
+    section:"hydro",
+    num:"III.50",
+    en:"In hydro-electric plants, _____ reduces water hammer effect in penstock:",
+    ta:"நீர்மின் நிலையங்களில் பென்ஸ்டாக்கில் நீர் சுத்தியல் விளைவை குறைப்பது?",
+    opts:[
+      {k:"a",en:"Forebay",ta:"முன் குளம்"},
+      {k:"b",en:"Trash rack",ta:"குப்பை கம்பி"},
+      {k:"c",en:"Surge tank",ta:"சர்ஜ் தொட்டி"},
+      {k:"d",en:"Spill way",ta:"சொட்டு வழி"}
+    ],
+    ans:"c",
+    exp:"Surge tank absorbs pressure surges and reduces water hammer effect in the penstock.",
+    exp_ta:"சர்ஜ் தொட்டி அழுத்த அலைகளை உறிஞ்சி பென்ஸ்டாக்கில் நீர் சுத்தியல் விளைவை குறைக்கிறது."
+  },
+  {
+    section:"hydro",
+    num:"III.51",
+    en:"The hydraulic turbine suitable for a speed range of 95 to 440 rpm is:",
+    ta:"95 முதல் 440 rpm வரம்புக்கு ஏற்ற நீர் டர்பைன்?",
+    opts:[
+      {k:"a",en:"Rankine",ta:"ரேங்கின்"},
+      {k:"b",en:"Francis",ta:"பிரான்சிஸ்"},
+      {k:"c",en:"Kaplan",ta:"கேப்லன்"},
+      {k:"d",en:"Pelton wheel",ta:"பெல்டன் சக்கரம்"}
+    ],
+    ans:"b",
+    exp:"Francis turbine operates in the speed range of 95 to 440 rpm for medium and high head applications.",
+    exp_ta:"பிரான்சிஸ் டர்பைன் 95 முதல் 440 rpm வரம்பில் இயங்குகிறது."
+  },
+  {
+    section:"hydro",
+    num:"III.52",
+    en:"Which generating station has the minimum running cost?",
+    ta:"எந்த மின் நிலையத்திற்கு குறைந்தபட்ச இயக்கச் செலவு உள்ளது?",
+    opts:[
+      {k:"a",en:"Hydro-electric station",ta:"நீர்மின் நிலையம்"},
+      {k:"b",en:"Nuclear power station",ta:"அணு மின் நிலையம்"},
+      {k:"c",en:"Thermal power station",ta:"வெப்ப மின் நிலையம்"},
+      {k:"d",en:"Diesel power plant",ta:"டீசல் மின் நிலையம்"}
+    ],
+    ans:"a",
+    exp:"Running cost order: Diesel > Thermal > Nuclear > Hydro. Hydro has minimum running cost.",
+    exp_ta:"இயக்கச் செலவு: டீசல் > வெப்ப > அணு > நீர்மின். நீர்மின் குறைந்தபட்ச இயக்கச் செலவு கொண்டது."
+  },
+  {
+    section:"hydro",
+    num:"III.53",
+    en:"Pelton turbine is used for water head of:",
+    ta:"பெல்டன் டர்பைன் எந்த தலை உயரத்திற்கு பயன்படுகிறது?",
+    opts:[
+      {k:"a",en:">200 m",ta:">200 m"},
+      {k:"b",en:"30–200 m",ta:"30–200 m"},
+      {k:"c",en:"< 30 m",ta:"< 30 m"},
+      {k:"d",en:"< 100 m",ta:"< 100 m"}
+    ],
+    ans:"a",
+    exp:"Pelton turbine is used for high head sites (>180m or >200m). It is a tangential flow impulse turbine.",
+    exp_ta:"பெல்டன் டர்பைன் >180m (அல்லது >200m) உயர் தலை உயரத்திற்கு பயன்படுகிறது."
+  },
+  {
+    section:"hydro",
+    num:"III.54",
+    en:"Unique advantages of a hydropower plant are that it:",
+    ta:"நீர்மின் நிலையத்தின் தனித்துவமான நன்மைகள்?",
+    opts:[
+      {k:"a",en:"Burns no fuel",ta:"எரிபொருள் எரிக்காது"},
+      {k:"b",en:"Produces no pollution",ta:"மாசு உற்பத்தி செய்யாது"},
+      {k:"c",en:"Located in hills",ta:"மலையில் அமைந்துள்ளது"},
+      {k:"d",en:"Both (a) and (b)",ta:"(a) மற்றும் (b) இரண்டும்"}
+    ],
+    ans:"d",
+    exp:"Hydro power burns no fuel and produces no air pollution – these are its unique advantages.",
+    exp_ta:"நீர்மின் நிலையம் எரிபொருள் எரிக்காது மற்றும் காற்று மாசு உற்பத்தி செய்யாது – இதுவே தனித்துவமான நன்மைகள்."
+  },
+  {
+    section:"hydro",
+    num:"III.55",
+    en:"The only large-scale energy storage method used at present is:",
+    ta:"தற்போது பயன்படும் ஒரே பெரிய அளவிலான ஆற்றல் சேமிப்பு முறை?",
+    opts:[
+      {k:"a",en:"Kinetic energy storage",ta:"இயக்க ஆற்றல் சேமிப்பு"},
+      {k:"b",en:"Storage in compressed gas",ta:"அழுத்தப்பட்ட வாயுவில் சேமிப்பு"},
+      {k:"c",en:"Potential energy storage in pumped hydro",ta:"பம்ப் நீர்மின்னில் நிலை ஆற்றல் சேமிப்பு"},
+      {k:"d",en:"Mechanical energy storage",ta:"இயந்திர ஆற்றல் சேமிப்பு"}
+    ],
+    ans:"c",
+    exp:"Pumped storage hydro is the only large-scale energy storage method widely used at present.",
+    exp_ta:"பம்ப் சேமிப்பு நீர்மின் தற்போது பயன்படும் ஒரே பெரிய அளவிலான ஆற்றல் சேமிப்பு முறை."
+  },
+  {
+    section:"hydro",
+    num:"III.56",
+    en:"Which power plant is free from environmental pollution problems?",
+    ta:"சூழல் மாசு பிரச்சனைகளில்லாத மின் நிலையம் எது?",
+    opts:[
+      {k:"a",en:"Thermal power plant",ta:"வெப்ப மின் நிலையம்"},
+      {k:"b",en:"Nuclear power plant",ta:"அணு மின் நிலையம்"},
+      {k:"c",en:"Hydro-power plant",ta:"நீர்மின் நிலையம்"},
+      {k:"d",en:"Geothermal energy power plant",ta:"புவி வெப்ப மின் நிலையம்"}
+    ],
+    ans:"c",
+    exp:"Hydro-power plant is free from any environmental pollution problem as it uses only water.",
+    exp_ta:"நீர்மின் நிலையம் சூழல் மாசு பிரச்சனையிலிருந்து முற்றிலும் விடுபட்டுள்ளது."
+  },
+  {
+    section:"hydro",
+    num:"III.57",
+    en:"The conduit system taking water from intake works to turbine is known as:",
+    ta:"உட்கொள்ளல் அமைப்பிலிருந்து டர்பைனுக்கு நீரை கொண்டுசெல்லும் குழாய் அமைப்பு?",
+    opts:[
+      {k:"a",en:"Dam",ta:"அணை"},
+      {k:"b",en:"Reservoir",ta:"நீர்த்தேக்கம்"},
+      {k:"c",en:"Penstock",ta:"பென்ஸ்டாக்"},
+      {k:"d",en:"Surge tank",ta:"சர்ஜ் தொட்டி"}
+    ],
+    ans:"c",
+    exp:"Penstocks are closed conduits made of reinforced concrete or steel that carry water to the turbines.",
+    exp_ta:"பென்ஸ்டாக் என்பது நீரை டர்பைன்களுக்கு கொண்டுசெல்லும் மூடிய குழாய் அமைப்பு."
+  },
+  {
+    section:"hydro",
+    num:"III.58",
+    en:"Which plant has the highest overall efficiency?",
+    ta:"மிக அதிக மொத்த திறன் உள்ள நிலையம் எது?",
+    opts:[
+      {k:"a",en:"Steam power plant",ta:"நீராவி மின் நிலையம்"},
+      {k:"b",en:"Diesel power plant",ta:"டீசல் மின் நிலையம்"},
+      {k:"c",en:"Hydro-electric power plant",ta:"நீர்மின் நிலையம்"},
+      {k:"d",en:"Nuclear power plant",ta:"அணு மின் நிலையம்"}
+    ],
+    ans:"c",
+    exp:"Hydro: 85–95%, Nuclear: 30–37%, Diesel: 38–42%, Thermal: 25–30%. Hydro is highest.",
+    exp_ta:"நீர்மின்: 85–95%, அணு: 30–37%, டீசல்: 38–42%, வெப்ப: 25–30%. நீர்மின் திறன் மிக அதிகம்."
+  },
+  {
+    section:"hydro",
+    num:"III.59",
+    en:"Hydro station: Q=1 m³/s, H=1m, 100% efficiency. Power generated by alternator?",
+    ta:"Q=1 m³/s, H=1m, 100% திறன். மாறு மின்னி உற்பத்திக்கும் மின்சாரம்?",
+    opts:[
+      {k:"a",en:"9.81 kW",ta:"9.81 kW"},
+      {k:"b",en:"12.5 kW",ta:"12.5 kW"},
+      {k:"c",en:"16 kW",ta:"16 kW"},
+      {k:"d",en:"22 kW",ta:"22 kW"}
+    ],
+    ans:"a",
+    exp:"P = 0.736×W×Q×H×η/75 = 0.736×1000×1×1×1/75 = 9.81 kW.",
+    exp_ta:"P = 0.736×W×Q×H×η/75 = 0.736×1000×1×1×1/75 = 9.81 kW."
+  },
+  {
+    section:"hydro",
+    num:"III.60",
+    en:"Which of the following is NOT a part of hydro-electric plant?",
+    ta:"நீர்மின் நிலையத்தின் பாகம் அல்லாதது?",
+    opts:[
+      {k:"a",en:"Penstock",ta:"பென்ஸ்டாக்"},
+      {k:"b",en:"Spillway",ta:"சொட்டு வழி"},
+      {k:"c",en:"Surge tank",ta:"சர்ஜ் தொட்டி"},
+      {k:"d",en:"Economiser",ta:"எக்கனாமைசர்"}
+    ],
+    ans:"d",
+    exp:"Economiser is a component of thermal/steam power plants, NOT of hydro-electric plants.",
+    exp_ta:"எக்கனாமைசர் வெப்ப/நீராவி மின் நிலையத்தின் கூறு – நீர்மின் நிலையத்தில் இல்லை."
+  },
+  {
+    section:"hydro",
+    num:"III.61",
+    en:"The power plant kW output formula for a hydro-electric plant is:",
+    ta:"நீர்மின் நிலையத்தின் kW உற்பத்தி சூத்திரம்?",
+    opts:[
+      {k:"a",en:"0.736QWh/75η₀",ta:"0.736QWh/75η₀"},
+      {k:"b",en:"0.736QWhη₀/75",ta:"0.736QWhη₀/75"},
+      {k:"c",en:"75QWhη₀/0.736",ta:"75QWhη₀/0.736"},
+      {k:"d",en:"None of these",ta:"இவை எதுவும் இல்லை"}
+    ],
+    ans:"b",
+    exp:"kW output = 0.736×Q×W×h×η₀/75, where Q=discharge, W=weight density, h=head, η₀=overall efficiency.",
+    exp_ta:"kW = 0.736×Q×W×h×η₀/75 – இதில் Q=வெளியேற்றம், W=எடை அடர்த்தி, h=தலை, η₀=திறன்."
+  },
+  {
+    section:"hydro",
+    num:"III.62",
+    en:"For low head and high discharge, the turbine used is:",
+    ta:"குறைந்த தலை மற்றும் அதிக வெளியேற்றத்திற்கு பயன்படும் டர்பைன்?",
+    opts:[
+      {k:"a",en:"Francis",ta:"பிரான்சிஸ்"},
+      {k:"b",en:"Kaplan",ta:"கேப்லன்"},
+      {k:"c",en:"Pelton wheel",ta:"பெல்டன் சக்கரம்"},
+      {k:"d",en:"None",ta:"எதுவும் இல்லை"}
+    ],
+    ans:"b",
+    exp:"Kaplan turbine: Low head (<30m), High discharge. Francis: Medium head. Pelton: High head.",
+    exp_ta:"கேப்லன் டர்பைன்: குறைந்த தலை (<30m), அதிக வெளியேற்றம். பிரான்சிஸ்: நடுத்தர. பெல்டன்: உயர் தலை."
+  },
+  {
+    section:"hydro",
+    num:"III.63",
+    en:"Spillways are constructed for:",
+    ta:"சொட்டு வழிகள் எதற்காக கட்டப்படுகின்றன?",
+    opts:[
+      {k:"a",en:"Solar energy plants",ta:"சூரிய ஆற்றல் நிலையங்கள்"},
+      {k:"b",en:"Gas based plants",ta:"வாயு சார்ந்த நிலையங்கள்"},
+      {k:"c",en:"Hydro plants",ta:"நீர்மின் நிலையங்கள்"},
+      {k:"d",en:"Thermal plants",ta:"வெப்ப மின் நிலையங்கள்"}
+    ],
+    ans:"c",
+    exp:"Spillways are structures in hydro plants that provide controlled release of excess water from the dam.",
+    exp_ta:"சொட்டு வழிகள் நீர்மின் நிலையங்களில் அணையிலிருந்து கட்டுப்படுத்தப்பட்ட நீர் வெளியேற்றத்திற்கு கட்டப்படுகின்றன."
+  },
+  {
+    section:"hydro",
+    num:"III.64",
+    en:"Advantage of hydropower over thermal power is:",
+    ta:"வெப்ப மின்னை விட நீர்மின்னின் நன்மை?",
+    opts:[
+      {k:"a",en:"Low initial cost",ta:"குறைந்த ஆரம்ப செலவு"},
+      {k:"b",en:"Low operating cost",ta:"குறைந்த இயக்கச் செலவு"},
+      {k:"c",en:"Continuous power",ta:"தொடர்ச்சியான மின்சாரம்"},
+      {k:"d",en:"None",ta:"எதுவும் இல்லை"}
+    ],
+    ans:"b",
+    exp:"Main advantage of hydro over thermal is LOW OPERATING COST (no fuel cost for water).",
+    exp_ta:"வெப்ப மின்னை விட நீர்மின்னின் முக்கிய நன்மை குறைந்த இயக்கச் செலவு (நீருக்கு எரிபொருள் செலவில்லை)."
+  },
+  {
+    section:"hydro",
+    num:"III.65",
+    en:"Hydro plant: 3.6×10⁶ m³ at 100m head, 75% efficiency. Total energy?",
+    ta:"3.6×10⁶ m³, 100m தலை, 75% திறன். மொத்த ஆற்றல்?",
+    opts:[
+      {k:"a",en:"735750 kWh",ta:"735750 kWh"},
+      {k:"b",en:"536750 kWh",ta:"536750 kWh"},
+      {k:"c",en:"63675 kWh",ta:"63675 kWh"},
+      {k:"d",en:"35750 kWh",ta:"35750 kWh"}
+    ],
+    ans:"a",
+    exp:"E = W×H×η/(3600×1000) = 3.6×10⁶×1000×9.81×100×0.75/(3600×1000) ≈ 735750 kWh.",
+    exp_ta:"E = W×H×η/(3600×1000) = ≈ 735750 kWh."
+  },
+  {
+    section:"hydro",
+    num:"III.66",
+    en:"Hydro station: H=150m, mech efficiency=0.85, elec efficiency=0.92. Electrical output per m³?",
+    ta:"H=150m, இயந்திர திறன்=0.85, மின் திறன்=0.92. 1 m³/s-க்கு மின் உற்பத்தி?",
+    opts:[
+      {k:"a",en:"1150.7 kWh",ta:"1150.7 kWh"},
+      {k:"b",en:"1470.0 kWh",ta:"1470.0 kWh"},
+      {k:"c",en:"945.7 kWh",ta:"945.7 kWh"},
+      {k:"d",en:"1350.0 kWh",ta:"1350.0 kWh"}
+    ],
+    ans:"a",
+    exp:"P_mech = 9.81×10⁻³×0.85×1×1000×150 = 1250.775 kW. Elec output = 1250.775×0.92 ≈ 1150.7 kW.",
+    exp_ta:"P_mech = 1250.775 kW. மின் உற்பத்தி = 1250.775×0.92 ≈ 1150.7 kW."
+  },
+  {
+    section:"hydro",
+    num:"III.67",
+    en:"Which statement about hydroelectric power plant is WRONG?",
+    ta:"நீர்மின் நிலையத்தைப் பற்றிய தவறான கூற்று எது?",
+    opts:[
+      {k:"a",en:"Efficiency does not reduce with age",ta:"வயதுடன் திறன் குறைவதில்லை"},
+      {k:"b",en:"Construction cost is very high",ta:"கட்டுமான செலவு மிக அதிகம்"},
+      {k:"c",en:"No smoke or ash is produced",ta:"புகை அல்லது சாம்பல் இல்லை"},
+      {k:"d",en:"Meeting rapidly changing load demands is not possible",ta:"விரைவாக மாறும் சுமை தேவைகளை சந்திக்க முடியாது"}
+    ],
+    ans:"d",
+    exp:"Statement (d) is WRONG. Hydro plants CAN meet rapidly changing loads by simply adjusting water flow.",
+    exp_ta:"(d) தவறு. நீர் ஓட்டத்தை சரிசெய்வதன் மூலம் நீர்மின் நிலையம் விரைவாக மாறும் சுமைகளை சந்திக்க முடியும்."
+  },
+  {
+    section:"hydro",
+    num:"III.68",
+    en:"Which type of turbines are used in hydroelectric power stations?",
+    ta:"நீர்மின் நிலையங்களில் எந்த வகை டர்பைன்கள் பயன்படுகின்றன?",
+    opts:[
+      {k:"a",en:"None of these",ta:"இவை எதுவும் இல்லை"},
+      {k:"b",en:"Impulse type only",ta:"உந்த வகை மட்டும்"},
+      {k:"c",en:"Both impulse and reaction types",ta:"உந்த மற்றும் எதிர்வினை இரண்டும்"},
+      {k:"d",en:"Reaction type only",ta:"எதிர்வினை வகை மட்டும்"}
+    ],
+    ans:"c",
+    exp:"Both impulse (Pelton) and reaction (Francis, Kaplan) turbines are used in hydroelectric power stations.",
+    exp_ta:"உந்த (பெல்டன்) மற்றும் எதிர்வினை (பிரான்சிஸ், கேப்லன்) இரண்டு வகை டர்பைன்களும் பயன்படுகின்றன."
+  },
+  {
+    section:"hydro",
+    num:"III.69",
+    en:"Which power station uses potential energy of water to produce electrical energy?",
+    ta:"நீரின் நிலை ஆற்றலை மின் ஆற்றலாக மாற்றும் நிலையம்?",
+    opts:[
+      {k:"a",en:"Diesel power station",ta:"டீசல் மின் நிலையம்"},
+      {k:"b",en:"Nuclear power station",ta:"அணு மின் நிலையம்"},
+      {k:"c",en:"Hydroelectric power station",ta:"நீர்மின் நிலையம்"},
+      {k:"d",en:"Steam power station",ta:"நீராவி மின் நிலையம்"}
+    ],
+    ans:"c",
+    exp:"Hydroelectric power station uses water stored at height (potential energy) to drive turbines and generate electricity.",
+    exp_ta:"நீர்மின் நிலையம் உயரத்தில் சேமித்த நீரின் நிலை ஆற்றலை மின் ஆற்றலாக மாற்றுகிறது."
+  },
+  {
+    section:"hydro",
+    num:"III.70",
+    en:"Surge tanks are used in hydroelectric power systems for:",
+    ta:"நீர்மின் அமைப்பில் சர்ஜ் தொட்டிகள் எதற்காக பயன்படுகின்றன?",
+    opts:[
+      {k:"a",en:"None of these",ta:"இவை எதுவும் இல்லை"},
+      {k:"b",en:"Protection of penstock",ta:"பென்ஸ்டாக் பாதுகாப்பு"},
+      {k:"c",en:"Protection of spillways",ta:"சொட்டு வழி பாதுகாப்பு"},
+      {k:"d",en:"Protection of turbines",ta:"டர்பைன் பாதுகாப்பு"}
+    ],
+    ans:"b",
+    exp:"Surge tanks protect the penstock from water hammer effects caused by sudden load changes.",
+    exp_ta:"சர்ஜ் தொட்டி திடீர் சுமை மாற்றங்களால் ஏற்படும் நீர் சுத்தியல் விளைவிலிருந்து பென்ஸ்டாக்கை பாதுகாக்கிறது."
+  },
+  {
+    section:"hydro",
+    num:"III.71",
+    en:"The name 'Penstock' is related with which power plant?",
+    ta:"'பென்ஸ்டாக்' என்ற பெயர் எந்த மின் நிலையத்துடன் தொடர்புடையது?",
+    opts:[
+      {k:"a",en:"Nuclear Power",ta:"அணு மின்"},
+      {k:"b",en:"Coal Power",ta:"நிலக்கரி மின்"},
+      {k:"c",en:"Geothermal Power",ta:"புவி வெப்ப மின்"},
+      {k:"d",en:"Hydro-Power",ta:"நீர்மின்"}
+    ],
+    ans:"d",
+    exp:"Penstock is exclusively related to hydro-power plants. It carries water from reservoir to turbines.",
+    exp_ta:"பென்ஸ்டாக் நீர்மின் நிலையத்துடன் மட்டுமே தொடர்புடையது."
+  },
+  {
+    section:"hydro",
+    num:"III.72",
+    en:"The cheapest plant in operation and maintenance is:",
+    ta:"இயக்கம் மற்றும் பராமரிப்பில் மலிவான நிலையம் எது?",
+    opts:[
+      {k:"a",en:"Diesel power plant",ta:"டீசல் மின் நிலையம்"},
+      {k:"b",en:"Hydro-electric plant",ta:"நீர்மின் நிலையம்"},
+      {k:"c",en:"Steam power plant",ta:"நீராவி மின் நிலையம்"},
+      {k:"d",en:"Nuclear plant",ta:"அணு மின் நிலையம்"}
+    ],
+    ans:"b",
+    exp:"Hydro plant needs no fuel. Running cost order: Diesel>Thermal>Nuclear>Hydro (hydro is cheapest).",
+    exp_ta:"நீர்மின் நிலையம் எரிபொருள் தேவையில்லை. இயக்கச் செலவில் மலிவானது."
+  },
+  {
+    section:"hydro",
+    num:"III.73",
+    en:"Hydro generators (HG) and steam turbines (ST) run at speeds respectively:",
+    ta:"நீர்மின் ஜெனரேட்டர்கள் மற்றும் நீராவி டர்பைன்கள் முறையே எந்த வேகத்தில் இயங்குகின்றன?",
+    opts:[
+      {k:"a",en:"High and low speeds",ta:"அதிக மற்றும் குறைந்த வேகம்"},
+      {k:"b",en:"Both high speeds",ta:"இரண்டும் அதிக வேகம்"},
+      {k:"c",en:"Low and high speeds",ta:"குறைந்த மற்றும் அதிக வேகம்"},
+      {k:"d",en:"Both low speeds",ta:"இரண்டும் குறைந்த வேகம்"}
+    ],
+    ans:"c",
+    exp:"Hydro generators run at LOW speed (~300 rpm). Steam turbines run at HIGH speed (~3000 rpm).",
+    exp_ta:"நீர்மின் ஜெனரேட்டர்கள் குறைந்த வேகத்திலும் (~300 rpm), நீராவி டர்பைன்கள் அதிக வேகத்திலும் (~3000 rpm) இயங்குகின்றன."
+  },
+  {
+    section:"hydro",
+    num:"III.74",
+    en:"Which power plant can be started and stopped quickly as per load requirement?",
+    ta:"சுமை தேவைக்கு ஏற்ப விரைவாக தொடங்கவும் நிறுத்தவும் முடியும் மின் நிலையம்?",
+    opts:[
+      {k:"a",en:"Thermal power plant",ta:"வெப்ப மின் நிலையம்"},
+      {k:"b",en:"Nuclear power plant",ta:"அணு மின் நிலையம்"},
+      {k:"c",en:"Combined cycle power plant",ta:"இணைந்த சுழற்சி மின் நிலையம்"},
+      {k:"d",en:"Hydro power plant",ta:"நீர்மின் நிலையம்"}
+    ],
+    ans:"d",
+    exp:"Hydroelectric plants can start and stop within minutes or seconds – ideal for peak load management.",
+    exp_ta:"நீர்மின் நிலையங்கள் சில நிமிடங்கள் அல்லது வினாடிகளில் தொடங்கி நிறுத்தலாம் – உச்ச சுமை நிர்வாகத்திற்கு சிறந்தது."
+  },
+  {
+    section:"hydro",
+    num:"III.75",
+    en:"Pelton wheel is which type of turbine?",
+    ta:"பெல்டன் சக்கரம் எந்த வகை டர்பைன்?",
+    opts:[
+      {k:"a",en:"Reaction turbine",ta:"எதிர்வினை டர்பைன்"},
+      {k:"b",en:"Impulse turbine",ta:"உந்த டர்பைன்"},
+      {k:"c",en:"Both (a) & (b)",ta:"(a) மற்றும் (b) இரண்டும்"},
+      {k:"d",en:"None of these",ta:"இவை எதுவும் இல்லை"}
+    ],
+    ans:"b",
+    exp:"Pelton wheel is an impulse turbine used for high head sites (>300m). It uses tangential flow.",
+    exp_ta:"பெல்டன் சக்கரம் ஒரு உந்த டர்பைன் – உயர் தலை (>300m) தளங்களுக்கு பயன்படுகிறது."
+  },
+  {
+    section:"hydro",
+    num:"III.76",
+    en:"Kaplan and Francis turbines are:",
+    ta:"கேப்லன் மற்றும் பிரான்சிஸ் டர்பைன்கள்?",
+    opts:[
+      {k:"a",en:"Both steam turbines",ta:"இரண்டும் நீராவி டர்பைன்கள்"},
+      {k:"b",en:"Both hydro turbines",ta:"இரண்டும் நீர் டர்பைன்கள்"},
+      {k:"c",en:"Only Francis is hydro turbine",ta:"பிரான்சிஸ் மட்டும் நீர் டர்பைன்"},
+      {k:"d",en:"Kaplan for steam, Francis for hydro",ta:"கேப்லன் நீராவிக்கு, பிரான்சிஸ் நீருக்கு"}
+    ],
+    ans:"b",
+    exp:"Both Kaplan and Francis are hydraulic (hydro) turbines. Pelton is also a hydraulic turbine.",
+    exp_ta:"கேப்லன் மற்றும் பிரான்சிஸ் இரண்டும் நீர் (ஹைட்ரோலிக்) டர்பைன்கள்."
+  },
+  {
+    section:"hydro",
+    num:"III.77",
+    en:"Turbine most suited for high discharge low head hydro power plant?",
+    ta:"அதிக வெளியேற்றம் மற்றும் குறைந்த தலை நீர்மின் நிலையத்திற்கு சிறந்த டர்பைன்?",
+    opts:[
+      {k:"a",en:"Kaplan turbine",ta:"கேப்லன் டர்பைன்"},
+      {k:"b",en:"Francis turbine",ta:"பிரான்சிஸ் டர்பைன்"},
+      {k:"c",en:"Pelton wheel turbine",ta:"பெல்டன் சக்கர டர்பைன்"},
+      {k:"d",en:"Turgo wheel turbine",ta:"டர்கோ சக்கர டர்பைன்"}
+    ],
+    ans:"a",
+    exp:"Kaplan turbine is most suited for high discharge and low head hydro power plants.",
+    exp_ta:"கேப்லன் டர்பைன் அதிக வெளியேற்றம் மற்றும் குறைந்த தலை நீர்மின் நிலையங்களுக்கு சிறந்தது."
+  },
+  {
+    section:"hydro",
+    num:"III.78",
+    en:"Hydro station: max demand=1250 kW, load factor=80%. Total annual energy?",
+    ta:"மின் நிலையம்: உச்ச தேவை=1250 kW, சுமை காரணி=80%. ஆண்டு மொத்த ஆற்றல்?",
+    opts:[
+      {k:"a",en:"876 × 10⁴ kWh",ta:"876 × 10⁴ kWh"},
+      {k:"b",en:"1000 × 10⁴ kWh",ta:"1000 × 10⁴ kWh"},
+      {k:"c",en:"1250 × 10⁴ kWh",ta:"1250 × 10⁴ kWh"},
+      {k:"d",en:"418 × 10⁴ kWh",ta:"418 × 10⁴ kWh"}
+    ],
+    ans:"a",
+    exp:"Avg load = LF × MD = 0.8 × 1250 = 1000 kW. Annual energy = 1000 × 8760 = 876 × 10⁴ kWh.",
+    exp_ta:"சராசரி சுமை = 0.8 × 1250 = 1000 kW. ஆண்டு ஆற்றல் = 1000 × 8760 = 876 × 10⁴ kWh."
+  },
+  {
+    section:"hydro",
+    num:"III.79",
+    en:"Which element is NOT found in a hydroelectric power plant?",
+    ta:"நீர்மின் நிலையத்தில் காணப்படாத உறுப்பு?",
+    opts:[
+      {k:"a",en:"Spillways",ta:"சொட்டு வழிகள்"},
+      {k:"b",en:"Dam",ta:"அணை"},
+      {k:"c",en:"Conduits",ta:"குழாய் அமைப்புகள்"},
+      {k:"d",en:"Superheater",ta:"மிகை வெப்பமாக்கி"}
+    ],
+    ans:"d",
+    exp:"Superheater is a component of thermal/steam power plants, NOT found in hydroelectric power plants.",
+    exp_ta:"மிகை வெப்பமாக்கி நீர்மின் நிலையத்தில் காணப்படாது – இது நீராவி மின் நிலையத்தில் மட்டுமே உள்ளது."
+  },
+  {
+    section:"hydro",
+    num:"III.80",
+    en:"A Francis turbine is:",
+    ta:"பிரான்சிஸ் டர்பைன் என்பது?",
+    opts:[
+      {k:"a",en:"Inward flow reaction turbine",ta:"உள்நோக்கி ஓட்ட எதிர்வினை டர்பைன்"},
+      {k:"b",en:"Inward flow impulse turbine",ta:"உள்நோக்கி ஓட்ட உந்த டர்பைன்"},
+      {k:"c",en:"Outward flow reaction turbine",ta:"வெளிநோக்கி ஓட்ட எதிர்வினை டர்பைன்"},
+      {k:"d",en:"Outward flow impulse turbine",ta:"வெளிநோக்கி ஓட்ட உந்த டர்பைன்"}
+    ],
+    ans:"a",
+    exp:"Francis turbine is an inward flow (mixed flow) reaction turbine used for medium head applications.",
+    exp_ta:"பிரான்சிஸ் டர்பைன் உள்நோக்கி ஓட்ட (கலப்பு ஓட்டம்) எதிர்வினை டர்பைன்."
+  },
+  {
+    section:"hydro",
+    num:"III.81",
+    en:"Ratio of power at turbine shaft to power supplied by water at inlet is:",
+    ta:"டர்பைன் தண்டில் உள்ள சக்தி மற்றும் நுழைவில் நீர் அளிக்கும் சக்தியின் விகிதம்?",
+    opts:[
+      {k:"a",en:"Overall efficiency",ta:"மொத்த திறன்"},
+      {k:"b",en:"Mechanical efficiency",ta:"இயந்திர திறன்"},
+      {k:"c",en:"Hydraulic efficiency",ta:"நீரியல் திறன்"},
+      {k:"d",en:"Volumetric efficiency",ta:"கன திறன்"}
+    ],
+    ans:"a",
+    exp:"Overall efficiency = Power at shaft / Power supplied by water at inlet.",
+    exp_ta:"மொத்த திறன் = தண்டிலுள்ள சக்தி / நுழைவில் நீர் அளிக்கும் சக்தி."
+  },
+  {
+    section:"hydro",
+    num:"III.82",
+    en:"Which is NOT included in electrical equipment of a hydro-electric plant?",
+    ta:"நீர்மின் நிலையத்தின் மின் உபகரணங்களில் சேர்க்கப்படாதது?",
+    opts:[
+      {k:"a",en:"Oil circuits and pumps",ta:"எண்ணெய் சுற்றுகள் மற்றும் பம்புகள்"},
+      {k:"b",en:"Exciters",ta:"தூண்டுவான்கள்"},
+      {k:"c",en:"Switchgear",ta:"சுவிட்ச்கியர்"},
+      {k:"d",en:"Control room equipment",ta:"கட்டுப்பாட்டு அறை உபகரணங்கள்"}
+    ],
+    ans:"a",
+    exp:"Oil circuits and pumps belong to the lubrication system, NOT electrical equipment of a hydro plant.",
+    exp_ta:"எண்ணெய் சுற்றுகள் மற்றும் பம்புகள் உயவு அமைப்பை சேர்ந்தவை – நீர்மின் நிலையத்தின் மின் உபகரணம் அல்ல."
+  },
+  {
+    section:"hydro",
+    num:"III.83",
+    en:"Which is NOT an advantage of hydro-electric plants?",
+    ta:"நீர்மின் நிலையங்களின் நன்மை அல்லாதது?",
+    opts:[
+      {k:"a",en:"Running cost is low",ta:"இயக்கச் செலவு குறைவு"},
+      {k:"b",en:"It takes considerably less time to erect",ta:"கட்டுவதற்கு மிகவும் குறைந்த நேரம்"},
+      {k:"c",en:"Highly reliable",ta:"மிகவும் நம்பகமானது"},
+      {k:"d",en:"Takes few minutes to run and synchronise",ta:"சில நிமிடங்களில் இயக்கி ஒத்திசைவு செய்யலாம்"}
+    ],
+    ans:"b",
+    exp:"Hydro plants take considerably MORE time (not less) to erect due to dam construction complexity.",
+    exp_ta:"நீர்மின் நிலையங்களை கட்டுவதற்கு கூடுதல் நேரம் (குறைந்த நேரம் அல்ல) தேவை – இது நன்மை அல்ல."
+  },
+  {
+    section:"hydro",
+    num:"III.84",
+    en:"Power developed at hydroelectric plants depends upon:",
+    ta:"நீர்மின் நிலையங்களில் உற்பத்தி செய்யப்படும் சக்தி எதை சார்ந்தது?",
+    opts:[
+      {k:"a",en:"Heat transferred to turbine",ta:"டர்பைனுக்கு மாற்றப்படும் வெப்பம்"},
+      {k:"b",en:"Cumulative weight of heat loss",ta:"வெப்ப இழப்பின் ஒட்டுமொத்த எடை"},
+      {k:"c",en:"Head and discharge",ta:"தலை மற்றும் வெளியேற்றம்"},
+      {k:"d",en:"Alternator efficiency",ta:"மாறு மின்னி திறன்"}
+    ],
+    ans:"c",
+    exp:"P = ρgQH. Power depends on head (H) and discharge (Q).",
+    exp_ta:"P = ρgQH. சக்தி தலை (H) மற்றும் வெளியேற்றம் (Q) ஆகியவற்றை சார்ந்தது."
+  },
+  {
+    section:"hydro",
+    num:"III.85",
+    en:"Which factor should NOT be considered when selecting a site for a hydro-electric plant?",
+    ta:"நீர்மின் நிலைய தள தேர்வில் கருத்தில் கொள்ளக்கூடாத காரணி?",
+    opts:[
+      {k:"a",en:"Type of land",ta:"நில வகை"},
+      {k:"b",en:"Availability of water",ta:"நீரின் இருப்பு"},
+      {k:"c",en:"Accessibility of site",ta:"தளத்திற்கு அணுகும் வசதி"},
+      {k:"d",en:"Sedimentation",ta:"வண்டல் படிவு"}
+    ],
+    ans:"d",
+    exp:"Sedimentation is NOT a primary site selection factor. Land type, water availability, and accessibility are.",
+    exp_ta:"வண்டல் படிவு முதன்மை தள தேர்வு காரணி அல்ல. நில வகை, நீர் இருப்பு, அணுகும் வசதி ஆகியவை கருத்தில் கொள்ளப்படும்."
+  },
+  {
+    section:"hydro",
+    num:"III.86",
+    en:"Which auxiliary is essential for starting the generating unit of a hydro plant?",
+    ta:"நீர்மின் நிலையத்தின் உற்பத்தி அலகை தொடங்க அவசியமான துணை உபகரணம்?",
+    opts:[
+      {k:"a",en:"Fans and cooling oil pumps",ta:"விசிறிகள் மற்றும் குளிர்ச்சி எண்ணெய் பம்புகள்"},
+      {k:"b",en:"Gate hoists",ta:"கதவு உயர்த்திகள்"},
+      {k:"c",en:"Battery charging units",ta:"மின்கல சார்ஜிங் அலகுகள்"},
+      {k:"d",en:"Exciter",ta:"தூண்டுவான்"}
+    ],
+    ans:"d",
+    exp:"Exciter is the essential auxiliary for starting the generating unit of a hydro plant (provides field excitation).",
+    exp_ta:"தூண்டுவான் (Exciter) நீர்மின் உற்பத்தி அலகை தொடங்க அவசியமான துணை உபகரணம்."
+  },
+  {
+    section:"hydro",
+    num:"III.87",
+    en:"Which power plant has the highest operating life?",
+    ta:"மிக அதிக இயக்க ஆயுளுள்ள மின் நிலையம் எது?",
+    opts:[
+      {k:"a",en:"Coal-fired combustion turbine plant",ta:"நிலக்கரி எரிப்பு டர்பைன் நிலையம்"},
+      {k:"b",en:"Nuclear power plant",ta:"அணு மின் நிலையம்"},
+      {k:"c",en:"Hydroelectric power plant",ta:"நீர்மின் நிலையம்"},
+      {k:"d",en:"Photovoltaic solar plant",ta:"சூரிய PV நிலையம்"}
+    ],
+    ans:"c",
+    exp:"Hydroelectric power plant has the highest operating life (~50 years) and lowest running cost.",
+    exp_ta:"நீர்மின் நிலையம் மிக அதிக இயக்க ஆயுள் (~50 ஆண்டுகள்) மற்றும் குறைந்த இயக்கச் செலவை கொண்டுள்ளது."
+  },
+
+  // ═══════════════ SECTION IV — NUCLEAR POWER PLANT ═══════════════
+  {
+    section:"nuclear",
+    num:"IV.1",
+    en:"The material used for the construction of control rod in a nuclear reactor is:",
+    ta:"அணு உலையில் கட்டுப்பாட்டு கம்பி கட்டுமானத்திற்கு பயன்படும் பொருள்?",
+    opts:[
+      {k:"a",en:"Copper",ta:"செம்பு"},
+      {k:"b",en:"Cadmium",ta:"கேட்மியம்"},
+      {k:"c",en:"Graphite",ta:"கிராஃபைட்"},
+      {k:"d",en:"Silicon",ta:"சிலிக்கான்"}
+    ],
+    ans:"b",
+    exp:"Cadmium rods are used as control rods in nuclear reactors to absorb neutrons and control fission.",
+    exp_ta:"கேட்மியம் கம்பிகள் அணு உலையில் நியூட்ரான்களை உறிஞ்சி பிளவை கட்டுப்படுத்த பயன்படுகின்றன."
+  },
+  {
+    section:"nuclear",
+    num:"IV.2",
+    en:"The purpose of moderator in the reactor core of a nuclear power plant is to:",
+    ta:"அணு மின் நிலையத்தின் உலை மையத்தில் மந்தகத்தின் நோக்கம்?",
+    opts:[
+      {k:"a",en:"Reduce the neutron speed",ta:"நியூட்ரான் வேகத்தை குறைக்க"},
+      {k:"b",en:"Break uranium atoms",ta:"யுரேனியம் அணுக்களை உடைக்க"},
+      {k:"c",en:"Shut down the reactor",ta:"உலையை நிறுத்த"},
+      {k:"d",en:"Heat the coolant",ta:"குளிர்விப்பானை சூடாக்க"}
+    ],
+    ans:"a",
+    exp:"Moderator slows down fast neutrons (produced in fission) to maintain the chain reaction effectively.",
+    exp_ta:"மந்தகம் பிளவில் உற்பத்தியாகும் வேக நியூட்ரான்களை மெதுவாக்கி சங்கிலி எதிர்வினையை நிலைத்திருக்க வைக்கிறது."
+  },
+  {
+    section:"nuclear",
+    num:"IV.3",
+    en:"Which of the following is a cladding material in nuclear reactor?",
+    ta:"அணு உலையில் உறை பொருளாக பயன்படுவது?",
+    opts:[
+      {k:"a",en:"Heavy water",ta:"கனமான நீர்"},
+      {k:"b",en:"Organic liquids",ta:"கரிம திரவங்கள்"},
+      {k:"c",en:"Boron",ta:"போரான்"},
+      {k:"d",en:"Magnesium",ta:"மக்னீசியம்"}
+    ],
+    ans:"d",
+    exp:"Magnesium alloy is used as cladding material in nuclear reactors due to its low neutron absorption.",
+    exp_ta:"மக்னீசியம் கலவை குறைந்த நியூட்ரான் உறிஞ்சும் தன்மையால் அணு உலையில் உறை பொருளாக பயன்படுகிறது."
+  },
+  {
+    section:"nuclear",
+    num:"IV.4",
+    en:"In which reactor is control achieved by varying moderator level?",
+    ta:"எந்த உலையில் மந்தக மட்டத்தை மாற்றி கட்டுப்பாடு பெறப்படுகிறது?",
+    opts:[
+      {k:"a",en:"PWR",ta:"அழுத்த நீர் உலை (PWR)"},
+      {k:"b",en:"BWR",ta:"கொதிக்கும் நீர் உலை (BWR)"},
+      {k:"c",en:"Liquid metal cooled reactor",ta:"திரவ உலோக குளிர் உலை"},
+      {k:"d",en:"CANDU",ta:"CANDU உலை"}
+    ],
+    ans:"d",
+    exp:"In CANDU reactor, control is achieved by varying the level of the heavy water moderator.",
+    exp_ta:"CANDU உலையில் கனமான நீர் மந்தகத்தின் மட்டத்தை மாற்றி கட்டுப்பாடு பெறப்படுகிறது."
+  },
+  {
+    section:"nuclear",
+    num:"IV.5",
+    en:"The cheapest shielding material used in a nuclear plant is:",
+    ta:"அணு மின் நிலையத்தில் பயன்படும் மலிவான கவசப் பொருள்?",
+    opts:[
+      {k:"a",en:"Concrete",ta:"கான்கிரீட்"},
+      {k:"b",en:"Brick",ta:"செங்கல்"},
+      {k:"c",en:"Boron",ta:"போரான்"},
+      {k:"d",en:"Cadmium",ta:"கேட்மியம்"}
+    ],
+    ans:"a",
+    exp:"Concrete is cheap, easy to mould, and has good shielding properties against neutrons and gamma-rays.",
+    exp_ta:"கான்கிரீட் மலிவானது, வார்க்க எளிதானது, மற்றும் நியூட்ரான்கள் மற்றும் கம்மா கதிர்களுக்கு எதிராக நல்ல கவசப் பண்புகளை கொண்டுள்ளது."
+  },
+  {
+    section:"nuclear",
+    num:"IV.6",
+    en:"The first nuclear plant was built in India at:",
+    ta:"இந்தியாவில் முதல் அணு மின் நிலையம் எங்கு கட்டப்பட்டது?",
+    opts:[
+      {k:"a",en:"Rana Pratap Sagar",ta:"ரானா பிரதாப் சாகர்"},
+      {k:"b",en:"Padghe",ta:"பட்கே"},
+      {k:"c",en:"Kalpakkam",ta:"கல்பாக்கம்"},
+      {k:"d",en:"Tarapur",ta:"தாரபுரம்"}
+    ],
+    ans:"d",
+    exp:"Tarapur nuclear power plant (Maharashtra) was India's first nuclear plant, commissioned in the 1960s.",
+    exp_ta:"தாரபுரம் அணு மின் நிலையம் (மகாராஷ்டிரா) இந்தியாவின் முதல் அணு மின் நிலையம்."
+  },
+  {
+    section:"nuclear",
+    num:"IV.7",
+    en:"Which plant experiences chain reactions?",
+    ta:"சங்கிலி எதிர்வினைகள் எங்கு நிகழ்கின்றன?",
+    opts:[
+      {k:"a",en:"Gas power plant",ta:"வாயு மின் நிலையம்"},
+      {k:"b",en:"Thermal power plant",ta:"வெப்ப மின் நிலையம்"},
+      {k:"c",en:"Nuclear power plant",ta:"அணு மின் நிலையம்"},
+      {k:"d",en:"Hydro-electric power plant",ta:"நீர்மின் நிலையம்"}
+    ],
+    ans:"c",
+    exp:"In nuclear power plants, neutron-fissile isotope (U²³⁵) interactions cause fission chain reactions.",
+    exp_ta:"அணு மின் நிலையங்களில் நியூட்ரான்–யுரேனியம்-235 இடைவினை பிளவு சங்கிலி எதிர்வினைகளை ஏற்படுத்துகிறது."
+  },
+  {
+    section:"nuclear",
+    num:"IV.8",
+    en:"What is the function of the moderator in a nuclear reactor?",
+    ta:"அணு உலையில் மந்தகத்தின் செயல்பாடு என்ன?",
+    opts:[
+      {k:"a",en:"Controlling chain reaction",ta:"சங்கிலி எதிர்வினையை கட்டுப்படுத்துதல்"},
+      {k:"b",en:"Stopping chain reaction",ta:"சங்கிலி எதிர்வினையை நிறுத்துதல்"},
+      {k:"c",en:"Starting chain reaction",ta:"சங்கிலி எதிர்வினையை தொடங்குதல்"},
+      {k:"d",en:"Transferring heat to heat exchanger",ta:"வெப்பத்தை வெப்ப மாற்றிக்கு மாற்றுதல்"}
+    ],
+    ans:"a",
+    exp:"Moderator slows neutrons to increase probability of U²³⁵ fission, thereby controlling the chain reaction.",
+    exp_ta:"மந்தகம் நியூட்ரான்களை மெதுவாக்கி U²³⁵ பிளவின் நிகழ்தகவை அதிகரித்து சங்கிலி எதிர்வினையை கட்டுப்படுத்துகிறது."
+  },
+  {
+    section:"nuclear",
+    num:"IV.9",
+    en:"Which is a correct statement about graphite in a nuclear power plant?",
+    ta:"அணு மின் நிலையத்தில் கிராஃபைட்டைப் பற்றிய சரியான கூற்று?",
+    opts:[
+      {k:"a",en:"Graphite is used as an electrode",ta:"கிராஃபைட் மின்முனையாக பயன்படுகிறது"},
+      {k:"b",en:"Graphite is used as fuel",ta:"கிராஃபைட் எரிபொருளாக பயன்படுகிறது"},
+      {k:"c",en:"Graphite is used as a moderator",ta:"கிராஃபைட் மந்தகமாக பயன்படுகிறது"},
+      {k:"d",en:"Graphite is used as a coolant",ta:"கிராஃபைட் குளிர்விப்பானாக பயன்படுகிறது"}
+    ],
+    ans:"c",
+    exp:"Graphite is used as a neutron moderator in nuclear reactors (along with heavy water). Uranium is the fuel.",
+    exp_ta:"கிராஃபைட் அணு உலைகளில் நியூட்ரான் மந்தகமாக பயன்படுகிறது. யுரேனியம் எரிபொருள்."
+  },
+  {
+    section:"nuclear",
+    num:"IV.10",
+    en:"Compared to coal-fired stations, nuclear power plant turbines use steam at:",
+    ta:"நிலக்கரி மின் நிலையங்களை விட, அணு மின் நிலைய டர்பைன்கள் நீராவியை எவ்வாறு பயன்படுத்துகின்றன?",
+    opts:[
+      {k:"a",en:"Lower pressure and temperature",ta:"குறைந்த அழுத்தம் மற்றும் வெப்பநிலை"},
+      {k:"b",en:"Higher pressure and temperature",ta:"அதிக அழுத்தம் மற்றும் வெப்பநிலை"},
+      {k:"c",en:"Lower pressure and higher temperature",ta:"குறைந்த அழுத்தம் மற்றும் அதிக வெப்பநிலை"},
+      {k:"d",en:"Higher pressure and lower temperature",ta:"அதிக அழுத்தம் மற்றும் குறைந்த வெப்பநிலை"}
+    ],
+    ans:"a",
+    exp:"Nuclear plant turbines use steam at LOWER pressure and temperature compared to conventional coal-fired plants.",
+    exp_ta:"அணு மின் நிலைய டர்பைன்கள் நிலையான நிலக்கரி நிலையங்களை விட குறைந்த அழுத்தம் மற்றும் வெப்பநிலையில் நீராவியை பயன்படுத்துகின்றன."
+  },
+  {
+    section:"nuclear",
+    num:"IV.11",
+    en:"The power generating station which uses uranium as fuel is:",
+    ta:"யுரேனியத்தை எரிபொருளாக பயன்படுத்தும் மின் நிலையம்?",
+    opts:[
+      {k:"a",en:"Hydro power station",ta:"நீர்மின் நிலையம்"},
+      {k:"b",en:"Thermal power station",ta:"வெப்ப மின் நிலையம்"},
+      {k:"c",en:"Nuclear power station",ta:"அணு மின் நிலையம்"},
+      {k:"d",en:"Solar power station",ta:"சூரிய மின் நிலையம்"}
+    ],
+    ans:"c",
+    exp:"Uranium (especially U²³⁵) is the dominant fuel used in nuclear power stations through fission reactions.",
+    exp_ta:"யுரேனியம் (குறிப்பாக U²³⁵) அணு மின் நிலையங்களில் பிளவு எதிர்வினை மூலம் பயன்படுத்தப்படும் முக்கிய எரிபொருள்."
+  },
+  {
+    section:"nuclear",
+    num:"IV.12",
+    en:"Which is used in nuclear power reactor to slow down neutrons?",
+    ta:"அணு மின் உலையில் நியூட்ரான்களை மெதுவாக்க எது பயன்படுகிறது?",
+    opts:[
+      {k:"a",en:"Plutonium",ta:"புளூட்டோனியம்"},
+      {k:"b",en:"U-235",ta:"யுரேனியம்-235"},
+      {k:"c",en:"Uranium",ta:"யுரேனியம்"},
+      {k:"d",en:"Graphite",ta:"கிராஃபைட்"}
+    ],
+    ans:"d",
+    exp:"Graphite (carbon) is a neutron moderator that allows un-enriched uranium to be used as fuel.",
+    exp_ta:"கிராஃபைட் (கார்பன்) ஒரு நியூட்ரான் மந்தகம் – இது செறிவூட்டப்படாத யுரேனியத்தை எரிபொருளாக பயன்படுத்த உதவுகிறது."
+  },
+  {
+    section:"nuclear",
+    num:"IV.13",
+    en:"Which fuel is used in a nuclear reactor?",
+    ta:"அணு உலையில் எந்த எரிபொருள் பயன்படுகிறது?",
+    opts:[
+      {k:"a",en:"Carbon",ta:"கார்பன்"},
+      {k:"b",en:"Plutonium",ta:"புளூட்டோனியம்"},
+      {k:"c",en:"Lead",ta:"ஈயம்"},
+      {k:"d",en:"Graphite",ta:"கிராஃபைட்"}
+    ],
+    ans:"b",
+    exp:"Plutonium is used as fuel in some nuclear reactors. Most commonly, Uranium (U²³⁵) is used.",
+    exp_ta:"புளூட்டோனியம் சில அணு உலைகளில் எரிபொருளாக பயன்படுகிறது. பொதுவாக யுரேனியம் (U²³⁵) பயன்படுகிறது."
+  },
+  {
+    section:"nuclear",
+    num:"IV.14",
+    en:"Radiation shield for a nuclear reactor for biological safety is provided by:",
+    ta:"அணு உலையின் உயிரியல் பாதுகாப்பிற்கான கதிர்வீச்சு கவசம் எதன் மூலம் வழங்கப்படுகிறது?",
+    opts:[
+      {k:"a",en:"Immersed in water pool",ta:"நீர் தொட்டியில் மூழ்கடித்தல்"},
+      {k:"b",en:"Encased by thick metal walls",ta:"தடிமனான உலோக சுவர்களால் மூடுதல்"},
+      {k:"c",en:"Encased by thick concrete wall",ta:"தடிமனான கான்கிரீட் சுவரால் மூடுதல்"},
+      {k:"d",en:"Isolated by strong magnetic fields",ta:"வலிமையான காந்த புலங்களால் தனிமைப்படுத்தல்"}
+    ],
+    ans:"c",
+    exp:"Nuclear reactor is encased in thick concrete walls to provide biological radiation shielding.",
+    exp_ta:"அணு உலையை தடிமனான கான்கிரீட் சுவரால் மூடுவதன் மூலம் உயிரியல் கதிர்வீச்சு கவசம் வழங்கப்படுகிறது."
+  },
+  {
+    section:"nuclear",
+    num:"IV.15",
+    en:"The average thermal efficiency of a modern nuclear power plant is about:",
+    ta:"நவீன அணு மின் நிலையத்தின் சராசரி வெப்ப திறன் சுமார் எவ்வளவு?",
+    opts:[
+      {k:"a",en:"30%",ta:"30%"},
+      {k:"b",en:"60%",ta:"60%"},
+      {k:"c",en:"40%",ta:"40%"},
+      {k:"d",en:"80%",ta:"80%"}
+    ],
+    ans:"a",
+    exp:"The thermal efficiency of a modern nuclear power plant is about 30–37%.",
+    exp_ta:"நவீன அணு மின் நிலையத்தின் வெப்ப திறன் சுமார் 30–37%."
+  },
+  {
+    section:"nuclear",
+    num:"IV.16",
+    en:"In a thermal nuclear reactor, which statements are correct? (1) Moderator slows fast neutrons (2) Moderator must have low molecular weight (3) Ordinary water can be used with natural uranium (4) Multiplication factor is slightly > 1 during normal operation",
+    ta:"வெப்ப அணு உலையில் சரியான கூற்றுகள் எவை?",
+    opts:[
+      {k:"a",en:"1 and 3",ta:"1 மற்றும் 3"},
+      {k:"b",en:"3 and 4",ta:"3 மற்றும் 4"},
+      {k:"c",en:"1, 2 and 3",ta:"1, 2 மற்றும் 3"},
+      {k:"d",en:"1, 2 and 4",ta:"1, 2 மற்றும் 4"}
+    ],
+    ans:"d",
+    exp:"Statements 1, 2, and 4 are correct. Statement 3 is incorrect – ordinary water cannot be used with natural (un-enriched) uranium.",
+    exp_ta:"கூற்றுகள் 1, 2, 4 சரியானவை. கூற்று 3 தவறு – சாதாரண நீரை இயற்கை யுரேனியத்துடன் பயன்படுத்த முடியாது."
+  },
+  {
+    section:"nuclear",
+    num:"IV.17",
+    en:"Which material has the highest moderating ratio?",
+    ta:"எந்த பொருளுக்கு மிக அதிக மந்தக விகிதம் உள்ளது?",
+    opts:[
+      {k:"a",en:"H₂O (ordinary water)",ta:"H₂O (சாதாரண நீர்)"},
+      {k:"b",en:"D₂O (heavy water)",ta:"D₂O (கனமான நீர்)"},
+      {k:"c",en:"Helium",ta:"ஹீலியம்"},
+      {k:"d",en:"Carbon (graphite)",ta:"கார்பன் (கிராஃபைட்)"}
+    ],
+    ans:"b",
+    exp:"D₂O has moderating ratio of 4830 (highest). H₂O: 62, Carbon: 216, Helium: 51.",
+    exp_ta:"D₂O-ன் மந்தக விகிதம் 4830 (மிக அதிகம்). H₂O: 62, கார்பன்: 216, ஹீலியம்: 51."
+  },
+  {
+    section:"nuclear",
+    num:"IV.18",
+    en:"Capital cost per megawatt is highest in:",
+    ta:"மெகாவாட்டுக்கு மூலதன செலவு மிக அதிகமான நிலையம்?",
+    opts:[
+      {k:"a",en:"Steam Power Plant",ta:"நீராவி மின் நிலையம்"},
+      {k:"b",en:"Diesel Power Plant",ta:"டீசல் மின் நிலையம்"},
+      {k:"c",en:"Nuclear Power plant",ta:"அணு மின் நிலையம்"},
+      {k:"d",en:"Hydro Power Plant",ta:"நீர்மின் நிலையம்"}
+    ],
+    ans:"c",
+    exp:"Nuclear power plant has the highest capital cost per MW due to complex reactor systems and safety requirements.",
+    exp_ta:"அணு மின் நிலையம் சிக்கலான உலை அமைப்புகள் மற்றும் பாதுகாப்பு தேவைகளால் மிக அதிக மூலதன செலவை கொண்டுள்ளது."
+  },
+  {
+    section:"nuclear",
+    num:"IV.19",
+    en:"Which of the following is NOT a renewable source of energy?",
+    ta:"பின்வருவனவற்றில் புதுப்பிக்கத்தக்க ஆற்றல் ஆதாரம் அல்லாதது?",
+    opts:[
+      {k:"a",en:"Energy from waste",ta:"கழிவு ஆற்றல்"},
+      {k:"b",en:"Hydropower",ta:"நீர் ஆற்றல்"},
+      {k:"c",en:"Biomass",ta:"உயிர் வெகுஜனம்"},
+      {k:"d",en:"Nuclear energy",ta:"அணு ஆற்றல்"}
+    ],
+    ans:"d",
+    exp:"Nuclear energy is NOT a renewable source. It uses uranium which is a finite resource.",
+    exp_ta:"அணு ஆற்றல் புதுப்பிக்கத்தக்க ஆற்றல் ஆதாரம் அல்ல. இது ஒரு குறைந்த யுரேனியத்தை பயன்படுத்துகிறது."
+  },
+  {
+    section:"nuclear",
+    num:"IV.20",
+    en:"Which is used as moderator in nuclear power plants?",
+    ta:"அணு மின் நிலையங்களில் மந்தகமாக எது பயன்படுகிறது?",
+    opts:[
+      {k:"a",en:"Sodium",ta:"சோடியம்"},
+      {k:"b",en:"Graphite",ta:"கிராஃபைட்"},
+      {k:"c",en:"Heavy water (D₂O)",ta:"கனமான நீர் (D₂O)"},
+      {k:"d",en:"Hydrogen",ta:"ஹைட்ரஜன்"}
+    ],
+    ans:"c",
+    exp:"Heavy water (D₂O) is the most effective moderator with a moderating ratio of 4830.",
+    exp_ta:"கனமான நீர் (D₂O) 4830 மந்தக விகிதத்துடன் மிகவும் திறமையான மந்தகம்."
+  },
+  {
+    section:"nuclear",
+    num:"IV.21",
+    en:"Which statement is INCORRECT?",
+    ta:"தவறான கூற்று எது?",
+    opts:[
+      {k:"a",en:"Uranium is a radioactive material",ta:"யுரேனியம் கதிரியக்க பொருள்"},
+      {k:"b",en:"Anthracite is the best form of coal",ta:"அன்த்ராசைட் சிறந்த நிலக்கரி வகை"},
+      {k:"c",en:"Solar energy is pollution free",ta:"சூரிய ஆற்றல் மாசு இல்லாதது"},
+      {k:"d",en:"Wind energy is a conventional source",ta:"காற்று ஆற்றல் மரபுசார் ஆதாரம்"}
+    ],
+    ans:"d",
+    exp:"Wind energy is a NON-conventional (renewable) source of energy, not conventional.",
+    exp_ta:"காற்று ஆற்றல் மரபுசாரா (புதுப்பிக்கத்தக்க) ஆற்றல் ஆதாரம் – மரபுசார் அல்ல."
+  },
+  {
+    section:"nuclear",
+    num:"IV.22",
+    en:"Which of the following will produce the LARGEST amount of energy?",
+    ta:"பின்வருவனவற்றில் மிக அதிக ஆற்றல் உற்பத்தி செய்வது?",
+    opts:[
+      {k:"a",en:"Burning 1 kg petrol",ta:"1 கிலோ பெட்ரோல் எரிக்க"},
+      {k:"b",en:"Burning 1 kg anthracite",ta:"1 கிலோ அன்த்ராசைட் எரிக்க"},
+      {k:"c",en:"Burning 10 kg wood",ta:"10 கிலோ மரம் எரிக்க"},
+      {k:"d",en:"Nuclear fission of 1 kg uranium",ta:"1 கிலோ யுரேனியம் பிளவு"}
+    ],
+    ans:"d",
+    exp:"Nuclear fission of 1 kg uranium produces about 24,000,000 kWh – enormously more than any chemical fuel.",
+    exp_ta:"1 கிலோ யுரேனியம் பிளவு சுமார் 2.4 கோடி kWh ஆற்றல் தரும் – இது எந்த வேதியியல் எரிபொருளையும் விட மிக அதிகம்."
+  },
+  {
+    section:"nuclear",
+    num:"IV.23",
+    en:"Kalpakkam, Tarapur and Kota are famous for:",
+    ta:"கல்பாக்கம், தாரபுரம் மற்றும் கோட்டா எதற்காக பிரசித்தமானவை?",
+    opts:[
+      {k:"a",en:"Hydel Power Plants",ta:"நீர்மின் நிலையங்கள்"},
+      {k:"b",en:"Nuclear Power Plants",ta:"அணு மின் நிலையங்கள்"},
+      {k:"c",en:"Thermal Power Plants",ta:"வெப்ப மின் நிலையங்கள்"},
+      {k:"d",en:"Diesel Power Plants",ta:"டீசல் மின் நிலையங்கள்"}
+    ],
+    ans:"b",
+    exp:"Kalpakkam (Tamil Nadu), Tarapur (Maharashtra) and Kota (Rajasthan) are famous for their nuclear power plants.",
+    exp_ta:"கல்பாக்கம் (தமிழ்நாடு), தாரபுரம் (மகாராஷ்டிரா) மற்றும் கோட்டா (ராஜஸ்தான்) அணு மின் நிலையங்களுக்கு பிரசித்தமானவை."
+  },
+  {
+    section:"nuclear",
+    num:"IV.24",
+    en:"Which is generally NOT used as a fertile material in nuclear power plant?",
+    ta:"அணு மின் நிலையத்தில் பொதுவாக வளமான பொருளாக பயன்படுத்தப்படாதது?",
+    opts:[
+      {k:"a",en:"U-238",ta:"யுரேனியம்-238"},
+      {k:"b",en:"U-235",ta:"யுரேனியம்-235"},
+      {k:"c",en:"Pu-239",ta:"புளூட்டோனியம்-239"},
+      {k:"d",en:"Th-232",ta:"தோரியம்-232"}
+    ],
+    ans:"c",
+    exp:"Pu-239 is NOT a fertile material; it is itself a fissile fuel. U-238, U-235, and Th-232 are fertile materials.",
+    exp_ta:"Pu-239 வளமான பொருள் அல்ல – இது ஒரு பிளவு எரிபொருள். U-238, U-235, Th-232 வளமான பொருட்கள்."
+  },
+  {
+    section:"nuclear",
+    num:"IV.25",
+    en:"Which of these statements about nuclear plant coolant is INCORRECT?",
+    ta:"அணு மின் நிலைய குளிர்விப்பானைப் பற்றி தவறான கூற்று எது?",
+    opts:[
+      {k:"a",en:"Only statement 3 (oxides formed with moisture)",ta:"கூற்று 3 மட்டும் (ஈரத்தில் ஆக்சைடு உருவாகும்)"},
+      {k:"b",en:"Statements 2 and 3",ta:"கூற்றுகள் 2 மற்றும் 3"},
+      {k:"c",en:"Only statement 1",ta:"கூற்று 1 மட்டும்"},
+      {k:"d",en:"Statements 1 and 3",ta:"கூற்றுகள் 1 மற்றும் 3"}
+    ],
+    ans:"a",
+    exp:"Coolant should have high heat conductivity and must be renewable. Oxides forming with moisture is an INCORRECT requirement.",
+    exp_ta:"குளிர்விப்பான் அதிக வெப்ப கடத்துதிறன் கொண்டிருக்க வேண்டும் மற்றும் புதுப்பிக்கத்தக்கதாக இருக்க வேண்டும். ஈரத்தில் ஆக்சைடு உருவாவது தவறான தேவை."
+  },
+  {
+    section:"nuclear",
+    num:"IV.26",
+    en:"Which is NOT a coolant used for a fast breeder reactor?",
+    ta:"விரைவான இனப்பெருக்க உலைக்கு குளிர்விப்பானாக பயன்படாதது?",
+    opts:[
+      {k:"a",en:"Oxygen",ta:"ஆக்சிஜன்"},
+      {k:"b",en:"Helium",ta:"ஹீலியம்"},
+      {k:"c",en:"Carbon Dioxide",ta:"கார்பன் டை ஆக்சைடு"},
+      {k:"d",en:"Liquid metal (sodium)",ta:"திரவ உலோகம் (சோடியம்)"}
+    ],
+    ans:"a",
+    exp:"Oxygen is NOT used as coolant. Helium, CO₂, and liquid metals (sodium) are used for fast breeder reactors.",
+    exp_ta:"ஆக்சிஜன் குளிர்விப்பானாக பயன்படாது. ஹீலியம், CO₂, திரவ உலோகங்கள் (சோடியம்) பயன்படுகின்றன."
+  },
+  {
+    section:"nuclear",
+    num:"IV.27",
+    en:"Capital cost on a nuclear plant is:",
+    ta:"அணு மின் நிலையத்தின் மூலதன செலவு?",
+    opts:[
+      {k:"a",en:"Very low",ta:"மிகவும் குறைவு"},
+      {k:"b",en:"Low",ta:"குறைவு"},
+      {k:"c",en:"Moderate",ta:"மிதமான"},
+      {k:"d",en:"Very high",ta:"மிகவும் அதிகம்"}
+    ],
+    ans:"d",
+    exp:"Capital cost on a nuclear plant is VERY HIGH due to complex reactor design and safety systems.",
+    exp_ta:"அணு மின் நிலையத்தின் மூலதன செலவு சிக்கலான உலை வடிவமைப்பு மற்றும் பாதுகாப்பு அமைப்புகளால் மிகவும் அதிகம்."
+  },
+  {
+    section:"nuclear",
+    num:"IV.28",
+    en:"The coolant used in nuclear power stations is:",
+    ta:"அணு மின் நிலையங்களில் பயன்படும் குளிர்விப்பான்?",
+    opts:[
+      {k:"a",en:"Hydrogen",ta:"ஹைட்ரஜன்"},
+      {k:"b",en:"CO₂ (carbon dioxide)",ta:"CO₂ (கார்பன் டை ஆக்சைடு)"},
+      {k:"c",en:"Lithium",ta:"லித்தியம்"},
+      {k:"d",en:"Neon",ta:"நியான்"}
+    ],
+    ans:"b",
+    exp:"Common coolants: Liquid sodium and CO₂. Control rods: Cadmium/Boron. Moderator: Heavy water/Graphite.",
+    exp_ta:"பொதுவான குளிர்விப்பான்: திரவ சோடியம் மற்றும் CO₂. கட்டுப்பாட்டு கம்பி: கேட்மியம்/போரான். மந்தகம்: கனமான நீர்/கிராஃபைட்."
+  },
+  {
+    section:"nuclear",
+    num:"IV.29",
+    en:"Which power plant has high maintenance cost?",
+    ta:"அதிக பராமரிப்பு செலவுடைய மின் நிலையம்?",
+    opts:[
+      {k:"a",en:"Thermal Power Plant",ta:"வெப்ப மின் நிலையம்"},
+      {k:"b",en:"Hydro Power Plant",ta:"நீர்மின் நிலையம்"},
+      {k:"c",en:"Diesel Engine power Plant",ta:"டீசல் இயந்திர மின் நிலையம்"},
+      {k:"d",en:"Nuclear Power Plant",ta:"அணு மின் நிலையம்"}
+    ],
+    ans:"d",
+    exp:"Nuclear power plant has the highest maintenance cost and requires highly skilled and specialized staff.",
+    exp_ta:"அணு மின் நிலையம் மிக அதிக பராமரிப்பு செலவை கொண்டுள்ளது மற்றும் மிகவும் திறன் வாய்ந்த ஊழியர்களை தேவைப்படுகிறது."
+  },
+  {
+    section:"nuclear",
+    num:"IV.30",
+    en:"Reflectors of a nuclear reactor are made of:",
+    ta:"அணு உலையின் பிரதிபலிப்பான்கள் எதனால் செய்யப்படுகின்றன?",
+    opts:[
+      {k:"a",en:"Brass",ta:"பித்தளை"},
+      {k:"b",en:"Beryllium",ta:"பெரிலியம்"},
+      {k:"c",en:"Boron",ta:"போரான்"},
+      {k:"d",en:"Copper",ta:"செம்பு"}
+    ],
+    ans:"b",
+    exp:"Reflectors are made of beryllium. Average thermal efficiency of nuclear plants is about 30%.",
+    exp_ta:"பிரதிபலிப்பான்கள் பெரிலியத்தால் செய்யப்படுகின்றன. அணு மின் நிலையத்தின் சராசரி வெப்ப திறன் சுமார் 30%."
+  },
+  {
+    section:"nuclear",
+    num:"IV.31",
+    en:"The nuclear power plant at Tarapur has:",
+    ta:"தாரபுரம் அணு மின் நிலையம் எந்த வகை உலை கொண்டுள்ளது?",
+    opts:[
+      {k:"a",en:"Fast breeder reactor",ta:"விரைவான இனப்பெருக்க உலை"},
+      {k:"b",en:"Sodium graphite reactor",ta:"சோடியம் கிராஃபைட் உலை"},
+      {k:"c",en:"Pressurised water reactor",ta:"அழுத்தப்பட்ட நீர் உலை"},
+      {k:"d",en:"Boiling water reactor",ta:"கொதிக்கும் நீர் உலை"}
+    ],
+    ans:"d",
+    exp:"Tarapur nuclear power plant has a Boiling Water Reactor (BWR) where water boils and steam drives the turbine.",
+    exp_ta:"தாரபுரம் அணு மின் நிலையம் கொதிக்கும் நீர் உலையை (BWR) கொண்டுள்ளது – நீர் கொதித்து நீராவி டர்பைனை இயக்குகிறது."
+  }
+];
+
+// State
+const userAnswers = {};
+let totalAnswered = 0, totalCorrect = 0, totalWrong = 0;
+
+function buildQuiz() {
+  const container = document.getElementById('quizContainer');
+  container.innerHTML = '';
+
+  let lastSection = '';
+  questions.forEach((q, i) => {
+    if (q.section !== lastSection) {
+      const label = document.createElement('div');
+      label.className = `section-label ${q.section}`;
+      const sectionNames = {
+        thermal: ['THERMAL POWER PLANT — CONTINUED', 'வெப்ப மின் நிலையம் — தொடர்'],
+        hydro: ['HYDRO POWER PLANT', 'நீர்மின் நிலையம்'],
+        nuclear: ['NUCLEAR POWER PLANT', 'அணு மின் நிலையம்']
+      };
+      label.innerHTML = `<span>${sectionNames[q.section][0]}</span><span class="tamil-s">${sectionNames[q.section][1]}</span>`;
+      container.appendChild(label);
+      lastSection = q.section;
+    }
+
+    const card = document.createElement('div');
+    card.className = 'q-card';
+    card.id = `q-card-${i}`;
+
+    const ua = userAnswers[i];
+    if (ua) {
+      card.classList.add(ua === q.ans ? 'answered-correct' : 'answered-wrong');
+    }
+
+    card.innerHTML = `
+      <div class="q-header">
+        <div class="q-num">${q.num}</div>
+        <div class="q-text">${q.en}</div>
+      </div>
+      <div class="q-tamil">${q.ta}</div>
+      ${q.src ? `<div class="q-source">${q.src}</div>` : ''}
+      <div class="options" id="opts-${i}">
+        ${q.opts.map(opt => `
+          <button class="opt-btn${ua === opt.k ? (ua === q.ans ? ' correct' : ' wrong') : (ua && opt.k === q.ans ? ' reveal' : '')}"
+            id="opt-${i}-${opt.k}"
+            ${ua ? 'disabled' : ''}
+            onclick="selectAnswer(${i},'${opt.k}')">
+            <span class="opt-key">${opt.k.toUpperCase()}.</span>
+            <span class="opt-text">${opt.en}<span class="opt-tamil">${opt.ta}</span></span>
+          </button>
+        `).join('')}
+      </div>
+      <div class="explanation${ua ? ' show' : ''}" id="expl-${i}">
+        <strong>Answer: ${q.ans.toUpperCase()}</strong> — ${q.exp}
+        <span class="expl-tamil">${q.exp_ta}</span>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+
+  updateScoreBar();
+}
+
+function selectAnswer(idx, key) {
+  if (userAnswers[idx]) return;
+  userAnswers[idx] = key;
+  const q = questions[idx];
+  const correct = key === q.ans;
+
+  if (correct) totalCorrect++; else totalWrong++;
+  totalAnswered++;
+
+  // Update card
+  const card = document.getElementById(`q-card-${idx}`);
+  card.classList.add(correct ? 'answered-correct' : 'answered-wrong');
+
+  // Update buttons
+  q.opts.forEach(opt => {
+    const btn = document.getElementById(`opt-${idx}-${opt.k}`);
+    btn.disabled = true;
+    if (opt.k === key) btn.classList.add(correct ? 'correct' : 'wrong');
+    else if (opt.k === q.ans && !correct) btn.classList.add('reveal');
+  });
+
+  // Show explanation
+  document.getElementById(`expl-${idx}`).classList.add('show');
+  updateScoreBar();
+}
+
+function updateScoreBar() {
+  const total = questions.length;
+  const pct = total > 0 ? Math.round((totalCorrect / total) * 100) : 0;
+  document.getElementById('scoreVal').textContent = pct + '%';
+  document.getElementById('correctVal').textContent = totalCorrect;
+  document.getElementById('wrongVal').textContent = totalWrong;
+  document.getElementById('skipVal').textContent = total - totalAnswered;
+  const fillPct = (totalAnswered / total) * 100;
+  document.getElementById('progressFill').style.width = fillPct + '%';
+  document.getElementById('progressText').textContent = `${totalAnswered} / ${total} answered`;
+}
+
+function showAll() {
+  document.querySelectorAll('.q-card').forEach(c => c.style.display = '');
+  document.querySelectorAll('.section-label').forEach(l => l.style.display = '');
+}
+
+function showUnanswered() {
+  document.querySelectorAll('.q-card').forEach((c, i) => {
+    c.style.display = userAnswers[i] ? 'none' : '';
+  });
+  document.querySelectorAll('.section-label').forEach(l => l.style.display = '');
+}
+
+function submitQuiz() {
+  const total = questions.length;
+  const skipped = total - totalAnswered;
+  const pct = Math.round((totalCorrect / total) * 100);
+
+  document.getElementById('modalPct').textContent = pct + '%';
+  document.getElementById('mCorrect').textContent = totalCorrect;
+  document.getElementById('mWrong').textContent = totalWrong;
+  document.getElementById('mSkip').textContent = skipped;
+
+  let grade = '';
+  if (pct >= 90) grade = '🏆 Excellent! Outstanding Performance';
+  else if (pct >= 75) grade = '✅ Very Good — Keep it up!';
+  else if (pct >= 60) grade = '👍 Good — Review marked topics';
+  else if (pct >= 40) grade = '📚 Average — More revision needed';
+  else grade = '⚠️ Needs Improvement — Revise thoroughly';
+
+  document.getElementById('modalGrade').textContent = grade;
+  document.getElementById('resultModal').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('resultModal').classList.remove('show');
+  showAll();
+}
+
+function resetQuiz() {
+  Object.keys(userAnswers).forEach(k => delete userAnswers[k]);
+  totalAnswered = 0; totalCorrect = 0; totalWrong = 0;
+  document.getElementById('resultModal').classList.remove('show');
+  buildQuiz();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// Init
+buildQuiz();
+</script>
+</body>
+</html>

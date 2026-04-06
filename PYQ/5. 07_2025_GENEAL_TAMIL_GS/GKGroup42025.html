@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCSEIVGT 2025 – Tamil GS Quiz (Q101–200)</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Tamil:wght@400;600;700&family=Noto+Sans+Tamil:wght@400;500;600&family=Playfair+Display:wght@700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f0f13;--surface:#18181e;--card:#1e1e28;--border:#2c2c3a;
+  --gold:#f5c842;--gold2:#e6a200;--green:#22c55e;--red:#ef4444;
+  --blue:#60a5fa;--text:#e8e8f0;--muted:#7a7a95;--radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans Tamil',sans-serif;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 10%,rgba(245,200,66,0.05) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(96,165,250,0.04) 0%,transparent 50%);pointer-events:none;z-index:0}
+#app{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:16px}
+
+/* WELCOME */
+#welcome{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:24px;padding:40px 20px}
+.badge{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;padding:5px 16px;border-radius:30px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase}
+#welcome h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:900;line-height:1.15}
+#welcome h1 span{color:var(--gold)}
+.sub{color:var(--muted);font-size:15px;line-height:1.7;max-width:480px}
+.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:100%;max-width:420px}
+.info-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center}
+.info-box .num{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:var(--gold)}
+.info-box .lbl{font-size:11px;color:var(--muted);margin-top:3px;letter-spacing:.5px}
+.btn-start{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;border:none;padding:15px 44px;border-radius:12px;font-size:17px;font-weight:700;cursor:pointer;font-family:'Playfair Display',serif;transition:all .2s;width:100%;max-width:420px}
+.btn-start:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(245,200,66,.3)}
+
+/* QUIZ */
+#quiz{display:none;padding:8px 0}
+.qhdr{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:20px;position:sticky;top:8px;z-index:100;backdrop-filter:blur(12px)}
+.qhdr-left{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);white-space:nowrap}
+.qhdr-left strong{color:var(--gold);font-size:19px}
+.pills-wrap{display:flex;flex-wrap:wrap;gap:3px;flex:1;justify-content:center}
+.pill{width:11px;height:11px;border-radius:3px;background:var(--border);cursor:pointer;transition:background .15s;border:none;padding:0}
+.pill.answered{background:var(--blue)}
+.pill.current{background:var(--gold);box-shadow:0 0 7px rgba(245,200,66,.5)}
+.pill.skipped{background:#4a4a60}
+.timer{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);background:var(--card);padding:5px 11px;border-radius:8px;white-space:nowrap}
+
+/* Question card */
+.qcard{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px;animation:fadeUp .25s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.qtag{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.qtag::after{content:'';flex:1;height:1px;background:var(--border)}
+.qen{font-size:16px;line-height:1.75;margin-bottom:6px;color:var(--text);font-family:'Noto Serif Tamil',serif}
+.qta{font-size:15px;line-height:1.8;color:var(--muted);margin-bottom:18px;font-family:'Noto Serif Tamil',serif}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{display:flex;align-items:flex-start;gap:12px;padding:13px 15px;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:all .15s;text-align:left;width:100%;color:var(--text);font-size:14.5px;line-height:1.55;font-family:'Noto Sans Tamil',sans-serif}
+.opt:hover{border-color:var(--gold);background:rgba(245,200,66,.05)}
+.opt.sel{border-color:var(--blue);background:rgba(96,165,250,.1)}
+.opt-ltr{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--gold);width:22px;height:22px;border-radius:5px;background:rgba(245,200,66,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.opt-ta{font-size:12.5px;color:#8888aa;margin-top:3px;font-family:'Noto Serif Tamil',serif}
+.qactions{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+.btn{padding:10px 20px;border-radius:10px;border:none;cursor:pointer;font-size:13.5px;font-weight:600;transition:all .15s;font-family:'Noto Sans Tamil',sans-serif}
+.btn-next{background:var(--gold);color:#000}
+.btn-next:hover{box-shadow:0 4px 18px rgba(245,200,66,.4);transform:translateY(-1px)}
+.btn-skip{background:var(--surface);color:var(--muted);border:1px solid var(--border)}
+.btn-skip:hover{border-color:var(--muted);color:var(--text)}
+.btn-finish{background:linear-gradient(135deg,var(--green),#16a34a);color:#fff}
+.btn-finish:hover{box-shadow:0 4px 18px rgba(34,197,94,.4)}
+.btn-prev{background:var(--surface);color:var(--text);border:1px solid var(--border)}
+
+/* RESULT */
+#result{display:none;padding:8px 0}
+.res-hero{text-align:center;padding:36px 20px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:22px}
+.res-hero h2{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;margin-bottom:4px}
+.score-ring{width:120px;height:120px;margin:18px auto;position:relative}
+.score-ring svg{transform:rotate(-90deg)}
+.score-ring circle{transition:stroke-dashoffset 1.2s ease}
+.score-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:var(--gold)}
+.stats{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.stat{padding:11px 18px;border-radius:10px;text-align:center;min-width:90px}
+.stat.c{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3)}
+.stat.w{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3)}
+.stat.s{background:rgba(122,122,149,.15);border:1px solid rgba(122,122,149,.3)}
+.stat .sn{font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700}
+.stat .sl{font-size:11px;color:var(--muted);margin-top:2px;letter-spacing:.8px}
+.stat.c .sn{color:var(--green)}
+.stat.w .sn{color:var(--red)}
+.stat.s .sn{color:var(--muted)}
+.tabs{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px}
+.tab{flex:1;padding:11px;text-align:center;cursor:pointer;font-size:13.5px;font-weight:600;transition:all .2s;border:none;background:transparent;color:var(--muted);font-family:'Noto Sans Tamil',sans-serif}
+.tab.active{background:var(--gold);color:#000}
+.tsec{display:none}
+.tsec.active{display:block}
+.rcard{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:12px}
+.rcard.rc{border-left:4px solid var(--green)}
+.rcard.rw{border-left:4px solid var(--red)}
+.rcard.rs{border-left:4px solid #4a4a60}
+.rtag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;padding:3px 9px;border-radius:20px;font-weight:700;margin-bottom:8px;margin-right:6px}
+.rtag.rc{background:rgba(34,197,94,.2);color:var(--green)}
+.rtag.rw{background:rgba(239,68,68,.2);color:var(--red)}
+.rtag.rs{background:rgba(122,122,149,.2);color:var(--muted)}
+.rqnum{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)}
+.rqen{font-size:14px;line-height:1.65;margin:6px 0 3px;font-family:'Noto Serif Tamil',serif}
+.rqta{font-size:12.5px;color:var(--muted);margin-bottom:10px;font-family:'Noto Serif Tamil',serif}
+.rinfo{font-size:11.5px;color:var(--muted);margin-bottom:8px;font-family:'JetBrains Mono',monospace}
+.ropts{display:flex;flex-wrap:wrap;gap:6px}
+.ropt{padding:5px 12px;border-radius:7px;font-size:12.5px;background:var(--surface);border:1px solid var(--border);font-family:'Noto Sans Tamil',sans-serif}
+.ropt.rok{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.4);color:var(--green);font-weight:600}
+.ropt.rno{background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.4);color:var(--red);text-decoration:line-through}
+.empty{text-align:center;padding:30px;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:12px}
+.btn-restart{display:block;width:100%;padding:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Playfair Display',serif;margin-top:20px}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- WELCOME -->
+<div id="welcome">
+  <div class="badge">CCSEIVGT / 2025</div>
+  <h1>Tamil GS Quiz<br><span>Questions 101 – 200</span></h1>
+  <p class="sub">இருமொழி (Bilingual) வினாடி வினா – பொது அறிவு & திறனாய்வு<br>General Studies & Aptitude · Part-B & Part-C</p>
+  <div class="info-grid">
+    <div class="info-box"><div class="num">100</div><div class="lbl">Questions</div></div>
+    <div class="info-box"><div class="num">150</div><div class="lbl">Marks</div></div>
+    <div class="info-box"><div class="num">EN/TA</div><div class="lbl">Bilingual</div></div>
+  </div>
+  <button class="btn-start" onclick="startQuiz()">தொடங்கு / Start Quiz →</button>
+</div>
+
+<!-- QUIZ -->
+<div id="quiz">
+  <div class="qhdr">
+    <div class="qhdr-left">Q <strong id="qnum">1</strong>/<span id="qtot">100</span></div>
+    <div class="pills-wrap" id="pills"></div>
+    <div class="timer" id="timer">00:00</div>
+  </div>
+  <div id="qarea"></div>
+</div>
+
+<!-- RESULT -->
+<div id="result">
+  <div class="res-hero">
+    <h2>Quiz Complete! 🎉</h2>
+    <div class="score-ring">
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="50" fill="none" stroke="#2c2c3a" stroke-width="10"/>
+        <circle id="sarc" cx="60" cy="60" r="50" fill="none" stroke="#f5c842" stroke-width="10" stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="314"/>
+      </svg>
+      <div class="score-pct" id="spct">0%</div>
+    </div>
+    <div class="stats">
+      <div class="stat c"><div class="sn" id="sc">0</div><div class="sl">CORRECT</div></div>
+      <div class="stat w"><div class="sn" id="sw">0</div><div class="sl">WRONG</div></div>
+      <div class="stat s"><div class="sn" id="ss">0</div><div class="sl">SKIPPED</div></div>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('c',this)">✓ Correct</button>
+    <button class="tab" onclick="showTab('w',this)">✗ Wrong</button>
+    <button class="tab" onclick="showTab('s',this)">– Skipped</button>
+  </div>
+  <div id="tc" class="tsec active"></div>
+  <div id="tw" class="tsec"></div>
+  <div id="ts" class="tsec"></div>
+  <button class="btn-restart" onclick="location.reload()">↺ மீண்டும் தொடங்கு / Restart</button>
+</div>
+
+<script>
+const QS = [
+  {n:101,en:"Match the following: Financial Assistance to Dependent children – (a), Maintenance of Orphan and Destitute Girls – (b), Foster Care Services Scheme – (c), State After-Care Home for Boys – (d) with 1.Between the age group of 18 and 21 years, 2.Providing destitute, orphan and unattached children, 3.Children below the age of 16 years, 4.Children between the age of 6 and 16 years",ta:"கீழ்காண்பவற்றை சரியாக பொருத்துக: சார்ந்திருக்கும் குழந்தைகளுக்கு நிதியுதவி – (a), ஆதரவற்ற மற்றும் அனாதை சிறுமிகளை பராமரித்தல் – (b), வளர்ப்பு மற்றும் பராமரிப்பு சேவைகள் திட்டம் – (c), சிறுவர்களுக்கான பராமரிப்பு இல்லம் – (d)",opts_en:["(a)2 (b)3 (c)1 (d)4","(b)4 (c)2 (d)3 (a)1 → (A) 2 3 1 4","(C) 3 4 2 1","(D) 2 4 1 3"],opts_ta:["(A) 2 3 1 4","(B) 4 2 3 1","(C) 3 4 2 1","(D) 2 4 1 3"],ans:"C"},
+  {n:102,en:"As per the Tamilnadu Economic Survey of 2024-2025, arrange the following in ascending order based on productivity: (1) Paddy productivity (2) Maize productivity (3) Oil seeds, Groundnut and Sugarcane productivity",ta:"2024-2025 ஆம் ஆண்டைய தமிழ்நாடு பொருளாதார ஆய்வறிக்கையின்படி, உற்பத்தித்திறனைப் பொறுது பின்வருவனவற்றை ஏறுவரிசையில் வரிசைப்படுத்துங்கள். (1) நெல் உற்பத்தித்திறன் (2) மக்காச்சோளம் உற்பத்தித்திறன் (3) எண்ணெய் வித்துக்கள், நிலகடலை மற்றும் கரும்பு உற்பத்தித்திறன்",opts_en:["(1) (2) (3)","(3) (2) (1)","(2) (1) (3)","(3) (1) (2)"],opts_ta:["(1) (2) (3)","(3) (2) (1)","(2) (1) (3)","(3) (1) (2)"],ans:"A"},
+  {n:103,en:"Find out the Incorrect statement(s) about the Tamilnadu Health System Reform Program (TNHSRP): (i) Supported by World Bank (ii) Sponsored by Central and State Govt in ratio 60:40 (iii) Implemented by Dept of Health and Family Welfare on Program for Results basis (iv) Aims to achieve SDG 9",ta:"தமிழ்நாடு சுகாதார அமைப்பு சீர்திருத்தத் திட்டம் (TNHSRP) பற்றிய தவறான கூற்றினை கண்டறிக.",opts_en:["(i) and (iii) only","(ii) and (iii) only","(ii) and (iv) only","(iii) only"],opts_ta:["(i) மற்றும் (iii) மட்டும்","(ii) மற்றும் (iii) மட்டும்","(ii) மற்றும் (iv) மட்டும்","(iii) மட்டும்"],ans:"C"},
+  {n:104,en:"Assertion [A]: In 1892, Tremenheere report was accepted by the Government for increasing the income of the Government, to allot the poramboke land to down trodden community. Reason [R]: In Chengalpet, the Panchamer Schools were run by the Philanthropic individuals in Panchami Land for promoting Education for downtrodden community people.",ta:"கூற்று [A]: 1892-ல் அரசு, புறம்போக்கு நிலங்களை தாழ்த்தப்பட்ட சமூகத்திற்கு வழங்குவதன் வாயிலாக அரசின் நிதி வருவாயினை பெருக்கி கொள்ளலாம் என்கிற திரமென்வூர் அறிக்கையினை ஏற்றுக்கொண்டது. காரணம் [R]: மனித நேயமிக்க நபர்கள் தாழ்த்தப்பட்ட சமூக மக்களின் கல்வியினை மேம்படுத்தும் பொருட்டு பஞ்சமி நிலங்களில் செங்கல்பட்டில் உள்ள பஞ்சமர் பள்ளிகளை நடத்தி வந்தனர்.",opts_en:["[A] is true [R] is false","Both [A] and [R] are true and [R] is the correct explanation of [A]","[A] is false [R] is true","Both [A] and [R] are true but [R] is not the correct explanation of [A]"],opts_ta:["[A] சரி [R] தவறு","[A] மற்றும் [R] இரண்டும் சரி மேலும் [R] ஆனது [A] யினுடைய சரியான விளக்கம்","[A] தவறு [R] சரி","[A] மற்றும் [R] இரண்டும் சரி ஆனால் [R] ஆனது [A] யினுடைய சரியான விளக்கமல்ல"],ans:"A"},
+  {n:105,en:"Identify the incorrectly paired matches: (1) Lokpal and Lokayuktas Act came into force – January 16th, 2014 (2) Tamil declared as Classical Language – Oct 10, 2004 (3) Election Commission of India – Article 324 (4) National Integration Council in India – 1960",ta:"பின்வருவனவற்றில் தவறாக பொருத்தப்பட்டுள்ளவற்றை கண்டறிக.",opts_en:["(1) and (3)","(2) and (4)","(3) and (4)","(4) and (1)"],opts_ta:["(1) மற்றும் (3)","(2) மற்றும் (4)","(3) மற்றும் (4)","(4) மற்றும் (1)"],ans:"B"},
+  {n:106,en:"The purpose of \"Surya Ghar Muft Bijli Yojana\" is",ta:"\"சூர்ய கர் முஃப்ட் பிஜிலி யோஜனா\" என்ற திட்டத்தின் நோக்கமானது",opts_en:["Installing roof top solar","Providing Houses to the poor","Insurance to old age people","Financing to small industries"],opts_ta:["வீட்டுக்கூரைகளில் சூரிய ஒளி மின்சாரம் நிறுவுவது","ஏழைகளுக்கான வீடுகள் வழங்குவது","வயது வந்தோருக்கான காப்பீடு வழங்குவது","சிறிய தொழிற்சாலைகளுக்கு நிதி வழங்குவது"],ans:"A"},
+  {n:107,en:"Assertion [A]: Zamindari system was created by the East India Company when in 1793. Lord Cornwallis entered into permanent settlement. Reason [R]: Under the settlement, the landlords were declared full properties large areas of land.",ta:"கூற்று [A]: 1793 ல் காரன்வாலிஸ் பிரபுவின் கிழக்கிந்திய வணிக குழுவின் ஆட்சியின் கீழ் ஜமீந்தாரி முறை கொண்டுவரப்பட்டது. காரணம் [R]: இம்முறையினால் ஜமீந்தார்கள் முழு நிலத்தின் உரிமையாளர்களாகத் தங்களை அறிவித்துக்கொண்டனர்.",opts_en:["[A] is true, [R] is false","[A] is false, [R] is true","Both [A] and [R] are false","Both [A] and [R] are true, but [R] is the correct explanation of [A]"],opts_ta:["[A] சரி, [R] தவறு","[A] தவறு, [R] சரி","[A] மற்றும் [R] இரண்டும் தவறு","[A] மற்றும் [R] இரண்டும் சரி, ஆனால் [R], [A] ன் சரியான விளக்கம்"],ans:"D"},
+  {n:108,en:"Assertion [A]: Goods and Services Tax in India is a comprehensive, multistage, destination-based tax that is levied on every value addition. Reason [R]: The moto is 'One Tax, One Market, One Nation'.",ta:"கூற்று [A]: இந்தியாவில் சரக்கு மற்றும் சேவை வரியானது விரிவான, பல படிநிலைகளில் இலக்கு அடிப்படையில் ஒவ்வொரு மதிப்புக் கூட்டின் போது விதிக்கப்படுகிறது. காரணம் [R]: இதன் நோக்கம் \"ஒரே வரி, ஒரே சந்தை, ஒரே நாடு\" ஆகும்.",opts_en:["[A] is true, but [R] is false","Both [A] and [R] are true; and [R] is the correct explanation of [A]","[A] is false, [R] is true","Both [A] and [R] are true, but [R] is not the correct explanation of [A] is correct"],opts_ta:["[A] சரி, ஆனால் [R] தவறு","[A] மற்றும் [R] இரண்டும் சரி, மற்றும் [R] என்பது [A] விற்கான சரியான விளக்கம் ஆகும்","[A] தவறு, [R] சரி","[A] மற்றும் [R] இரண்டும் சரி ஆனால் [R] என்பது [A] யின் சரியான விளக்கமல்ல என்பது சரி"],ans:"B"},
+  {n:109,en:"Arrange the following Finance Ministers of Tamil Nadu according to the Budget Year (Chronological Order): 1. Mr. Paneerselvam, 2. Dr. Nedunchezhiyan, 3. Mr. Palanivel Thiagarajan, 4. Mr. Thangam Thennarasu",ta:"கீழ்க்கண்ட தமிழ்நாடு நிதி அமைச்சர்களை அவர்களின் பட்ஜெட் ஆண்டை அடிப்படையாகக் கொண்டு காலவரிசைப்படி வரிசைப்படுத்துக.",opts_en:["1 2 3 4","4 3 2 1","2 1 3 4","1 4 2 3"],opts_ta:["1 2 3 4","4 3 2 1","2 1 3 4","1 4 2 3"],ans:"C"},
+  {n:110,en:"Assertion [A]: The plan period 1966–69 were called as 'Annual plans or plan holiday'. Reason [R]: Because of the two major conflicts with China and Pakistan.",ta:"கூற்று [A]: 1966–69 திட்டக் காலம் \"ஆண்டுத் திட்டம் அல்லது திட்ட விடுமுறை காலம்\" என அழைக்கப்படுகிறது. காரணம் [R]: சீனா மற்றும் பாகிஸ்தானுடன் ஏற்பட்ட இரண்டு பெரிய மோதல்கள்.",opts_en:["[A] is true, [R] is false","Both [A] and [R] are true, but [R] is not a correct explanation of [A]","Both [A] and [R] are true, but [R] is the correct explanation of [A]","[A] is false, [R] is true"],opts_ta:["[A] சரி, [R] தவறு","[A]-யும் [R]-ம் சரி, ஆனால் [R] [A] விற்கான சரியான விளக்கமல்ல","[A]-யும் [R]-ம் சரி, ஆனால் [R] என்பது [A] விற்கான சரியான விளக்கமாகும்","[A] தவறு, [R] சரி"],ans:"C"},
+  {n:111,en:"Statement: Thiruvalluvar has captured certain features like pride and administration of the Three Great Kings (Moovendhar) in his couplets. Reason: Thiruvalluvar wanted to portray the administrative skills of Kings.",ta:"கூற்று: தமிழகத்தில் வாழ்ந்த மூவேந்தர்களின் பெருமை ஆட்சித் திறம் பற்றி ஒரு சில கருத்துக்களை மட்டுமே திருவள்ளுவர் தமது குறட்பாக்களில் தந்துள்ளார். காரணம்: மன்னர்களின் ஆட்சித் திறம் பற்றிய கருத்துக்களைக் கூற வேண்டும் எனக் கருதினார்.",opts_en:["Both Statement and Reason are correct","Reason is incorrect but Statement is correct","Both Statement and Reason are incorrect","Statement is incorrect but Reason is correct"],opts_ta:["கூற்று காரணம் இரண்டும் சரி","காரணம் தவறு ஆனால் கூற்று சரி","கூற்று காரணம் இரண்டும் தவறு","கூற்று தவறு ஆனால் காரணம் சரி"],ans:"D"},
+  {n:112,en:"Give the chapter No. _____ in Thirukkural that talks about Ascetic Virtues.",ta:"திருக்குறளில் அமைந்துள்ள துறவறவியல் அதிகாரத்தின் எண்ணைக் குறிப்பிடுக.",opts_en:["18","13","12","16"],opts_ta:["18","13","12","16"],ans:"B"},
+  {n:113,en:"Who is the author of \"Valluvarum Kuralum\"?",ta:"\"வள்ளுவரும் குறளும்\" என்ற நூலின் ஆசிரியர்",opts_en:["Tamilannal","Ki.Aa.Pe. Vishwanatham","Ra.Pi. Sethupillai","Thiru.Vi. Kalyanasundaram"],opts_ta:["தமிழண்ணல்","கி.ஆ.பெ. விசுவநாதம்","ரா.பி. சேதுப்பிள்ளை","திரு.வி. கலியாண சுந்தரனார்"],ans:"B"},
+  {n:114,en:"Who was the first to draw the portrait of Thiruvalluvar?",ta:"திருவள்ளுவர் உருவத்தினை முதன் முதலில் ஓவியமாக வரைந்தவர்",opts_en:["Venkata Krishna Pandithar","Venugopala Sharma","Saminatha Sharma","Vannacharaba Dheetchithar"],opts_ta:["வேங்கட கிருஷ்ணபண்டிதர்","வேணுகோபால சர்மா","சாமிநாத சர்மா","வண்ணச்சரப தீட்சிதர்"],ans:"B"},
+  {n:115,en:"Choose the right matches: (1) New India – Bharathi (2) Thesapakthan – V.V. Subramanian (3) Nava Sakthi – Thiru. V. Kalyanasundaram (4) The Hindu – G. Subramaniam",ta:"சரியான இணையைக் கண்டறிக: (1) நியூ இந்தியா – பாரதியார் (2) தேசபக்தன் – வ.வே. சுப்பிரமணியன் (3) நவசக்தி – திரு.வி. கலியாணசுந்தரம் (4) தி இந்து – G. சுப்பிரமணியம்",opts_en:["(1) and (2) are correct","(2) and (3) are correct","(3) and (4) are correct","(1) and (4) are correct"],opts_ta:["(1) மற்றும் (2) சரி","(2) மற்றும் (3) சரி","(3) மற்றும் (4) சரி","(1) மற்றும் (4) சரி"],ans:"B"},
+  {n:116,en:"Which of the following statements are true about the Theosophical Movement? (i) The Theosophical society was founded by Madam Blavatsky and Col. H.S. Olcott in New York. (ii) In 1888 Mrs. Annie Besant joined the society in India. (iii) The headquarters of the society in Adyar.",ta:"பிரம்மஞான சபை பற்றிய சரியான வாக்கியங்களைத் தேர்வு செய்க.",opts_en:["(i) and (ii)","(ii) and (iii)","(i) and (iii)","(iii) only"],opts_ta:["(i) மற்றும் (ii)","(ii) மற்றும் (iii)","(i) மற்றும் (iii)","(iii) மட்டும்"],ans:"C"},
+  {n:117,en:"Assertion [A]: E.V.R. Periyar started the Self-Respect Movement in 1925. Reason [R]: New India was the official Newspaper of the Self-Respect Movement.",ta:"கூற்று [A]: 1925-இல் ஈ.வே.ரா. பெரியார் சுயமரியாதை இயக்கத்தைத் தொடங்கினார். காரணம் [R]: சுயமரியாதை இயக்கத்தின் அதிகாரபூர்வ செய்தித்தாள் நியூ இந்தியா ஆகும்.",opts_en:["[A] is true, but [R] is false","Both [A] and [R] are true, and [R] is the correct explanation of [A]","[A] is false, [R] is true","Both [A] and [R] are true, but [R] is not the correct explanation of [A] is correct"],opts_ta:["[A] சரி ஆனால் [R] தவறு","[A] மற்றும் [R] இரண்டும் சரி, மற்றும் [R] என்பது [A] யினுடைய சரியான விளக்கம்","[A] தவறு, [R] சரி","[A] மற்றும் [R] இரண்டும் சரி, ஆனால் [R] என்பது [A] யினுடைய சரியான விளக்கமல்ல என்பது சரி"],ans:"A"},
+  {n:118,en:"Consider the following statements and Identify the wrong answers: (1) On 1st September 1798 Major Bannerman served an ultimatum directing Kattabomman to see him at Palayamkottai. (2) Kattabomman's Fort 500 feet long and 300 feet broad, was constructed entirely of Mud. (3) On September 16, 1799 Veera Pandiya Kattabomman was tried before an assembly of Palayakkarars at Kayatar. (4) On 1st June, 1799 Kattabomman, attended by 500 men, proceeded to Sivagangai.",ta:"கீழ்கண்ட கூற்றுகளை கருத்தில் கொண்டு தவறான விடையை கண்டறி.",opts_en:["(1) is wrong","(2) is wrong","(1) and (3) are wrong","(2) and (4) are wrong"],opts_ta:["(1) மட்டும் தவறு","(2) மட்டும் தவறு","(1) மற்றும் (3) மட்டும் தவறு","(2) மற்றும் (4) மட்டும் தவறு"],ans:"C"},
+  {n:119,en:"Which of the following statements are true? (1) Congress boycotted the election which was held in 1923 in Chennai. (2) Swaraj Party won 11 seats. (3) Justice Party formed Ministry in Chennai. (4) Kamaraj led the Non-Co-operation movement in Chennai.",ta:"சரியான வாக்கியங்களைத் தெரிவு செய்க.",opts_en:["(1), (4) are correct","(1), (2) are correct","(1), (3) are correct","(1), (2), (3) are correct"],opts_ta:["(1), (4) சரியானது","(1), (2) சரியானது","(1), (3) சரியானது","(1), (2), (3) சரியானது"],ans:"D"},
+  {n:120,en:"Match the following: (a) Karaikkal Ammaiyar – 1. Thiruvantadi (b) Andal – 2. Kachhikalambagam (c) Aranganadha Mudaliyar – 3. Pavaippattu (d) Seraman Perumal Nayanar – 4. Moothathiruppathigangal",ta:"கீழ்க்கண்டவற்றைப் பொருத்துக: (a) காரைக்கால் அம்மையார் – 1. திருவந்தாதி (b) ஆண்டாள் – 2. கச்சிக்கலம்பகம் (c) அரங்கநாத முதலியார் – 3. பாவைப்பாட்டு (d) சேரமான் பெருமாள் நாயனார் – 4. மூத்ததிருப்பதிகங்கள்",opts_en:["(a)2 (b)3 (c)1 (d)4","(a)3 (b)1 (c)2 (d)4","(a)4 (b)3 (c)2 (d)1","(a)1 (b)2 (c)3 (d)4"],opts_ta:["(a)2 (b)3 (c)1 (d)4","(a)3 (b)1 (c)2 (d)4","(a)4 (b)3 (c)2 (d)1","(a)1 (b)2 (c)3 (d)4"],ans:"C"},
+  {n:121,en:"Which of the following statements are true about Sivakalai excavation? (i) Sivakalai excavation located in North shore of river Thamiraparani. (ii) Tamil society lived in Sivakalai considered very ancient. (iii) Copper and gold goods are found.",ta:"கீழ்கண்ட சிவகளை அகழாய்வு வாக்கியத்தில் பொருத்தமான பதிலை தேர்ந்தெடுக்கவும்.",opts_en:["(i) only","(i) and (iii) only","(i) and (ii) only","(iii) only"],opts_ta:["(i) மட்டும் சரி","(i) மற்றும் (iii) சரி","(i) மற்றும் (ii) சரி","(iii) மட்டும் சரி"],ans:"C"},
+  {n:122,en:"What is the crucial role played by noncoding RNA's?",ta:"குறியிடாத RNA (NCRNA) என்ன முக்கியப் பங்கு வகிக்கிறது?",opts_en:["encode for proteins","replications","gene regulation","carbohydrate synthesis"],opts_ta:["புரதத்திற்கான குறியாக்கம்","பிரதி","மரபணு கட்டுப்பாடு","கார்போஹைட்ரேட் தொகுப்பு"],ans:"C"},
+  {n:123,en:"Choose the right matches among the following: (1) Five Kingdom System – R.H. Whittaker (2) Six Kingdom System – Carl Woese, et al (3) Four Kingdom System – Carl Linnaeus (4) Three Kingdom System – Ernst Haeckel",ta:"சரியான இணையைக் கண்டறிக: (1) ஐந்துலக வகைப்பாடு – R.H. விட்டாக்கெர் (2) ஆறுலக வகைப்பாடு – கார்ல் வெயிசி, ம.ப. (3) நான்குலக வகைப்பாடு – கார்ல் லின்னேயஸ் (4) மூன்றுலக வகைப்பாடு – எர்னெஸ்ட் ஹெக்கேல்",opts_en:["(1) only correct","(1), (2) and (4) are correct","(1) and (2) are correct","(1), (2) and (3) are correct"],opts_ta:["(1) மட்டும் சரி","(1), (2) மற்றும் (4) சரியானவை","(1) மற்றும் (2) சரியானவை","(1), (2) மற்றும் (3) சரியானவை"],ans:"B"},
+  {n:124,en:"0.10 M of weak acid is found to be dissociated to the extent of 1.20% at 25°C. Its dissociation constant is",ta:"0.10 M சேறிவுடைய வலிமை குறைந்த அமில கரைசல் 25°C-ல் 1.20% பிரிகை அடைகிறது எனில், பிரிகை மாறிலியின் மதிப்பு",opts_en:["1.44 × 10⁵","1.44 × 10⁻⁴","1.44 × 10⁻⁵","1.44 × 10⁴"],opts_ta:["1.44 × 10⁵","1.44 × 10⁻⁴","1.44 × 10⁻⁵","1.44 × 10⁴"],ans:"C"},
+  {n:125,en:"The GSLV-F15 is launched on _________ by ISRO.",ta:"ISRO-வால் GSLV-F15 ராக்கெட் ஏவப்பட்ட திநம் _________.",opts_en:["January 29, 2025","March 08, 2025","January 29, 2024","March 08, 2024"],opts_ta:["ஜனவரி 29, 2025","மார்ச் 08, 2025","ஜனவரி 29, 2024","மார்ச் 08, 2024"],ans:"A"},
+  {n:126,en:"Which of the following is incorrectly matched? (1) Trans Siberian Railway line – Connects Baltic Sea and Pacific Ocean (2) Trans Caspian Railway line – Connects Central Asia and Japan (3) Canadian Pacific Railway line – Connects Atlantic Ocean and Indian Ocean (4) Trans-Continental Railway line – Connects Buenos Aires with Valparaiso",ta:"கீழ்கண்டவற்றுள் எது தவறாக பொருந்தி உள்ளது?",opts_en:["(1) only","(2) only","(3) only","(4) only"],opts_ta:["(1) மட்டும்","(2) மட்டும்","(3) மட்டும்","(4) மட்டும்"],ans:"C"},
+  {n:127,en:"Who among the following was the Indian Prime Minister when the 42nd Amendment Act was passed?",ta:"இந்திய அரசமைப்பின் 42-ஆவது திருத்தச் சட்டம் கொண்டு வரப்பட்டபோது இந்தியாவின் பிரதமராக இருந்தவர் யார்?",opts_en:["Jawaharlal Nehru","V.P. Singh","Indira Gandhi","Morarji Desai"],opts_ta:["ஜவஹர்லால் நேரு","வி.பி. சிங்","இந்திராகாந்தி","மொராார்ஜி தேசாய்"],ans:"C"},
+  {n:128,en:"Assertion [A]: The Pallavas constructed the Cave temples without brick, wood, metal and sudhai. Reason [R]: The stones kept one upon another and not bound with plaster is known as \"Katraligal\".",ta:"கூற்று [A]: பல்லவர்கள், மரம், சுதை, உலோகம், செங்கல் போன்ற பொருள்களை இன்றிக் குடைவரைக் கோவில்களை உருவாக்கினார். காரணம் [R]: கருங்கற்களை ஒன்றின்மேல் ஒன்றாக அடுக்கிச் சுண்ணாம்போடு சேர்க்காமல் கட்டடங்களுக்குக் \"கற்றளிகள்\" என்று பெயர்.",opts_en:["[A] true, but [R] false","[A] false but [R] true","Both [A] and [R] are true","Both [A] and [R] are false"],opts_ta:["[A] சரி ஆனால் [R] தவறு","[A] தவறு ஆனால் [R] சரி","[A] மற்றும் [R] இரண்டும் சரி","[A] மற்றும் [R] இரண்டும் தவறு"],ans:"C"},
+  {n:129,en:"Choose the wrong pair: (1) South Dravidan Language – Malayalam (2) East Dravidan Language – Munda (3) Central Dravidan Language – Telugu (4) North Dravidan Language – Kuruk",ta:"தவறான இணையைக் கண்டுபிடி.",opts_en:["(1)","(2)","(3)","(4)"],opts_ta:["(1)","(2)","(3)","(4)"],ans:"B"},
+  {n:130,en:"Assertion [A]: Rabindranath Tagore surrendered his knighthood. Reason [R]: On 13th April 1919 Jalianwala Bagh Massacre occurred in Amritsar.",ta:"கூற்று [A]: இரவீந்தரநாத் தாகூர் தனது 'சர்' பட்டத்தைத் துறந்தார். காரணம் [R]: 13 ஏப்ரல் 1919 அமிர்தசரஸ் நகரில் ஜாலியன் வாலாபாக் படுகொலை நடைபெற்றது.",opts_en:["[A] True [R] False","Both [A] and [R] are true and [R] is the correct explanation of [A]","[A] is False [R] is True","Both [A] and [R] are true but [R] is not the correct explanation of [A]"],opts_ta:["[A] சரி [R] தவறு","[A] மற்றும் [R] சரி, [R] [A] யினுடைய சரியான விளக்கம்","[A] தவறு [R] சரி","[A] மற்றும் [R] சரி ஆனால் [R], [A] யினுடைய சரியான விளக்கமல்ல"],ans:"B"},
+  {n:131,en:"Assertion [A]: The Indian National Congress First Conference convened on 28th December 1885 in Bombay. Reason [R]: Tamil Nadu region represented and attend 21 members.",ta:"கூற்று [A]: இந்திய தேசிய காங்கிரசின் முதல் மாநாடு 1885 டிசம்பர் 28 ஆம் தேதி பம்பாயில் கூடியது. காரணம் [R]: தமிழ்நாட்டு பகுதியிலிருந்து 21 பேர் கலந்து கொண்டனர்.",opts_en:["[A] is true but [R] is false","Both [A] and [R] are true and [R] is the correct explanation of [A]","[A] is false [R] is true","Both [A] and [R] are true but [R] is not the correct explanation of [A] is correct"],opts_ta:["கூற்று [A] சரி ஆனால் காரணம் [R] தவறு","[A] மற்றும் [R] இரண்டும் சரி மற்றும் [R] ஆனது [A] யிற்கு சரியான விளக்கமாகும்","கூற்று [A] தவறு காரணம் [R] சரி","[A] மற்றும் [R] சரி ஆனால் காரணம் [R] கூற்று [A] யிற்கு சரியான விளக்கமல்ல என்பது சரி"],ans:"D"},
+  {n:132,en:"Which of the following statements are true about the Indus Civilisation? (i) In the 1920s Martimer Wheeler excavated the Harappan sites. (ii) The longest text has about twenty six signs. (iii) The term \"Meluhha\" in the Prakrit inscriptions refers to the Indus region. (iv) The \"Priest King\" of steatite was discovered in Mohenjo-Daro.",ta:"சிந்து நாகரிகம் குறித்து பின்வரும் கூற்றுகளில் எவை உண்மையானவை?",opts_en:["(i) and (ii) only","(i) and (iii) only","(ii) and (iii) only","(ii) and (iv) only"],opts_ta:["(i) மற்றும் (ii) மட்டும்","(i) மற்றும் (iii) மட்டும்","(ii) மற்றும் (iii) மட்டும்","(ii) மற்றும் (iv) மட்டும்"],ans:"D"},
+  {n:133,en:"The correct statements on the New Chief Election Commissioner of India are: (i) Gyanesh Kumar took charge as the 26th Chief Election Commissioner of India on February 19th, 2025. (ii) He is a Kerala cadre of the Indian Administrative Service in the 1989 batch. (iii) He has been responsible for handling various departments as the secretary to the government of Kerala.",ta:"புதியதாக பதவியேற்றுள்ள இந்திய தலைமைத் தேர்தல் ஆணையரைப் பற்றிய சரியான கூற்றுகளானது:",opts_en:["(i) only","(i) and (iii) only","(i) and (ii) only","(ii) and (iii) only"],opts_ta:["(i) மட்டும்","(i) மற்றும் (iii) மட்டும்","(i) மற்றும் (ii) மட்டும்","(ii) மற்றும் (iii) மட்டும்"],ans:"B"},
+  {n:134,en:"Match the following: Name of the Act – Enacted year: (a) Consumer Protection Rules – 1. 1930 (b) Drug Control Act – 2. 1987 (c) The monopolies and Restrictive Trade Practice Act – 3. 1950 (d) Goods and Services Sales Act – 4. 1969",ta:"கீழ்கண்டவற்றைப் பொருத்துக: சட்டத்தின் பெயர் – இயற்றப்பட்ட ஆண்டு",opts_en:["(a)2 (b)3 (c)4 (d)1","(a)3 (b)1 (c)2 (d)4","(a)1 (b)3 (c)4 (d)2","(a)4 (b)1 (c)2 (d)3"],opts_ta:["(a)2 (b)3 (c)4 (d)1","(a)3 (b)1 (c)2 (d)4","(a)1 (b)3 (c)4 (d)2","(a)4 (b)1 (c)2 (d)3"],ans:"A"},
+  {n:135,en:"Consider the Assertion [A] and Reason [R]: Assertion [A]: Supreme court judges are to be appointed by the President. Reason [R]: In the case of appointment of the Judges the Law Minister of India shall always be consulted.",ta:"கருத்து [A] மற்றும் காரணம் [R] வினாவை கருதுக: கருத்து [A]: குடியரசுத் தலைவர் உச்சநீதிமன்ற நீதிபதிகளை நியமனம் செய்கிறார். காரணம் [R]: நீதிபதிகளை நியமனம் செய்யும் பொழுது சட்ட அமைச்சரையும் கலந்தாலோசிக்க வேண்டும்.",opts_en:["Both [A] and [R] are true and [R] is the correct explanation of [A]","Both [A] and [R] are true but [R] is not a correct explanation of [A]","[A] is true but [R] is false","[A] is false but [R] is true"],opts_ta:["[A] மற்றும் [R] இரண்டும் சரி மற்றும் [R] என்பது [A] க்கான சரியான விளக்கம்","[A] மற்றும் [R] இரண்டும் சரி ஆனால் [R] என்பது [A] யின் சரியான விளக்கமல்ல","[A] சரி ஆனால் [R] தவறு","[A] தவறு ஆனால் [R] சரி"],ans:"C"},
+  {n:136,en:"Arrange in chronological order on Inter-State council: (1) Punchhi Commission (2) Rajamannar Commission (3) Sarkaria Commission (4) Venkatachaliah Commission",ta:"மாநிலங்களுக்கிடையேயான குழுக்களை காலவரிசைப்படி ஒழுங்குபடுத்துவும்.",opts_en:["(3), (4), (2), (1)","(2), (1), (4), (3)","(2), (4), (3), (1)","(2), (3), (4), (1)"],opts_ta:["(3), (4), (2), (1)","(2), (1), (4), (3)","(2), (4), (3), (1)","(2), (3), (4), (1)"],ans:"D"},
+  {n:137,en:"Choose the right match: (1) Retirement age of the Supreme Court Judge – 60 years (2) Minimum age for contesting for the President of India – 35 years (3) Minimum age for becoming Rajya Sabha member – 30 years (4) Minimum age for becoming Lok Sabha member – 21 years",ta:"சரியான இணையைத் தெரிவு செய்க",opts_en:["(1) and (3) are correct","(1) and (2) are correct","(2) and (3) are correct","(3) and (4) are correct"],opts_ta:["(1) மற்றும் (3) சரியானவை","(1) மற்றும் (2) சரியானவை","(2) மற்றும் (3) சரியானவை","(3) மற்றும் (4) சரியானவை"],ans:"C"},
+  {n:138,en:"Arrange the following in chronological order: 1. Bharat Ratna, 2. Padma Vibhushan, 3. Padma Sri, 4. Padma Bhushan",ta:"பின்வரும் விருதுகளை காலவரிசைப்படி வரிசைப்படுத்துக.",opts_en:["2, 3, 1, 4","1, 2, 4, 3","4, 3, 2, 1","3, 1, 4, 2"],opts_ta:["2, 3, 1, 4","1, 2, 4, 3","4, 3, 2, 1","3, 1, 4, 2"],ans:"B"},
+  {n:139,en:"Match the following: Name of the States – States in Part: (a) Himachal Pradesh – 1. A (b) Rajasthan – 2. D (c) West Bengal – 3. B (d) The Andaman and Nicobar Islands – 4. C",ta:"பொருத்துக: மாநிலங்கள் பெயர் – மாநிலங்கள் இருக்கும் பகுதி",opts_en:["(a)4 (b)3 (c)1 (d)2","(a)2 (b)4 (c)1 (d)3","(a)3 (b)1 (c)2 (d)4","(a)1 (b)2 (c)4 (d)3"],opts_ta:["(a)4 (b)3 (c)1 (d)2","(a)2 (b)4 (c)1 (d)3","(a)3 (b)1 (c)2 (d)4","(a)1 (b)2 (c)4 (d)3"],ans:"A"},
+  {n:140,en:"P and Q can do a piece of work in 20 days and 40 days respectively. They started the work together and Q left after some days of work and P finished the remaining work in 8 days. After how many days from the start did Q leave?",ta:"P மற்றும் Q ஆகியோர் ஒரு வேலையை முறையே 20 மற்றும் 40 நாட்களில் முடிப்பர். அவர்கள் இருவரும் ஒன்றாக சேர்ந்து வேலையை தொடங்கினர். சில நாட்கள் வேலை செய்த பிறகு Q என்பவர் சென்றுவிடுகிறார். மீதமுள்ள வேலையை P என்பவர் 8 நாட்களில் முடிக்கிறார் எனில் தொடங்கியதிலிருந்து எத்தனை நாட்களுக்குப் பிறகு Q வேலையை விட்டுச் சென்றார்?",opts_en:["9 days","10 days","8 days","11 days"],opts_ta:["9 நாட்கள்","10 நாட்கள்","8 நாட்கள்","11 நாட்கள்"],ans:"C"},
+  {n:141,en:"Divide Rs. 2,602 between A and B, so that the amount of A at the end of 6 years is equal to the amount of B at the end of 8 years, compound interest being at 4% per annum.",ta:"ஆண்டுக்கு 4% கூட்டுவட்டியில் 6 வருடங்களில் A க்கு கிடைக்கும் தொகையானது 8 வருடங்களில் B ன் தொகைக்குச் சமமாக இருக்கும் எனில் ரூ. 2,602ல் A மற்றும் Bன் பங்குகள்",opts_en:["Rs.1,300, Rs.1,252","Rs.1,452, Rs.1,150","Rs.1,302, Rs.1,300","Rs.1,352, Rs.1,250"],opts_ta:["ரூ.1,300, ரூ.1,252","ரூ.1,452, ரூ.1,150","ரூ.1,302, ரூ.1,300","ரூ.1,352, ரூ.1,250"],ans:"D"},
+  {n:142,en:"Find the simple interest on Rs. 68,000 at 16⅔% per annum for 9 months.",ta:"ரூ. 68,000க்கு 9 மாதங்களுக்கு 16⅔% வருட வட்டி விகிதத்தில் தனி வட்டி காண்க.",opts_en:["Rs. 8,500","Rs. 8,000","Rs. 9,400","Rs. 9,100"],opts_ta:["ரூ. 8,500","ரூ. 8,000","ரூ. 9,400","ரூ. 9,100"],ans:"A"},
+  {n:143,en:"If a : b = 3 : 7 and b : c = 7 : 6, then Find the ratio between c and a",ta:"a : b = 3 : 7 மற்றும் b : c = 7 : 6 எனில் c மற்றும் a இவற்றின் விகிதம் காண்க.",opts_en:["1 : 2","3 : 6","6 : 7","2 : 1"],opts_ta:["1 : 2","3 : 6","6 : 7","2 : 1"],ans:"D"},
+  {n:144,en:"The ratio of two numbers is 3 : 4 and H.C.F is 4. Their L.C.M. is",ta:"இரண்டு எண்களின் விகிதம் 3 : 4 மேலும் அதன் மீ.பொ.வ மதிப்பு 4 எனில் அவைகளின் மீ.சி.ம.",opts_en:["48","38","58","68"],opts_ta:["48","38","58","68"],ans:"A"},
+  {n:145,en:"A number x is divisible by 13. When this number is divided by 16, 24, 32 it leaves a remainder 6 in each case. The least value of x is ___.",ta:"ஒரு எண் x ஆனது 13 ஆல் வகுபடும். இந்த எண் 16, 24 மற்றும் 32 ஆல் வகுக்கும் போது ஒவ்வொரு முறையும் மீதி 6 கிடைக்கிறது எனில் x ன் மிகச்சிறிய மதிப்பு",opts_en:["390","391","389","392"],opts_ta:["390","391","389","392"],ans:"A"},
+  {n:146,en:"There are 80 students in a class. If 25% are absent on a particular day. Find the number of students present in the class.",ta:"ஒரு வகுப்பில் 80 மாணவர்கள் உள்ளனர். ஒரு குறிப்பிட்ட நாளில் 25% பேர் வருகைபுரியவில்லை எனில் வருகை புரிந்த மாணவர்களின் எண்ணிக்கையைக் கண்டறியவும்.",opts_en:["10","60","30","25"],opts_ta:["10","60","30","25"],ans:"B"},
+  {n:147,en:"The ratio of boys and girls in a class is 5 : 3. If 16% of boys and 8% of girls failed in an examination, then find the percentage of passed students.",ta:"ஒரு வகுப்பிலுள்ள மாணவர்கள் மற்றும் மாணவிகளின் விகிதம் 5 : 3 ஆகும். ஒரு தேர்வில் 16% மாணவர்களும், 8% மாணவிகளும் தேர்ச்சி பெறவில்லை எனில் தேர்ச்சி பெற்ற மாணவ – மாணவிகளின் சதவிதத்தைக் காண்க.",opts_en:["87%","13%","84%","92%"],opts_ta:["87%","13%","84%","92%"],ans:"A"},
+  {n:148,en:"Find the sum of 1 + 3 + 5 + ⋯ + 55",ta:"தொடரின் கூடுதல் காண்க: 1 + 3 + 5 + ⋯ + 55",opts_en:["700","784","555","550"],opts_ta:["700","784","555","550"],ans:"B"},
+  {n:149,en:"The next term in the given sequence is 0, 2, 24, 252, 3120, ___.",ta:"கீழே கொடுக்கப்பட்டுள்ள தொடர் வரிசையில் வரும் அடுத்த உறுப்பு 0, 2, 24, 252, 3120, ___.",opts_en:["42450","46650","38450","44650"],opts_ta:["42450","46650","38450","44650"],ans:"B"},
+  {n:150,en:"In the series 6 4 1 2 2 8 7 4 2 1 5 3 8 how many pairs of successive numbers have a difference of 2 each?",ta:"இந்த தொடர்ச்சி எண்களில் 6 4 1 2 2 8 7 4 2 1 5 3 8 இரண்டு வித்தியாசத்தை உடைய எண்களில் எத்தனை இணைகள் உள்ளன?",opts_en:["One","Two","Three","Four"],opts_ta:["ஒன்று","இரண்டு","மூன்று","நான்கு"],ans:"C"},
+  {n:151,en:"A dice is thrown four times and its four different positions are given. Find the number on the face opposite the face showing 2.",ta:"ஒரு பகடை 4 முறை உருட்டப்படும் போது அதன் 4 வேறுபட்ட நிலைகள் கீழே கொடுக்கப்பட்டுள்ளன. 2-ன் எதிர் பக்கமாக இருக்கும் எண்ணைக் காண்க.",opts_en:["4","5","6","3"],opts_ta:["4","5","6","3"],ans:"A"},
+  {n:152,en:"Find the missing term of the sequence: 7, 12, 19, 24, 43, ___, 91",ta:"தொடர் வரிசையில் உள்ள விடுபட்ட எண்ணைக் காண்க: 7, 12, 19, 24, 43, ___, 91",opts_en:["50","45","48","63"],opts_ta:["50","45","48","63"],ans:"C"},
+  {n:153,en:"Identify the correct answer. Assertion [A]: Space MAITRI is a collaborative space mission between India and Australia. Reason [R]: India aims to lower the cost of access to space through this mission.",ta:"சரியான விடையை தேர்ந்தெடுக்கவும். கூற்று [A]: ஸ்பேஷ் MAITRI என்பது இந்தியா மற்றும் ஆஸ்திரேலியாவிற்கு இடையிலான கூட்டு விண்வெளி திட்டம். காரணம் [R]: இத்திட்டத்தின் மூலம் விண்வெளிக்கான அணுகல் செலவினை இந்தியா குறைக்க எண்ணுகிறது.",opts_en:["Both [A] and [R] are correct and [R] is the correct explanation for [A]","Both [A] and [R] are correct, but [R] is not the correct explanation for [A]","[A] is correct but [R] is wrong","[A] is wrong but [R] is correct"],opts_ta:["[A] மற்றும் [R] சரியே, மேலும் [R] என்பது [A] விற்கான சரியான விளக்கமாகும்","[A] மற்றும் [R] சரி, ஆனால் [R] என்பது [A] விற்கான சரியான விளக்கம் அல்ல","[A] சரியே, ஆனால் [R] தவறு","[A] தவறு ஆனால் [R] சரி"],ans:"C"},
+  {n:154,en:"Which of the following statement(s) is/are true about the agricultural cultivation of 2021-2022 in Tamilnadu? (i) Mayiladuthurai District involved more Paddy cultivation. (ii) Perambalur District involved more Maize cultivation. (iii) Kallakurichi involved more Sugarcane cultivation.",ta:"பின்வருவனவற்றில் 2021-2022-ம் ஆண்டில் தமிழ்நாட்டின் வேளாண்மை சாகுபடியோடு தொடர்புடைய உண்மையான கூற்று(க்கள்) எவை/யாவை?",opts_en:["(i) only","(i) and (iii) only","(i) and (ii) only","(ii) and (iii) only"],opts_ta:["(i) மட்டும்","(i) மற்றும் (iii) மட்டும்","(i) மற்றும் (ii) மட்டும்","(ii) மற்றும் (iii) மட்டும்"],ans:"D"},
+  {n:155,en:"Assertion [A]: As per the Economic Survey of Tamilnadu 2024-2025 the Urban inflation in Tamilnadu is coming down from 6% in 2019-2020 to 4.5% in 2024-2025. While rural inflation is static at 5.4%. Reason [R]: It is mainly due to the Governments' policy on the Tamilnadu Public Distribution System and other income support schemes.",ta:"கூற்று [A]: தமிழ்நாட்டின் 2024-2025 பொருளாதார ஆய்வறிக்கையின்படி தமிழ்நாட்டின் நகர்ப்புர பணவீக்கம் 2019-2020 ஆம் ஆண்டில் 6% விருந்து 2024-2025 ஆம் ஆண்டில் 4.5% ஆகக் குறைந்து காணப்படுகிறது. அதே நேரத்தில் கிராமப்புர பணவீக்கம் 5.4% என்ற விகிதத்தில் நிலையாக உள்ளது. காரணம் [R]: இது முக்கியமாக அரசாங்கத்தினால் அமல்படுத்தப் பெறும் தமிழ்நாடு பொது விநியோகத் திட்டம் மற்றும் கலைஞர் மகளிர் உரிமைத் திட்டம் மற்றும் நூறு நாள் வேலைவாய்ப்பு உத்திரவாத திட்டம் போன்ற பிற வருமான ஆதரவுத் திட்டங்களால் ஏற்படுகிறது.",opts_en:["[A] is true [R] is false","Both [A] and [R] are true and [R] is the correct explanation of [A]","[A] is false [R] is true","Both [A] and [R] are true but [R] is not the correct explanation of [A]"],opts_ta:["[A] சரி [R] தவறு","[A] மற்றும் [R] சரி மற்றும் [R] ஆனது [A] யினுடைய சரியான விளக்கம் ஆகும்","[A] தவறு [R] சரி","[A] மற்றும் [R] சரி ஆனால் [R] ஆனது [A] யினுடைய சரியான விளக்கம் அல்ல"],ans:"B"},
+  {n:156,en:"Assertion [A]: The \"Illam Thedi Kalvi\" scheme in Tamilnadu aims to bridge learning gaps among school students caused by the Covid-19 Pandemic. Reason [R]: The scheme involves volunteers providing remedial education to students at their homes.",ta:"கூற்று [A]: கோவிட்-19 பெருந்தொற்றால் பள்ளி மாணவர்களிடையே ஏற்படும் கற்றல் இடைவெளிகளை குறைப்பதை நோக்கமாகக் கொண்டு தமிழ்நாட்டில் \"இல்லம் தேடி கல்வி\" திட்டம் செயல்படுத்தப்படுகிறது. காரணம் [R]: இந்தத் திட்டத்தில், தன்னார்வலர்கள் மாணவர்களின் வீடுகளுக்குச் சென்று மாற்றுவழிகள் கொண்ட கல்வியை வழங்குகிறார்கள்.",opts_en:["Both [A] and [R] are true and [R] is the correct explanation of [A]","Both [A] and [R] are true but [R] is not the correct explanation of [A]","[A] is true but [R] is false","[A] is false but [R] is true"],opts_ta:["[A] மற்றும் [R] இரண்டும் உண்மை, மற்றும் [R] என்பது [A] க்கு சரியான விளக்கம்","[A] மற்றும் [R] இரண்டும் உண்மை, ஆனால் [R] என்பது [A] க்கு சரியான விளக்கமில்லை","[A] உண்மை ஆனால் [R] தவறானது","[A] தவறானது ஆனால் [R] சரியானது"],ans:"A"},
+  {n:157,en:"Which of the following statement(s) is/are true about \"The Mandal Commission Report\"? (i) The commission used Three indicators i.e. Social, Educational and Economic. (ii) In social indicator there were five criteria and educational indicators there were two criteria. (iii) In economic indicator there were four criteria. Thus there were 11 criteria used in the Mandal Commission Report.",ta:"பின்வருவனவற்றுள் மண்டல் கமிஷன் அறிக்கையோடு தொடர்புடைய சரியான கூற்று(க்கள்) எது/யாவை?",opts_en:["(i) only","(i) and (iii) only","(i) and (ii) only","(ii) and (iii) only"],opts_ta:["(i) மட்டும்","(i) மற்றும் (iii) மட்டும்","(i) மற்றும் (ii) மட்டும்","(ii) மற்றும் (iii) மட்டும்"],ans:"B"},
+  {n:158,en:"What was the cause for high inflation in India?",ta:"இந்தியாவின் பணவீக்கம் அதிகமாக இருப்பதற்கான காரணம்",opts_en:["High demand","Weaken rupee against the dollar","Low production","Low money supply"],opts_ta:["அதிக தேவை","டாலருக்கு எதிரான ரூபாய் மதிப்பு குறைவு","குறைவான உற்பத்தி","குறைவான பண அளிப்பு"],ans:"B"},
+  {n:159,en:"Arrange poverty eradication schemes in chronological order: 1. National Rural Livelihood Mission 2. Rajiv Awas Yojana 3. Bharat Nirman Yojana 4. National Food Security Scheme",ta:"வறுமை ஒழிப்பு திட்டங்களை கால வரிசைப்படுத்தி எழுதுக.",opts_en:["1 2 4 3","3 1 4 2","3 2 1 4","2 3 4 1"],opts_ta:["1 2 4 3","3 1 4 2","3 2 1 4","2 3 4 1"],ans:"C"},
+  {n:160,en:"Which of the following is incorrectly paired? (1) MFAL – Marginal Farmers and Agricultural Labourer Development Agency (2) DPAP – Drought Prone Area Programme (3) DDP – District Development Programme (4) HDA – Hills Development Agencies",ta:"பொருந்தாத ஒன்றை தேர்ந்தெடுத்து எழுதுக.",opts_en:["(1) and (2)","(1) and (3)","(3) and (4)","(2) and (3)"],opts_ta:["(1) மற்றும் (2)","(1) மற்றும் (3)","(3) மற்றும் (4)","(2) மற்றும் (3)"],ans:"C"},
+  {n:161,en:"Identify the incorrect Acronym: (1) TSC – Total Sanitation Campaign (2) NIC – National Information Centre (3) MIS – Management Information System (4) IMIS – Integrated Management Infrastructure System",ta:"பின்வருவனவற்றுள் தவறான இணைப்பு எது?",opts_en:["(1), (2), (3) and (4)","(1), (2) and (3)","(1), (2) and (4)","(4) only"],opts_ta:["(1), (2), (3) மற்றும் (4)","(1), (2) மற்றும் (3)","(1), (2) மற்றும் (4)","(4) மட்டும்"],ans:"D"},
+  {n:162,en:"Choose the correct pair: 1. Bombay plan – 1940, 2. Gandhian plan – 1945, 3. People's plan – 1944, 4. Sarvodaya plan – 1950",ta:"சரியான இணையைத் தேர்ந்தெடு: 1. பாம்பே திட்டம் – 1940, 2. காந்தியத் திட்டம் – 1945, 3. மக்கள் திட்டம் – 1944, 4. சர்வோதயத் திட்டம் – 1950",opts_en:["2 and 3 are correct","1 and 2 are correct","1 and 4 are correct","2 and 4 are correct"],opts_ta:["2 மற்றும் 3 சரி","1 மற்றும் 2 சரி","1 மற்றும் 4 சரி","2 மற்றும் 4 சரி"],ans:"C"},
+  {n:163,en:"Kokkokka Koompum Paruvaththu Matradhan Kuththokka Seerthththa Itaththu – As Heron with folded wing, so wait in waiting hour; As Heron snaps its prey, when fortune smiles, put forth your power. Statements: (1) To act like a Heron is incorrect. (2) You must wait till the Time Ripens. (3) This Kural appears in Chapter titled \"Therinthu Thelithal\". (4) \"Vaadiyirukkumaam Kokku\" is the phrase best suited to this Thirukkural.",ta:"கொக்கொக்க கூம்பும் பருவத்து மற்றதன் கொத்தொக்க சீர்த்த இடத்து. இக்குறட்பாவின் கருத்து:",opts_en:["(1)–Right (2)–Wrong (3)–Wrong (4)–Wrong","(1)–Wrong (2)–Right (3)–Right (4)–Wrong","(1)–Wrong (2)–Right (3)–Wrong (4)–Right","(1)–Right (2)–Wrong (3)–Right (4)–Right"],opts_ta:["(1)–சரி (2)–தவறு (3)–தவறு (4)–தவறு","(1)–தவறு (2)–சரி (3)–சரி (4)–தவறு","(1)–தவறு (2)–சரி (3)–தவறு (4)–சரி","(1)–சரி (2)–தவறு (3)–சரி (4)–சரி"],ans:"C"},
+  {n:164,en:"\"Manaththodu vaiymai mozhiyin thavaththodu Thaananj Seiyvaarin Thalai\". Statement 1: Those who speak the TRUTH are always more superior than those who practice charity or penance. Statement 2: Those who practice charity and penance are far better than who speak the TRUTH.",ta:"\"மனத்தொடு வாய்மை மொழியின் தவத்தொடு தானஞ்செய் வாரின் தலை\". கூற்று 1: வாய்மை பேசுபவர்கள் தானம், தவம் செய்பவர்களை விட சிறந்தவர்கள். கூற்று 2: வாய்மையே பேசினாலும் தானம், தவம் செய்பவரே சிறந்தவர்.",opts_en:["Statement 1 – Correct","Statement 2 – Correct","Statement 1 and 2 – Correct","Statement 1 and 2 – Incorrect"],opts_ta:["கூற்று 1 – சரி","கூற்று 2 – சரி","கூற்று 1, 2 – சரி","கூற்று 1, 2 – தவறு"],ans:"A"},
+  {n:165,en:"Match the following type: (a) Iyotheethass Pandithar – 1. Tahdhip-ul-Akhluq (b) Ramalinga Adigal – 2. Gulamgiri (c) Jotiba Phule – 3. Thiruvarutpa (d) Syed Ahmed Khan – 4. Oru Paisa Tamilan",ta:"பொருத்துக: (a) அயோத்திதாசப் பண்டிதர் – 1. தத்கீப்-ஒல்-அக்லுக் (b) இராமலிங்க அடிகள் – 2. குலாம்கிரி (c) ஜோதிபா பூலே – 3. திருவருட்பா (d) சையது அகமது கான் – 4. ஒரு பைசாத் தமிழன்",opts_en:["(a)1 (b)2 (c)3 (d)4","(a)4 (b)3 (c)2 (d)1","(a)4 (b)3 (c)1 (d)2","(a)1 (b)2 (c)4 (d)3"],opts_ta:["(a)1 (b)2 (c)3 (d)4","(a)4 (b)3 (c)2 (d)1","(a)4 (b)3 (c)1 (d)2","(a)1 (b)2 (c)4 (d)3"],ans:"B"},
+  {n:166,en:"Assertion [A]: K.M. Balasubramanian, author of South Indian Celebrities compared Dr. C. Natesa Mudaliyar to Mahathma Gandhi. Reason [R]: He was the epitome of love, character, tolerance, compromise and he was the heart of Justice Party.",ta:"கூற்று [A]: தென்னிந்திய பிரபலங்கள் (South Indian Celebrities) என்ற நூலின் ஆசிரியர் K.M. பாலசுப்பிரமணியன், டாக்டர் சி. நடேச முதலியாரை மகாத்மா காந்தியுடன் ஒப்பிட்டு எழுதினார். காரணம் [R]: நீதிகட்சியின் இதயமாகத் திகழ்ந்த நடேச முதலியார் அன்புக்கும், பண்புக்கும், பொறையுடைமைக்கும், சமரச மனப்பான்மைக்கும் எடுத்துக்காட்டாக விளங்கினார்.",opts_en:["[A] is true but [R] is false","Both [A] and [R] are true and [R] is the correct explanation of [A]","[A] is false [R] is true","Both [A] and [R] are true but [R] is not the correct explanation of [A] is correct"],opts_ta:["கூற்று [A] சரி ஆனால் காரணம் [R] தவறு","[A] மற்றும் [R] இரண்டும் சரி மற்றும் [R] ஆனது [A] யின் சரியான விளக்கம் ஆகும்","கூற்று [A] தவறு காரணம் [R] சரி","[A] மற்றும் [R] சரி ஆனால் காரணம் [R] கூற்று [A] யிற்கு சரியான விளக்கமல்ல என்பது சரி"],ans:"B"},
+  {n:167,en:"Which of the following statements are true about Ramalinga Adigal? (i) He said that apart from musical Instruments the mind should unite. (ii) He started night schools for farmers. (iii) He said that through human charity one should get full benefit in life and be one with God.",ta:"இராமலிங்க அடிகளாரைப் பற்றிய எந்தக் கருது சரியானது?",opts_en:["(i) only","(i) and (iii) only","(i) and (ii) only","(ii) and (iii) only"],opts_ta:["(i) மட்டும்","(i) மற்றும் (iii) மட்டும்","(i) மற்றும் (ii) மட்டும்","(ii) மற்றும் (iii) மட்டும்"],ans:"B"},
+  {n:168,en:"Assertion [A]: In 1930 Muthulakshmi Ammaiyar introduced in the Madras Legislative Council a Bill on the prevention of the dedication of woman of Hindu temples in the 'Presidency of Madras'. Reason [R]: The Bill which later became the Devadasi Abolition Act, declared the \"Pottukattu Ceremony\" Illegal.",ta:"கூற்று [A]: 1930-ல் சென்னை சட்டமன்றத்தில் முத்துலட்சமி அம்மையார் சென்னை மாகாணத்தில் இந்து கோவில்களுக்கு பெண்கள் \"அர்ப்பணிக்கப்படுவதை தடுப்பது\" எனும் மசோதாவை அறிமுகப்படுத்தினார். காரணம் [R]: பின்னர் தேவதாசி ஒழிப்புச் சட்டமாக மாறிய இம்மசோதா \"பொட்டுக் கட்டும் சடங்கு\" நடத்துவது சட்டத்திற்கு புறம்பானது என அறிவித்தது.",opts_en:["[A] is true but [R] is false","[A] is false but [R] is true","Both [A] and [R] are true and [R] is the correct explanation of [A]","Both [A] and [R] are true but [R] is not the correct explanation of [A]"],opts_ta:["[A] சரி ஆனால் [R] தவறு","[A] தவறு ஆனால் [R] சரி","[A] மற்றும் [R] சரி மேலும் [R], [A] யின் சரியான விளக்கம்","[A] மற்றும் [R] சரி ஆனால் [R], [A] யினுடைய சரியான விளக்கமல்ல"],ans:"C"},
+  {n:169,en:"Assertion [A]: Under the leadership of Rajaji, Congress decided to boycott Simon Commission in Chennai. Reason [R]: The Simon Commission had only Whitemen as members that is no Indians.",ta:"கூற்று [A]: சென்னையில் இராஜாஜி தலைமையில் சைமன் புறக்கணிப்புப் போராட்டத்தை நடத்த முடிவு செய்யப்பட்டது. காரணம் [R]: சைமன் குழுவில் உறுப்பினர் அனைவரும் வெள்ளையரே, அதாவது குழுவில் இந்தியரே இல்லை.",opts_en:["[A] is true, [R] is false","Both [A] and [R] are true, and [R] is the correct explanation of [A]","[A] is false, [R] is true","Both [A] and [R] are true, and [R] is not the correct explanation of [A]"],opts_ta:["[A] சரி, [R] தவறு","[A] மற்றும் [R] இரண்டும் சரி, மேலும் [R], [A] -ன் சரியான விளக்கம் ஆகும்","[A] தவறு, [R] சரி","[A] மற்றும் [R] இரண்டும் சரி, மேலும் [R], [A] -ன் சரியான விளக்கமல்ல"],ans:"C"},
+  {n:170,en:"Match the Works/Books with the author's: (a) Vetriverkai – 1. Avaiyar (b) Nanneri – 2. Kumara Kurubarar (c) Neethinerivilakam – 3. Athiveerarama Pandiyar (d) Nalvazhi – 4. Duraimangalam Sivaprakasar",ta:"கீழ்கண்ட நூல்களை ஆசிரியர்களோடு பொருத்தவும்: (a) வெற்றிவேற்கை – 1. ஔவையார் (b) நன்னெறி – 2. குமரகுருபரர் (c) நீதிநெறி விளக்கம் – 3. அதிவீராம பாண்டியர் (d) நல்வழி – 4. துறைமங்கலம் சிவப்பிரகாசர்",opts_en:["(a)1 (b)3 (c)4 (d)2","(a)1 (b)4 (c)2 (d)3","(a)3 (b)4 (c)2 (d)1","(a)3 (b)4 (c)1 (d)2"],opts_ta:["(a)1 (b)3 (c)4 (d)2","(a)1 (b)4 (c)2 (d)3","(a)3 (b)4 (c)2 (d)1","(a)3 (b)4 (c)1 (d)2"],ans:"C"},
+  {n:171,en:"Match correctly the Excavated places with their corresponding Districts: (a) Azhagankulam – 1. Sivagangai (b) Vasavasamudram – 2. Erode (c) Kodumanal – 3. Kanchipuram (d) Keezhadi – 4. Ramanathapuram",ta:"பின்வருவனவற்றில் அகழ்வாராய்ச்சி நடைபெற்ற ஊர்களை அவ்வூர் அமைந்துள்ள மாவட்டத்துடன் பொருத்திக் காட்டுக.",opts_en:["(a)1 (b)4 (c)3 (d)2","(a)4 (b)2 (c)3 (d)1","(a)3 (b)1 (c)2 (d)4","(a)4 (b)3 (c)2 (d)1"],opts_ta:["(a)1 (b)4 (c)3 (d)2","(a)4 (b)2 (c)3 (d)1","(a)3 (b)1 (c)2 (d)4","(a)4 (b)3 (c)2 (d)1"],ans:"D"},
+  {n:172,en:"Match the diseases in Column I with the site of infectious in Column II: (a) Dengue – 1. Intestine, Brain (b) Polio myelitis – 2. Skin and Blood (c) Measels – 3. Respiratory tract and Nervous system (d) Chicken Pox – 4. Skin and Respiratory tract",ta:"கீழ்க்காணும் நோய்களும் (Column I) அதனால் ஏற்படும் பாதிப்புகளையும் (Column II) பொருத்துக",opts_en:["(a)2 (b)1 (c)4 (d)3","(a)2 (b)1 (c)3 (d)4","(a)2 (b)4 (c)3 (d)1","(a)1 (b)3 (c)2 (d)4"],opts_ta:["(a)2 (b)1 (c)4 (d)3","(a)2 (b)1 (c)3 (d)4","(a)2 (b)4 (c)3 (d)1","(a)1 (b)3 (c)2 (d)4"],ans:"A"},
+  {n:173,en:"Assertion [A]: Cobalt-60 is useful in Cancer therapy. Reason [R]: Cobalt-60 is source of γ-radiations capable of killing cancerous cells.",ta:"கூற்று [A]: கோபால்ட்–60 புற்றுநோய் சிகிச்சையில் பயன்படுகிறது. காரணம் [R]: கோபால்ட்–60 காமா-கதிர்களின் மூலமாக செயல்பட்டு புற்றுநோய் செல்களை அழிக்க வல்லது.",opts_en:["Both [A] and [R] are correct and the [R] is a correct explanation of the [A]","Both [A] and [R] are correct but the [R] is not a correct explanation of the [A]","[A] is correct but [R] is incorrect","Both [A] and [R] are incorrect"],opts_ta:["[A] மற்றும் [R] சரி மேலும் [R] என்பது [A] க்கான சரியான விளக்கம்","[A] மற்றும் [R] சரி ஆனால் [R] என்பது [A] க்கான சரியான விளக்கம் இல்லை","[A] சரி ஆனால் [R] தவறு","[A] மற்றும் [R] இரண்டும் தவறு"],ans:"A"},
+  {n:174,en:"In Tamil Nadu, Vidiyal Payanam Scheme introduced in the month of",ta:"தமிழ்நாட்டில், விடியல் பயணம் திட்டம் எப்போது அறிமுகப்படுத்தப்பட்டது?",opts_en:["May, 2021","December, 2021","March, 2022","October, 2021"],opts_ta:["மே, 2021","டிசம்பர், 2021","மார்ச், 2022","அக்டோபர், 2021"],ans:"A"},
+  {n:175,en:"Assertion [A]: Climate, Relief, Soil and Natural resources are influencing the distribution of population. Reason [R]: Birth and death rate does not affect the distribution of population.",ta:"கூற்று [A]: காலநிலை, நிலத்தோற்றம், மண் மற்றும் இயற்கை வளங்கள் போன்றவை மக்கள் தொகைப் பரவலைக் கட்டுப்படுத்துகின்றன. காரணம் [R]: பிறப்பு, இறப்பு விகிதங்கள் மக்கள் தொகைப் பரவலை பாதிக்கவில்லை.",opts_en:["[A] is true, but [R] is false","[A] is false, but [R] is true","Both [A] and [R] are true, and [R] is the correct explanation of [A]","Both [A] and [R] are true, but [R] is not the correct explanation of [A]"],opts_ta:["[A] சரி, ஆனால் [R] தவறு","[A] தவறு, ஆனால் [R] சரி","[A] மற்றும் [R] இரண்டும் சரி, மற்றும் [R] என்பது [A] க்கான சரியான விளக்கம்","[A] மற்றும் [R] இரண்டும் சரி, ஆனால் [R] என்பது [A] யின் சரியான விளக்கம் இல்லை"],ans:"A"},
+  {n:176,en:"Match the following: Shifting cultivation – Region: (a) Ladang – 1. Malaysia (b) Milpa – 2. Vietnam (c) Roca – 3. Brazil (d) Ray – 4. Mexico",ta:"கீழ்கண்டவற்றைப் பொருத்துக: இடப்பெயர்வு வேளாண்மை – பகுதி: (a) லடாங் – 1. மலேசியா (b) மில்பா – 2. வியட்நாம் (c) ரோக்கா – 3. பிரேசில் (d) ரே – 4. மெக்ஸிகோ",opts_en:["(a)1 (b)4 (c)3 (d)2","(a)3 (b)4 (c)1 (d)2","(a)4 (b)2 (c)3 (d)1","(a)2 (b)3 (c)4 (d)1"],opts_ta:["(a)1 (b)4 (c)3 (d)2","(a)3 (b)4 (c)1 (d)2","(a)4 (b)2 (c)3 (d)1","(a)2 (b)3 (c)4 (d)1"],ans:"A"},
+  {n:177,en:"Match the following: Author – Work: (a) Amoghavarsha – 1. Mahapurana (b) Jinasena – 2. Kavirajamarga (c) Gunabhadra – 3. Kadambari (d) Bana – 4. Adipurana",ta:"கீழ்கண்டவற்றைப் பொருத்துக: ஆசிரியர் – நூல்: (a) அமேகாவர்ஷர் – 1. மகாபுராணம் (b) ஜீனசேனர் – 2. கவிராஜமார்க்கம் (c) குணபதரர் – 3. காதம்பரி (d) பாணர் – 4. ஆதிபுராணம்",opts_en:["(a)2 (b)4 (c)3 (d)1","(a)2 (b)4 (c)1 (d)3","(a)2 (b)3 (c)4 (d)1","(a)2 (b)3 (c)1 (d)4"],opts_ta:["(a)2 (b)4 (c)3 (d)1","(a)2 (b)4 (c)1 (d)3","(a)2 (b)3 (c)4 (d)1","(a)2 (b)3 (c)1 (d)4"],ans:"B"},
+  {n:178,en:"Which of the following statements are true about Velu Nachiyar? (i) Velu Nachiyar was the daughter of Chellamuthu Sethupathi, King of Sivagangai. (ii) Velu Nachiyar's husband was assassinated by the Nawab Army and to attack the Nawab and British. She joined with Gopal Naicker and Hyder Ali. (iii) In 1790, she died due to illness.",ta:"கீழ்கண்ட கூற்றுகளில் வேலுநாச்சியார் பற்றி எது/எவை சரியானவை?",opts_en:["(ii) only","(i) and (iii)","(i) and (ii)","(ii) and (iii)"],opts_ta:["(ii) மட்டும்","(i) மற்றும் (iii)","(i) மற்றும் (ii)","(ii) மற்றும் (iii)"],ans:"A"},
+  {n:179,en:"Which of the following points were accepted in Gandhi-Irwin Pact? (i) People allowed to make salt for their consumption. (ii) Not releasing the political prisoners who had not indulged in violence. (iii) Permitted picketing of foreign cloth shops. (iv) Reduced the death sentence of Bhagat Singh and his Comrades.",ta:"கீழ்கண்டவற்றில் காந்தி-இர்வின் ஒப்பந்தத்தில் ஏற்றுக்கொள்ளப்பட்ட அம்சங்கள் எவை?",opts_en:["(i) and (ii) only","(i) and (iii) only","(ii) and (iii) only","(ii) and (iv) only"],opts_ta:["(i) மற்றும் (ii) மட்டும்","(i) மற்றும் (iii) மட்டும்","(ii) மற்றும் (iii) மட்டும்","(ii) மற்றும் (iv) மட்டும்"],ans:"B"},
+  {n:180,en:"Consider the following statements and identify the correct answer: (1) In 1918, Madurai Harvi Mill labours strike happened. (2) B.B. Wadhiya was the labour union leader of Madurai Harvi Mill. (3) Dr. P. Varadharajulu's speech was an eye opener to the government. (4) Dr. P. Varadharajulu was the Author of \"Prabanja Mitran\" Magazine.",ta:"பின்வருவனவற்றில் எவை சரியானவை?",opts_en:["(1) only","(2) only","(1), (3) and (4) only","(1), (2) and (3) only"],opts_ta:["(1) மட்டும்","(2) மட்டும்","(1), (3) மற்றும் (4) மட்டும்","(1), (2) மற்றும் (3) மட்டும்"],ans:"C"},
+  {n:181,en:"False statements about Subhas Chandra Bose are: (i) Subhas Chandra Bose was born on 23rd January 1897, in Calcutta, West Bengal. (ii) The Government of India has declared his birthday, 23rd January as \"Parakram Diwas\". (iii) To honour of Subhas Chandra Bose's legacy, 23rd January is a National holiday.",ta:"சுபாஷ் சந்திர போஸைப் பற்றி பின்வரும் கூற்றுகளில் தவறானது:",opts_en:["(iii) only","(i) and (ii) only","(ii) and (iii) only","(i) and (iii) only"],opts_ta:["(iii) மட்டும்","(i) மற்றும் (ii) மட்டும்","(ii) மற்றும் (iii) மட்டும்","(i) மற்றும் (iii) மட்டும்"],ans:"D"},
+  {n:182,en:"Match the Presidents listed below with the distinguished guests who attended the Republic Day celebrations held under their leadership: (a) Droupadi Murmu – 1. Cyril Ramaphosa (b) A.P.J. Abdul Kalam – 2. Prabowo Subianto (c) Pranab Mukherjee – 3. Vladimir Putin (d) Ram Nath Kovind – 4. Barack Obama",ta:"குடியரசு தின விழாவிற்கு தலைமை வகித்த குடியரசுத் தலைவரையும் அவருடன் சிறப்பு விருந்தினராகக் கலந்து கொண்ட விருந்தினரையும் பொருத்திக் காட்டுக.",opts_en:["(a)1 (b)4 (c)3 (d)2","(a)2 (b)3 (c)4 (d)1","(a)3 (b)4 (c)1 (d)2","(a)4 (b)2 (c)3 (d)1"],opts_ta:["(a)1 (b)4 (c)3 (d)2","(a)2 (b)3 (c)4 (d)1","(a)3 (b)4 (c)1 (d)2","(a)4 (b)2 (c)3 (d)1"],ans:"B"},
+  {n:183,en:"Directorate of Vigilance and Anti-corruption Tamil Nadu Toll free No. is:",ta:"தமிழ்நாடு ஊழல் தடுப்பு மற்றும் கண்காணிப்புத் துறை இயக்குனரகத்தின் இலவச அழைப்பு எண்",opts_en:["1062 and 1963","1064 and 1965","1066 and 1967","1068 and 1969"],opts_ta:["1062 மற்றும் 1963","1064 மற்றும் 1965","1066 மற்றும் 1967","1068 மற்றும் 1969"],ans:"B"},
+  {n:184,en:"Find out the correct statements on election: (i) In all the states elections EVMS were used in 2003. (ii) The commission took a historic decision to use only EVMS for the Lok Sabha election in 2004. (iii) Two million EVMS were used in this elections.",ta:"தேர்தல் பற்றிய சரியான கூற்றுகளைக் கண்டறிக.",opts_en:["(i) only","(i) and (iii) only","(i) and (ii) only","(ii) and (iii) only"],opts_ta:["(i) மட்டும்","(i) மற்றும் (iii) மட்டும்","(i) மற்றும் (ii) மட்டும்","(ii) மற்றும் (iii) மட்டும்"],ans:"C"},
+  {n:185,en:"Choose the right matches: Committees – Chairman: (1) Committee on Panchayat Raj Election – K. Shanthanam (2) Committee on Rationalisation of Panchayat statistics – G. Ramachandran (3) Committee on Panchayat Raj Training centres – V.K. Rao (4) Study team on Panchayat Raj Administration – V. Iswaran",ta:"சரியானவற்றோடு பொருத்துக: குழுக்கள் – தலைவர்",opts_en:["(1) and (3) are correct","(1) and (4) are correct","(2) and (3) are correct","(3) and (4) are correct"],opts_ta:["(1) மற்றும் (3) மட்டும் சரி","(1) மற்றும் (4) மட்டும் சரி","(2) மற்றும் (3) மட்டும் சரி","(3) மற்றும் (4) மட்டும் சரி"],ans:"B"},
+  {n:186,en:"The correct statements on the Directive principles of state policy are: (i) The Directive principles of the state policy are provided in Article 36 to 51 of the constitution. (ii) The framers of the constitution borrowed this idea from the Spanish constitution. (iii) The Directive principles form the soul of the constitution.",ta:"அரசு வழிகாட்டும் நெறிமுறைகள் மீதான சரியான கூற்றானது.",opts_en:["(i) only","(i) and (iii) only","(i) and (ii) only","(ii) and (iii) only"],opts_ta:["(i) மட்டும்","(i) மற்றும் (iii) மட்டும்","(i) மற்றும் (ii) மட்டும்","(ii) மற்றும் (iii) மட்டும்"],ans:"B"},
+  {n:187,en:"Assertion [A]: Indian constitution is federal in nature. Reason [R]: Indian constitution provides dual citizenship like United States of America.",ta:"கூற்று [A]: இந்திய அரசியலமைப்பு உள்ளடக்கம் கூட்டாட்சி அரசியலமைப்பு ஆகும். காரணம் [R]: இந்திய அரசியலமைப்பு இக்கிய அமெரிக்க நாடுகள் (USA) போல் இரட்டைக் குடியுரிமையை வழங்கியுள்ளது.",opts_en:["[A] is false [R] is true","Both [A] and [R] are true; and [R] is the correct explanation of [A]","[A] is true [R] is false","Both [A] and [R] are true but [R] is not the correct explanation of [A]"],opts_ta:["கூற்று [A] தவறு காரணம் [R] சரி","[A] மற்றும் [R] சரியானவை ஆகும், மற்றும் [R] ஆனது [A] க்கான சரியான விளக்கமாகும்","கூற்று [A] சரி காரணம் [R] தவறு","[A] மற்றும் [R] சரியானவை ஆனால் [R] ஆனது [A] க்கான சரியான விளக்கமல்ல"],ans:"C"},
+  {n:188,en:"Assertion [A]: Indian constitution has the qualities of both rigid and flexible. Reason [R]: The constitution was amended more than 100 times without changing the foundations of the constitution.",ta:"கூற்று [A]: இந்திய அரசமைப்பு நெகிழும் மற்றும் நெகிழாத் தன்மைகளை கொண்டுள்ளது. காரணம் [R]: இந்திய அரசமைப்பின் அடிப்படையை மாற்றாமல் இதுவரை 100 க்கும் மேற்பட்ட மாற்றங்கள் கொண்டுவரப்பட்டுள்ளன.",opts_en:["[A] is true but [R] is false","Both [A] and [R] are true; and [R] is the correct explanation of [A]","[A] is false, but [R] is true","Both [A] and [R] are true, but [R] is not the correct explanation of [A] is correct"],opts_ta:["கூற்று [A] சரி ஆனால் காரணம் [R] தவறு","[A] மற்றும் [R] இரண்டும் சரியானவைகள் ஆகும் மற்றும் [R] ஆனது [A] யிற்கு சரியான விளக்கமாகும்","கூற்று [A] தவறு ஆனால் காரணம் [R] சரி","[A] மற்றும் [R] சரியானவை ஆனால் [R] ஆனது [A] யினுடைய சரியான விளக்கமல்ல என்பது சரி"],ans:"B"},
+  {n:189,en:"The reading in a field book are as given below. [Table: To C 150, 20 to D - 120, 80 - 50 to B, 30 to E - 50, From A]. The area of the field is",ta:"நில அளவை புத்தகத்தில் நிலமானது பின்வருமாறு மதிப்புகள் குறிக்கப்பட்டுள்ளன. [அட்டவணை: C வரை 150, 20 to D - 120, 80 - 50 to B, 30 to E - 50, A யிலிருந்து]. நிலத்தின் பரப்பளவு என்பது",opts_en:["6550 m²","7550 m²","5750 m²","5650 m²"],opts_ta:["6550 மீ²","7550 மீ²","5750 மீ²","5650 மீ²"],ans:"A"},
+  {n:190,en:"A person distributes his pens among four friends A, B, C and D in the ratio 1/3 : 1/4 : 1/5 : 1/6 then the minimum number of pens that the person should have is ___.",ta:"ஒருவர் தன்னுடைய நான்கு நண்பர்கள் A, B, C மற்றும் D ஆகியவர்களுக்கு தனது பேனாக்களை 1/3 : 1/4 : 1/5 : 1/6 ஆகிய விகிதங்களில் விநியோகிக்கிறார் எனில் அவர் வைத்திருக்க வேண்டிய பேனாக்களின் குறைந்தபட்ட எண்ணிக்கை ___.",opts_en:["23","55","57","65"],opts_ta:["23","55","57","65"],ans:"C"},
+  {n:191,en:"If the ratios formed using the numbers 2, 5, x, 20 are in the same order of proportion, then the value of x is",ta:"2, 5, x, 20 ஆகிய எண்களை அதே வரிசையில் பயன்படுத்தி அமையும் விகிதங்கள் விகித சமாக இருப்பின், 'x' ன் மதிப்பு",opts_en:["50","10","8","4"],opts_ta:["50","10","8","4"],ans:"C"},
+  {n:192,en:"If the HCF of 108 and 234 is expressible of the form 23x – 51 then what is the value of x?",ta:"108 மற்றும் 234 ஆகியவற்றின் மீப்பெரு பொது வகுத்தியை 23x – 51, என்ற வடிவில் எழுதினால் x-ன் மதிப்பு யாது?",opts_en:["3","2","4","5"],opts_ta:["3","2","4","5"],ans:"A"},
+  {n:193,en:"Find the HCF of the polynomials x³ + x² – x + 2 and 2x³ – 5x² + 5x – 3.",ta:"x³ + x² – x + 2 மற்றும் 2x³ – 5x² + 5x – 3 ஆகிய பல்லுறுப்புக் கோவைகளின் மீ.பொ.கா. காண்க.",opts_en:["x² – x + 1","x² + x – 1","–7x² + 7x – 7","7x² – 7x + 7"],opts_ta:["x² – x + 1","x² + x – 1","–7x² + 7x – 7","7x² – 7x + 7"],ans:"A"},
+  {n:194,en:"Simplify: (4⁻¹ + 4⁻² + 4⁻³)⁰ × (4⁻¹ + 4⁻² + 4⁻³)¹.",ta:"சுருக்குக: (4⁻¹ + 4⁻² + 4⁻³)⁰ × (4⁻¹ + 4⁻² + 4⁻³)¹.",opts_en:["63/19","19/63","21/64","64/21"],opts_ta:["63/19","19/63","21/64","64/21"],ans:"C"},
+  {n:195,en:"The average mark of 25 students was found to be 78.4. Later on, it was found that score of 96 was misread as 69. Find the correct mean of the marks.",ta:"25 மாணவர்களின் சராசரி மதிப்பெண் 78.4. இங்கு 96 என்ற மதிப்பானது 69 எனத் தவறுதலாக எடுக்கப்பட்டது கண்டறியப்பட்டது எனில், மதிப்பெண்களுக்கான சரியான சராசரியைக் காண்க.",opts_en:["77.32","79.48","78.42","78.24"],opts_ta:["77.32","79.48","78.42","78.24"],ans:"B"},
+  {n:196,en:"D, F, G, H, I and M are sitting in a row. I and M are in the centre, and F and D are at the beginning and at the end. G is sitting on the left of D. Then who is sitting on the right of F?",ta:"D, F, G, H, I மற்றும் M ஆகியோர் வரிசையாக அமர்ந்துள்ளனர். I மற்றும் M ஆகியோர் மையத்திலும், F மற்றும் D ஆகியோர் முதலிலும், இறுதியாகவும் அமர்ந்துள்ளனர். G என்பவர் D-யின் இடதுபுறத்தில் அமர்ந்துள்ளார். அப்படியானால் F-ன் வலதுபுறத்தில் அமர்ந்திருப்பது யார்?",opts_en:["H","I","M","G"],opts_ta:["H","I","M","G"],ans:"A"},
+  {n:197,en:"If A = 26, SUN = 27, then CAT = ?",ta:"A = 26, SUN = 27, எனில் CAT = ?",opts_en:["24","27","57","58"],opts_ta:["24","27","57","58"],ans:"C"},
+  {n:198,en:"If a ≠ b ≠ c is given, which one of the following is correct?",ta:"a ≠ b ≠ c எனக் கொடுக்கப்பட்டிருந்தால் பின்வருவனவற்றுள் எது சரி?",opts_en:["b ≠ a ≠ c","a, b, c are distinct","a = b = c","a ≠ c or a = c"],opts_ta:["b ≠ a ≠ c","a, b, c ஆகியவை வெவ்வேறானவை","a = b = c","a ≠ c அல்லது a = c"],ans:"D"},
+  {n:199,en:"The missing term in the given alpha-numeric series is: 2 X 2, 7 T 4, 14 P 12, 23 L 48, ___.",ta:"கீழே கொடுக்கப்பட்டுள்ள எண் எழுத்து தொடரின் விடுபட்ட உறுப்பு: 2 X 2, 7 T 4, 14 P 12, 23 L 48, ___.",opts_en:["34 H 240","34 H 144","30 H 100","30 H 120"],opts_ta:["34 H 240","34 H 144","30 H 100","30 H 120"],ans:"A"},
+  {n:200,en:"Two unbiased dice are rolled once. Find the probability of getting the product of face value is 4 or the difference of the face value is 5.",ta:"இரண்டு முறையான பகடைகள் உருட்டப்படும் பொழுது முகமதிப்புகளின் பெருக்கல் பலன் 4 அல்லது முக மதிப்புகளின் வித்தியாசம் 5 ஆக இருக்க நிகழ்தகவு?",opts_en:["1/12","5/36","1/9","7/36"],opts_ta:["1/12","5/36","1/9","7/36"],ans:"B"}
+];
+
+let cur=0, answers={}, timerSec=0, timerInt=null;
+
+function startQuiz(){
+  document.getElementById('welcome').style.display='none';
+  document.getElementById('quiz').style.display='block';
+  document.getElementById('qtot').textContent=QS.length;
+  buildPills();
+  timerInt=setInterval(()=>{
+    timerSec++;
+    const m=String(Math.floor(timerSec/60)).padStart(2,'0');
+    const s=String(timerSec%60).padStart(2,'0');
+    document.getElementById('timer').textContent=m+':'+s;
+  },1000);
+  renderQ(0);
+}
+
+function buildPills(){
+  const c=document.getElementById('pills');
+  c.innerHTML='';
+  QS.forEach((_,i)=>{
+    const p=document.createElement('button');
+    p.className='pill';p.id='pill-'+i;
+    p.title='Q'+(i+101);
+    p.onclick=()=>renderQ(i);
+    c.appendChild(p);
+  });
+}
+
+function updatePills(){
+  QS.forEach((_,i)=>{
+    const p=document.getElementById('pill-'+i);
+    if(!p)return;
+    p.className='pill';
+    if(i===cur)p.classList.add('current');
+    else if(answers[i]===null)p.classList.add('skipped');
+    else if(answers[i])p.classList.add('answered');
+  });
+}
+
+function renderQ(idx){
+  cur=idx;
+  const q=QS[idx];
+  document.getElementById('qnum').textContent=idx+1;
+  const sel=answers[idx];
+  const ltrs=['A','B','C','D'];
+  document.getElementById('qarea').innerHTML=`
+    <div class="qcard">
+      <div class="qtag">Q${q.n} &nbsp;·&nbsp; General Studies / பொது அறிவு</div>
+      <div class="qen">${q.en}</div>
+      <div class="qta">${q.ta}</div>
+      <div class="opts">
+        ${ltrs.map((l,i)=>`
+          <button class="opt${sel===l?' sel':''}" onclick="pick('${l}',${idx})">
+            <span class="opt-ltr">${l}</span>
+            <div>
+              <div>${q.opts_en[i]||''}</div>
+              ${q.opts_ta[i]&&q.opts_ta[i]!==q.opts_en[i]?`<div class="opt-ta">${q.opts_ta[i]}</div>`:''}
+            </div>
+          </button>`).join('')}
+      </div>
+      <div class="qactions">
+        ${idx>0?`<button class="btn btn-prev" onclick="go(-1)">← Prev</button>`:''}
+        <button class="btn btn-skip" onclick="skip()">Skip →</button>
+        ${idx<QS.length-1?`<button class="btn btn-next" onclick="go(1)">Next →</button>`:`<button class="btn btn-finish" onclick="finish()">Finish ✓</button>`}
+      </div>
+    </div>`;
+  updatePills();
+}
+
+function pick(l,idx){answers[idx]=l;renderQ(idx);}
+function go(d){if(answers[cur]===undefined)answers[cur]=null;const nx=cur+d;if(nx>=0&&nx<QS.length)renderQ(nx);}
+function skip(){answers[cur]=null;if(cur<QS.length-1)renderQ(cur+1);else finish();}
+
+function finish(){
+  clearInterval(timerInt);
+  QS.forEach((_,i)=>{if(answers[i]===undefined)answers[i]=null;});
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('result').style.display='block';
+
+  let c=0,w=0,s=0;
+  const cl=[],wl=[],sl=[];
+  QS.forEach((q,i)=>{
+    const a=answers[i];
+    if(!a){s++;sl.push({q,i,a});}
+    else if(a===q.ans){c++;cl.push({q,i,a});}
+    else{w++;wl.push({q,i,a});}
+  });
+
+  const pct=Math.round(c/QS.length*100);
+  document.getElementById('sc').textContent=c;
+  document.getElementById('sw').textContent=w;
+  document.getElementById('ss').textContent=s;
+  document.getElementById('spct').textContent=pct+'%';
+  setTimeout(()=>{document.getElementById('sarc').style.strokeDashoffset=314-(314*pct/100);},100);
+
+  fill('tc',cl,'c');fill('tw',wl,'w');fill('ts',sl,'s');
+}
+
+function fill(id,list,type){
+  const el=document.getElementById(id);
+  if(!list.length){el.innerHTML=`<div class="empty">No ${type==='c'?'correct':type==='w'?'wrong':'skipped'} questions</div>`;return;}
+  el.innerHTML=list.map(({q,i,a})=>{
+    const ltrs=['A','B','C','D'];
+    const opts=ltrs.map((l,li)=>{
+      let cls='ropt';
+      if(l===q.ans)cls+=' rok';
+      else if(l===a&&type==='w')cls+=' rno';
+      return `<span class="${cls}">${l}: ${q.opts_en[li]||''}</span>`;
+    }).join('');
+    const info=a?`Your answer: <strong>${a}</strong> &nbsp;|&nbsp; `:'<em>Skipped</em> &nbsp;|&nbsp; ';
+    return `<div class="rcard r${type}">
+      <div><span class="rtag r${type}">${type==='c'?'✓ Correct':type==='w'?'✗ Wrong':'– Skipped'}</span><span class="rqnum">Q${q.n}</span></div>
+      <div class="rqen">${q.en}</div>
+      <div class="rqta">${q.ta}</div>
+      <div class="rinfo">${info}Correct: <strong style="color:var(--green)">${q.ans}</strong></div>
+      <div class="ropts">${opts}</div>
+    </div>`;
+  }).join('');
+}
+
+function showTab(name,btn){
+  document.querySelectorAll('.tsec').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));
+  document.getElementById('t'+name).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</div>
+</body>
+</html><!DOCTYPE html>
+<html lang="ta">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCSEIVGT 2025 – Tamil GS Quiz (Q101–200)</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Tamil:wght@400;600;700&family=Noto+Sans+Tamil:wght@400;500;600&family=Playfair+Display:wght@700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f0f13;--surface:#18181e;--card:#1e1e28;--border:#2c2c3a;
+  --gold:#f5c842;--gold2:#e6a200;--green:#22c55e;--red:#ef4444;
+  --blue:#60a5fa;--text:#e8e8f0;--muted:#7a7a95;--radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans Tamil',sans-serif;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 10%,rgba(245,200,66,0.05) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(96,165,250,0.04) 0%,transparent 50%);pointer-events:none;z-index:0}
+#app{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:16px}
+
+/* WELCOME */
+#welcome{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:24px;padding:40px 20px}
+.badge{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;padding:5px 16px;border-radius:30px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase}
+#welcome h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:900;line-height:1.15}
+#welcome h1 span{color:var(--gold)}
+.sub{color:var(--muted);font-size:15px;line-height:1.7;max-width:480px}
+.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:100%;max-width:420px}
+.info-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center}
+.info-box .num{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:var(--gold)}
+.info-box .lbl{font-size:11px;color:var(--muted);margin-top:3px;letter-spacing:.5px}
+.btn-start{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;border:none;padding:15px 44px;border-radius:12px;font-size:17px;font-weight:700;cursor:pointer;font-family:'Playfair Display',serif;transition:all .2s;width:100%;max-width:420px}
+.btn-start:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(245,200,66,.3)}
+
+/* QUIZ */
+#quiz{display:none;padding:8px 0}
+.qhdr{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:20px;position:sticky;top:8px;z-index:100;backdrop-filter:blur(12px)}
+.qhdr-left{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);white-space:nowrap}
+.qhdr-left strong{color:var(--gold);font-size:19px}
+.pills-wrap{display:flex;flex-wrap:wrap;gap:3px;flex:1;justify-content:center}
+.pill{width:11px;height:11px;border-radius:3px;background:var(--border);cursor:pointer;transition:background .15s;border:none;padding:0}
+.pill.answered{background:var(--blue)}
+.pill.current{background:var(--gold);box-shadow:0 0 7px rgba(245,200,66,.5)}
+.pill.skipped{background:#4a4a60}
+.timer{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);background:var(--card);padding:5px 11px;border-radius:8px;white-space:nowrap}
+
+/* Question card */
+.qcard{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px;animation:fadeUp .25s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.qtag{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.qtag::after{content:'';flex:1;height:1px;background:var(--border)}
+.qen{font-size:16px;line-height:1.75;margin-bottom:6px;color:var(--text);font-family:'Noto Serif Tamil',serif}
+.qta{font-size:15px;line-height:1.8;color:var(--muted);margin-bottom:18px;font-family:'Noto Serif Tamil',serif}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{display:flex;align-items:flex-start;gap:12px;padding:13px 15px;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:all .15s;text-align:left;width:100%;color:var(--text);font-size:14.5px;line-height:1.55;font-family:'Noto Sans Tamil',sans-serif}
+.opt:hover{border-color:var(--gold);background:rgba(245,200,66,.05)}
+.opt.sel{border-color:var(--blue);background:rgba(96,165,250,.1)}
+.opt-ltr{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--gold);width:22px;height:22px;border-radius:5px;background:rgba(245,200,66,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.opt-ta{font-size:12.5px;color:#8888aa;margin-top:3px;font-family:'Noto Serif Tamil',serif}
+.qactions{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+.btn{padding:10px 20px;border-radius:10px;border:none;cursor:pointer;font-size:13.5px;font-weight:600;transition:all .15s;font-family:'Noto Sans Tamil',sans-serif}
+.btn-next{background:var(--gold);color:#000}
+.btn-next:hover{box-shadow:0 4px 18px rgba(245,200,66,.4);transform:translateY(-1px)}
+.btn-skip{background:var(--surface);color:var(--muted);border:1px solid var(--border)}
+.btn-skip:hover{border-color:var(--muted);color:var(--text)}
+.btn-finish{background:linear-gradient(135deg,var(--green),#16a34a);color:#fff}
+.btn-finish:hover{box-shadow:0 4px 18px rgba(34,197,94,.4)}
+.btn-prev{background:var(--surface);color:var(--text);border:1px solid var(--border)}
+
+/* RESULT */
+#result{display:none;padding:8px 0}
+.res-hero{text-align:center;padding:36px 20px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:22px}
+.res-hero h2{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;margin-bottom:4px}
+.score-ring{width:120px;height:120px;margin:18px auto;position:relative}
+.score-ring svg{transform:rotate(-90deg)}
+.score-ring circle{transition:stroke-dashoffset 1.2s ease}
+.score-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:var(--gold)}
+.stats{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.stat{padding:11px 18px;border-radius:10px;text-align:center;min-width:90px}
+.stat.c{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3)}
+.stat.w{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3)}
+.stat.s{background:rgba(122,122,149,.15);border:1px solid rgba(122,122,149,.3)}
+.stat .sn{font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700}
+.stat .sl{font-size:11px;color:var(--muted);margin-top:2px;letter-spacing:.8px}
+.stat.c .sn{color:var(--green)}
+.stat.w .sn{color:var(--red)}
+.stat.s .sn{color:var(--muted)}
+.tabs{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px}
+.tab{flex:1;padding:11px;text-align:center;cursor:pointer;font-size:13.5px;font-weight:600;transition:all .2s;border:none;background:transparent;color:var(--muted);font-family:'Noto Sans Tamil',sans-serif}
+.tab.active{background:var(--gold);color:#000}
+.tsec{display:none}
+.tsec.active{display:block}
+.rcard{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:12px}
+.rcard.rc{border-left:4px solid var(--green)}
+.rcard.rw{border-left:4px solid var(--red)}
+.rcard.rs{border-left:4px solid #4a4a60}
+.rtag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;padding:3px 9px;border-radius:20px;font-weight:700;margin-bottom:8px;margin-right:6px}
+.rtag.rc{background:rgba(34,197,94,.2);color:var(--green)}
+.rtag.rw{background:rgba(239,68,68,.2);color:var(--red)}
+.rtag.rs{background:rgba(122,122,149,.2);color:var(--muted)}
+.rqnum{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)}
+.rqen{font-size:14px;line-height:1.65;margin:6px 0 3px;font-family:'Noto Serif Tamil',serif}
+.rqta{font-size:12.5px;color:var(--muted);margin-bottom:10px;font-family:'Noto Serif Tamil',serif}
+.rinfo{font-size:11.5px;color:var(--muted);margin-bottom:8px;font-family:'JetBrains Mono',monospace}
+.ropts{display:flex;flex-wrap:wrap;gap:6px}
+.ropt{padding:5px 12px;border-radius:7px;font-size:12.5px;background:var(--surface);border:1px solid var(--border);font-family:'Noto Sans Tamil',sans-serif}
+.ropt.rok{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.4);color:var(--green);font-weight:600}
+.ropt.rno{background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.4);color:var(--red);text-decoration:line-through}
+.empty{text-align:center;padding:30px;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:12px}
+.btn-restart{display:block;width:100%;padding:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Playfair Display',serif;margin-top:20px}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- WELCOME -->
+<div id="welcome">
+  <div class="badge">CCSEIVGT / 2025</div>
+  <h1>Tamil GS Quiz<br><span>Questions 101 – 200</span></h1>
+  <p class="sub">இருமொழி (Bilingual) வினாடி வினா – பொது அறிவு & திறனாய்வு<br>General Studies & Aptitude · Part-B & Part-C</p>
+  <div class="info-grid">
+    <div class="info-box"><div class="num">100</div><div class="lbl">Questions</div></div>
+    <div class="info-box"><div class="num">150</div><div class="lbl">Marks</div></div>
+    <div class="info-box"><div class="num">EN/TA</div><div class="lbl">Bilingual</div></div>
+  </div>
+  <button class="btn-start" onclick="startQuiz()">தொடங்கு / Start Quiz →</button>
+</div>
+
+<!-- QUIZ -->
+<div id="quiz">
+  <div class="qhdr">
+    <div class="qhdr-left">Q <strong id="qnum">1</strong>/<span id="qtot">100</span></div>
+    <div class="pills-wrap" id="pills"></div>
+    <div class="timer" id="timer">00:00</div>
+  </div>
+  <div id="qarea"></div>
+</div>
+
+<!-- RESULT -->
+<div id="result">
+  <div class="res-hero">
+    <h2>Quiz Complete! 🎉</h2>
+    <div class="score-ring">
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="50" fill="none" stroke="#2c2c3a" stroke-width="10"/>
+        <circle id="sarc" cx="60" cy="60" r="50" fill="none" stroke="#f5c842" stroke-width="10" stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="314"/>
+      </svg>
+      <div class="score-pct" id="spct">0%</div>
+    </div>
+    <div class="stats">
+      <div class="stat c"><div class="sn" id="sc">0</div><div class="sl">CORRECT</div></div>
+      <div class="stat w"><div class="sn" id="sw">0</div><div class="sl">WRONG</div></div>
+      <div class="stat s"><div class="sn" id="ss">0</div><div class="sl">SKIPPED</div></div>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('c',this)">✓ Correct</button>
+    <button class="tab" onclick="showTab('w',this)">✗ Wrong</button>
+    <button class="tab" onclick="showTab('s',this)">– Skipped</button>
+  </div>
+  <div id="tc" class="tsec active"></div>
+  <div id="tw" class="tsec"></div>
+  <div id="ts" class="tsec"></div>
+  <button class="btn-restart" onclick="location.reload()">↺ மீண்டும் தொடங்கு / Restart</button>
+</div>
+
+<script>
+const QS = [
+  {n:101,en:"Match the following: Financial Assistance to Dependent children – (a), Maintenance of Orphan and Destitute Girls – (b), Foster Care Services Scheme – (c), State After-Care Home for Boys – (d) with 1.Between the age group of 18 and 21 years, 2.Providing destitute, orphan and unattached children, 3.Children below the age of 16 years, 4.Children between the age of 6 and 16 years",ta:"கீழ்காண்பவற்றை சரியாக பொருத்துக: சார்ந்திருக்கும் குழந்தைகளுக்கு நிதியுதவி – (a), ஆதரவற்ற மற்றும் அனாதை சிறுமிகளை பராமரித்தல் – (b), வளர்ப்பு மற்றும் பராமரிப்பு சேவைகள் திட்டம் – (c), சிறுவர்களுக்கான பராமரிப்பு இல்லம் – (d)",opts_en:["(a)2 (b)3 (c)1 (d)4","(b)4 (c)2 (d)3 (a)1 → (A) 2 3 1 4","(C) 3 4 2 1","(D) 2 4 1 3"],opts_ta:["(A) 2 3 1 4","(B) 4 2 3 1","(C) 3 4 2 1","(D) 2 4 1 3"],ans:"C"},
+  {n:102,en:"As per the Tamilnadu Economic Survey of 2024-2025, arrange the following in ascending order based on productivity: (1) Paddy productivity (2) Maize productivity (3) Oil seeds, Groundnut and Sugarcane productivity",ta:"2024-2025 ஆம் ஆண்டைய தமிழ்நாடு பொருளாதார ஆய்வறிக்கையின்படி, உற்பத்தித்திறனைப் பொறுது பின்வருவனவற்றை ஏறுவரிசையில் வரிசைப்படுத்துங்கள். (1) நெல் உற்பத்தித்திறன் (2) மக்காச்சோளம் உற்பத்தித்திறன் (3) எண்ணெய் வித்துக்கள், நிலகடலை மற்றும் கரும்பு உற்பத்தித்திறன்",opts_en:["(1) (2) (3)","(3) (2) (1)","(2) (1) (3)","(3) (1) (2)"],opts_ta:["(1) (2) (3)","(3) (2) (1)","(2) (1) (3)","(3) (1) (2)"],ans:"A"},
+  {n:103,en:"Find out the Incorrect statement(s) about the Tamilnadu Health System Reform Program (TNHSRP): (i) Supported by World Bank (ii) Sponsored by Central and State Govt in ratio 60:40 (iii) Implemented by Dept of Health and Family Welfare on Program for Results basis (iv) Aims to achieve SDG 9",ta:"தமிழ்நாடு சுகாதார அமைப்பு சீர்திருத்தத் திட்டம் (TNHSRP) பற்றிய தவறான கூற்றினை கண்டறிக.",opts_en:["(i) and (iii) only","(ii) and (iii) only","(ii) and (iv) only","(iii) only"],opts_ta:["(i) மற்றும் (iii) மட்டும்","(ii) மற்றும் (iii) மட்டும்","(ii) மற்றும் (iv) மட்டும்","(iii) மட்டும்"],ans:"C"},
+  {n:104,en:"Assertion [A]: In 1892, Tremenheere report was accepted by the Government for increasing the income of the Government, to allot the poramboke land to down trodden community. Reason [R]: In Chengalpet, the Panchamer Schools were run by the Philanthropic individuals in Panchami Land for promoting Education for downtrodden community people.",ta:"கூற்று [A]: 1892-ல் அரசு, புறம்போக்கு நிலங்களை தாழ்த்தப்பட்ட சமூகத்திற்கு வழங்குவதன் வாயிலாக அரசின் நிதி வருவாயினை பெருக்கி கொள்ளலாம் என்கிற திரமென்வூர் அறிக்கையினை ஏற்றுக்கொண்டது. காரணம் [R]: மனித நேயமிக்க நபர்கள் தாழ்த்தப்பட்ட சமூக மக்களின் கல்வியினை மேம்படுத்தும் பொருட்டு பஞ்சமி நிலங்களில் செங்கல்பட்டில் உள்ள பஞ்சமர் பள்ளிகளை நடத்தி வந்தனர்.",opts_en:["[A] is true [R] is false","Both [A] and [R] are true and [R] is the correct explanation of [A]","[A] is false [R] is true","Both [A] and [R] are true but [R] is not the correct explanation of [A]"],opts_ta:["[A] சரி [R] தவறு","[A] மற்றும் [R] இரண்டும் சரி மேலும் [R] ஆனது [A] யினுடைய சரியான விளக்கம்","[A] தவறு [R] சரி","[A] மற்றும் [R] இரண்டும் சரி ஆனால் [R] ஆனது [A] யினுடைய சரியான விளக்கமல்ல"],ans:"A"},
+  {n:105,en:"Identify the incorrectly paired matches: (1) Lokpal and Lokayuktas Act came into force – January 16th, 2014 (2) Tamil declared as Classical Language – Oct 10, 2004 (3) Election Commission of India – Article 324 (4) National Integration Council in India – 1960",ta:"பின்வருவனவற்றில் தவறாக பொருத்தப்பட்டுள்ளவற்றை கண்டறிக.",opts_en:["(1) and (3)","(2) and (4)","(3) and (4)","(4) and (1)"],opts_ta:["(1) மற்றும் (3)","(2) மற்றும் (4)","(3) மற்றும் (4)","(4) மற்றும் (1)"],ans:"B"},
+  {n:106,en:"The purpose of \"Surya Ghar Muft Bijli Yojana\" is",ta:"\"சூர்ய கர் முஃப்ட் பிஜிலி யோஜனா\" என்ற திட்டத்தின் நோக்கமானது",opts_en:["Installing roof top solar","Providing Houses to the poor","Insurance to old age people","Financing to small industries"],opts_ta:["வீட்டுக்கூரைகளில் சூரிய ஒளி மின்சாரம் நிறுவுவது","ஏழைகளுக்கான வீடுகள் வழங்குவது","வயது வந்தோருக்கான காப்பீடு வழங்குவது","சிறிய தொழிற்சாலைகளுக்கு நிதி வழங்குவது"],ans:"A"},
+  {n:107,en:"Assertion [A]: Zamindari system was created by the East India Company when in 1793. Lord Cornwallis entered into permanent settlement. Reason [R]: Under the settlement, the landlords were declared full properties large areas of land.",ta:"கூற்று [A]: 1793 ல் காரன்வாலிஸ் பிரபுவின் கிழக்கிந்திய வணிக குழுவின் ஆட்சியின் கீழ் ஜமீந்தாரி முறை கொண்டுவரப்பட்டது. காரணம் [R]: இம்முறையினால் ஜமீந்தார்கள் முழு நிலத்தின் உரிமையாளர்களாகத் தங்களை அறிவித்துக்கொண்டனர்.",opts_en:["[A] is true, [R] is false","[A] is false, [R] is true","Both [A] and [R] are false","Both [A] and [R] are true, but [R] is the correct explanation of [A]"],opts_ta:["[A] சரி, [R] தவறு","[A] தவறு, [R] சரி","[A] மற்றும் [R] இரண்டும் தவறு","[A] மற்றும் [R] இரண்டும் சரி, ஆனால் [R], [A] ன் சரியான விளக்கம்"],ans:"D"},
+  {n:108,en:"Assertion [A]: Goods and Services Tax in India is a comprehensive, multistage, destination-based tax that is levied on every value addition. Reason [R]: The moto is 'One Tax, One Market, One Nation'.",ta:"கூற்று [A]: இந்தியாவில் சரக்கு மற்றும் சேவை வரியானது விரிவான, பல படிநிலைகளில் இலக்கு அடிப்படையில் ஒவ்வொரு மதிப்புக் கூட்டின் போது விதிக்கப்படுகிறது. காரணம் [R]: இதன் நோக்கம் \"ஒரே வரி, ஒரே சந்தை, ஒரே நாடு\" ஆகும்.",opts_en:["[A] is true, but [R] is false","Both [A] and [R] are true; and [R] is the correct explanation of [A]","[A] is false, [R] is true","Both [A] and [R] are true, but [R] is not the correct explanation of [A] is correct"],opts_ta:["[A] சரி, ஆனால் [R] தவறு","[A] மற்றும் [R] இரண்டும் சரி, மற்றும் [R] என்பது [A] விற்கான சரியான விளக்கம் ஆகும்","[A] தவறு, [R] சரி","[A] மற்றும் [R] இரண்டும் சரி ஆனால் [R] என்பது [A] யின் சரியான விளக்கமல்ல என்பது சரி"],ans:"B"},
+  {n:109,en:"Arrange the following Finance Ministers of Tamil Nadu according to the Budget Year (Chronological Order): 1. Mr. Paneerselvam, 2. Dr. Nedunchezhiyan, 3. Mr. Palanivel Thiagarajan, 4. Mr. Thangam Thennarasu",ta:"கீழ்க்கண்ட தமிழ்நாடு நிதி அமைச்சர்களை அவர்களின் பட்ஜெட் ஆண்டை அடிப்படையாகக் கொண்டு காலவரிசைப்படி வரிசைப்படுத்துக.",opts_en:["1 2 3 4","4 3 2 1","2 1 3 4","1 4 2 3"],opts_ta:["1 2 3 4","4 3 2 1","2 1 3 4","1 4 2 3"],ans:"C"},
+  {n:110,en:"Assertion [A]: The plan period 1966–69 were called as 'Annual plans or plan holiday'. Reason [R]: Because of the two major conflicts with China and Pakistan.",ta:"கூற்று [A]: 1966–69 திட்டக் காலம் \"ஆண்டுத் திட்டம் அல்லது திட்ட விடுமுறை காலம்\" என அழைக்கப்படுகிறது. காரணம் [R]: சீனா மற்றும் பாகிஸ்தானுடன் ஏற்பட்ட இரண்டு பெரிய மோதல்கள்.",opts_en:["[A] is true, [R] is false","Both [A] and [R] are true, but [R] is not a correct explanation of [A]","Both [A] and [R] are true, but [R] is the correct explanation of [A]","[A] is false, [R] is true"],opts_ta:["[A] சரி, [R] தவறு","[A]-யும் [R]-ம் சரி, ஆனால் [R] [A] விற்கான சரியான விளக்கமல்ல","[A]-யும் [R]-ம் சரி, ஆனால் [R] என்பது [A] விற்கான சரியான விளக்கமாகும்","[A] தவறு, [R] சரி"],ans:"C"},
+  {n:111,en:"Statement: Thiruvalluvar has captured certain features like pride and administration of the Three Great Kings (Moovendhar) in his couplets. Reason: Thiruvalluvar wanted to portray the administrative skills of Kings.",ta:"கூற்று: தமிழகத்தில் வாழ்ந்த மூவேந்தர்களின் பெருமை ஆட்சித் திறம் பற்றி ஒரு சில கருத்துக்களை மட்டுமே திருவள்ளுவர் தமது குறட்பாக்களில் தந்துள்ளார். காரணம்: மன்னர்களின் ஆட்சித் திறம் பற்றிய கருத்துக்களைக் கூற வேண்டும் எனக் கருதினார்.",opts_en:["Both Statement and Reason are correct","Reason is incorrect but Statement is correct","Both Statement and Reason are incorrect","Statement is incorrect but Reason is correct"],opts_ta:["கூற்று காரணம் இரண்டும் சரி","காரணம் தவறு ஆனால் கூற்று சரி","கூற்று காரணம் இரண்டும் தவறு","கூற்று தவறு ஆனால் காரணம் சரி"],ans:"D"},
+  {n:112,en:"Give the chapter No. _____ in Thirukkural that talks about Ascetic Virtues.",ta:"திருக்குறளில் அமைந்துள்ள துறவறவியல் அதிகாரத்தின் எண்ணைக் குறிப்பிடுக.",opts_en:["18","13","12","16"],opts_ta:["18","13","12","16"],ans:"B"},
+  {n:113,en:"Who is the author of \"Valluvarum Kuralum\"?",ta:"\"வள்ளுவரும் குறளும்\" என்ற நூலின் ஆசிரியர்",opts_en:["Tamilannal","Ki.Aa.Pe. Vishwanatham","Ra.Pi. Sethupillai","Thiru.Vi. Kalyanasundaram"],opts_ta:["தமிழண்ணல்","கி.ஆ.பெ. விசுவநாதம்","ரா.பி. சேதுப்பிள்ளை","திரு.வி. கலியாண சுந்தரனார்"],ans:"B"},
+  {n:114,en:"Who was the first to draw the portrait of Thiruvalluvar?",ta:"திருவள்ளுவர் உருவத்தினை முதன் முதலில் ஓவியமாக வரைந்தவர்",opts_en:["Venkata Krishna Pandithar","Venugopala Sharma","Saminatha Sharma","Vannacharaba Dheetchithar"],opts_ta:["வேங்கட கிருஷ்ணபண்டிதர்","வேணுகோபால சர்மா","சாமிநாத சர்மா","வண்ணச்சரப தீட்சிதர்"],ans:"B"},
+  {n:115,en:"Choose the right matches: (1) New India – Bharathi (2) Thesapakthan – V.V. Subramanian (3) Nava Sakthi – Thiru. V. Kalyanasundaram (4) The Hindu – G. Subramaniam",ta:"சரியான இணையைக் கண்டறிக: (1) நியூ இந்தியா – பாரதியார் (2) தேசபக்தன் – வ.வே. சுப்பிரமணியன் (3) நவசக்தி – திரு.வி. கலியாணசுந்தரம் (4) தி இந்து – G. சுப்பிரமணியம்",opts_en:["(1) and (2) are correct","(2) and (3) are correct","(3) and (4) are correct","(1) and (4) are correct"],opts_ta:["(1) மற்றும் (2) சரி","(2) மற்றும் (3) சரி","(3) மற்றும் (4) சரி","(1) மற்றும் (4) சரி"],ans:"B"},
+  {n:116,en:"Which of the following statements are true about the Theosophical Movement? (i) The Theosophical society was founded by Madam Blavatsky and Col. H.S. Olcott in New York. (ii) In 1888 Mrs. Annie Besant joined the society in India. (iii) The headquarters of the society in Adyar.",ta:"பிரம்மஞான சபை பற்றிய சரியான வாக்கியங்களைத் தேர்வு செய்க.",opts_en:["(i) and (ii)","(ii) and (iii)","(i) and (iii)","(iii) only"],opts_ta:["(i) மற்றும் (ii)","(ii) மற்றும் (iii)","(i) மற்றும் (iii)","(iii) மட்டும்"],ans:"C"},
+  {n:117,en:"Assertion [A]: E.V.R. Periyar started the Self-Respect Movement in 1925. Reason [R]: New India was the official Newspaper of the Self-Respect Movement.",ta:"கூற்று [A]: 1925-இல் ஈ.வே.ரா. பெரியார் சுயமரியாதை இயக்கத்தைத் தொடங்கினார். காரணம் [R]: சுயமரியாதை இயக்கத்தின் அதிகாரபூர்வ செய்தித்தாள் நியூ இந்தியா ஆகும்.",opts_en:["[A] is true, but [R] is false","Both [A] and [R] are true, and [R] is the correct explanation of [A]","[A] is false, [R] is true","Both [A] and [R] are true, but [R] is not the correct explanation of [A] is correct"],opts_ta:["[A] சரி ஆனால் [R] தவறு","[A] மற்றும் [R] இரண்டும் சரி, மற்றும் [R] என்பது [A] யினுடைய சரியான விளக்கம்","[A] தவறு, [R] சரி","[A] மற்றும் [R] இரண்டும் சரி, ஆனால் [R] என்பது [A] யினுடைய சரியான விளக்கமல்ல என்பது சரி"],ans:"A"},
+  {n:118,en:"Consider the following statements and Identify the wrong answers: (1) On 1st September 1798 Major Bannerman served an ultimatum directing Kattabomman to see him at Palayamkottai. (2) Kattabomman's Fort 500 feet long and 300 feet broad, was constructed entirely of Mud. (3) On September 16, 1799 Veera Pandiya Kattabomman was tried before an assembly of Palayakkarars at Kayatar. (4) On 1st June, 1799 Kattabomman, attended by 500 men, proceeded to Sivagangai.",ta:"கீழ்கண்ட கூற்றுகளை கருத்தில் கொண்டு தவறான விடையை கண்டறி.",opts_en:["(1) is wrong","(2) is wrong","(1) and (3) are wrong","(2) and (4) are wrong"],opts_ta:["(1) மட்டும் தவறு","(2) மட்டும் தவறு","(1) மற்றும் (3) மட்டும் தவறு","(2) மற்றும் (4) மட்டும் தவறு"],ans:"C"},
+  {n:119,en:"Which of the following statements are true? (1) Congress boycotted the election which was held in 1923 in Chennai. (2) Swaraj Party won 11 seats. (3) Justice Party formed Ministry in Chennai. (4) Kamaraj led the Non-Co-operation movement in Chennai.",ta:"சரியான வாக்கியங்களைத் தெரிவு செய்க.",opts_en:["(1), (4) are correct","(1), (2) are correct","(1), (3) are correct","(1), (2), (3) are correct"],opts_ta:["(1), (4) சரியானது","(1), (2) சரியானது","(1), (3) சரியானது","(1), (2), (3) சரியானது"],ans:"D"},
+  {n:120,en:"Match the following: (a) Karaikkal Ammaiyar – 1. Thiruvantadi (b) Andal – 2. Kachhikalambagam (c) Aranganadha Mudaliyar – 3. Pavaippattu (d) Seraman Perumal Nayanar – 4. Moothathiruppathigangal",ta:"கீழ்க்கண்டவற்றைப் பொருத்துக: (a) காரைக்கால் அம்மையார் – 1. திருவந்தாதி (b) ஆண்டாள் – 2. கச்சிக்கலம்பகம் (c) அரங்கநாத முதலியார் – 3. பாவைப்பாட்டு (d) சேரமான் பெருமாள் நாயனார் – 4. மூத்ததிருப்பதிகங்கள்",opts_en:["(a)2 (b)3 (c)1 (d)4","(a)3 (b)1 (c)2 (d)4","(a)4 (b)3 (c)2 (d)1","(a)1 (b)2 (c)3 (d)4"],opts_ta:["(a)2 (b)3 (c)1 (d)4","(a)3 (b)1 (c)2 (d)4","(a)4 (b)3 (c)2 (d)1","(a)1 (b)2 (c)3 (d)4"],ans:"C"},
+  {n:121,en:"Which of the following statements are true about Sivakalai excavation? (i) Sivakalai excavation located in North shore of river Thamiraparani. (ii) Tamil society lived in Sivakalai considered very ancient. (iii) Copper and gold goods are found.",ta:"கீழ்கண்ட சிவகளை அகழாய்வு வாக்கியத்தில் பொருத்தமான பதிலை தேர்ந்தெடுக்கவும்.",opts_en:["(i) only","(i) and (iii) only","(i) and (ii) only","(iii) only"],opts_ta:["(i) மட்டும் சரி","(i) மற்றும் (iii) சரி","(i) மற்றும் (ii) சரி","(iii) மட்டும் சரி"],ans:"C"},
+  {n:122,en:"What is the crucial role played by noncoding RNA's?",ta:"குறியிடாத RNA (NCRNA) என்ன முக்கியப் பங்கு வகிக்கிறது?",opts_en:["encode for proteins","replications","gene regulation","carbohydrate synthesis"],opts_ta:["புரதத்திற்கான குறியாக்கம்","பிரதி","மரபணு கட்டுப்பாடு","கார்போஹைட்ரேட் தொகுப்பு"],ans:"C"},
+  {n:123,en:"Choose the right matches among the following: (1) Five Kingdom System – R.H. Whittaker (2) Six Kingdom System – Carl Woese, et al (3) Four Kingdom System – Carl Linnaeus (4) Three Kingdom System – Ernst Haeckel",ta:"சரியான இணையைக் கண்டறிக: (1) ஐந்துலக வகைப்பாடு – R.H. விட்டாக்கெர் (2) ஆறுலக வகைப்பாடு – கார்ல் வெயிசி, ம.ப. (3) நான்குலக வகைப்பாடு – கார்ல் லின்னேயஸ் (4) மூன்றுலக வகைப்பாடு – எர்னெஸ்ட் ஹெக்கேல்",opts_en:["(1) only correct","(1), (2) and (4) are correct","(1) and (2) are correct","(1), (2) and (3) are correct"],opts_ta:["(1) மட்டும் சரி","(1), (2) மற்றும் (4) சரியானவை","(1) மற்றும் (2) சரியானவை","(1), (2) மற்றும் (3) சரியானவை"],ans:"B"},
+  {n:124,en:"0.10 M of weak acid is found to be dissociated to the extent of 1.20% at 25°C. Its dissociation constant is",ta:"0.10 M சேறிவுடைய வலிமை குறைந்த அமில கரைசல் 25°C-ல் 1.20% பிரிகை அடைகிறது எனில், பிரிகை மாறிலியின் மதிப்பு",opts_en:["1.44 × 10⁵","1.44 × 10⁻⁴","1.44 × 10⁻⁵","1.44 × 10⁴"],opts_ta:["1.44 × 10⁵","1.44 × 10⁻⁴","1.44 × 10⁻⁵","1.44 × 10⁴"],ans:"C"},
+  {n:125,en:"The GSLV-F15 is launched on _________ by ISRO.",ta:"ISRO-வால் GSLV-F15 ராக்கெட் ஏவப்பட்ட திநம் _________.",opts_en:["January 29, 2025","March 08, 2025","January 29, 2024","March 08, 2024"],opts_ta:["ஜனவரி 29, 2025","மார்ச் 08, 2025","ஜனவரி 29, 2024","மார்ச் 08, 2024"],ans:"A"},
+  {n:126,en:"Which of the following is incorrectly matched? (1) Trans Siberian Railway line – Connects Baltic Sea and Pacific Ocean (2) Trans Caspian Railway line – Connects Central Asia and Japan (3) Canadian Pacific Railway line – Connects Atlantic Ocean and Indian Ocean (4) Trans-Continental Railway line – Connects Buenos Aires with Valparaiso",ta:"கீழ்கண்டவற்றுள் எது தவறாக பொருந்தி உள்ளது?",opts_en:["(1) only","(2) only","(3) only","(4) only"],opts_ta:["(1) மட்டும்","(2) மட்டும்","(3) மட்டும்","(4) மட்டும்"],ans:"C"},
+  {n:127,en:"Who among the following was the Indian Prime Minister when the 42nd Amendment Act was passed?",ta:"இந்திய அரசமைப்பின் 42-ஆவது திருத்தச் சட்டம் கொண்டு வரப்பட்டபோது இந்தியாவின் பிரதமராக இருந்தவர் யார்?",opts_en:["Jawaharlal Nehru","V.P. Singh","Indira Gandhi","Morarji Desai"],opts_ta:["ஜவஹர்லால் நேரு","வி.பி. சிங்","இந்திராகாந்தி","மொராார்ஜி தேசாய்"],ans:"C"},
+  {n:128,en:"Assertion [A]: The Pallavas constructed the Cave temples without brick, wood, metal and sudhai. Reason [R]: The stones kept one upon another and not bound with plaster is known as \"Katraligal\".",ta:"கூற்று [A]: பல்லவர்கள், மரம், சுதை, உலோகம், செங்கல் போன்ற பொருள்களை இன்றிக் குடைவரைக் கோவில்களை உருவாக்கினார். காரணம் [R]: கருங்கற்களை ஒன்றின்மேல் ஒன்றாக அடுக்கிச் சுண்ணாம்போடு சேர்க்காமல் கட்டடங்களுக்குக் \"கற்றளிகள்\" என்று பெயர்.",opts_en:["[A] true, but [R] false","[A] false but [R] true","Both [A] and [R] are true","Both [A] and [R] are false"],opts_ta:["[A] சரி ஆனால் [R] தவறு","[A] தவறு ஆனால் [R] சரி","[A] மற்றும் [R] இரண்டும் சரி","[A] மற்றும் [R] இரண்டும் தவறு"],ans:"C"},
+  {n:129,en:"Choose the wrong pair: (1) South Dravidan Language – Malayalam (2) East Dravidan Language – Munda (3) Central Dravidan Language – Telugu (4) North Dravidan Language – Kuruk",ta:"தவறான இணையைக் கண்டுபிடி.",opts_en:["(1)","(2)","(3)","(4)"],opts_ta:["(1)","(2)","(3)","(4)"],ans:"B"},
+  {n:130,en:"Assertion [A]: Rabindranath Tagore surrendered his knighthood. Reason [R]: On 13th April 1919 Jalianwala Bagh Massacre occurred in Amritsar.",ta:"கூற்று [A]: இரவீந்தரநாத் தாகூர் தனது 'சர்' பட்டத்தைத் துறந்தார். காரணம் [R]: 13 ஏப்ரல் 1919 அமிர்தசரஸ் நகரில் ஜாலியன் வாலாபாக் படுகொலை நடைபெற்றது.",opts_en:["[A] True [R] False","Both [A] and [R] are true and [R] is the correct explanation of [A]","[A] is False [R] is True","Both [A] and [R] are true but [R] is not the correct explanation of [A]"],opts_ta:["[A] சரி [R] தவறு","[A] மற்றும் [R] சரி, [R] [A] யினுடைய சரியான விளக்கம்","[A] தவறு [R] சரி","[A] மற்றும் [R] சரி ஆனால் [R], [A] யினுடைய சரியான விளக்கமல்ல"],ans:"B"},
+  {n:131,en:"Assertion [A]: The Indian National Congress First Conference convened on 28th December 1885 in Bombay. Reason [R]: Tamil Nadu region represented and attend 21 members.",ta:"கூற்று [A]: இந்திய தேசிய காங்கிரசின் முதல் மாநாடு 1885 டிசம்பர் 28 ஆம் தேதி பம்பாயில் கூடியது. காரணம் [R]: தமிழ்நாட்டு பகுதியிலிருந்து 21 பேர் கலந்து கொண்டனர்.",opts_en:["[A] is true but [R] is false","Both [A] and [R] are true and [R] is the correct explanation of [A]","[A] is false [R] is true","Both [A] and [R] are true but [R] is not the correct explanation of [A] is correct"],opts_ta:["கூற்று [A] சரி ஆனால் காரணம் [R] தவறு","[A] மற்றும் [R] இரண்டும் சரி மற்றும் [R] ஆனது [A] யிற்கு சரியான விளக்கமாகும்","கூற்று [A] தவறு காரணம் [R] சரி","[A] மற்றும் [R] சரி ஆனால் காரணம் [R] கூற்று [A] யிற்கு சரியான விளக்கமல்ல என்பது சரி"],ans:"D"},
+  {n:132,en:"Which of the following statements are true about the Indus Civilisation? (i) In the 1920s Martimer Wheeler excavated the Harappan sites. (ii) The longest text has about twenty six signs. (iii) The term \"Meluhha\" in the Prakrit inscriptions refers to the Indus region. (iv) The \"Priest King\" of steatite was discovered in Mohenjo-Daro.",ta:"சிந்து நாகரிகம் குறித்து பின்வரும் கூற்றுகளில் எவை உண்மையானவை?",opts_en:["(i) and (ii) only","(i) and (iii) only","(ii) and (iii) only","(ii) and (iv) only"],opts_ta:["(i) மற்றும் (ii) மட்டும்","(i) மற்றும் (iii) மட்டும்","(ii) மற்றும் (iii) மட்டும்","(ii) மற்றும் (iv) மட்டும்"],ans:"D"},
+  {n:133,en:"The correct statements on the New Chief Election Commissioner of India are: (i) Gyanesh Kumar took charge as the 26th Chief Election Commissioner of India on February 19th, 2025. (ii) He is a Kerala cadre of the Indian Administrative Service in the 1989 batch. (iii) He has been responsible for handling various departments as the secretary to the government of Kerala.",ta:"புதியதாக பதவியேற்றுள்ள இந்திய தலைமைத் தேர்தல் ஆணையரைப் பற்றிய சரியான கூற்றுகளானது:",opts_en:["(i) only","(i) and (iii) only","(i) and (ii) only","(ii) and (iii) only"],opts_ta:["(i) மட்டும்","(i) மற்றும் (iii) மட்டும்","(i) மற்றும் (ii) மட்டும்","(ii) மற்றும் (iii) மட்டும்"],ans:"B"},
+  {n:134,en:"Match the following: Name of the Act – Enacted year: (a) Consumer Protection Rules – 1. 1930 (b) Drug Control Act – 2. 1987 (c) The monopolies and Restrictive Trade Practice Act – 3. 1950 (d) Goods and Services Sales Act – 4. 1969",ta:"கீழ்கண்டவற்றைப் பொருத்துக: சட்டத்தின் பெயர் – இயற்றப்பட்ட ஆண்டு",opts_en:["(a)2 (b)3 (c)4 (d)1","(a)3 (b)1 (c)2 (d)4","(a)1 (b)3 (c)4 (d)2","(a)4 (b)1 (c)2 (d)3"],opts_ta:["(a)2 (b)3 (c)4 (d)1","(a)3 (b)1 (c)2 (d)4","(a)1 (b)3 (c)4 (d)2","(a)4 (b)1 (c)2 (d)3"],ans:"A"},
+  {n:135,en:"Consider the Assertion [A] and Reason [R]: Assertion [A]: Supreme court judges are to be appointed by the President. Reason [R]: In the case of appointment of the Judges the Law Minister of India shall always be consulted.",ta:"கருத்து [A] மற்றும் காரணம் [R] வினாவை கருதுக: கருத்து [A]: குடியரசுத் தலைவர் உச்சநீதிமன்ற நீதிபதிகளை நியமனம் செய்கிறார். காரணம் [R]: நீதிபதிகளை நியமனம் செய்யும் பொழுது சட்ட அமைச்சரையும் கலந்தாலோசிக்க வேண்டும்.",opts_en:["Both [A] and [R] are true and [R] is the correct explanation of [A]","Both [A] and [R] are true but [R] is not a correct explanation of [A]","[A] is true but [R] is false","[A] is false but [R] is true"],opts_ta:["[A] மற்றும் [R] இரண்டும் சரி மற்றும் [R] என்பது [A] க்கான சரியான விளக்கம்","[A] மற்றும் [R] இரண்டும் சரி ஆனால் [R] என்பது [A] யின் சரியான விளக்கமல்ல","[A] சரி ஆனால் [R] தவறு","[A] தவறு ஆனால் [R] சரி"],ans:"C"},
+  {n:136,en:"Arrange in chronological order on Inter-State council: (1) Punchhi Commission (2) Rajamannar Commission (3) Sarkaria Commission (4) Venkatachaliah Commission",ta:"மாநிலங்களுக்கிடையேயான குழுக்களை காலவரிசைப்படி ஒழுங்குபடுத்துவும்.",opts_en:["(3), (4), (2), (1)","(2), (1), (4), (3)","(2), (4), (3), (1)","(2), (3), (4), (1)"],opts_ta:["(3), (4), (2), (1)","(2), (1), (4), (3)","(2), (4), (3), (1)","(2), (3), (4), (1)"],ans:"D"},
+  {n:137,en:"Choose the right match: (1) Retirement age of the Supreme Court Judge – 60 years (2) Minimum age for contesting for the President of India – 35 years (3) Minimum age for becoming Rajya Sabha member – 30 years (4) Minimum age for becoming Lok Sabha member – 21 years",ta:"சரியான இணையைத் தெரிவு செய்க",opts_en:["(1) and (3) are correct","(1) and (2) are correct","(2) and (3) are correct","(3) and (4) are correct"],opts_ta:["(1) மற்றும் (3) சரியானவை","(1) மற்றும் (2) சரியானவை","(2) மற்றும் (3) சரியானவை","(3) மற்றும் (4) சரியானவை"],ans:"C"},
+  {n:138,en:"Arrange the following in chronological order: 1. Bharat Ratna, 2. Padma Vibhushan, 3. Padma Sri, 4. Padma Bhushan",ta:"பின்வரும் விருதுகளை காலவரிசைப்படி வரிசைப்படுத்துக.",opts_en:["2, 3, 1, 4","1, 2, 4, 3","4, 3, 2, 1","3, 1, 4, 2"],opts_ta:["2, 3, 1, 4","1, 2, 4, 3","4, 3, 2, 1","3, 1, 4, 2"],ans:"B"},
+  {n:139,en:"Match the following: Name of the States – States in Part: (a) Himachal Pradesh – 1. A (b) Rajasthan – 2. D (c) West Bengal – 3. B (d) The Andaman and Nicobar Islands – 4. C",ta:"பொருத்துக: மாநிலங்கள் பெயர் – மாநிலங்கள் இருக்கும் பகுதி",opts_en:["(a)4 (b)3 (c)1 (d)2","(a)2 (b)4 (c)1 (d)3","(a)3 (b)1 (c)2 (d)4","(a)1 (b)2 (c)4 (d)3"],opts_ta:["(a)4 (b)3 (c)1 (d)2","(a)2 (b)4 (c)1 (d)3","(a)3 (b)1 (c)2 (d)4","(a)1 (b)2 (c)4 (d)3"],ans:"A"},
+  {n:140,en:"P and Q can do a piece of work in 20 days and 40 days respectively. They started the work together and Q left after some days of work and P finished the remaining work in 8 days. After how many days from the start did Q leave?",ta:"P மற்றும் Q ஆகியோர் ஒரு வேலையை முறையே 20 மற்றும் 40 நாட்களில் முடிப்பர். அவர்கள் இருவரும் ஒன்றாக சேர்ந்து வேலையை தொடங்கினர். சில நாட்கள் வேலை செய்த பிறகு Q என்பவர் சென்றுவிடுகிறார். மீதமுள்ள வேலையை P என்பவர் 8 நாட்களில் முடிக்கிறார் எனில் தொடங்கியதிலிருந்து எத்தனை நாட்களுக்குப் பிறகு Q வேலையை விட்டுச் சென்றார்?",opts_en:["9 days","10 days","8 days","11 days"],opts_ta:["9 நாட்கள்","10 நாட்கள்","8 நாட்கள்","11 நாட்கள்"],ans:"C"},
+  {n:141,en:"Divide Rs. 2,602 between A and B, so that the amount of A at the end of 6 years is equal to the amount of B at the end of 8 years, compound interest being at 4% per annum.",ta:"ஆண்டுக்கு 4% கூட்டுவட்டியில் 6 வருடங்களில் A க்கு கிடைக்கும் தொகையானது 8 வருடங்களில் B ன் தொகைக்குச் சமமாக இருக்கும் எனில் ரூ. 2,602ல் A மற்றும் Bன் பங்குகள்",opts_en:["Rs.1,300, Rs.1,252","Rs.1,452, Rs.1,150","Rs.1,302, Rs.1,300","Rs.1,352, Rs.1,250"],opts_ta:["ரூ.1,300, ரூ.1,252","ரூ.1,452, ரூ.1,150","ரூ.1,302, ரூ.1,300","ரூ.1,352, ரூ.1,250"],ans:"D"},
+  {n:142,en:"Find the simple interest on Rs. 68,000 at 16⅔% per annum for 9 months.",ta:"ரூ. 68,000க்கு 9 மாதங்களுக்கு 16⅔% வருட வட்டி விகிதத்தில் தனி வட்டி காண்க.",opts_en:["Rs. 8,500","Rs. 8,000","Rs. 9,400","Rs. 9,100"],opts_ta:["ரூ. 8,500","ரூ. 8,000","ரூ. 9,400","ரூ. 9,100"],ans:"A"},
+  {n:143,en:"If a : b = 3 : 7 and b : c = 7 : 6, then Find the ratio between c and a",ta:"a : b = 3 : 7 மற்றும் b : c = 7 : 6 எனில் c மற்றும் a இவற்றின் விகிதம் காண்க.",opts_en:["1 : 2","3 : 6","6 : 7","2 : 1"],opts_ta:["1 : 2","3 : 6","6 : 7","2 : 1"],ans:"D"},
+  {n:144,en:"The ratio of two numbers is 3 : 4 and H.C.F is 4. Their L.C.M. is",ta:"இரண்டு எண்களின் விகிதம் 3 : 4 மேலும் அதன் மீ.பொ.வ மதிப்பு 4 எனில் அவைகளின் மீ.சி.ம.",opts_en:["48","38","58","68"],opts_ta:["48","38","58","68"],ans:"A"},
+  {n:145,en:"A number x is divisible by 13. When this number is divided by 16, 24, 32 it leaves a remainder 6 in each case. The least value of x is ___.",ta:"ஒரு எண் x ஆனது 13 ஆல் வகுபடும். இந்த எண் 16, 24 மற்றும் 32 ஆல் வகுக்கும் போது ஒவ்வொரு முறையும் மீதி 6 கிடைக்கிறது எனில் x ன் மிகச்சிறிய மதிப்பு",opts_en:["390","391","389","392"],opts_ta:["390","391","389","392"],ans:"A"},
+  {n:146,en:"There are 80 students in a class. If 25% are absent on a particular day. Find the number of students present in the class.",ta:"ஒரு வகுப்பில் 80 மாணவர்கள் உள்ளனர். ஒரு குறிப்பிட்ட நாளில் 25% பேர் வருகைபுரியவில்லை எனில் வருகை புரிந்த மாணவர்களின் எண்ணிக்கையைக் கண்டறியவும்.",opts_en:["10","60","30","25"],opts_ta:["10","60","30","25"],ans:"B"},
+  {n:147,en:"The ratio of boys and girls in a class is 5 : 3. If 16% of boys and 8% of girls failed in an examination, then find the percentage of passed students.",ta:"ஒரு வகுப்பிலுள்ள மாணவர்கள் மற்றும் மாணவிகளின் விகிதம் 5 : 3 ஆகும். ஒரு தேர்வில் 16% மாணவர்களும், 8% மாணவிகளும் தேர்ச்சி பெறவில்லை எனில் தேர்ச்சி பெற்ற மாணவ – மாணவிகளின் சதவிதத்தைக் காண்க.",opts_en:["87%","13%","84%","92%"],opts_ta:["87%","13%","84%","92%"],ans:"A"},
+  {n:148,en:"Find the sum of 1 + 3 + 5 + ⋯ + 55",ta:"தொடரின் கூடுதல் காண்க: 1 + 3 + 5 + ⋯ + 55",opts_en:["700","784","555","550"],opts_ta:["700","784","555","550"],ans:"B"},
+  {n:149,en:"The next term in the given sequence is 0, 2, 24, 252, 3120, ___.",ta:"கீழே கொடுக்கப்பட்டுள்ள தொடர் வரிசையில் வரும் அடுத்த உறுப்பு 0, 2, 24, 252, 3120, ___.",opts_en:["42450","46650","38450","44650"],opts_ta:["42450","46650","38450","44650"],ans:"B"},
+  {n:150,en:"In the series 6 4 1 2 2 8 7 4 2 1 5 3 8 how many pairs of successive numbers have a difference of 2 each?",ta:"இந்த தொடர்ச்சி எண்களில் 6 4 1 2 2 8 7 4 2 1 5 3 8 இரண்டு வித்தியாசத்தை உடைய எண்களில் எத்தனை இணைகள் உள்ளன?",opts_en:["One","Two","Three","Four"],opts_ta:["ஒன்று","இரண்டு","மூன்று","நான்கு"],ans:"C"},
+  {n:151,en:"A dice is thrown four times and its four different positions are given. Find the number on the face opposite the face showing 2.",ta:"ஒரு பகடை 4 முறை உருட்டப்படும் போது அதன் 4 வேறுபட்ட நிலைகள் கீழே கொடுக்கப்பட்டுள்ளன. 2-ன் எதிர் பக்கமாக இருக்கும் எண்ணைக் காண்க.",opts_en:["4","5","6","3"],opts_ta:["4","5","6","3"],ans:"A"},
+  {n:152,en:"Find the missing term of the sequence: 7, 12, 19, 24, 43, ___, 91",ta:"தொடர் வரிசையில் உள்ள விடுபட்ட எண்ணைக் காண்க: 7, 12, 19, 24, 43, ___, 91",opts_en:["50","45","48","63"],opts_ta:["50","45","48","63"],ans:"C"},
+  {n:153,en:"Identify the correct answer. Assertion [A]: Space MAITRI is a collaborative space mission between India and Australia. Reason [R]: India aims to lower the cost of access to space through this mission.",ta:"சரியான விடையை தேர்ந்தெடுக்கவும். கூற்று [A]: ஸ்பேஷ் MAITRI என்பது இந்தியா மற்றும் ஆஸ்திரேலியாவிற்கு இடையிலான கூட்டு விண்வெளி திட்டம். காரணம் [R]: இத்திட்டத்தின் மூலம் விண்வெளிக்கான அணுகல் செலவினை இந்தியா குறைக்க எண்ணுகிறது.",opts_en:["Both [A] and [R] are correct and [R] is the correct explanation for [A]","Both [A] and [R] are correct, but [R] is not the correct explanation for [A]","[A] is correct but [R] is wrong","[A] is wrong but [R] is correct"],opts_ta:["[A] மற்றும் [R] சரியே, மேலும் [R] என்பது [A] விற்கான சரியான விளக்கமாகும்","[A] மற்றும் [R] சரி, ஆனால் [R] என்பது [A] விற்கான சரியான விளக்கம் அல்ல","[A] சரியே, ஆனால் [R] தவறு","[A] தவறு ஆனால் [R] சரி"],ans:"C"},
+  {n:154,en:"Which of the following statement(s) is/are true about the agricultural cultivation of 2021-2022 in Tamilnadu? (i) Mayiladuthurai District involved more Paddy cultivation. (ii) Perambalur District involved more Maize cultivation. (iii) Kallakurichi involved more Sugarcane cultivation.",ta:"பின்வருவனவற்றில் 2021-2022-ம் ஆண்டில் தமிழ்நாட்டின் வேளாண்மை சாகுபடியோடு தொடர்புடைய உண்மையான கூற்று(க்கள்) எவை/யாவை?",opts_en:["(i) only","(i) and (iii) only","(i) and (ii) only","(ii) and (iii) only"],opts_ta:["(i) மட்டும்","(i) மற்றும் (iii) மட்டும்","(i) மற்றும் (ii) மட்டும்","(ii) மற்றும் (iii) மட்டும்"],ans:"D"},
+  {n:155,en:"Assertion [A]: As per the Economic Survey of Tamilnadu 2024-2025 the Urban inflation in Tamilnadu is coming down from 6% in 2019-2020 to 4.5% in 2024-2025. While rural inflation is static at 5.4%. Reason [R]: It is mainly due to the Governments' policy on the Tamilnadu Public Distribution System and other income support schemes.",ta:"கூற்று [A]: தமிழ்நாட்டின் 2024-2025 பொருளாதார ஆய்வறிக்கையின்படி தமிழ்நாட்டின் நகர்ப்புர பணவீக்கம் 2019-2020 ஆம் ஆண்டில் 6% விருந்து 2024-2025 ஆம் ஆண்டில் 4.5% ஆகக் குறைந்து காணப்படுகிறது. அதே நேரத்தில் கிராமப்புர பணவீக்கம் 5.4% என்ற விகிதத்தில் நிலையாக உள்ளது. காரணம் [R]: இது முக்கியமாக அரசாங்கத்தினால் அமல்படுத்தப் பெறும் தமிழ்நாடு பொது விநியோகத் திட்டம் மற்றும் கலைஞர் மகளிர் உரிமைத் திட்டம் மற்றும் நூறு நாள் வேலைவாய்ப்பு உத்திரவாத திட்டம் போன்ற பிற வருமான ஆதரவுத் திட்டங்களால் ஏற்படுகிறது.",opts_en:["[A] is true [R] is false","Both [A] and [R] are true and [R] is the correct explanation of [A]","[A] is false [R] is true","Both [A] and [R] are true but [R] is not the correct explanation of [A]"],opts_ta:["[A] சரி [R] தவறு","[A] மற்றும் [R] சரி மற்றும் [R] ஆனது [A] யினுடைய சரியான விளக்கம் ஆகும்","[A] தவறு [R] சரி","[A] மற்றும் [R] சரி ஆனால் [R] ஆனது [A] யினுடைய சரியான விளக்கம் அல்ல"],ans:"B"},
+  {n:156,en:"Assertion [A]: The \"Illam Thedi Kalvi\" scheme in Tamilnadu aims to bridge learning gaps among school students caused by the Covid-19 Pandemic. Reason [R]: The scheme involves volunteers providing remedial education to students at their homes.",ta:"கூற்று [A]: கோவிட்-19 பெருந்தொற்றால் பள்ளி மாணவர்களிடையே ஏற்படும் கற்றல் இடைவெளிகளை குறைப்பதை நோக்கமாகக் கொண்டு தமிழ்நாட்டில் \"இல்லம் தேடி கல்வி\" திட்டம் செயல்படுத்தப்படுகிறது. காரணம் [R]: இந்தத் திட்டத்தில், தன்னார்வலர்கள் மாணவர்களின் வீடுகளுக்குச் சென்று மாற்றுவழிகள் கொண்ட கல்வியை வழங்குகிறார்கள்.",opts_en:["Both [A] and [R] are true and [R] is the correct explanation of [A]","Both [A] and [R] are true but [R] is not the correct explanation of [A]","[A] is true but [R] is false","[A] is false but [R] is true"],opts_ta:["[A] மற்றும் [R] இரண்டும் உண்மை, மற்றும் [R] என்பது [A] க்கு சரியான விளக்கம்","[A] மற்றும் [R] இரண்டும் உண்மை, ஆனால் [R] என்பது [A] க்கு சரியான விளக்கமில்லை","[A] உண்மை ஆனால் [R] தவறானது","[A] தவறானது ஆனால் [R] சரியானது"],ans:"A"},
+  {n:157,en:"Which of the following statement(s) is/are true about \"The Mandal Commission Report\"? (i) The commission used Three indicators i.e. Social, Educational and Economic. (ii) In social indicator there were five criteria and educational indicators there were two criteria. (iii) In economic indicator there were four criteria. Thus there were 11 criteria used in the Mandal Commission Report.",ta:"பின்வருவனவற்றுள் மண்டல் கமிஷன் அறிக்கையோடு தொடர்புடைய சரியான கூற்று(க்கள்) எது/யாவை?",opts_en:["(i) only","(i) and (iii) only","(i) and (ii) only","(ii) and (iii) only"],opts_ta:["(i) மட்டும்","(i) மற்றும் (iii) மட்டும்","(i) மற்றும் (ii) மட்டும்","(ii) மற்றும் (iii) மட்டும்"],ans:"B"},
+  {n:158,en:"What was the cause for high inflation in India?",ta:"இந்தியாவின் பணவீக்கம் அதிகமாக இருப்பதற்கான காரணம்",opts_en:["High demand","Weaken rupee against the dollar","Low production","Low money supply"],opts_ta:["அதிக தேவை","டாலருக்கு எதிரான ரூபாய் மதிப்பு குறைவு","குறைவான உற்பத்தி","குறைவான பண அளிப்பு"],ans:"B"},
+  {n:159,en:"Arrange poverty eradication schemes in chronological order: 1. National Rural Livelihood Mission 2. Rajiv Awas Yojana 3. Bharat Nirman Yojana 4. National Food Security Scheme",ta:"வறுமை ஒழிப்பு திட்டங்களை கால வரிசைப்படுத்தி எழுதுக.",opts_en:["1 2 4 3","3 1 4 2","3 2 1 4","2 3 4 1"],opts_ta:["1 2 4 3","3 1 4 2","3 2 1 4","2 3 4 1"],ans:"C"},
+  {n:160,en:"Which of the following is incorrectly paired? (1) MFAL – Marginal Farmers and Agricultural Labourer Development Agency (2) DPAP – Drought Prone Area Programme (3) DDP – District Development Programme (4) HDA – Hills Development Agencies",ta:"பொருந்தாத ஒன்றை தேர்ந்தெடுத்து எழுதுக.",opts_en:["(1) and (2)","(1) and (3)","(3) and (4)","(2) and (3)"],opts_ta:["(1) மற்றும் (2)","(1) மற்றும் (3)","(3) மற்றும் (4)","(2) மற்றும் (3)"],ans:"C"},
+  {n:161,en:"Identify the incorrect Acronym: (1) TSC – Total Sanitation Campaign (2) NIC – National Information Centre (3) MIS – Management Information System (4) IMIS – Integrated Management Infrastructure System",ta:"பின்வருவனவற்றுள் தவறான இணைப்பு எது?",opts_en:["(1), (2), (3) and (4)","(1), (2) and (3)","(1), (2) and (4)","(4) only"],opts_ta:["(1), (2), (3) மற்றும் (4)","(1), (2) மற்றும் (3)","(1), (2) மற்றும் (4)","(4) மட்டும்"],ans:"D"},
+  {n:162,en:"Choose the correct pair: 1. Bombay plan – 1940, 2. Gandhian plan – 1945, 3. People's plan – 1944, 4. Sarvodaya plan – 1950",ta:"சரியான இணையைத் தேர்ந்தெடு: 1. பாம்பே திட்டம் – 1940, 2. காந்தியத் திட்டம் – 1945, 3. மக்கள் திட்டம் – 1944, 4. சர்வோதயத் திட்டம் – 1950",opts_en:["2 and 3 are correct","1 and 2 are correct","1 and 4 are correct","2 and 4 are correct"],opts_ta:["2 மற்றும் 3 சரி","1 மற்றும் 2 சரி","1 மற்றும் 4 சரி","2 மற்றும் 4 சரி"],ans:"C"},
+  {n:163,en:"Kokkokka Koompum Paruvaththu Matradhan Kuththokka Seerthththa Itaththu – As Heron with folded wing, so wait in waiting hour; As Heron snaps its prey, when fortune smiles, put forth your power. Statements: (1) To act like a Heron is incorrect. (2) You must wait till the Time Ripens. (3) This Kural appears in Chapter titled \"Therinthu Thelithal\". (4) \"Vaadiyirukkumaam Kokku\" is the phrase best suited to this Thirukkural.",ta:"கொக்கொக்க கூம்பும் பருவத்து மற்றதன் கொத்தொக்க சீர்த்த இடத்து. இக்குறட்பாவின் கருத்து:",opts_en:["(1)–Right (2)–Wrong (3)–Wrong (4)–Wrong","(1)–Wrong (2)–Right (3)–Right (4)–Wrong","(1)–Wrong (2)–Right (3)–Wrong (4)–Right","(1)–Right (2)–Wrong (3)–Right (4)–Right"],opts_ta:["(1)–சரி (2)–தவறு (3)–தவறு (4)–தவறு","(1)–தவறு (2)–சரி (3)–சரி (4)–தவறு","(1)–தவறு (2)–சரி (3)–தவறு (4)–சரி","(1)–சரி (2)–தவறு (3)–சரி (4)–சரி"],ans:"C"},
+  {n:164,en:"\"Manaththodu vaiymai mozhiyin thavaththodu Thaananj Seiyvaarin Thalai\". Statement 1: Those who speak the TRUTH are always more superior than those who practice charity or penance. Statement 2: Those who practice charity and penance are far better than who speak the TRUTH.",ta:"\"மனத்தொடு வாய்மை மொழியின் தவத்தொடு தானஞ்செய் வாரின் தலை\". கூற்று 1: வாய்மை பேசுபவர்கள் தானம், தவம் செய்பவர்களை விட சிறந்தவர்கள். கூற்று 2: வாய்மையே பேசினாலும் தானம், தவம் செய்பவரே சிறந்தவர்.",opts_en:["Statement 1 – Correct","Statement 2 – Correct","Statement 1 and 2 – Correct","Statement 1 and 2 – Incorrect"],opts_ta:["கூற்று 1 – சரி","கூற்று 2 – சரி","கூற்று 1, 2 – சரி","கூற்று 1, 2 – தவறு"],ans:"A"},
+  {n:165,en:"Match the following type: (a) Iyotheethass Pandithar – 1. Tahdhip-ul-Akhluq (b) Ramalinga Adigal – 2. Gulamgiri (c) Jotiba Phule – 3. Thiruvarutpa (d) Syed Ahmed Khan – 4. Oru Paisa Tamilan",ta:"பொருத்துக: (a) அயோத்திதாசப் பண்டிதர் – 1. தத்கீப்-ஒல்-அக்லுக் (b) இராமலிங்க அடிகள் – 2. குலாம்கிரி (c) ஜோதிபா பூலே – 3. திருவருட்பா (d) சையது அகமது கான் – 4. ஒரு பைசாத் தமிழன்",opts_en:["(a)1 (b)2 (c)3 (d)4","(a)4 (b)3 (c)2 (d)1","(a)4 (b)3 (c)1 (d)2","(a)1 (b)2 (c)4 (d)3"],opts_ta:["(a)1 (b)2 (c)3 (d)4","(a)4 (b)3 (c)2 (d)1","(a)4 (b)3 (c)1 (d)2","(a)1 (b)2 (c)4 (d)3"],ans:"B"},
+  {n:166,en:"Assertion [A]: K.M. Balasubramanian, author of South Indian Celebrities compared Dr. C. Natesa Mudaliyar to Mahathma Gandhi. Reason [R]: He was the epitome of love, character, tolerance, compromise and he was the heart of Justice Party.",ta:"கூற்று [A]: தென்னிந்திய பிரபலங்கள் (South Indian Celebrities) என்ற நூலின் ஆசிரியர் K.M. பாலசுப்பிரமணியன், டாக்டர் சி. நடேச முதலியாரை மகாத்மா காந்தியுடன் ஒப்பிட்டு எழுதினார். காரணம் [R]: நீதிகட்சியின் இதயமாகத் திகழ்ந்த நடேச முதலியார் அன்புக்கும், பண்புக்கும், பொறையுடைமைக்கும், சமரச மனப்பான்மைக்கும் எடுத்துக்காட்டாக விளங்கினார்.",opts_en:["[A] is true but [R] is false","Both [A] and [R] are true and [R] is the correct explanation of [A]","[A] is false [R] is true","Both [A] and [R] are true but [R] is not the correct explanation of [A] is correct"],opts_ta:["கூற்று [A] சரி ஆனால் காரணம் [R] தவறு","[A] மற்றும் [R] இரண்டும் சரி மற்றும் [R] ஆனது [A] யின் சரியான விளக்கம் ஆகும்","கூற்று [A] தவறு காரணம் [R] சரி","[A] மற்றும் [R] சரி ஆனால் காரணம் [R] கூற்று [A] யிற்கு சரியான விளக்கமல்ல என்பது சரி"],ans:"B"},
+  {n:167,en:"Which of the following statements are true about Ramalinga Adigal? (i) He said that apart from musical Instruments the mind should unite. (ii) He started night schools for farmers. (iii) He said that through human charity one should get full benefit in life and be one with God.",ta:"இராமலிங்க அடிகளாரைப் பற்றிய எந்தக் கருது சரியானது?",opts_en:["(i) only","(i) and (iii) only","(i) and (ii) only","(ii) and (iii) only"],opts_ta:["(i) மட்டும்","(i) மற்றும் (iii) மட்டும்","(i) மற்றும் (ii) மட்டும்","(ii) மற்றும் (iii) மட்டும்"],ans:"B"},
+  {n:168,en:"Assertion [A]: In 1930 Muthulakshmi Ammaiyar introduced in the Madras Legislative Council a Bill on the prevention of the dedication of woman of Hindu temples in the 'Presidency of Madras'. Reason [R]: The Bill which later became the Devadasi Abolition Act, declared the \"Pottukattu Ceremony\" Illegal.",ta:"கூற்று [A]: 1930-ல் சென்னை சட்டமன்றத்தில் முத்துலட்சமி அம்மையார் சென்னை மாகாணத்தில் இந்து கோவில்களுக்கு பெண்கள் \"அர்ப்பணிக்கப்படுவதை தடுப்பது\" எனும் மசோதாவை அறிமுகப்படுத்தினார். காரணம் [R]: பின்னர் தேவதாசி ஒழிப்புச் சட்டமாக மாறிய இம்மசோதா \"பொட்டுக் கட்டும் சடங்கு\" நடத்துவது சட்டத்திற்கு புறம்பானது என அறிவித்தது.",opts_en:["[A] is true but [R] is false","[A] is false but [R] is true","Both [A] and [R] are true and [R] is the correct explanation of [A]","Both [A] and [R] are true but [R] is not the correct explanation of [A]"],opts_ta:["[A] சரி ஆனால் [R] தவறு","[A] தவறு ஆனால் [R] சரி","[A] மற்றும் [R] சரி மேலும் [R], [A] யின் சரியான விளக்கம்","[A] மற்றும் [R] சரி ஆனால் [R], [A] யினுடைய சரியான விளக்கமல்ல"],ans:"C"},
+  {n:169,en:"Assertion [A]: Under the leadership of Rajaji, Congress decided to boycott Simon Commission in Chennai. Reason [R]: The Simon Commission had only Whitemen as members that is no Indians.",ta:"கூற்று [A]: சென்னையில் இராஜாஜி தலைமையில் சைமன் புறக்கணிப்புப் போராட்டத்தை நடத்த முடிவு செய்யப்பட்டது. காரணம் [R]: சைமன் குழுவில் உறுப்பினர் அனைவரும் வெள்ளையரே, அதாவது குழுவில் இந்தியரே இல்லை.",opts_en:["[A] is true, [R] is false","Both [A] and [R] are true, and [R] is the correct explanation of [A]","[A] is false, [R] is true","Both [A] and [R] are true, and [R] is not the correct explanation of [A]"],opts_ta:["[A] சரி, [R] தவறு","[A] மற்றும் [R] இரண்டும் சரி, மேலும் [R], [A] -ன் சரியான விளக்கம் ஆகும்","[A] தவறு, [R] சரி","[A] மற்றும் [R] இரண்டும் சரி, மேலும் [R], [A] -ன் சரியான விளக்கமல்ல"],ans:"C"},
+  {n:170,en:"Match the Works/Books with the author's: (a) Vetriverkai – 1. Avaiyar (b) Nanneri – 2. Kumara Kurubarar (c) Neethinerivilakam – 3. Athiveerarama Pandiyar (d) Nalvazhi – 4. Duraimangalam Sivaprakasar",ta:"கீழ்கண்ட நூல்களை ஆசிரியர்களோடு பொருத்தவும்: (a) வெற்றிவேற்கை – 1. ஔவையார் (b) நன்னெறி – 2. குமரகுருபரர் (c) நீதிநெறி விளக்கம் – 3. அதிவீராம பாண்டியர் (d) நல்வழி – 4. துறைமங்கலம் சிவப்பிரகாசர்",opts_en:["(a)1 (b)3 (c)4 (d)2","(a)1 (b)4 (c)2 (d)3","(a)3 (b)4 (c)2 (d)1","(a)3 (b)4 (c)1 (d)2"],opts_ta:["(a)1 (b)3 (c)4 (d)2","(a)1 (b)4 (c)2 (d)3","(a)3 (b)4 (c)2 (d)1","(a)3 (b)4 (c)1 (d)2"],ans:"C"},
+  {n:171,en:"Match correctly the Excavated places with their corresponding Districts: (a) Azhagankulam – 1. Sivagangai (b) Vasavasamudram – 2. Erode (c) Kodumanal – 3. Kanchipuram (d) Keezhadi – 4. Ramanathapuram",ta:"பின்வருவனவற்றில் அகழ்வாராய்ச்சி நடைபெற்ற ஊர்களை அவ்வூர் அமைந்துள்ள மாவட்டத்துடன் பொருத்திக் காட்டுக.",opts_en:["(a)1 (b)4 (c)3 (d)2","(a)4 (b)2 (c)3 (d)1","(a)3 (b)1 (c)2 (d)4","(a)4 (b)3 (c)2 (d)1"],opts_ta:["(a)1 (b)4 (c)3 (d)2","(a)4 (b)2 (c)3 (d)1","(a)3 (b)1 (c)2 (d)4","(a)4 (b)3 (c)2 (d)1"],ans:"D"},
+  {n:172,en:"Match the diseases in Column I with the site of infectious in Column II: (a) Dengue – 1. Intestine, Brain (b) Polio myelitis – 2. Skin and Blood (c) Measels – 3. Respiratory tract and Nervous system (d) Chicken Pox – 4. Skin and Respiratory tract",ta:"கீழ்க்காணும் நோய்களும் (Column I) அதனால் ஏற்படும் பாதிப்புகளையும் (Column II) பொருத்துக",opts_en:["(a)2 (b)1 (c)4 (d)3","(a)2 (b)1 (c)3 (d)4","(a)2 (b)4 (c)3 (d)1","(a)1 (b)3 (c)2 (d)4"],opts_ta:["(a)2 (b)1 (c)4 (d)3","(a)2 (b)1 (c)3 (d)4","(a)2 (b)4 (c)3 (d)1","(a)1 (b)3 (c)2 (d)4"],ans:"A"},
+  {n:173,en:"Assertion [A]: Cobalt-60 is useful in Cancer therapy. Reason [R]: Cobalt-60 is source of γ-radiations capable of killing cancerous cells.",ta:"கூற்று [A]: கோபால்ட்–60 புற்றுநோய் சிகிச்சையில் பயன்படுகிறது. காரணம் [R]: கோபால்ட்–60 காமா-கதிர்களின் மூலமாக செயல்பட்டு புற்றுநோய் செல்களை அழிக்க வல்லது.",opts_en:["Both [A] and [R] are correct and the [R] is a correct explanation of the [A]","Both [A] and [R] are correct but the [R] is not a correct explanation of the [A]","[A] is correct but [R] is incorrect","Both [A] and [R] are incorrect"],opts_ta:["[A] மற்றும் [R] சரி மேலும் [R] என்பது [A] க்கான சரியான விளக்கம்","[A] மற்றும் [R] சரி ஆனால் [R] என்பது [A] க்கான சரியான விளக்கம் இல்லை","[A] சரி ஆனால் [R] தவறு","[A] மற்றும் [R] இரண்டும் தவறு"],ans:"A"},
+  {n:174,en:"In Tamil Nadu, Vidiyal Payanam Scheme introduced in the month of",ta:"தமிழ்நாட்டில், விடியல் பயணம் திட்டம் எப்போது அறிமுகப்படுத்தப்பட்டது?",opts_en:["May, 2021","December, 2021","March, 2022","October, 2021"],opts_ta:["மே, 2021","டிசம்பர், 2021","மார்ச், 2022","அக்டோபர், 2021"],ans:"A"},
+  {n:175,en:"Assertion [A]: Climate, Relief, Soil and Natural resources are influencing the distribution of population. Reason [R]: Birth and death rate does not affect the distribution of population.",ta:"கூற்று [A]: காலநிலை, நிலத்தோற்றம், மண் மற்றும் இயற்கை வளங்கள் போன்றவை மக்கள் தொகைப் பரவலைக் கட்டுப்படுத்துகின்றன. காரணம் [R]: பிறப்பு, இறப்பு விகிதங்கள் மக்கள் தொகைப் பரவலை பாதிக்கவில்லை.",opts_en:["[A] is true, but [R] is false","[A] is false, but [R] is true","Both [A] and [R] are true, and [R] is the correct explanation of [A]","Both [A] and [R] are true, but [R] is not the correct explanation of [A]"],opts_ta:["[A] சரி, ஆனால் [R] தவறு","[A] தவறு, ஆனால் [R] சரி","[A] மற்றும் [R] இரண்டும் சரி, மற்றும் [R] என்பது [A] க்கான சரியான விளக்கம்","[A] மற்றும் [R] இரண்டும் சரி, ஆனால் [R] என்பது [A] யின் சரியான விளக்கம் இல்லை"],ans:"A"},
+  {n:176,en:"Match the following: Shifting cultivation – Region: (a) Ladang – 1. Malaysia (b) Milpa – 2. Vietnam (c) Roca – 3. Brazil (d) Ray – 4. Mexico",ta:"கீழ்கண்டவற்றைப் பொருத்துக: இடப்பெயர்வு வேளாண்மை – பகுதி: (a) லடாங் – 1. மலேசியா (b) மில்பா – 2. வியட்நாம் (c) ரோக்கா – 3. பிரேசில் (d) ரே – 4. மெக்ஸிகோ",opts_en:["(a)1 (b)4 (c)3 (d)2","(a)3 (b)4 (c)1 (d)2","(a)4 (b)2 (c)3 (d)1","(a)2 (b)3 (c)4 (d)1"],opts_ta:["(a)1 (b)4 (c)3 (d)2","(a)3 (b)4 (c)1 (d)2","(a)4 (b)2 (c)3 (d)1","(a)2 (b)3 (c)4 (d)1"],ans:"A"},
+  {n:177,en:"Match the following: Author – Work: (a) Amoghavarsha – 1. Mahapurana (b) Jinasena – 2. Kavirajamarga (c) Gunabhadra – 3. Kadambari (d) Bana – 4. Adipurana",ta:"கீழ்கண்டவற்றைப் பொருத்துக: ஆசிரியர் – நூல்: (a) அமேகாவர்ஷர் – 1. மகாபுராணம் (b) ஜீனசேனர் – 2. கவிராஜமார்க்கம் (c) குணபதரர் – 3. காதம்பரி (d) பாணர் – 4. ஆதிபுராணம்",opts_en:["(a)2 (b)4 (c)3 (d)1","(a)2 (b)4 (c)1 (d)3","(a)2 (b)3 (c)4 (d)1","(a)2 (b)3 (c)1 (d)4"],opts_ta:["(a)2 (b)4 (c)3 (d)1","(a)2 (b)4 (c)1 (d)3","(a)2 (b)3 (c)4 (d)1","(a)2 (b)3 (c)1 (d)4"],ans:"B"},
+  {n:178,en:"Which of the following statements are true about Velu Nachiyar? (i) Velu Nachiyar was the daughter of Chellamuthu Sethupathi, King of Sivagangai. (ii) Velu Nachiyar's husband was assassinated by the Nawab Army and to attack the Nawab and British. She joined with Gopal Naicker and Hyder Ali. (iii) In 1790, she died due to illness.",ta:"கீழ்கண்ட கூற்றுகளில் வேலுநாச்சியார் பற்றி எது/எவை சரியானவை?",opts_en:["(ii) only","(i) and (iii)","(i) and (ii)","(ii) and (iii)"],opts_ta:["(ii) மட்டும்","(i) மற்றும் (iii)","(i) மற்றும் (ii)","(ii) மற்றும் (iii)"],ans:"A"},
+  {n:179,en:"Which of the following points were accepted in Gandhi-Irwin Pact? (i) People allowed to make salt for their consumption. (ii) Not releasing the political prisoners who had not indulged in violence. (iii) Permitted picketing of foreign cloth shops. (iv) Reduced the death sentence of Bhagat Singh and his Comrades.",ta:"கீழ்கண்டவற்றில் காந்தி-இர்வின் ஒப்பந்தத்தில் ஏற்றுக்கொள்ளப்பட்ட அம்சங்கள் எவை?",opts_en:["(i) and (ii) only","(i) and (iii) only","(ii) and (iii) only","(ii) and (iv) only"],opts_ta:["(i) மற்றும் (ii) மட்டும்","(i) மற்றும் (iii) மட்டும்","(ii) மற்றும் (iii) மட்டும்","(ii) மற்றும் (iv) மட்டும்"],ans:"B"},
+  {n:180,en:"Consider the following statements and identify the correct answer: (1) In 1918, Madurai Harvi Mill labours strike happened. (2) B.B. Wadhiya was the labour union leader of Madurai Harvi Mill. (3) Dr. P. Varadharajulu's speech was an eye opener to the government. (4) Dr. P. Varadharajulu was the Author of \"Prabanja Mitran\" Magazine.",ta:"பின்வருவனவற்றில் எவை சரியானவை?",opts_en:["(1) only","(2) only","(1), (3) and (4) only","(1), (2) and (3) only"],opts_ta:["(1) மட்டும்","(2) மட்டும்","(1), (3) மற்றும் (4) மட்டும்","(1), (2) மற்றும் (3) மட்டும்"],ans:"C"},
+  {n:181,en:"False statements about Subhas Chandra Bose are: (i) Subhas Chandra Bose was born on 23rd January 1897, in Calcutta, West Bengal. (ii) The Government of India has declared his birthday, 23rd January as \"Parakram Diwas\". (iii) To honour of Subhas Chandra Bose's legacy, 23rd January is a National holiday.",ta:"சுபாஷ் சந்திர போஸைப் பற்றி பின்வரும் கூற்றுகளில் தவறானது:",opts_en:["(iii) only","(i) and (ii) only","(ii) and (iii) only","(i) and (iii) only"],opts_ta:["(iii) மட்டும்","(i) மற்றும் (ii) மட்டும்","(ii) மற்றும் (iii) மட்டும்","(i) மற்றும் (iii) மட்டும்"],ans:"D"},
+  {n:182,en:"Match the Presidents listed below with the distinguished guests who attended the Republic Day celebrations held under their leadership: (a) Droupadi Murmu – 1. Cyril Ramaphosa (b) A.P.J. Abdul Kalam – 2. Prabowo Subianto (c) Pranab Mukherjee – 3. Vladimir Putin (d) Ram Nath Kovind – 4. Barack Obama",ta:"குடியரசு தின விழாவிற்கு தலைமை வகித்த குடியரசுத் தலைவரையும் அவருடன் சிறப்பு விருந்தினராகக் கலந்து கொண்ட விருந்தினரையும் பொருத்திக் காட்டுக.",opts_en:["(a)1 (b)4 (c)3 (d)2","(a)2 (b)3 (c)4 (d)1","(a)3 (b)4 (c)1 (d)2","(a)4 (b)2 (c)3 (d)1"],opts_ta:["(a)1 (b)4 (c)3 (d)2","(a)2 (b)3 (c)4 (d)1","(a)3 (b)4 (c)1 (d)2","(a)4 (b)2 (c)3 (d)1"],ans:"B"},
+  {n:183,en:"Directorate of Vigilance and Anti-corruption Tamil Nadu Toll free No. is:",ta:"தமிழ்நாடு ஊழல் தடுப்பு மற்றும் கண்காணிப்புத் துறை இயக்குனரகத்தின் இலவச அழைப்பு எண்",opts_en:["1062 and 1963","1064 and 1965","1066 and 1967","1068 and 1969"],opts_ta:["1062 மற்றும் 1963","1064 மற்றும் 1965","1066 மற்றும் 1967","1068 மற்றும் 1969"],ans:"B"},
+  {n:184,en:"Find out the correct statements on election: (i) In all the states elections EVMS were used in 2003. (ii) The commission took a historic decision to use only EVMS for the Lok Sabha election in 2004. (iii) Two million EVMS were used in this elections.",ta:"தேர்தல் பற்றிய சரியான கூற்றுகளைக் கண்டறிக.",opts_en:["(i) only","(i) and (iii) only","(i) and (ii) only","(ii) and (iii) only"],opts_ta:["(i) மட்டும்","(i) மற்றும் (iii) மட்டும்","(i) மற்றும் (ii) மட்டும்","(ii) மற்றும் (iii) மட்டும்"],ans:"C"},
+  {n:185,en:"Choose the right matches: Committees – Chairman: (1) Committee on Panchayat Raj Election – K. Shanthanam (2) Committee on Rationalisation of Panchayat statistics – G. Ramachandran (3) Committee on Panchayat Raj Training centres – V.K. Rao (4) Study team on Panchayat Raj Administration – V. Iswaran",ta:"சரியானவற்றோடு பொருத்துக: குழுக்கள் – தலைவர்",opts_en:["(1) and (3) are correct","(1) and (4) are correct","(2) and (3) are correct","(3) and (4) are correct"],opts_ta:["(1) மற்றும் (3) மட்டும் சரி","(1) மற்றும் (4) மட்டும் சரி","(2) மற்றும் (3) மட்டும் சரி","(3) மற்றும் (4) மட்டும் சரி"],ans:"B"},
+  {n:186,en:"The correct statements on the Directive principles of state policy are: (i) The Directive principles of the state policy are provided in Article 36 to 51 of the constitution. (ii) The framers of the constitution borrowed this idea from the Spanish constitution. (iii) The Directive principles form the soul of the constitution.",ta:"அரசு வழிகாட்டும் நெறிமுறைகள் மீதான சரியான கூற்றானது.",opts_en:["(i) only","(i) and (iii) only","(i) and (ii) only","(ii) and (iii) only"],opts_ta:["(i) மட்டும்","(i) மற்றும் (iii) மட்டும்","(i) மற்றும் (ii) மட்டும்","(ii) மற்றும் (iii) மட்டும்"],ans:"B"},
+  {n:187,en:"Assertion [A]: Indian constitution is federal in nature. Reason [R]: Indian constitution provides dual citizenship like United States of America.",ta:"கூற்று [A]: இந்திய அரசியலமைப்பு உள்ளடக்கம் கூட்டாட்சி அரசியலமைப்பு ஆகும். காரணம் [R]: இந்திய அரசியலமைப்பு இக்கிய அமெரிக்க நாடுகள் (USA) போல் இரட்டைக் குடியுரிமையை வழங்கியுள்ளது.",opts_en:["[A] is false [R] is true","Both [A] and [R] are true; and [R] is the correct explanation of [A]","[A] is true [R] is false","Both [A] and [R] are true but [R] is not the correct explanation of [A]"],opts_ta:["கூற்று [A] தவறு காரணம் [R] சரி","[A] மற்றும் [R] சரியானவை ஆகும், மற்றும் [R] ஆனது [A] க்கான சரியான விளக்கமாகும்","கூற்று [A] சரி காரணம் [R] தவறு","[A] மற்றும் [R] சரியானவை ஆனால் [R] ஆனது [A] க்கான சரியான விளக்கமல்ல"],ans:"C"},
+  {n:188,en:"Assertion [A]: Indian constitution has the qualities of both rigid and flexible. Reason [R]: The constitution was amended more than 100 times without changing the foundations of the constitution.",ta:"கூற்று [A]: இந்திய அரசமைப்பு நெகிழும் மற்றும் நெகிழாத் தன்மைகளை கொண்டுள்ளது. காரணம் [R]: இந்திய அரசமைப்பின் அடிப்படையை மாற்றாமல் இதுவரை 100 க்கும் மேற்பட்ட மாற்றங்கள் கொண்டுவரப்பட்டுள்ளன.",opts_en:["[A] is true but [R] is false","Both [A] and [R] are true; and [R] is the correct explanation of [A]","[A] is false, but [R] is true","Both [A] and [R] are true, but [R] is not the correct explanation of [A] is correct"],opts_ta:["கூற்று [A] சரி ஆனால் காரணம் [R] தவறு","[A] மற்றும் [R] இரண்டும் சரியானவைகள் ஆகும் மற்றும் [R] ஆனது [A] யிற்கு சரியான விளக்கமாகும்","கூற்று [A] தவறு ஆனால் காரணம் [R] சரி","[A] மற்றும் [R] சரியானவை ஆனால் [R] ஆனது [A] யினுடைய சரியான விளக்கமல்ல என்பது சரி"],ans:"B"},
+  {n:189,en:"The reading in a field book are as given below. [Table: To C 150, 20 to D - 120, 80 - 50 to B, 30 to E - 50, From A]. The area of the field is",ta:"நில அளவை புத்தகத்தில் நிலமானது பின்வருமாறு மதிப்புகள் குறிக்கப்பட்டுள்ளன. [அட்டவணை: C வரை 150, 20 to D - 120, 80 - 50 to B, 30 to E - 50, A யிலிருந்து]. நிலத்தின் பரப்பளவு என்பது",opts_en:["6550 m²","7550 m²","5750 m²","5650 m²"],opts_ta:["6550 மீ²","7550 மீ²","5750 மீ²","5650 மீ²"],ans:"A"},
+  {n:190,en:"A person distributes his pens among four friends A, B, C and D in the ratio 1/3 : 1/4 : 1/5 : 1/6 then the minimum number of pens that the person should have is ___.",ta:"ஒருவர் தன்னுடைய நான்கு நண்பர்கள் A, B, C மற்றும் D ஆகியவர்களுக்கு தனது பேனாக்களை 1/3 : 1/4 : 1/5 : 1/6 ஆகிய விகிதங்களில் விநியோகிக்கிறார் எனில் அவர் வைத்திருக்க வேண்டிய பேனாக்களின் குறைந்தபட்ட எண்ணிக்கை ___.",opts_en:["23","55","57","65"],opts_ta:["23","55","57","65"],ans:"C"},
+  {n:191,en:"If the ratios formed using the numbers 2, 5, x, 20 are in the same order of proportion, then the value of x is",ta:"2, 5, x, 20 ஆகிய எண்களை அதே வரிசையில் பயன்படுத்தி அமையும் விகிதங்கள் விகித சமாக இருப்பின், 'x' ன் மதிப்பு",opts_en:["50","10","8","4"],opts_ta:["50","10","8","4"],ans:"C"},
+  {n:192,en:"If the HCF of 108 and 234 is expressible of the form 23x – 51 then what is the value of x?",ta:"108 மற்றும் 234 ஆகியவற்றின் மீப்பெரு பொது வகுத்தியை 23x – 51, என்ற வடிவில் எழுதினால் x-ன் மதிப்பு யாது?",opts_en:["3","2","4","5"],opts_ta:["3","2","4","5"],ans:"A"},
+  {n:193,en:"Find the HCF of the polynomials x³ + x² – x + 2 and 2x³ – 5x² + 5x – 3.",ta:"x³ + x² – x + 2 மற்றும் 2x³ – 5x² + 5x – 3 ஆகிய பல்லுறுப்புக் கோவைகளின் மீ.பொ.கா. காண்க.",opts_en:["x² – x + 1","x² + x – 1","–7x² + 7x – 7","7x² – 7x + 7"],opts_ta:["x² – x + 1","x² + x – 1","–7x² + 7x – 7","7x² – 7x + 7"],ans:"A"},
+  {n:194,en:"Simplify: (4⁻¹ + 4⁻² + 4⁻³)⁰ × (4⁻¹ + 4⁻² + 4⁻³)¹.",ta:"சுருக்குக: (4⁻¹ + 4⁻² + 4⁻³)⁰ × (4⁻¹ + 4⁻² + 4⁻³)¹.",opts_en:["63/19","19/63","21/64","64/21"],opts_ta:["63/19","19/63","21/64","64/21"],ans:"C"},
+  {n:195,en:"The average mark of 25 students was found to be 78.4. Later on, it was found that score of 96 was misread as 69. Find the correct mean of the marks.",ta:"25 மாணவர்களின் சராசரி மதிப்பெண் 78.4. இங்கு 96 என்ற மதிப்பானது 69 எனத் தவறுதலாக எடுக்கப்பட்டது கண்டறியப்பட்டது எனில், மதிப்பெண்களுக்கான சரியான சராசரியைக் காண்க.",opts_en:["77.32","79.48","78.42","78.24"],opts_ta:["77.32","79.48","78.42","78.24"],ans:"B"},
+  {n:196,en:"D, F, G, H, I and M are sitting in a row. I and M are in the centre, and F and D are at the beginning and at the end. G is sitting on the left of D. Then who is sitting on the right of F?",ta:"D, F, G, H, I மற்றும் M ஆகியோர் வரிசையாக அமர்ந்துள்ளனர். I மற்றும் M ஆகியோர் மையத்திலும், F மற்றும் D ஆகியோர் முதலிலும், இறுதியாகவும் அமர்ந்துள்ளனர். G என்பவர் D-யின் இடதுபுறத்தில் அமர்ந்துள்ளார். அப்படியானால் F-ன் வலதுபுறத்தில் அமர்ந்திருப்பது யார்?",opts_en:["H","I","M","G"],opts_ta:["H","I","M","G"],ans:"A"},
+  {n:197,en:"If A = 26, SUN = 27, then CAT = ?",ta:"A = 26, SUN = 27, எனில் CAT = ?",opts_en:["24","27","57","58"],opts_ta:["24","27","57","58"],ans:"C"},
+  {n:198,en:"If a ≠ b ≠ c is given, which one of the following is correct?",ta:"a ≠ b ≠ c எனக் கொடுக்கப்பட்டிருந்தால் பின்வருவனவற்றுள் எது சரி?",opts_en:["b ≠ a ≠ c","a, b, c are distinct","a = b = c","a ≠ c or a = c"],opts_ta:["b ≠ a ≠ c","a, b, c ஆகியவை வெவ்வேறானவை","a = b = c","a ≠ c அல்லது a = c"],ans:"D"},
+  {n:199,en:"The missing term in the given alpha-numeric series is: 2 X 2, 7 T 4, 14 P 12, 23 L 48, ___.",ta:"கீழே கொடுக்கப்பட்டுள்ள எண் எழுத்து தொடரின் விடுபட்ட உறுப்பு: 2 X 2, 7 T 4, 14 P 12, 23 L 48, ___.",opts_en:["34 H 240","34 H 144","30 H 100","30 H 120"],opts_ta:["34 H 240","34 H 144","30 H 100","30 H 120"],ans:"A"},
+  {n:200,en:"Two unbiased dice are rolled once. Find the probability of getting the product of face value is 4 or the difference of the face value is 5.",ta:"இரண்டு முறையான பகடைகள் உருட்டப்படும் பொழுது முகமதிப்புகளின் பெருக்கல் பலன் 4 அல்லது முக மதிப்புகளின் வித்தியாசம் 5 ஆக இருக்க நிகழ்தகவு?",opts_en:["1/12","5/36","1/9","7/36"],opts_ta:["1/12","5/36","1/9","7/36"],ans:"B"}
+];
+
+let cur=0, answers={}, timerSec=0, timerInt=null;
+
+function startQuiz(){
+  document.getElementById('welcome').style.display='none';
+  document.getElementById('quiz').style.display='block';
+  document.getElementById('qtot').textContent=QS.length;
+  buildPills();
+  timerInt=setInterval(()=>{
+    timerSec++;
+    const m=String(Math.floor(timerSec/60)).padStart(2,'0');
+    const s=String(timerSec%60).padStart(2,'0');
+    document.getElementById('timer').textContent=m+':'+s;
+  },1000);
+  renderQ(0);
+}
+
+function buildPills(){
+  const c=document.getElementById('pills');
+  c.innerHTML='';
+  QS.forEach((_,i)=>{
+    const p=document.createElement('button');
+    p.className='pill';p.id='pill-'+i;
+    p.title='Q'+(i+101);
+    p.onclick=()=>renderQ(i);
+    c.appendChild(p);
+  });
+}
+
+function updatePills(){
+  QS.forEach((_,i)=>{
+    const p=document.getElementById('pill-'+i);
+    if(!p)return;
+    p.className='pill';
+    if(i===cur)p.classList.add('current');
+    else if(answers[i]===null)p.classList.add('skipped');
+    else if(answers[i])p.classList.add('answered');
+  });
+}
+
+function renderQ(idx){
+  cur=idx;
+  const q=QS[idx];
+  document.getElementById('qnum').textContent=idx+1;
+  const sel=answers[idx];
+  const ltrs=['A','B','C','D'];
+  document.getElementById('qarea').innerHTML=`
+    <div class="qcard">
+      <div class="qtag">Q${q.n} &nbsp;·&nbsp; General Studies / பொது அறிவு</div>
+      <div class="qen">${q.en}</div>
+      <div class="qta">${q.ta}</div>
+      <div class="opts">
+        ${ltrs.map((l,i)=>`
+          <button class="opt${sel===l?' sel':''}" onclick="pick('${l}',${idx})">
+            <span class="opt-ltr">${l}</span>
+            <div>
+              <div>${q.opts_en[i]||''}</div>
+              ${q.opts_ta[i]&&q.opts_ta[i]!==q.opts_en[i]?`<div class="opt-ta">${q.opts_ta[i]}</div>`:''}
+            </div>
+          </button>`).join('')}
+      </div>
+      <div class="qactions">
+        ${idx>0?`<button class="btn btn-prev" onclick="go(-1)">← Prev</button>`:''}
+        <button class="btn btn-skip" onclick="skip()">Skip →</button>
+        ${idx<QS.length-1?`<button class="btn btn-next" onclick="go(1)">Next →</button>`:`<button class="btn btn-finish" onclick="finish()">Finish ✓</button>`}
+      </div>
+    </div>`;
+  updatePills();
+}
+
+function pick(l,idx){answers[idx]=l;renderQ(idx);}
+function go(d){if(answers[cur]===undefined)answers[cur]=null;const nx=cur+d;if(nx>=0&&nx<QS.length)renderQ(nx);}
+function skip(){answers[cur]=null;if(cur<QS.length-1)renderQ(cur+1);else finish();}
+
+function finish(){
+  clearInterval(timerInt);
+  QS.forEach((_,i)=>{if(answers[i]===undefined)answers[i]=null;});
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('result').style.display='block';
+
+  let c=0,w=0,s=0;
+  const cl=[],wl=[],sl=[];
+  QS.forEach((q,i)=>{
+    const a=answers[i];
+    if(!a){s++;sl.push({q,i,a});}
+    else if(a===q.ans){c++;cl.push({q,i,a});}
+    else{w++;wl.push({q,i,a});}
+  });
+
+  const pct=Math.round(c/QS.length*100);
+  document.getElementById('sc').textContent=c;
+  document.getElementById('sw').textContent=w;
+  document.getElementById('ss').textContent=s;
+  document.getElementById('spct').textContent=pct+'%';
+  setTimeout(()=>{document.getElementById('sarc').style.strokeDashoffset=314-(314*pct/100);},100);
+
+  fill('tc',cl,'c');fill('tw',wl,'w');fill('ts',sl,'s');
+}
+
+function fill(id,list,type){
+  const el=document.getElementById(id);
+  if(!list.length){el.innerHTML=`<div class="empty">No ${type==='c'?'correct':type==='w'?'wrong':'skipped'} questions</div>`;return;}
+  el.innerHTML=list.map(({q,i,a})=>{
+    const ltrs=['A','B','C','D'];
+    const opts=ltrs.map((l,li)=>{
+      let cls='ropt';
+      if(l===q.ans)cls+=' rok';
+      else if(l===a&&type==='w')cls+=' rno';
+      return `<span class="${cls}">${l}: ${q.opts_en[li]||''}</span>`;
+    }).join('');
+    const info=a?`Your answer: <strong>${a}</strong> &nbsp;|&nbsp; `:'<em>Skipped</em> &nbsp;|&nbsp; ';
+    return `<div class="rcard r${type}">
+      <div><span class="rtag r${type}">${type==='c'?'✓ Correct':type==='w'?'✗ Wrong':'– Skipped'}</span><span class="rqnum">Q${q.n}</span></div>
+      <div class="rqen">${q.en}</div>
+      <div class="rqta">${q.ta}</div>
+      <div class="rinfo">${info}Correct: <strong style="color:var(--green)">${q.ans}</strong></div>
+      <div class="ropts">${opts}</div>
+    </div>`;
+  }).join('');
+}
+
+function showTab(name,btn){
+  document.querySelectorAll('.tsec').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));
+  document.getElementById('t'+name).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</div>
+</body>
+</html>
