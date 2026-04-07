@@ -40,3 +40,33 @@ function Home() {
     </div>
   );
 }
+
+export default function App() {
+  return (
+    <HashRouter>
+      <Routes>
+        {/* Home */}
+        <Route path="/" element={<Home />} />
+
+        {/* AE EEE routes */}
+        <Route path="/part1" element={<PPPartOne />} />
+        <Route path="/parts" element={<PartFourFive />} />
+        <Route path="/part4" element={<PartFourFive defaultPart={4} />} />
+        <Route path="/part5" element={<PartFourFive defaultPart={5} />} />
+
+        {/* Dictionary routes */}
+        <Route path="/dictionary" element={<Dictionary />} />
+        <Route path="/dictionary/a-series" element={<A_Series />} />
+        <Route path="/dictionary/a-series/part1" element={<A_Part_1 />} />
+        <Route path="/dictionary/a-series/part2" element={<A_Part_2 />} />
+
+        {/* Current Affairs routes */}
+        <Route path="/current-affairs" element={<CurrentAffairs />} />
+        <Route path="/current-affairs/jan-2026" element={<Jan_2026 />} />
+
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </HashRouter>
+  );
+}
