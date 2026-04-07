@@ -17,7 +17,7 @@ const servePublicHtml = () => ({
           cleanUrl = cleanUrl.substring(1);
         }
         
-        const publicPath = path.resolve(__dirname, 'public', cleanUrl);
+        const publicPath = path.resolve(process.cwd(), 'public', cleanUrl);
         if (fs.existsSync(publicPath)) {
           res.setHeader('Content-Type', 'text/html');
           res.end(fs.readFileSync(publicPath));
