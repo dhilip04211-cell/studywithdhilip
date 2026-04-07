@@ -13,6 +13,10 @@ import A_Part_2 from "./Dictionary/A_Part_2";
 import CurrentAffairs from "./Current_Affairs/Current_Affairs";
 import Jan_2026 from "./Current_Affairs/Jan_2026";
 
+//PYQ Tamil
+import PYQTAMIL from "./PYQ_TAMIL/PYQ_TAMIL";
+import 1.Special_Examination_2025 from"./PYQ_TAMIL/1.Special_Examination_2025";
+
 function Home() {
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100vh", width: "100%" }}>
@@ -63,6 +67,13 @@ export default function App() {
         {/* Current Affairs routes */}
         <Route path="/current-affairs" element={<CurrentAffairs />} />
         <Route path="/current-affairs/jan-2026" element={<Jan_2026 />} />
+
+{/*PYQ TAMIL routes*/}
+<Route path="/PYQ-TAMIL"
+element={<PYQTAMIL />} />
+<Route path="/1.special-examination-2025"
+element={<1.Special_Examination_2025 />} />
+
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
