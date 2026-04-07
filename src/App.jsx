@@ -13,9 +13,9 @@ import A_Part_2 from "./Dictionary/A_Part_2";
 import CurrentAffairs from "./Current_Affairs/Current_Affairs";
 import Jan_2026 from "./Current_Affairs/Jan_2026";
 
-//PYQ Tamil
+// PYQ Tamil imports
 import PYQTAMIL from "./PYQTAMIL/PYQ_TAMIL";
-import 1.Special_Examination_2025 from"./PYQTAMIL/1.Special_Examination_2025";
+import Special_Examination_2025 from "./PYQTAMIL/Special_Examination_2025"; // ✅ renamed file too
 
 function Home() {
   return (
@@ -33,14 +33,12 @@ function Home() {
         </div>
       </div>
 
-      {/* Current Affairs Section */}
       <div style={{ marginTop: "30px", textAlign: "center" }}>
         <h2>Current Affairs</h2>
         <div style={{ display: "flex", flexDirection: "column", gap: "15px", marginTop: "15px" }}>
           <Link to="/current-affairs" className="btn">Current Affairs</Link>
         </div>
       </div>
-
     </div>
   );
 }
@@ -68,12 +66,9 @@ export default function App() {
         <Route path="/current-affairs" element={<CurrentAffairs />} />
         <Route path="/current-affairs/jan-2026" element={<Jan_2026 />} />
 
-{/*PYQ TAMIL routes*/}
-<Route path="/PYQ-TAMIL"
-element={<PYQTAMIL />} />
-<Route path="/1.special-examination-2025"
-element={<1.Special_Examination_2025 />} />
-
+        {/* PYQ Tamil routes */}
+        <Route path="/PYQTAMIL" element={<PYQTAMIL />} />  {/* ✅ matches Tamil.html href */}
+        <Route path="/PYQTAMIL/special-examination-2025" element={<Special_Examination_2025 />} />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
