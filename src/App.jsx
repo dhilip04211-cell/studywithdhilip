@@ -10,7 +10,7 @@ function Home() {
       <a href="PYQ/previous_years.html" className="btn">Previous Year Questions</a>
       <a href="Tamil/Tamil.html" className="btn">Tamil</a>
       <a href="AE/YCT-1/YCT-1.html" className="btn">Assistant Engineer</a>
-      
+
       <div style={{ marginTop: "30px", textAlign: "center" }}>
         <h2>Assistant Engineer (EEE)</h2>
         <div style={{ display: "flex", flexDirection: "column", gap: "15px", marginTop: "15px" }}>
