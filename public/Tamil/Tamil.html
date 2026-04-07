@@ -25,7 +25,12 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
         h1 { margin-bottom: 2rem; font-size: 2.5rem; }
-        .btn-group { display: flex; gap: 20px; }
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
         .btn {
             padding: 15px 40px;
             font-size: 1.2rem;
@@ -37,7 +42,8 @@
             font-weight: bold;
         }
         .notes-btn { background: #fff; color: #764ba2; }
-        .quiz-btn { background: #ff9a9e; color: white; }
+        .quiz-btn  { background: #ff9a9e; color: white; }
+        .dict-btn  { background: #a8edea; color: #764ba2; }
         .btn:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); opacity: 0.9; }
     </style>
 </head>
@@ -45,8 +51,13 @@
     <div class="container">
         <h1>தமிழ் கல்வி (Tamil Education)</h1>
         <div class="btn-group">
-            <a href="Notes.html" class="btn notes-btn">Notes</a>
-            <a href="Quiz.html" class="btn quiz-btn">Quiz</a>
+            <a href="Notes.html"       class="btn notes-btn">Notes</a>
+            <a href="Quiz.html"        class="btn quiz-btn">Quiz</a>
+            <!-- 
+                /#/dictionary uses HashRouter so it works with your React app
+                at the root index.html. Adjust the path if your app is in a subfolder.
+            -->
+            <a href="../../index.html#/dictionary" class="btn dict-btn">Dictionary</a>
         </div>
     </div>
 </body>
