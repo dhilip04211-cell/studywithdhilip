@@ -14,8 +14,8 @@ import CurrentAffairs from "./Current_Affairs/Current_Affairs";
 import Jan_2026 from "./Current_Affairs/Jan_2026";
 
 //PYQ Tamil
-import PYQTAMIL from "./PYQ_TAMIL/PYQ_TAMIL";
-import 1.Special_Examination_2025 from"./PYQ_TAMIL/1.Special_Examination_2025";
+import PYQTAMIL from "./PYQTAMIL/PYQ_TAMIL";
+import 1.Special_Examination_2025 from"./PYQTAMIL/1.Special_Examination_2025";
 
 function Home() {
   return (
