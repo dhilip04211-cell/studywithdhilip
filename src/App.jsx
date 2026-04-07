@@ -8,7 +8,7 @@ import Dictionary from "./Dictionary/Dictionary";
 import A_Series from "./Dictionary/A_Series";
 import A_Part_1 from "./Dictionary/A_Part_1";
 // Add more parts as you create them:
-// import A_Part_2 from "./Dictionary/A_Part_2";
+import A_Part_2 from "./Dictionary/A_Part_2";
 // import A_Part_3 from "./Dictionary/A_Part_3";
 // import A_Part_4 from "./Dictionary/A_Part_4";
 // import A_Part_5 from "./Dictionary/A_Part_5";
@@ -49,8 +49,8 @@ export default function App() {
         <Route path="/dictionary" element={<Dictionary />} />
         <Route path="/dictionary/a-series" element={<A_Series />} />
         <Route path="/dictionary/a-series/part1" element={<A_Part_1 />} />
-        {/* Add more as you build them: */}
-        {/* <Route path="/dictionary/a-series/part2" element={<A_Part_2 />} /> */}
+        {/*Add more as you build them: */}
+        <Route path="/dictionary/a-series/part2" element={<A_Part_2 />} /> 
         {/* <Route path="/dictionary/a-series/part3" element={<A_Part_3 />} /> */}
         {/* <Route path="/dictionary/a-series/part4" element={<A_Part_4 />} /> */}
         {/* <Route path="/dictionary/a-series/part5" element={<A_Part_5 />} /> */}
