@@ -7,9 +7,9 @@ function Home() {
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100vh", width: "100%" }}>
       <h1>StudyWithDhilip</h1>
-      <a href="PYQ/previous_years.html" className="btn">Previous Year Questions</a>
-      <a href="Tamil/Tamil.html" className="btn">Tamil</a>
-      <a href="AE/YCT-1/YCT-1.html" className="btn">Assistant Engineer</a>
+      <a href="public/PYQ/previous_years.html" className="btn">Previous Year Questions</a>
+      <a href="public/Tamil/Tamil.html" className="btn">Tamil</a>
+      <a href="public/AE/YCT-1/YCT-1.html" className="btn">Assistant Engineer</a>
       
       <div style={{ marginTop: "30px", textAlign: "center" }}>
         <h2>Assistant Engineer (EEE)</h2>
