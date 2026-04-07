@@ -16,6 +16,7 @@ import Jan_2026 from "./Current_Affairs/Jan_2026";
 // PYQ Tamil imports
 import PYQTAMIL from "./PYQTAMIL/PYQ_TAMIL";
 import Special_Examination_2025 from "./PYQTAMIL/Special_Examination_2025"; // ✅ renamed file too
+import Gr_2_Mains_2025 from "./PYQTAMIL/Gr_2_Mains_2025"; // ✅ renamed file too
 
 function Home() {
   return (
@@ -69,6 +70,7 @@ export default function App() {
         {/* PYQ Tamil routes */}
         <Route path="/PYQTAMIL" element={<PYQTAMIL />} />  {/* ✅ matches Tamil.html href */}
         <Route path="/PYQTAMIL/special-examination-2025" element={<Special_Examination_2025 />} />
+        <Route path="/PYQTAMIL/gr-2-mains-2025" element={<Gr_2_Mains_2025 />} />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
