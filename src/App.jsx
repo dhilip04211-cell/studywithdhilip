@@ -12,6 +12,8 @@ import A_Part_2 from "./Dictionary/A_Part_2";
 // import A_Part_3 from "./Dictionary/A_Part_3";
 // import A_Part_4 from "./Dictionary/A_Part_4";
 // import A_Part_5 from "./Dictionary/A_Part_5";
+import Current-Affairs from "./Current_Affairs/Current_Affairs"
+import Jan_2026 from "./Current_Affairs/Jan_2026"
 
 function Home() {
   return (
@@ -54,6 +56,9 @@ export default function App() {
         {/* <Route path="/dictionary/a-series/part3" element={<A_Part_3 />} /> */}
         {/* <Route path="/dictionary/a-series/part4" element={<A_Part_4 />} /> */}
         {/* <Route path="/dictionary/a-series/part5" element={<A_Part_5 />} /> */}
+
+<Route path="/Current_Affairs" element={<Current_Affairs />} />
+<Route path="/Current_Affairs/Jan_2026" element={<Jan_2026 />} />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
