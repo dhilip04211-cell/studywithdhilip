@@ -1611,7 +1611,7 @@ const quizData = [
   { q: "The new US-India Free Trade Agreement – what percentage of EU goods are duty-free to India?", options: ["75%", "80%", "90%", "95%"], ans: 2, exp: "Under the India-EU Free Trade Agreement signed at the 16th India-EU Summit, 90% of EU goods are duty-free in India, and 93% of Indian goods are tax-free in EU." },
 ];
 
-export default function App() {
+export default function Jan_2026() {
   const [activeTab, setActiveTab] = useState("notes");
   const [expandedDate, setExpandedDate] = useState(null);
   const [expandedTopic, setExpandedTopic] = useState({});
