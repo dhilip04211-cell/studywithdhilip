@@ -19,6 +19,14 @@ import Special_Examination_2025 from "./PYQTAMIL/Special_Examination_2025"; // â
 import Gr_2_Mains_2025 from "./PYQTAMIL/Gr_2_Mains_2025"; // âœ… renamed file too
 import Gr_4_2025 from "./PYQTAMIL/Gr_4_2025";
 
+// Thirukkural
+import Thirukkural from "./Thirukkural/Thirukkural_home";
+import Thirukkuralold from "./Thirukkural/thirukkural_old";
+import Thirukkuraloldpart1 from "./Thirukkural/thirukkural_old_part1";
+import Thirukkuraloldpart1quiz from "./Thirukkural/thirukkural_old_part1_quiz";
+
+
+
 function Home() {
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100vh", width: "100%" }}>
@@ -73,6 +81,13 @@ export default function App() {
         <Route path="/PYQTAMIL/special-examination-2025" element={<Special_Examination_2025 />} />
         <Route path="/PYQTAMIL/gr-2-mains-2025" element={<Gr_2_Mains_2025 />} />
 <Route path="/PYQTAMIL/gr-4-2025" element={<Gr_4_2025 />} />
+
+{/* Thirukkural routes */}
+        <Route path="/Thirukkural" element={<Thirukkural />} />
+<Route path="/Thirukkuralold" element={<Thirukkural/thirukkural-old />} />
+<Route path="/Thirukkuraloldpart1" element={<Thirukkural/thirukkural-old-part1 />} />
+<Route path="/Thirukkuraloldpart1quiz" element={<Thirukkural/thirukkural-old-part1-quiz />} />
+
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
