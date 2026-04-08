@@ -7,7 +7,7 @@ export default function thirukkural_old() {
       <h1>Old Book</h1>
       <div style={{ display: "flex", flexDirection: "column", gap: "15px", marginTop: "20px" }}>
         {/* ✅ Path matches App.jsx route exactly */}
-        <Link to="/Thirukkural/thirukkural-old_part1" className="btn">
+        <Link to="/Thirukkural/thirukkural-old-part1" className="btn">
           1. Part 1
         </Link>
         {/* Add more exam links here as you create the components */}
