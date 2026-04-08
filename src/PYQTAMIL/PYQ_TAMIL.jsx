@@ -11,7 +11,10 @@ export default function PYQ_TAMIL() {
           1. Special Exam - 2025
         </Link>
         <Link to="/PYQTAMIL/gr-2-mains-2025" className="btn">
-          1. Gr2a Mains - 2025
+          2. Gr-2A Mains - 2025
+        </Link>
+        <Link to="/PYQTAMIL/gr-4-2025" className="btn">
+          3. Gr-4 - 2025
         </Link>
         {/* Add more exam links here as you create the components */}
       </div>
