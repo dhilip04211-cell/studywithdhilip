@@ -71,7 +71,7 @@ export default function App() {
         {/* PYQ Tamil routes */}
         <Route path="/PYQTAMIL" element={<PYQTAMIL />} />  {/* ✅ matches Tamil.html href */}
         <Route path="/PYQTAMIL/special-examination-2025" element={<Special_Examination_2025 />} />
-        <Route path="/PYQTAMIL/gr-2-mains-2025" element={<Gr_4_2025 />} />
+        <Route path="/PYQTAMIL/gr-2-mains-2025" element={<Gr_2_Mains_2025 />} />
 <Route path="/PYQTAMIL/gr-4-2025" element={<Gr_4_2025 />} />
 
         {/* Fallback */}
