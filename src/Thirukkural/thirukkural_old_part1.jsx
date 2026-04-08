@@ -1233,7 +1233,7 @@ export default function thirukkural_old_part1() {
 
       {/* Content */}
       <div style={{ padding: "18px 16px 40px" }}>
-        {tab === "notes" ? <NotesView /> : tab === <QuizView quizProgress={quizProgress} setQuizProgress={setQuizProgress} /> : <Quiz1View />}
+        {tab === "notes" ? <NotesView /> : tab === "quiz" ? <QuizView quizProgress={quizProgress} setQuizProgress={setQuizProgress} /> : <Quiz1View />}
       </div>
 
       {/* TNPSC Tips Bar */}
