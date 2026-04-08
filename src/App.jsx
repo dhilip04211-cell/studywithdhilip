@@ -21,9 +21,9 @@ import Gr_4_2025 from "./PYQTAMIL/Gr_4_2025";
 
 // Thirukkural
 import Thirukkural from "./Thirukkural/Thirukkural_home";
-import Thirukkuralold from "./Thirukkural/thirukkural_old";
-import Thirukkuraloldpart1 from "./Thirukkural/thirukkural_old_part1";
-import Thirukkuraloldpart1quiz from "./Thirukkural/thirukkural_old_part1_quiz";
+import thirukkural_old from "./Thirukkural/thirukkural_old";
+import thirukkural_old_part1 from "./Thirukkural/thirukkural_old_part1";
+import thirukkural_old_part1_quiz from "./Thirukkural/thirukkural_old_part1_quiz";
 
 
 
@@ -84,9 +84,9 @@ export default function App() {
 
 {/* Thirukkural routes */}
         <Route path="/Thirukkural" element={<Thirukkural />} />
-<Route path="/Thirukkuralold" element={<Thirukkural/thirukkural-old />} />
-<Route path="/Thirukkuraloldpart1" element={<Thirukkural/thirukkural-old-part1 />} />
-<Route path="/Thirukkuraloldpart1quiz" element={<Thirukkural/thirukkural-old-part1-quiz />} />
+<Route path="/thirukkural_old" element={<Thirukkural/thirukkural-old />} />
+<Route path="/thirukkural_old_part1" element={<Thirukkural/thirukkural-old-part1 />} />
+<Route path="/thirukkural_old_part1_quiz" element={<Thirukkural/thirukkural-old-part1-quiz />} />
 
 
         {/* Fallback */}
