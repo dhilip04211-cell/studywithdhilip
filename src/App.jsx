@@ -84,9 +84,9 @@ export default function App() {
 
 {/* Thirukkural routes */}
         <Route path="/Thirukkural" element={<Thirukkural />} />
-<Route path="/thirukkural-old" element={<thirukkural_old />} />
-<Route path="/thirukkural-old-part1" element={<thirukkural_old_part1 />} />
-<Route path="/thirukkural-old-part1-quiz" element={<thirukkural_old_part1_quiz />} />
+<Route path="/Thirukkural/thirukkural-old" element={<thirukkural_old />} />
+<Route path="/Thirukkural/thirukkural-old-part1" element={<thirukkural_old_part1 />} />
+<Route path="/Thirukkural/thirukkural-old-part1-quiz" element={<thirukkural_old_part1_quiz />} />
 
 
         {/* Fallback */}
