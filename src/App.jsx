@@ -24,6 +24,7 @@ import Thirukkural from "./Thirukkural/Thirukkural_home";
 import ThirukkuralOld from "./Thirukkural/thirukkural_old";
 import ThirukkuralOldPart1 from "./Thirukkural/thirukkural_old_part1";
 import ThirukkuralOldPart1Quiz from "./Thirukkural/thirukkural_old_part1_quiz";
+import ThirukkuralOldPart2 from "./Thirukkural/thirukkural_old_part2";
 
 
 function Home() {
@@ -85,7 +86,8 @@ export default function App() {
         <Route path="/Thirukkural" element={<Thirukkural />} />
 <Route path="/Thirukkural/thirukkural-old" element={<ThirukkuralOld />} />
 <Route path="/Thirukkural/thirukkural-old-part1" element={<ThirukkuralOldPart1 />} />
-<Route path="/Thirukkural/thirukkural-old-part1-quiz" element={<ThirukkuralOldPart1Quiz />} />
+<Route path="/Thirukkural/thirukkural-old-part1-quiz" element={<ThirukkuralOldPart1Quiz />} />        
+<Route path="/Thirukkural/thirukkural-old-part2" element={<ThirukkuralOldPart2 />} />
 
 
         {/* Fallback */}
