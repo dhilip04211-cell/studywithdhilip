@@ -1393,7 +1393,7 @@ const QUIZ_DATA = [
 
 // ===================== APP =====================
 
-export default function App() {
+export default function SanthiPizai() {
   const [activeTab, setActiveTab] = useState("notes");
   const [activeNotesTopic, setActiveNotesTopic] = useState("sandhi");
   const [quizState, setQuizState] = useState("idle"); // idle, quiz, result
