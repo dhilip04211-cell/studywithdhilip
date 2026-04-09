@@ -10,6 +10,10 @@ export default function thirukkural_old() {
         <Link to="/Thirukkural/thirukkural-old-part1" className="btn">
           1. Part 1
         </Link>
+       <Link to="/Thirukkural/thirukkural-old-part2" className="btn">
+          2. Part 2
+        </Link>
+        
         {/* Add more exam links here as you create the components */}
       </div>
     </div>
