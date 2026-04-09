@@ -11,15 +11,13 @@ export default function ilakkanam_new() {
         <Link to="/Tamilbook/term1-grammar" className="btn">
           1. term 1
         </Link>
+<a href="/studywitdhilip/Tamil/lakkanam/term1_grammar.html" className="btn">
+  2. term 1 (HTML)
+</a>
 
-        {/* HTML files - from public/Tamil/lakkanam/ */}
-        <a href="/Tamil/lakkanam/term1_grammar.html" className="btn">
-          2. term 1 (HTML)
-        </a>
-
-        <a href="/Tamil/lakkanam/term2_grammar.html" className="btn">
-          3. term 2
-        </a>
+<a href="/studywitdhilip/Tamil/lakkanam/term2_grammar.html" className="btn">
+  3. term 2
+</a>
 
         {/* JSX Link - Term 3 */}
         <Link to="/Tamilbook/term3-grammar" className="btn">
