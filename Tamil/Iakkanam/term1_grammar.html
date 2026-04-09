@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>6th New Book Term 1 — தமிழ் இலக்கணம்</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f4fb;color:#1a1a2e;min-height:100vh}
+.app{max-width:960px;margin:0 auto;padding:1rem}
+.header{text-align:center;padding:1.5rem 0 1rem;background:linear-gradient(135deg,#534AB7,#7F77DD);border-radius:16px;color:#fff;margin-bottom:1.5rem}
+.header h1{font-size:22px;font-weight:600}
+.header p{font-size:14px;opacity:.85;margin-top:4px}
+.tabs{display:flex;gap:6px;background:#fff;border-radius:12px;padding:6px;margin-bottom:1.5rem;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.tab{flex:1;padding:10px;font-size:14px;font-weight:500;cursor:pointer;border:none;background:none;color:#666;border-radius:8px;transition:all .2s}
+.tab.active{background:#534AB7;color:#fff}
+.section{display:none}
+.section.active{display:block}
+
+/* NOTES */
+.iyal-card{background:#fff;border:1px solid #e8e6f8;border-radius:14px;margin-bottom:1rem;overflow:hidden;box-shadow:0 1px 4px rgba(83,74,183,.08)}
+.iyal-header{background:#EEEDFE;padding:14px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.iyal-badge{background:#534AB7;color:#fff;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;white-space:nowrap}
+.iyal-title{font-size:15px;font-weight:600;color:#26215C;flex:1}
+.iyal-arrow{font-size:12px;color:#534AB7;transition:transform .3s;flex-shrink:0}
+.iyal-body{padding:16px;display:none;border-top:1px solid #e8e6f8}
+.iyal-body.open{display:block}
+.note-section{margin-bottom:16px}
+.note-section h3{font-size:15px;font-weight:600;color:#3C3489;margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid #CECBF6}
+.note-section h4{font-size:14px;font-weight:600;color:#534AB7;margin:10px 0 6px}
+.note-p{font-size:14px;line-height:1.9;margin-bottom:8px;color:#2d2d4e}
+.note-list{list-style:none;padding:0}
+.note-list li{font-size:14px;line-height:1.85;padding:4px 0 4px 20px;position:relative;color:#2d2d4e}
+.note-list li::before{content:"•";position:absolute;left:5px;color:#534AB7;font-weight:700}
+.highlight-box{background:#EEEDFE;border-left:4px solid #534AB7;border-radius:0 10px 10px 0;padding:12px 14px;margin:10px 0;font-size:14px;color:#3C3489;line-height:1.85}
+.table-wrap{overflow-x:auto;margin:10px 0;border-radius:10px;border:1px solid #e8e6f8}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#534AB7;color:#fff;font-weight:600;padding:10px 12px;text-align:left}
+td{padding:9px 12px;border-bottom:1px solid #f0eeff;color:#2d2d4e;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:nth-child(even) td{background:#f8f7ff}
+.match-th{background:#1D9E75}
+.match-even{background:#E1F5EE}
+
+/* QUIZ */
+.quiz-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1rem}
+.quiz-stat{background:#fff;border-radius:10px;padding:10px 12px;font-size:12px;color:#888;border:1px solid #e8e6f8;text-align:center}
+.quiz-stat span{font-weight:700;font-size:18px;display:block;color:#1a1a2e;margin-top:2px}
+.q-card{background:#fff;border:1px solid #e8e6f8;border-radius:14px;padding:20px;margin-bottom:1rem;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.q-num{font-size:12px;color:#534AB7;font-weight:600;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.q-text{font-size:15px;font-weight:600;line-height:1.7;margin-bottom:16px;color:#1a1a2e}
+.options{display:grid;gap:8px}
+.opt{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border:1.5px solid #e8e6f8;border-radius:10px;cursor:pointer;transition:all .2s;background:#fff;font-size:14px;color:#2d2d4e;line-height:1.6;text-align:left;width:100%}
+.opt:hover:not(.disabled){border-color:#AFA9EC;background:#EEEDFE}
+.opt.correct{border-color:#1D9E75;background:#E1F5EE;color:#085041}
+.opt.wrong{border-color:#D85A30;background:#FAECE7;color:#4A1B0C}
+.opt-label{font-weight:700;min-width:20px;color:#534AB7;flex-shrink:0}
+.opt.correct .opt-label{color:#1D9E75}
+.opt.wrong .opt-label{color:#D85A30}
+.opt.disabled{cursor:default}
+.answer-exp{margin-top:12px;padding:12px 14px;background:#E1F5EE;border-radius:10px;font-size:13px;color:#085041;line-height:1.8;display:none}
+.answer-exp.show{display:block}
+.q-nav{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:1rem;flex-wrap:wrap}
+.btn{padding:10px 22px;border-radius:10px;border:1.5px solid #d0cef5;background:#fff;font-size:14px;cursor:pointer;color:#534AB7;font-weight:500;transition:all .2s}
+.btn:hover{background:#EEEDFE}
+.btn-primary{background:#534AB7;color:#fff;border-color:#534AB7}
+.btn-primary:hover{background:#3C3489}
+.btn-danger{background:#D85A30;color:#fff;border-color:#D85A30;font-size:13px}
+.progress-bar{height:6px;background:#e8e6f8;border-radius:6px;margin-bottom:1rem}
+.progress-fill{height:6px;background:linear-gradient(90deg,#534AB7,#7F77DD);border-radius:6px;transition:width .4s ease}
+
+/* RESULT */
+.result-box{text-align:center;padding:2.5rem;background:#fff;border-radius:14px;border:1px solid #e8e6f8;margin-bottom:1rem}
+.score-big{font-size:60px;font-weight:700;color:#534AB7}
+.score-label{font-size:15px;color:#888;margin-top:4px}
+.grade-badge{display:inline-block;padding:8px 24px;border-radius:24px;font-size:15px;font-weight:600;margin-top:14px}
+.result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:1rem 0}
+.res-card{background:#fff;border:1px solid #e8e6f8;border-radius:12px;padding:16px;text-align:center}
+.res-num{font-size:26px;font-weight:700}
+.res-lab{font-size:12px;color:#888;margin-top:4px}
+
+/* GAME */
+.game-info{display:flex;gap:10px;margin-bottom:1rem;flex-wrap:wrap;align-items:center}
+.game-badge{background:#fff;border:1px solid #e8e6f8;border-radius:8px;padding:6px 14px;font-size:13px;color:#666}
+.game-badge strong{color:#1a1a2e}
+.game-pairs-area{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:1rem}
+.col-label{font-size:12px;font-weight:600;color:#534AB7;margin-bottom:6px;text-align:center}
+.game-col{display:flex;flex-direction:column;gap:8px}
+.gc{background:#fff;border:1.5px solid #e8e6f8;border-radius:10px;padding:12px 10px;cursor:pointer;text-align:center;font-size:13px;line-height:1.6;color:#2d2d4e;transition:all .2s;min-height:52px;display:flex;align-items:center;justify-content:center}
+.gc:hover{border-color:#AFA9EC;background:#EEEDFE}
+.gc.sel{border-color:#534AB7;background:#EEEDFE;color:#26215C}
+.gc.matched{border-color:#1D9E75;background:#E1F5EE;color:#085041;cursor:default}
+.gc.shake{border-color:#D85A30;background:#FAECE7;animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <h1>6th New Book — Term 1</h1>
+    <p>தமிழ் இலக்கணம் | Tamil Grammar — இயல் 1, 2, 3</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('notes',this)">📚 Notes</button>
+    <button class="tab" onclick="switchTab('quiz',this)">✏️ Quiz (50)</button>
+    <button class="tab" onclick="switchTab('game',this)">🎮 Quiz Game</button>
+  </div>
+
+  <!-- NOTES -->
+  <div id="notes" class="section active">
+
+    <div class="iyal-card">
+      <div class="iyal-header" onclick="tog(this)">
+        <span class="iyal-badge">இயல் 1</span>
+        <span class="iyal-title">தமிழ் எழுத்துகளின் வகையும் தொகையும்</span>
+        <span class="iyal-arrow">▼</span>
+      </div>
+      <div class="iyal-body open">
+        <div class="note-section">
+          <h3>இலக்கணம் — வரையறை</h3>
+          <p class="note-p">உலகில் உள்ள ஒவ்வொரு பொருளையும் மனிதன் உற்றுநோக்கினான். அவற்றின் இயல்புகளை அறிந்துகொண்டான். இவ்வாறே மொழியையும் ஆழ்ந்து கவனித்தான். மொழியை எவ்வாறு பேசவும் எழுதவும் வேண்டும் என்பதை வரையறை செய்தான். அந்த வரையறைகளே <b>இலக்கணம்</b> எனப்படும்.</p>
+        </div>
+        <div class="note-section">
+          <h3>தமிழ் மொழியின் இலக்கண வகைகள் ஐந்து</h3>
+          <div class="table-wrap"><table>
+            <tr><th>வ.எண்</th><th>இலக்கண வகை</th></tr>
+            <tr><td>1</td><td>எழுத்து இலக்கணம்</td></tr>
+            <tr><td>2</td><td>சொல் இலக்கணம்</td></tr>
+            <tr><td>3</td><td>பொருள் இலக்கணம்</td></tr>
+            <tr><td>4</td><td>யாப்பு இலக்கணம்</td></tr>
+            <tr><td>5</td><td>அணி இலக்கணம்</td></tr>
+          </table></div>
+        </div>
+        <div class="note-section">
+          <h3>எழுத்து — வரையறை</h3>
+          <p class="note-p">ஒலி வடிவமாக எழுப்பப்படுவதும் வரிவடிவமாக எழுதப்படுவதும் <b>எழுத்து</b> எனப்படுகிறது.</p>
+        </div>
+        <div class="note-section">
+          <h3>உயிர் எழுத்துகள்</h3>
+          <p class="note-p">உயிருக்கு முதன்மையானது காற்று. இயல்பாகக் காற்று வெளிப்படும்போது உயிர் எழுத்துகள் பிறக்கின்றன. வாயைத் திறத்தல், உதடுகளை விரித்தல், உதடுகளைக் குவித்தல் ஆகிய எளிய செயல்பாடுகளால் 'அ' முதல் 'ஔ' வரையுள்ள <b>பன்னிரண்டு உயிர் எழுத்துகளும்</b> பிறக்கின்றன.</p>
+          <div class="highlight-box">
+            <b>குறில் எழுத்துகள் (5):</b> அ, இ, உ, எ, ஒ — குறுகி ஒலிக்கின்றன<br>
+            <b>நெடில் எழுத்துகள் (7):</b> ஆ, ஈ, ஊ, ஏ, ஐ, ஓ, ஔ — நீண்டு ஒலிக்கின்றன
+          </div>
+        </div>
+        <div class="note-section">
+          <h3>மாத்திரை — கால அளவு</h3>
+          <p class="note-p">மாத்திரை என்பது இங்குக் கால அளவைக் குறிக்கிறது. ஒரு மாத்திரை என்பது ஒருமுறை கண் இமைக்கவோ ஒருமுறை கைநாடிக்கவோ ஆகும் கால அளவாகும்.</p>
+          <div class="table-wrap"><table>
+            <tr><th>எழுத்து வகை</th><th>கால அளவு</th></tr>
+            <tr><td>குறில் எழுத்து</td><td>1 மாத்திரை</td></tr>
+            <tr><td>நெடில் எழுத்து</td><td>2 மாத்திரை</td></tr>
+            <tr><td>மெய் எழுத்து</td><td>½ (அரை) மாத்திரை</td></tr>
+            <tr><td>ஆயத எழுத்து (ஃ)</td><td>½ (அரை) மாத்திரை</td></tr>
+          </table></div>
+          <div class="highlight-box">எ.கா: கபிலர் — க(1) + பி(1) + ல(1) + ர்(½) = 3½ மாத்திரை</div>
+        </div>
+        <div class="note-section">
+          <h3>மெய்யெழுத்துகள் — 18</h3>
+          <p class="note-p">மெய் என்பது உடம்பு எனப் பொருள்படும். மெய் எழுத்துகளை ஒலிக்க உடல் இயக்கத்தின் பங்கு இன்றியமையாதது.</p>
+          <p class="note-p"><b>மெய்யெழுத்துகள்:</b> க், ங், ச், ஞ், ட், ண், த், ந், ப், ம், ய, ர், ல், வ், ழ், ள், ற், ன்</p>
+          <div class="table-wrap"><table>
+            <tr><th>இன வகை</th><th>எழுத்துகள்</th><th>ஒலி இயல்பு</th></tr>
+            <tr><td><b>வல்லினம்</b></td><td>க், ச், ட், த், ப், ற்</td><td>வன்மையாக ஒலிக்கின்றன</td></tr>
+            <tr><td><b>மெல்லினம்</b></td><td>ங், ஞ், ண், ந், ம், ன்</td><td>மென்மையாக ஒலிக்கின்றன</td></tr>
+            <tr><td><b>இடையினம்</b></td><td>ய, ர், ல், வ், ழ், ள்</td><td>வன்மையாகவும் மென்மையாகவும் இல்லாமல் இரண்டிற்கும் இடைப்பட்டு ஒலிக்கின்றன</td></tr>
+          </table></div>
+        </div>
+        <div class="note-section">
+          <h3>உயிர்மெய் எழுத்துகள் — 216</h3>
+          <p class="note-p">மெய் எழுத்துகள் பதினெட்டுடன் உயிர் எழுத்துகள் பன்னிரண்டும் சேர்வதால் தோன்றும் <b>216 எழுத்துகளும்</b> உயிர்மெய் எழுத்துகள் ஆகும்.</p>
+          <ul class="note-list">
+            <li>மெய்யுடன் உயிர்க்குறில் சேர்ந்தால் உயிர்மெய்க் குறில் தோன்றுகிறது.</li>
+            <li>மெய்யுடன் உயிர் நெடில் சேர்ந்தால் உயிர்மெய் நெடில் தோன்றுகிறது.</li>
+            <li>உயிர்மெய் எழுத்தின் ஒலிவடிவம் மெய்யும் உயிரும் சேர்ந்ததாக இருக்கும்.</li>
+            <li>வரிவடிவம் மெய்யெழுத்தை ஒத்திருக்கும். ஒலிக்கும் கால அளவு உயிர் எழுத்தை ஒத்திருக்கும்.</li>
+          </ul>
+        </div>
+        <div class="note-section">
+          <h3>ஆயத எழுத்து (ஃ)</h3>
+          <p class="note-p">தமிழ் மொழியில் உயிர், மெய், உயிர்மெய் எழுத்துகள் தவிர தனி எழுத்து ஒன்றும் உள்ளது. அது <b>ஃ</b> என்னும் ஆயத எழுத்தாகும். ஆயத எழுத்தை ஒலிக்க ஆகும் கால அளவு <b>அரை மாத்திரை</b>.</p>
+        </div>
+        <div class="note-section">
+          <h3>கற்பவை கற்றபின் — பதிப்பீடு</h3>
+          <ul class="note-list">
+            <li>தமிழ் இலக்கணம் எத்தனை வகைப்படும்? அவை யாவை?</li>
+            <li>மெய்யெழுத்துகளை மூவகை இனங்களாக வகைப்படுத்தி எழுதுக.</li>
+            <li>தமிழ் எழுத்துகளுக்குரிய மாத்திரை அளவுகளைக் குறிப்பிடுக.</li>
+            <li>கொடுக்கப்பட்டுள்ள மாத்திரை அளவுக்கேற்பச் சொற்களை எழுதுக: (1) உயிரெழுத்தில் தொடங்கும் இரண்டு மாத்திரை அளவுள்ள சொல் (2) இரண்டு மாத்திரை அளவுள்ள ஓரெழுத்துச்சொல் (3) ஆயத எழுத்து இடம்பெறும் இரண்டரை மாத்திரை அளவுள்ள சொல்</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="iyal-card">
+      <div class="iyal-header" onclick="tog(this)">
+        <span class="iyal-badge">இயல் 2</span>
+        <span class="iyal-title">முதலெழுத்தும் சார்பெழுத்தும்</span>
+        <span class="iyal-arrow">▼</span>
+      </div>
+      <div class="iyal-body">
+        <div class="note-section">
+          <h3>எழுத்துகள் இரண்டு வகை</h3>
+          <div class="table-wrap"><table>
+            <tr><th>வகை</th><th>விவரம்</th><th>எண்ணிக்கை</th></tr>
+            <tr><td><b>முதல் எழுத்துகள்</b></td><td>உயிர் + மெய்</td><td>12 + 18 = 30</td></tr>
+            <tr><td><b>சார்பு எழுத்துகள்</b></td><td>முதல் எழுத்துகளைச் சார்ந்து வரும் எழுத்துகள்</td><td>10 வகை</td></tr>
+          </table></div>
+        </div>
+        <div class="note-section">
+          <h3>முதல் எழுத்துகள்</h3>
+          <p class="note-p">உயிர் எழுத்துகள் பன்னிரண்டு, மெய்யெழுத்துகள் பதினெட்டு ஆகிய முப்பது எழுத்துகளும் முதல் எழுத்துகள் ஆகும். பிற எழுத்துகள் தோன்றுவதற்கும் இயங்குவதற்கும் முதற்காரணமாக இவை இருக்கின்றன. எனவே இவற்றை <b>முதல் எழுத்துகள்</b> என்பர்.</p>
+        </div>
+        <div class="note-section">
+          <h3>சார்பு எழுத்துகள் — 10 வகை</h3>
+          <p class="note-p">முதல் எழுத்துகளைச் சார்ந்து வரும் எழுத்துகள் <b>சார்பெழுத்துகள்</b>. இவை பத்து வகைப்படும்.</p>
+          <div class="table-wrap"><table>
+            <tr><th>வ.எண்</th><th>சார்பு எழுத்து வகை</th></tr>
+            <tr><td>1</td><td>உயிர்மெய்</td></tr>
+            <tr><td>2</td><td>ஆயதம்</td></tr>
+            <tr><td>3</td><td>உயிரளபெடை</td></tr>
+            <tr><td>4</td><td>ஒற்றளபெடை</td></tr>
+            <tr><td>5</td><td>குற்றியலிகரம்</td></tr>
+            <tr><td>6</td><td>குற்றியலுகரம்</td></tr>
+            <tr><td>7</td><td>ஐகாரக்குறுக்கம்</td></tr>
+            <tr><td>8</td><td>ஒளகாரக்குறுக்கம்</td></tr>
+            <tr><td>9</td><td>மகரக்குறுக்கம்</td></tr>
+            <tr><td>10</td><td>ஆயதக்குறுக்கம்</td></tr>
+          </table></div>
+          <p class="note-p" style="margin-top:8px">இவ்வகுப்பில் <b>உயிர்மெய், ஆயதம்</b> ஆகிய இரண்டு சார்பெழுத்துகள் பற்றிக் காண்போம்.</p>
+        </div>
+        <div class="note-section">
+          <h3>உயிர்மெய் — விளக்கம்</h3>
+          <ul class="note-list">
+            <li>மெய் எழுத்துகளும் உயிர் எழுத்துகளும் ஒன்றுடன் ஒன்று சேர்வதால் உயிர்மெய் எழுத்துகள் தோன்றுகின்றன.</li>
+            <li>உயிர்மெய் எழுத்தின் ஒலிவடிவம் மெய்யும் உயிரும் சேர்ந்ததாக இருக்கும்.</li>
+            <li>வரிவடிவம் மெய்யெழுத்தை ஒத்திருக்கும். ஒலிக்கும் கால அளவு உயிர் எழுத்தை ஒத்திருக்கும்.</li>
+            <li>முதல் எழுத்துகளைச் சார்ந்து வருவதால் இவை சார்பெழுத்து வகையுள் அடங்கும்.</li>
+          </ul>
+        </div>
+        <div class="note-section">
+          <h3>ஆய்தம் (ஃ) — விளக்கம்</h3>
+          <ul class="note-list">
+            <li>மூன்று புள்ளிகளை உடைய தனித்த வடிவம் பெற்றது.</li>
+            <li>முப்புள்ளி, முப்பாற்புள்ளி, தனிநிலை, அஃகேனம் என்ற வேறு பெயர்களும் இதற்கு உண்டு.</li>
+            <li>நுட்பமான ஒலிப்புமுறையை உடையது.</li>
+            <li>தனக்குமுன் ஒரு குறில் எழுத்தையும் தனக்குப்பின் ஒரு வல்லின உயிர்மெய் எழுத்தையும் பெற்றுச் சொல்லின் இடையில் மட்டுமே வரும்.</li>
+            <li>தனித்து இயங்காது.</li>
+            <li>முதல் எழுத்துகளாகிய உயிரையும், மெய்யயும் சார்ந்து இயங்குவதால் ஆயத எழுத்து சார்பெழுத்து ஆகும்.</li>
+          </ul>
+        </div>
+        <div class="note-section">
+          <h3>கற்பவை கற்றபின் — பதிப்பீடு</h3>
+          <ul class="note-list">
+            <li>முதல் எழுத்துகள் என்பவை யாவை? அவை எதனால் அவ்வாறு அழைக்கப்படுகின்றன?</li>
+            <li>சார்பெழுத்துகள் எத்தனை? அவை யாவை?</li>
+            <li>சொற்களில் ஆயத எழுத்து எவ்வாறு இடம்பெறும்?</li>
+            <li>முதல் எழுத்துகள், சார்பு எழுத்துகள் தொடர்பைப் பற்றி விவாதிக்க.</li>
+            <li>முதல் எழுத்துகள் மட்டும் இடம்பெறும் சொற்களை எழுதுக. (எ.கா.) ஆம்</li>
+            <li>முதல் எழுத்துகள் இடம்பெறாத சொற்களை எழுதுக. (எ.கா.) குருவி</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="iyal-card">
+      <div class="iyal-header" onclick="tog(this)">
+        <span class="iyal-badge">இயல் 3</span>
+        <span class="iyal-title">மொழி முதல், இறுதி எழுத்துகள்</span>
+        <span class="iyal-arrow">▼</span>
+      </div>
+      <div class="iyal-body">
+        <div class="note-section">
+          <h3>தொடக்கம்</h3>
+          <p class="note-p">நம் தமிழ் மொழியின் சொற்கள் நாம் எளிதாக ஒலிக்கும் வகையில் உருவானவை. வேற்று மொழிச்சொற்களைப் பேசுகையில் நமக்குத் தடுமாற்றம் ஏற்படுகிறது. நம் மொழியின் சொற்களின் இயல்பையும் மரபையும் அறிந்து கொள்வது தேவையானது. சொல்லின் முதலிலும் இடையிலும் இறுதியிலும் எந்தெந்த எழுத்துகள் வரும் என்பதை அறிந்து கொள்வதால் மொழியை நன்கு பேசமுடியும்.</p>
+          <div class="highlight-box">எ.கா: நன்றி — ண்ன்றி, னன்றி என்பதல்ல, <b>நன்றி</b> என்பதே சரியான சொல்.</div>
+        </div>
+        <div class="note-section">
+          <h3>மொழி முதல் எழுத்துகள்</h3>
+          <p class="note-p">சொல்லின் முதலில் வரும் எழுத்துகளை <b>மொழிமுதல் எழுத்துகள்</b> என்பர். (மொழி என்பதற்குச் சொல் என்னும் பொருளும் உண்டு.)</p>
+          <div class="table-wrap"><table>
+            <tr><th>வரிசை / வகை</th><th>விவரம்</th></tr>
+            <tr><td>உயிர் எழுத்துகள் 12</td><td>அனைத்தும் சொல்லின் முதலில் வரும்</td></tr>
+            <tr><td>க, ச, த, ந, ப, ம வரிசைகள்</td><td>எல்லா உயிர்மெய் எழுத்துகளும் சொல்லின் முதலில் வரும்</td></tr>
+            <tr><td>ஞ வரிசை</td><td>ஞ, ஞா, ஞெ, ஞோ — 4 எழுத்துகள் மட்டும் வரும்</td></tr>
+            <tr><td>ய வரிசை</td><td>ய, யா, யு, யூ, யோ, யௌ — 6 எழுத்துகள் மட்டும் வரும்</td></tr>
+            <tr><td>வ வரிசை</td><td>வ, வா, வி, வீ, வெ, வே, வை, வெள் — 8 எழுத்துகள் மட்டும் வரும்</td></tr>
+          </table></div>
+        </div>
+        <div class="note-section">
+          <h3>மொழிக்கு முதலில் வராத எழுத்துகள்</h3>
+          <ul class="note-list">
+            <li>மெய்யெழுத்துகள் பதினெட்டும் சொல்லின் முதலில் வாரா.</li>
+            <li>ட, ண, ர, ல, ழ, ள, ற, ன ஆகிய எட்டு வரிசைகளில் ஓர் எழுத்துகூட சொல்லின் முதலில் வராது.</li>
+            <li>ஆயத எழுத்து சொல்லின் முதலில் வராது.</li>
+            <li>ங வரிசையில் 'ங' என்னும் ஓர் எழுத்து மட்டுமே சொல்லில் முதல் எழுத்தாக வருகிறது. (எ.கா: ஙனம்) — இக்காலத்தில் ஙனம் என்னும் சொல் தனித்து இயங்காமல் அங்ஙனம், இங்ஙனம், எங்ஙனம் என்னும் சொற்களில் மட்டுமே வழங்கி வருகிறது.</li>
+          </ul>
+        </div>
+        <div class="note-section">
+          <h3>மொழி இறுதி எழுத்துகள்</h3>
+          <p class="note-p">சொல்லின் இறுதியில் வரும் எழுத்துகளை <b>மொழி இறுதி எழுத்துகள்</b> என்பர்.</p>
+          <ul class="note-list">
+            <li>உயிர் எழுத்துகள் பன்னிரண்டும் மெய்யுடன் இணைந்து உயிர்மெய்யாக மட்டுமே மொழி இறுதியில் வரும்.</li>
+            <li>ஞ், ண், ந், ம், ய, ர், ல், வ், ழ், ள், ன் ஆகிய மெய்யெழுத்துகள் பதினொன்றும் மொழியின் இறுதியில் வரும்.</li>
+          </ul>
+        </div>
+        <div class="note-section">
+          <h3>மொழி இறுதியாகா எழுத்துகள்</h3>
+          <ul class="note-list">
+            <li>சொல்லின் இறுதியில் உயிரெழுத்துகள் தனித்து வருவதில்லை.</li>
+            <li>ஆயத எழுத்து சொல்லின் இறுதியில் வராது.</li>
+            <li>க், ங், ச், ட், த், ப், ற் ஆகிய ஏழு மெய் எழுத்துகளும் சொல்லின் இறுதியில் வருவதில்லை.</li>
+            <li>உயிர்மெய் எழுத்துகளுள் 'ங' எழுத்து வரிசை சொல்லின் இறுதியில் வராது.</li>
+            <li>எகர வரிசையில் கெ முதல் நெ முடிய எந்த உயிர்மெய் எழுத்தும் மொழி இறுதியில் வருவதில்லை.</li>
+            <li>ஒகர வரிசையில் நோ தவிர பிற உயிர்மெய் எழுத்துகள் மொழி இறுதியில் வருவதில்லை. நோ என்னும் எழுத்து ஓரெழுத்து ஒரு மொழியாகத் துன்பம் என்னும் பொருளில் வரும்.</li>
+          </ul>
+        </div>
+        <div class="note-section">
+          <h3>சொல்லின் இடையில் வரும் எழுத்துகள்</h3>
+          <ul class="note-list">
+            <li>மெய் எழுத்துகள் பதினெட்டும் சொல்லின் இடையில் வரும்.</li>
+            <li>உயிர்மெய் எழுத்துகள் சொல்லின் இடையில் வரும்.</li>
+            <li>ஆயத எழுத்து சொல்லின் இடையில் <b>மட்டுமே</b> வரும்.</li>
+            <li>அளபெடையில் இடம் பெறும்போது உயிர் எழுத்துகள் சொல்லின் இடையில் வரும்.</li>
+          </ul>
+        </div>
+        <div class="note-section">
+          <h3>பொருத்துக (Match the Following)</h3>
+          <div class="table-wrap"><table>
+            <tr><th class="match-th">நெடுவரிசை 1</th><th class="match-th">நெடுவரிசை 2</th></tr>
+            <tr><td>வல்லினம்</td><td>க், ச், ட், த், ப், ற்</td></tr>
+            <tr class="match-even"><td>மெல்லினம்</td><td>ங், ஞ், ண், ந், ம், ன்</td></tr>
+            <tr><td>இடையினம்</td><td>ய, ர், ல், வ், ழ், ள்</td></tr>
+            <tr class="match-even"><td>குறில் மாத்திரை</td><td>1 மாத்திரை</td></tr>
+            <tr><td>நெடில் மாத்திரை</td><td>2 மாத்திரை</td></tr>
+            <tr class="match-even"><td>மெய் மாத்திரை</td><td>½ மாத்திரை</td></tr>
+            <tr><td>ஆயதம் வரும் இடம்</td><td>சொல்லின் இடையில் மட்டும்</td></tr>
+            <tr class="match-even"><td>மொழி முதல் வாரா மெய்</td><td>18 மெய்யெழுத்துகளும் வாரா</td></tr>
+            <tr><td>உயிர்மெய் எழுத்துகள்</td><td>216 எழுத்துகள்</td></tr>
+            <tr class="match-even"><td>சார்பு எழுத்துகள்</td><td>10 வகை</td></tr>
+          </table></div>
+        </div>
+        <div class="note-section">
+          <h3>பதிப்பீடு கேள்விகள்</h3>
+          <ul class="note-list">
+            <li>மொழிக்கு முதலில் வரும் உயிர்மெய் எழுத்துகள் யாவை?</li>
+            <li>மொழிக்கு இறுதியில் வாரா மெய்யெழுத்துகள் யாவை?</li>
+            <li>சொல்லின் இடையில் மட்டுமே வரும் எழுத்துகள் எவை?</li>
+            <li>ஞ, ய, வ ஆகிய உயிர்மெய் எழுத்துகள் வரிசையில் மொழிமுதல் எழுத்துகளாக அமைபவை எவை? அவ்வெழுத்துகளைக் கொண்டு தொடங்கும் சொற்களை அகராதியைப் பார்த்து எழுதுக.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="iyal-card">
+      <div class="iyal-header" onclick="tog(this)">
+        <span class="iyal-badge">அறிவியல்</span>
+        <span class="iyal-title">சர். சி.வி. இராமன் — இராமன் விளைவு</span>
+        <span class="iyal-arrow">▼</span>
+      </div>
+      <div class="iyal-body">
+        <div class="note-section">
+          <h3>கடல்நீரின் நீல நிறம் — வினா எழுந்தது</h3>
+          <p class="note-p">1921 ஆம் ஆண்டு மத்திய தரைக் கடலில், ஒரு கப்பல் இங்கிலாந்தை நோக்கிச் சென்று கொண்டிருந்தது. தமிழர் ஒருவர் கப்பலின் மேல்தளத்தில் நின்று கடல் அலைகளைப் பார்த்துக் கொண்டிருந்தார். திடீரென அவரது உள்ளத்தில் <b>கடல்நீர் ஏன் நீலநிறமாகக் காட்சியளிக்கிறது</b> என்ற வினா எழுந்தது. அவ்வினா அவரை உறங்க விடவில்லை.</p>
+          <p class="note-p">இங்கிலாந்து பயணம் முடிந்து இந்தியா திரும்பினார். பிறகு பாதரச ஆவி விளக்கு, பென்சீன் மற்றும் நிறமாலைக் காட்டி ஆகியவற்றின் உதவியுடன் தமது ஆய்வைத் தொடங்கினார்.</p>
+        </div>
+        <div class="note-section">
+          <h3>இராமன் விளைவு — கண்டுபிடிப்பு</h3>
+          <p class="note-p">ஆய்வின் முடிவில் <b>1928 பிப்ரவரி 28 ஆம் நாள்</b> "இராமன் விளைவு" என்னும் தமது கண்டுபிடிப்பை வெளியிட்டார். இக்கண்டுபிடிப்பு இந்தியாவிற்கு அறிவியலுக்கான <b>முதல் நோபல் பரிசை</b>ப் பெற்றுத் தந்தது.</p>
+          <div class="highlight-box">அவர் தமது கண்டுபிடிப்பை வெளியிட்ட <b>பிப்ரவரி 28</b> ஆம் நாளை நாம் ஆண்டு தோறும் <b>"தேசிய அறிவியல் நாள்"</b> எனக் கொண்டாடி மகிழ்கிறோம். அவர் — <b>சர். சி. வி. இராமன்</b>.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="iyal-card">
+      <div class="iyal-header" onclick="tog(this)">
+        <span class="iyal-badge">கலைச்சொல்</span>
+        <span class="iyal-title">தமிழ் — ஆங்கிலம் கலைச்சொற்கள்</span>
+        <span class="iyal-arrow">▼</span>
+      </div>
+      <div class="iyal-body">
+        <div class="table-wrap"><table>
+          <tr><th>தமிழ்</th><th>ஆங்கிலம்</th><th>தமிழ்</th><th>ஆங்கிலம்</th></tr>
+          <tr><td>இணையம்</td><td>Internet</td><td>குரல்தேடல்</td><td>Voice Search</td></tr>
+          <tr><td>தேடுபொறி</td><td>Search engine</td><td>தொடுதிரை</td><td>Touch Screen</td></tr>
+          <tr><td>முகநூல்</td><td>Facebook</td><td>செயலி</td><td>App</td></tr>
+          <tr><td>புலனம்</td><td>Whatsapp</td><td>மின்னஞ்சல்</td><td>E-mail</td></tr>
+          <tr><td>வலஞ்சுழி</td><td>Clock wise</td><td>இடஞ்சுழி</td><td>Anti Clock wise</td></tr>
+          <tr><td>செயற்கை நுண்ணறிவு</td><td>Artificial Intelligence</td><td>மீத்திறன் கணினி</td><td>Super Computer</td></tr>
+          <tr><td>செயற்கைக் கோள்</td><td>Satellite</td><td>நுண்ணறிவு</td><td>Intelligence</td></tr>
+          <tr><td>கண்டம்</td><td>Continent</td><td>தட்பவெப்பநிலை</td><td>Climate</td></tr>
+          <tr><td>வானிலை</td><td>Weather</td><td>வலசை</td><td>Migration</td></tr>
+          <tr><td>புகலிடம்</td><td>Sanctuary</td><td>புவிஈர்ப்புப்புலம்</td><td>Gravitational Field</td></tr>
+        </table></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quiz" class="section">
+    <div id="quiz-main">
+      <div class="quiz-meta">
+        <div class="quiz-stat">கேள்வி <span id="qcount">1/50</span></div>
+        <div class="quiz-stat">மதிப்பெண் <span id="qscore">0</span></div>
+        <div class="quiz-stat">சரி <span id="qcorrect" style="color:#1D9E75">0</span></div>
+        <div class="quiz-stat">தவறு <span id="qwrong" style="color:#D85A30">0</span></div>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="qprogress" style="width:2%"></div></div>
+      <div id="q-container"></div>
+      <div class="q-nav">
+        <button class="btn" onclick="prevQ()" id="prevBtn" disabled>← முந்தைய</button>
+        <button class="btn btn-danger" onclick="resetQuiz()">↺ மீண்டும்</button>
+        <button class="btn btn-primary" onclick="nextQ()" id="nextBtn">அடுத்தது →</button>
+      </div>
+    </div>
+    <div id="quiz-result" style="display:none">
+      <div class="result-box">
+        <div class="score-big" id="r-score">0</div>
+        <div class="score-label">மொத்த மதிப்பெண் (100 இல்)</div>
+        <div id="r-grade" class="grade-badge"></div>
+      </div>
+      <div class="result-grid">
+        <div class="res-card"><div class="res-num" id="r-correct" style="color:#1D9E75">0</div><div class="res-lab">சரியான விடைகள்</div></div>
+        <div class="res-card"><div class="res-num" id="r-wrong" style="color:#D85A30">0</div><div class="res-lab">தவறான விடைகள்</div></div>
+        <div class="res-card"><div class="res-num" id="r-pct">0%</div><div class="res-lab">சதவீதம்</div></div>
+      </div>
+      <div style="text-align:center"><button class="btn btn-primary" onclick="resetQuiz()">மீண்டும் விளையாடு</button></div>
+    </div>
+  </div>
+
+  <!-- GAME -->
+  <div id="game" class="section">
+    <div class="iyal-card">
+      <div style="padding:16px">
+        <h2 style="font-size:18px;font-weight:600;color:#26215C;margin-bottom:4px">இணை கண்டுபிடி விளையாட்டு 🎯</h2>
+        <p style="font-size:13px;color:#666;margin-bottom:14px">இடது பக்கம் ஒன்றைத் தேர்ந்தெடுத்து வலது பக்கத்தில் இணையான விடையை தொடுங்கள்!</p>
+        <div class="game-info">
+          <div class="game-badge">மதிப்பெண்: <strong id="gscore">0</strong></div>
+          <div class="game-badge">இணைகள்: <strong id="gmatched">0</strong>/8</div>
+          <div class="game-badge">முயற்சிகள்: <strong id="gattempts">0</strong></div>
+          <button class="btn btn-primary" onclick="startGame()">புதிய விளையாட்டு</button>
+        </div>
+        <div id="game-status" style="font-size:14px;font-weight:600;color:#534AB7;margin:8px 0;min-height:22px"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
+          <div class="col-label">இடப்பக்கம் (Question)</div>
+          <div class="col-label">வலப்பக்கம் (Answer)</div>
+        </div>
+        <div id="game-area" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchTab(t,el){
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(t).classList.add('active');
+}
+function tog(header){
+  const body=header.nextElementSibling;
+  const arrow=header.querySelector('.iyal-arrow');
+  const isOpen=body.classList.contains('open');
+  body.classList.toggle('open');
+  arrow.style.transform=isOpen?'':'rotate(180deg)';
+}
+// init arrows
+document.querySelectorAll('.iyal-body.open').forEach(b=>{b.previousElementSibling.querySelector('.iyal-arrow').style.transform='rotate(180deg)'});
+
+const allQ=[
+  {q:"தமிழ் இலக்கணம் எத்தனை வகைப்படும்?",o:["மூன்று","நான்கு","ஐந்து","ஆறு"],a:2,e:"தமிழ் மொழியின் இலக்கண வகைகள் ஐந்து: எழுத்து, சொல், பொருள், யாப்பு, அணி."},
+  {q:"எழுத்து என்றால் என்ன?",o:["ஒலி மட்டும்","வரி மட்டும்","ஒலி வடிவமாக எழுப்பப்படுவதும் வரிவடிவமாக எழுதப்படுவதும்","சொல் மட்டும்"],a:2,e:"ஒலி வடிவமாக எழுப்பப்படுவதும் வரிவடிவமாக எழுதப்படுவதும் எழுத்து எனப்படுகிறது."},
+  {q:"உயிர் எழுத்துகள் எத்தனை?",o:["10","11","12","14"],a:2,e:"உயிர் எழுத்துகள் பன்னிரண்டு (12): அ முதல் ஔ வரை."},
+  {q:"மெய்யெழுத்துகள் எத்தனை?",o:["16","17","18","20"],a:2,e:"மெய்யெழுத்துகள் பதினெட்டு (18)."},
+  {q:"குறில் எழுத்துகளின் மாத்திரை அளவு என்ன?",o:["½ மாத்திரை","1 மாத்திரை","2 மாத்திரை","3 மாத்திரை"],a:1,e:"குறில் எழுத்தை ஒலிக்கும் கால அளவு 1 மாத்திரை."},
+  {q:"நெடில் எழுத்துகளின் மாத்திரை அளவு என்ன?",o:["1 மாத்திரை","1½ மாத்திரை","2 மாத்திரை","½ மாத்திரை"],a:2,e:"நெடில் எழுத்தை ஒலிக்கும் கால அளவு 2 மாத்திரை."},
+  {q:"மெய் எழுத்துகள் ஒலிக்கும் கால அளவு என்ன?",o:["1 மாத்திரை","2 மாத்திரை","½ மாத்திரை","¼ மாத்திரை"],a:2,e:"மெய் எழுத்துகள் ஒலிக்கும் கால அளவு அரை (½) மாத்திரை."},
+  {q:"ஆயத எழுத்தை ஒலிக்க ஆகும் கால அளவு என்ன?",o:["1 மாத்திரை","½ மாத்திரை","2 மாத்திரை","¼ மாத்திரை"],a:1,e:"ஆயத எழுத்தை ஒலிக்க ஆகும் கால அளவு அரை (½) மாத்திரை."},
+  {q:"வல்லினம் என்று அழைக்கப்படும் மெய்யெழுத்துகள் எவை?",o:["ங், ஞ், ண், ந், ம், ன்","க், ச், ட், த், ப், ற்","ய, ர், ல், வ், ழ், ள்","க், ச், ய, ர், ல், வ்"],a:1,e:"க், ச், ட், த், ப், ற் ஆகிய ஆறும் வல்லினம் — வன்மையாக ஒலிக்கின்றன."},
+  {q:"மெல்லினம் என்று அழைக்கப்படும் மெய்யெழுத்துகள் எவை?",o:["க், ச், ட், த், ப், ற்","ய, ர், ல், வ், ழ், ள்","ங், ஞ், ண், ந், ம், ன்","ட், ண், ர், ல், ழ், ள்"],a:2,e:"ங், ஞ், ண், ந், ம், ன் ஆகிய ஆறும் மெல்லினம் — மென்மையாக ஒலிக்கின்றன."},
+  {q:"இடையினம் என்று அழைக்கப்படும் மெய்யெழுத்துகள் எவை?",o:["க், ச், ட், த், ப், ற்","ங், ஞ், ண், ந், ம், ன்","ய, ர், ல், வ், ழ், ள்","ண், ந், ம், ய, ர், ல்"],a:2,e:"ய, ர், ல், வ், ழ், ள் ஆகிய ஆறும் இடையினம் — வன்மையாகவும் மென்மையாகவும் இல்லாமல் இடைப்பட்டு ஒலிக்கின்றன."},
+  {q:"உயிர்மெய் எழுத்துகள் மொத்தம் எத்தனை?",o:["180","200","216","250"],a:2,e:"மெய் (18) × உயிர் (12) = 216 உயிர்மெய் எழுத்துகள்."},
+  {q:"ஆயத எழுத்தின் வேறு பெயர்கள் யாவை?",o:["முப்புள்ளி, முப்பாற்புள்ளி, தனிநிலை, அஃகேனம்","குறில், நெடில், மெய், உயிர்","வல்லினம், மெல்லினம், இடையினம்","எதுவுமில்லை"],a:0,e:"ஆயத எழுத்தின் வேறு பெயர்கள்: முப்புள்ளி, முப்பாற்புள்ளி, தனிநிலை, அஃகேனம்."},
+  {q:"முதல் எழுத்துகள் மொத்தம் எத்தனை?",o:["20","25","30","36"],a:2,e:"உயிர் (12) + மெய் (18) = 30 முதல் எழுத்துகள்."},
+  {q:"சார்பு எழுத்துகள் எத்தனை வகைப்படும்?",o:["5","8","10","12"],a:2,e:"சார்பு எழுத்துகள் பத்து வகைப்படும்."},
+  {q:"ஆயத எழுத்து சொல்லின் எந்த இடத்தில் வரும்?",o:["முதலில்","இறுதியில்","இடையில் மட்டும்","எங்கும்"],a:2,e:"ஆயத எழுத்து சொல்லின் இடையில் மட்டுமே வரும். தனித்து இயங்காது."},
+  {q:"மொழி முதல் எழுத்துகள் என்றால் என்ன?",o:["சொல்லின் இறுதியில் வரும் எழுத்துகள்","சொல்லின் முதலில் வரும் எழுத்துகள்","சொல்லின் இடையில் வரும் எழுத்துகள்","எல்லா இடத்திலும் வரும் எழுத்துகள்"],a:1,e:"சொல்லின் முதலில் வரும் எழுத்துகளை மொழிமுதல் எழுத்துகள் என்பர்."},
+  {q:"ஆயத எழுத்து சொல்லின் முதலில் வருமா?",o:["ஆம்","இல்லை","சில நேரம் வரும்","பொருளைப் பொறுத்தது"],a:1,e:"ஆயத எழுத்து சொல்லின் முதலில் வராது. அது இடையில் மட்டுமே வரும்."},
+  {q:"ட, ண, ர, ல, ழ, ள, ற, ன வரிசைகளில் எழுத்துகள் சொல்லின் முதலில் வருமா?",o:["சில வரும்","ஒன்றும் வராது","எல்லாமே வரும்","பாதி வரும்"],a:1,e:"ட, ண, ர, ல, ழ, ள, ற, ன ஆகிய எட்டு வரிசைகளில் ஒர் எழுத்துகூட சொல்லின் முதலில் வராது."},
+  {q:"க, ச, த, ந, ப, ம வரிசைகளில் உயிர்மெய் எழுத்துகள் சொல்லின் முதலில் வருமா?",o:["இல்லை","சில வரும்","எல்லா உயிர்மெய் எழுத்துகளும் வரும்","ஒரே ஒரு எழுத்து மட்டும் வரும்"],a:2,e:"க, ச, த, ந, ப, ம ஆகிய வரிசைகளில் உள்ள எல்லா உயிர்மெய் எழுத்துகளும் சொல்லின் முதலில் வரும்."},
+  {q:"மொழி இறுதியில் வரும் மெய்யெழுத்துகள் எத்தனை?",o:["5","7","11","18"],a:2,e:"ஞ், ண், ந், ம், ய, ர், ல், வ், ழ், ள், ன் ஆகிய 11 மெய்யெழுத்துகள் மொழியின் இறுதியில் வரும்."},
+  {q:"மொழி இறுதியில் வராத மெய்யெழுத்துகள் எவை?",o:["ண், ந், ம், ன்","க், ங், ச், ட், த், ப், ற்","ய, ர், ல், வ்","ழ், ள், ன்"],a:1,e:"க், ங், ச், ட், த், ப், ற் ஆகிய ஏழு மெய் எழுத்துகளும் சொல்லின் இறுதியில் வருவதில்லை."},
+  {q:"சொல்லின் இடையில் மட்டுமே வரும் எழுத்து எது?",o:["உயிர் எழுத்துகள்","மெய்யெழுத்துகள்","ஆயத எழுத்து","உயிர்மெய் எழுத்துகள்"],a:2,e:"ஆயத எழுத்து சொல்லின் இடையில் மட்டுமே வரும்."},
+  {q:"மாத்திரை என்பது எதைக் குறிக்கிறது?",o:["எழுத்தின் வடிவை","கால அளவை","ஒலி இயல்பை","வலிமையை"],a:1,e:"மாத்திரை என்பது கால அளவைக் குறிக்கிறது."},
+  {q:"ஒரு மாத்திரை என்பது எவ்வளவு கால அளவு?",o:["ஒரு நிமிடம்","ஒருமுறை கண் இமைக்க ஆகும் கால அளவு","ஒரு விநாடி","ஒரு மணி நேரம்"],a:1,e:"ஒரு மாத்திரை என்பது ஒருமுறை கண் இமைக்கவோ ஒருமுறை கைநாடிக்கவோ ஆகும் கால அளவாகும்."},
+  {q:"'கபிலர்' என்ற பெயரின் மாத்திரை அளவு என்ன?",o:["3 மாத்திரை","3½ மாத்திரை","4 மாத்திரை","2½ மாத்திரை"],a:1,e:"க(1)+பி(1)+ல(1)+ர்(½) = 3½ மாத்திரை."},
+  {q:"சர். சி.வி. இராமன் தமது கண்டுபிடிப்பை வெளியிட்ட ஆண்டு எது?",o:["1920","1925","1928","1930"],a:2,e:"1928 பிப்ரவரி 28 ஆம் நாள் 'இராமன் விளைவு' கண்டுபிடிப்பை வெளியிட்டார்."},
+  {q:"இராமன் விளைவுக் கண்டுபிடிப்பு இந்தியாவிற்கு என்ன பரிசைத் தந்தது?",o:["ஆஸ்கர் பரிசு","புலிட்சர் பரிசு","அறிவியலுக்கான முதல் நோபல் பரிசு","பாரத ரத்னா"],a:2,e:"இக்கண்டுபிடிப்பு இந்தியாவிற்கு அறிவியலுக்கான முதல் நோபல் பரிசைப் பெற்றுத் தந்தது."},
+  {q:"தேசிய அறிவியல் நாள் எப்போது கொண்டாடப்படுகிறது?",o:["ஜனவரி 26","பிப்ரவரி 28","மார்ச் 15","நவம்பர் 14"],a:1,e:"சர்.சி.வி.இராமன் தமது கண்டுபிடிப்பை வெளியிட்ட பிப்ரவரி 28 ஆம் நாள் தேசிய அறிவியல் நாள்."},
+  {q:"இராமன் அவர்கள் கடல்நீரின் எந்த நிறம் பற்றி ஆராய்ந்தார்?",o:["சிவப்பு நிறம்","பச்சை நிறம்","நீல நிறம்","மஞ்சள் நிறம்"],a:2,e:"கடல்நீர் ஏன் நீலநிறமாகக் காட்சியளிக்கிறது என்ற வினா அவரது உள்ளத்தில் எழுந்தது."},
+  {q:"குறில் எழுத்துகள் எவை?",o:["அ, ஆ, இ, ஈ, உ","அ, இ, உ, எ, ஒ","ஆ, ஈ, ஊ, ஏ, ஐ","அ, இ, உ, ஏ, ஒ"],a:1,e:"அ, இ, உ, எ, ஒ ஆகிய ஐந்தும் குறில் எழுத்துகள் — குறுகி ஒலிக்கின்றன."},
+  {q:"நெடில் எழுத்துகள் எத்தனை?",o:["5","6","7","8"],a:2,e:"ஆ, ஈ, ஊ, ஏ, ஐ, ஓ, ஔ ஆகிய ஏழும் நெடில் எழுத்துகள்."},
+  {q:"மெய் என்ற சொல்லுக்கு என்ன பொருள்?",o:["மனம்","உடம்பு","ஒலி","வடிவு"],a:1,e:"மெய் என்பது உடம்பு எனப் பொருள்படும்."},
+  {q:"உயிர் எழுத்துகள் பிறப்பதற்கு முதன்மையான காரணம் என்ன?",o:["நீர்","காற்று","நெருப்பு","மண்"],a:1,e:"உயிருக்கு முதன்மையானது காற்று. இயல்பாகக் காற்று வெளிப்படும்போது உயிர் எழுத்துகள் பிறக்கின்றன."},
+  {q:"ங வரிசையில் சொல்லின் முதல் எழுத்தாக வரும் எழுத்து எது?",o:["ங மட்டும்","ங, ஙா","ங, ஙி","எதுவும் வராது"],a:0,e:"ங வரிசையில் 'ங' என்னும் ஓர் எழுத்து மட்டுமே சொல்லில் முதல் எழுத்தாக வருகிறது. (எ.கா: ஙனம்)"},
+  {q:"ஞ வரிசையில் சொல்லின் முதலில் வரும் எழுத்துகள் எத்தனை?",o:["2","3","4","6"],a:2,e:"ஞ வரிசையில் ஞ, ஞா, ஞெ, ஞோ ஆகிய நான்கு எழுத்துகளும் சொல்லின் முதலில் வரும்."},
+  {q:"வ வரிசையில் சொல்லின் முதலில் வரும் எழுத்துகள் எத்தனை?",o:["4","6","8","10"],a:2,e:"வ வரிசையில் வ, வா, வி, வீ, வெ, வே, வை, வெள் ஆகிய எட்டு எழுத்துகளும் சொல்லின் முதலில் வரும்."},
+  {q:"ய வரிசையில் சொல்லின் முதலில் வரும் எழுத்துகள் எத்தனை?",o:["3","4","5","6"],a:3,e:"ய வரிசையில் ய, யா, யு, யூ, யோ, யௌ ஆகிய ஆறு எழுத்துகளும் சொல்லின் முதலில் வரும்."},
+  {q:"ஆயதம் மூன்று புள்ளிகளை உடைய தனித்த வடிவம் பெற்றது என்று யார் கூறுகிறார்?",o:["தொல்காப்பியம்","இலக்கண நூல்","6ஆம் வகுப்பு தமிழ் பாடப்புத்தகம்","நன்னூல்"],a:2,e:"6ஆம் வகுப்பு தமிழ் Term 1 பாடப்புத்தகம் — ஆயதம் மூன்று புள்ளிகளை உடைய தனித்த வடிவம் பெற்றது என்று கூறுகிறது."},
+  {q:"இலக்கணம் என்பது என்ன?",o:["ஒரு மொழியின் சொற்கள்","மொழியை பேசவும் எழுதவும் வழிகாட்டும் வரையறைகள்","ஒரு மொழியின் வரலாறு","மொழியின் ஒலிகள்"],a:1,e:"மொழியை எவ்வாறு பேசவும் எழுதவும் வேண்டும் என்பதை வரையறை செய்வதே இலக்கணம்."},
+  {q:"ஆயத எழுத்து சொல்லின் இடையில் வர என்ன நிபந்தனை?",o:["எந்த எழுத்தும் இருக்கலாம்","தனக்குமுன் குறில் எழுத்தும் பின் வல்லின உயிர்மெய்யும் வேண்டும்","தனக்குமுன் நெடில் வேண்டும்","எந்த நிபந்தனையும் இல்லை"],a:1,e:"ஆயதம் தனக்குமுன் ஒரு குறில் எழுத்தையும் தனக்குப்பின் ஒரு வல்லின உயிர்மெய் எழுத்தையும் பெற்றுச் சொல்லின் இடையில் மட்டுமே வரும்."},
+  {q:"மெய்யெழுத்துகள் சொல்லின் முதலில் வருமா?",o:["ஆம்","இல்லை","சில வரும்","பொருளைப் பொறுத்தது"],a:1,e:"மெய்யெழுத்துகள் பதினெட்டும் சொல்லின் முதலில் வாரா."},
+  {q:"'பொருள் இலக்கணம்' தமிழ் இலக்கணத்தின் எந்த வகை?",o:["முதல்","இரண்டாம்","மூன்றாம்","நான்காம்"],a:2,e:"தமிழ் இலக்கணத்தின் ஐந்து வகைகளில் பொருள் இலக்கணம் மூன்றாம் வகை."},
+  {q:"உயிர்மெய் குறில் என்றால் என்ன?",o:["மெய்யுடன் உயிர் நெடில் சேர்ந்தது","மெய்யுடன் உயிர் குறில் சேர்ந்தது","உயிர் தனியாக வருவது","மெய் தனியாக வருவது"],a:1,e:"மெய்யுடன் உயிர்க்குறில் சேர்ந்தால் உயிர்மெய்க் குறில் தோன்றுகிறது."},
+  {q:"'நன்றி' என்ற சொல்லில் முதல் எழுத்து எது?",o:["ண","ன","ந","ந்"],a:2,e:"'நன்றி' என்ற சொல்லில் முதல் எழுத்து 'ந' — ந வரிசை சொல்லின் முதலில் வரும்."},
+  {q:"சொல்லின் இடையில் வரும் எழுத்துகள் யாவை?",o:["உயிர் மட்டும்","மெய் மட்டும்","மெய், உயிர்மெய், ஆயதம்","உயிர், மெய், ஆயதம்"],a:2,e:"மெய் எழுத்துகள், உயிர்மெய் எழுத்துகள், ஆயத எழுத்து ஆகியவை சொல்லின் இடையில் வரும்."},
+  {q:"'யாப்பு இலக்கணம்' தமிழ் இலக்கணத்தின் எந்த வகை?",o:["இரண்டாம்","மூன்றாம்","நான்காம்","ஐந்தாம்"],a:2,e:"யாப்பு இலக்கணம் தமிழ் மொழியின் இலக்கண வகைகளில் நான்காம் வகை."},
+  {q:"உயிர் எழுத்துகளில் குறில் எத்தனை? நெடில் எத்தனை?",o:["குறில் 7, நெடில் 5","குறில் 5, நெடில் 7","குறில் 6, நெடில் 6","குறில் 4, நெடில் 8"],a:1,e:"அ, இ, உ, எ, ஒ = 5 குறில்; ஆ, ஈ, ஊ, ஏ, ஐ, ஓ, ஔ = 7 நெடில்."},
+  {q:"எகர வரிசையில் கெ முதல் நெ வரை சொல்லின் இறுதியில் வருமா?",o:["ஆம், வரும்","இல்லை, வராது","சில வரும்","நெ மட்டும் வரும்"],a:1,e:"எகர வரிசையில் கெ முதல் நெ முடிய எந்த உயிர்மெய் எழுத்தும் மொழி இறுதியில் வருவதில்லை."},
+  {q:"'இணையம்' என்ற தமிழ்ச்சொல்லுக்கு ஆங்கிலம் என்ன?",o:["Facebook","Whatsapp","Internet","Satellite"],a:2,e:"இணையம் = Internet என்பது கலைச்சொல்."},
+  {q:"'Sanctuary' என்ற ஆங்கிலச் சொல்லுக்கு தமிழ் என்ன?",o:["கண்டம்","வலசை","வானிலை","புகலிடம்"],a:3,e:"Sanctuary = புகலிடம் என்பது கலைச்சொல்."},
+  {q:"'Artificial Intelligence' என்பதற்கு தமிழ் என்ன?",o:["மீத்திறன் கணினி","செயற்கை நுண்ணறிவு","செயற்கைக் கோள்","நுண்ணறிவு மட்டும்"],a:1,e:"Artificial Intelligence = செயற்கை நுண்ணறிவு என்பது கலைச்சொல்."},
+];
+
+let cur=0,score=0,correct=0,wrong=0,answered=[];
+
+function renderQ(){
+  if(!allQ.length) return;
+  const q=allQ[cur];
+  const ans=answered[cur];
+  const labels=['அ','ஆ','இ','ஈ'];
+  let html=`<div class="q-card"><div class="q-num"><span>கேள்வி ${cur+1} / ${allQ.length}</span><span style="font-size:11px;color:#888">${answered.filter(x=>x!==undefined).length} விடையளிக்கப்பட்டது</span></div><div class="q-text">${q.q}</div><div class="options">`;
+  q.o.forEach((opt,i)=>{
+    let cls='opt';
+    if(ans!==undefined){
+      cls+=' disabled';
+      if(i===q.a) cls+=' correct';
+      else if(i===ans&&ans!==q.a) cls+=' wrong';
+    }
+    html+=`<button class="${cls}" onclick="answer(${i})"><span class="opt-label">${labels[i]}</span><span>${opt}</span></button>`;
+  });
+  html+='</div>';
+  if(ans!==undefined) html+=`<div class="answer-exp show">✓ விளக்கம்: ${q.e}</div>`;
+  html+='</div>';
+  document.getElementById('q-container').innerHTML=html;
+  document.getElementById('qcount').textContent=`${cur+1}/${allQ.length}`;
+  document.getElementById('qscore').textContent=score;
+  document.getElementById('qcorrect').textContent=correct;
+  document.getElementById('qwrong').textContent=wrong;
+  const pct=((cur)/(allQ.length-1))*100;
+  document.getElementById('qprogress').style.width=Math.max(2,pct)+'%';
+  document.getElementById('prevBtn').disabled=cur===0;
+  document.getElementById('nextBtn').textContent=cur===allQ.length-1?'முடிவைப் பார் →':'அடுத்தது →';
+}
+
+function answer(i){
+  if(answered[cur]!==undefined) return;
+  answered[cur]=i;
+  if(i===allQ[cur].a){score+=2;correct++;}
+  else wrong++;
+  renderQ();
+}
+
+function nextQ(){
+  if(cur===allQ.length-1){showResult();return;}
+  cur++;renderQ();
+}
+function prevQ(){if(cur>0){cur--;renderQ();}}
+
+function showResult(){
+  document.getElementById('quiz-main').style.display='none';
+  document.getElementById('quiz-result').style.display='block';
+  const pct=Math.round((correct/allQ.length)*100);
+  document.getElementById('r-score').textContent=score;
+  document.getElementById('r-correct').textContent=correct;
+  document.getElementById('r-wrong').textContent=wrong;
+  document.getElementById('r-pct').textContent=pct+'%';
+  const gb=document.getElementById('r-grade');
+  if(pct>=90){gb.textContent='மிகச்சிறப்பு! A+';gb.style.cssText='background:#E1F5EE;color:#085041';}
+  else if(pct>=75){gb.textContent='நல்லது! A';gb.style.cssText='background:#EEEDFE;color:#26215C';}
+  else if(pct>=60){gb.textContent='ஓரளவு நல்லது! B';gb.style.cssText='background:#FAEEDA;color:#412402';}
+  else{gb.textContent='மேலும் படிக்கவும்! C';gb.style.cssText='background:#FAECE7;color:#4A1B0C';}
+}
+
+function resetQuiz(){
+  cur=0;score=0;correct=0;wrong=0;answered=[];
+  document.getElementById('quiz-main').style.display='block';
+  document.getElementById('quiz-result').style.display='none';
+  renderQ();
+}
+renderQ();
+
+// GAME
+const gamePairs=[
+  {a:'வல்லினம்',b:'க், ச், ட், த், ப், ற்'},
+  {a:'மெல்லினம்',b:'ங், ஞ், ண், ந், ம், ன்'},
+  {a:'இடையினம்',b:'ய, ர், ல், வ், ழ், ள்'},
+  {a:'குறில் மாத்திரை',b:'1 மாத்திரை'},
+  {a:'நெடில் மாத்திரை',b:'2 மாத்திரை'},
+  {a:'மெய் மாத்திரை',b:'½ மாத்திரை'},
+  {a:'உயிர் எழுத்துகள்',b:'12 எழுத்துகள்'},
+  {a:'மெய் எழுத்துகள்',b:'18 எழுத்துகள்'},
+  {a:'உயிர்மெய் எழுத்துகள்',b:'216 எழுத்துகள்'},
+  {a:'சார்பு எழுத்துகள்',b:'10 வகை'},
+  {a:'முதல் எழுத்துகள்',b:'30 எழுத்துகள்'},
+  {a:'தமிழ் இலக்கணம்',b:'5 வகை'},
+  {a:'ஆயதம் வரும் இடம்',b:'சொல்லின் இடையில் மட்டும்'},
+  {a:'மொழி இறுதி மெய்',b:'ஞ், ண், ந், ம், ய, ர், ல், வ், ழ், ள், ன்'},
+];
+
+let gLeft=[],gRight=[],gSel=null,gSelSide=null,gMatched=[],gAttempts=0,gScore=0;
+
+function startGame(){
+  const copy=[...gamePairs];
+  const picked=[];
+  for(let i=0;i<8;i++){
+    const idx=Math.floor(Math.random()*copy.length);
+    picked.push(copy.splice(idx,1)[0]);
+  }
+  gLeft=picked.map((p,i)=>({id:i,text:p.a,pair:i}));
+  gRight=picked.map((p,i)=>({id:i,text:p.b,pair:i}));
+  for(let i=gRight.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [gRight[i],gRight[j]]=[gRight[j],gRight[i]];
+  }
+  gSel=null;gSelSide=null;gMatched=[];gAttempts=0;gScore=0;
+  document.getElementById('game-status').textContent='';
+  renderGame();
+}
+
+function renderGame(){
+  document.getElementById('gscore').textContent=gScore;
+  document.getElementById('gmatched').textContent=gMatched.length;
+  document.getElementById('gattempts').textContent=gAttempts;
+  const area=document.getElementById('game-area');
+  if(!gLeft.length){area.innerHTML='<p style="color:#888;padding:1rem;grid-column:1/-1">புதிய விளையாட்டு தொடங்கு!</p>';return;}
+  let lHtml='<div style="display:flex;flex-direction:column;gap:8px">';
+  gLeft.forEach(item=>{
+    const matched=gMatched.includes(item.pair);
+    const sel=gSel===item.id&&gSelSide==='left';
+    let cls='gc';
+    if(matched) cls+=' matched';
+    else if(sel) cls+=' sel';
+    lHtml+=`<div class="${cls}" id="lc${item.id}" onclick="pickCard(${item.id},'left')">${item.text}</div>`;
+  });
+  lHtml+='</div>';
+  let rHtml='<div style="display:flex;flex-direction:column;gap:8px">';
+  gRight.forEach(item=>{
+    const matched=gMatched.includes(item.pair);
+    const sel=gSel===item.id&&gSelSide==='right';
+    let cls='gc';
+    if(matched) cls+=' matched';
+    else if(sel) cls+=' sel';
+    rHtml+=`<div class="${cls}" id="rc${item.id}" onclick="pickCard(${item.id},'right')">${item.text}</div>`;
+  });
+  rHtml+='</div>';
+  area.innerHTML=lHtml+rHtml;
+  if(gMatched.length===8){
+    document.getElementById('game-status').textContent='🎉 அனைத்தும் இணைக்கப்பட்டன! மதிப்பெண்: '+gScore+' | முயற்சிகள்: '+gAttempts;
+  }
+}
+
+function pickCard(id,side){
+  if(gMatched.includes(id)&&side==='left') return;
+  if(gMatched.includes(id)&&side==='right') return;
+  if(gSel===null){gSel=id;gSelSide=side;renderGame();return;}
+  if(gSelSide===side){gSel=id;gSelSide=side;renderGame();return;}
+  gAttempts++;
+  const leftId=side==='right'?gSel:id;
+  const rightId=side==='right'?id:gSel;
+  const lItem=gLeft.find(x=>x.id===leftId);
+  const rItem=gRight.find(x=>x.id===rightId);
+  if(lItem&&rItem&&lItem.pair===rItem.pair){
+    gMatched.push(lItem.pair);gScore+=10;
+    gSel=null;gSelSide=null;renderGame();
+  } else {
+    const lEl=document.getElementById('lc'+leftId);
+    const rEl=document.getElementById('rc'+rightId);
+    if(lEl){lEl.classList.add('shake');}
+    if(rEl){rEl.classList.add('shake');}
+    setTimeout(()=>{gSel=null;gSelSide=null;renderGame();},600);
+  }
+}
+</script>
+</body>
+</html>
