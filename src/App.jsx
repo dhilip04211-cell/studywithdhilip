@@ -28,6 +28,7 @@ import ThirukkuralOldPart2 from "./Thirukkural/thirukkural_old_part2";
 
 // Tamil Notes
 import SanthiPizai from "./TamilNotes/SanthiPizai";
+import Mayankoli from "./TamilNotes/Mayankoli";
 
 function Home() {
   return (
@@ -92,7 +93,8 @@ export default function App() {
         <Route path="/Thirukkural/thirukkural-old-part2" element={<ThirukkuralOldPart2 />} />
 
         {/* Tamil Notes */}
-        Route path="/TamilNotes/santhipizai" element={<SanthiPizai />} />
+        <Route path="/TamilNotes/santhipizai" element={<SanthiPizai />} />
+        <Route path="/TamilNotes/mayankoli" element={<Mayankoli />} />
         
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
