@@ -26,6 +26,8 @@ import ThirukkuralOldPart1 from "./Thirukkural/thirukkural_old_part1";
 import ThirukkuralOldPart1Quiz from "./Thirukkural/thirukkural_old_part1_quiz";
 import ThirukkuralOldPart2 from "./Thirukkural/thirukkural_old_part2";
 
+// Tamil Notes
+import SanthiPizai from "./TamilNotes/SanthiPizai";
 
 function Home() {
   return (
@@ -80,16 +82,18 @@ export default function App() {
         <Route path="/PYQTAMIL" element={<PYQTAMIL />} />  {/* ✅ matches Tamil.html href */}
         <Route path="/PYQTAMIL/special-examination-2025" element={<Special_Examination_2025 />} />
         <Route path="/PYQTAMIL/gr-2-mains-2025" element={<Gr_2_Mains_2025 />} />
-<Route path="/PYQTAMIL/gr-4-2025" element={<Gr_4_2025 />} />
+        <Route path="/PYQTAMIL/gr-4-2025" element={<Gr_4_2025 />} />
 
-{/* Thirukkural routes */}
+        {/* Thirukkural routes */}
         <Route path="/Thirukkural" element={<Thirukkural />} />
-<Route path="/Thirukkural/thirukkural-old" element={<ThirukkuralOld />} />
-<Route path="/Thirukkural/thirukkural-old-part1" element={<ThirukkuralOldPart1 />} />
-<Route path="/Thirukkural/thirukkural-old-part1-quiz" element={<ThirukkuralOldPart1Quiz />} />        
-<Route path="/Thirukkural/thirukkural-old-part2" element={<ThirukkuralOldPart2 />} />
+        <Route path="/Thirukkural/thirukkural-old" element={<ThirukkuralOld />} />
+        <Route path="/Thirukkural/thirukkural-old-part1" element={<ThirukkuralOldPart1 />} />
+        <Route path="/Thirukkural/thirukkural-old-part1-quiz" element={<ThirukkuralOldPart1Quiz />} />        
+        <Route path="/Thirukkural/thirukkural-old-part2" element={<ThirukkuralOldPart2 />} />
 
-
+        {/* Tamil Notes */}
+        Route path="/TamilNotes/santhipizai" element={<SanthiPizai />} />
+        
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
