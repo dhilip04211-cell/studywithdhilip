@@ -93,8 +93,8 @@ export default function App() {
         <Route path="/Thirukkural/thirukkural-old-part2" element={<ThirukkuralOldPart2 />} />
 
         {/* Tamil Notes */}
-        <Route path="/TamilNotes/santhi-pizai" element={<SanthiPizai />} />
-        <Route path="/TamilNotes/mayan-koli" element={<Mayankoli />} />
+        <Route path="/santhi-pizai" element={<SanthiPizai />} />
+        <Route path="/mayan-koli" element={<Mayankoli />} />
         
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
