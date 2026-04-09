@@ -31,7 +31,7 @@ import SanthiPizai from "./TamilNotes/SanthiPizai";
 import Mayankoli from "./TamilNotes/Mayankoli";
 
 // TamilBook imports
-import TamilBook from "./TamilBook/TamilBook_home"; // create a home if needed
+ // create a home if needed
 import Ilakkanam_New from "./TamilBook/ilakkanam_new";
 import Sixth_Book from "./TamilBook/sixth_book";
 import T_Book from "./TamilBook/t_book";
@@ -106,7 +106,6 @@ export default function App() {
         <Route path="/mayan-koli" element={<Mayankoli />} />
 
         {/* TamilBook routes */}
-        <Route path="/tamilbook" element={<TamilBook />} />
         <Route path="/tamilbook/ilakkanam-new" element={<Ilakkanam_New />} />
         <Route path="/tamilbook/sixth-book" element={<Sixth_Book />} />
         <Route path="/tamilbook/t-book" element={<T_Book />} />
