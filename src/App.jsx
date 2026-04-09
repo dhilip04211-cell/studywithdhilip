@@ -30,6 +30,15 @@ import ThirukkuralOldPart2 from "./Thirukkural/thirukkural_old_part2";
 import SanthiPizai from "./TamilNotes/SanthiPizai";
 import Mayankoli from "./TamilNotes/Mayankoli";
 
+// TamilBook imports
+import TamilBook from "./TamilBook/TamilBook_home"; // create a home if needed
+import Ilakkanam_New from "./TamilBook/ilakkanam_new";
+import Sixth_Book from "./TamilBook/sixth_book";
+import T_Book from "./TamilBook/t_book";
+import T_NewBook from "./TamilBook/t_newbook";
+import Term1_Grammar from "./TamilBook/term1_grammar";
+import Term3_Grammar from "./TamilBook/term3_grammar";
+
 function Home() {
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100vh", width: "100%" }}>
@@ -95,7 +104,16 @@ export default function App() {
         {/* Tamil Notes */}
         <Route path="/santhi-pizai" element={<SanthiPizai />} />
         <Route path="/mayan-koli" element={<Mayankoli />} />
-        
+
+        {/* TamilBook routes */}
+        <Route path="/tamilbook" element={<TamilBook />} />
+        <Route path="/tamilbook/ilakkanam-new" element={<Ilakkanam_New />} />
+        <Route path="/tamilbook/sixth-book" element={<Sixth_Book />} />
+        <Route path="/tamilbook/t-book" element={<T_Book />} />
+        <Route path="/tamilbook/t-newbook" element={<T_NewBook />} />
+        <Route path="/tamilbook/term1-grammar" element={<Term1_Grammar />} />
+        <Route path="/tamilbook/term3-grammar" element={<Term3_Grammar />} />
+                
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
