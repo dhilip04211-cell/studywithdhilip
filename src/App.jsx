@@ -40,6 +40,8 @@ import Term3_Grammar from "./TamilBook/term3_grammar";
 
 // ✅ GK imports
 import TwelvePolityUnit7 from "./GK/twelve_polity_unit7";
+import TwelvePolityUnit1 from "./GK/twelve_polity_unit1";
+
 
 function Home() {
   return (
@@ -69,6 +71,7 @@ function Home() {
         <h2>General Knowledge (GK)</h2>
         <div style={{ display: "flex", flexDirection: "column", gap: "15px", marginTop: "15px" }}>
           <Link to="/gk/polity/unit7" className="btn">Class 12 Polity – Unit 7</Link>
+<Link to="/gk/polity/unit1" className="btn">Class 12 Polity – Unit 1</Link>
         </div>
       </div>
 
@@ -126,6 +129,7 @@ export default function App() {
 
         {/* ✅ GK routes */}
         <Route path="/gk/polity/unit7" element={<TwelvePolityUnit7 />} />
+        <Route path="/gk/polity/unit1" element={<TwelvePolityUnit1 />} />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
