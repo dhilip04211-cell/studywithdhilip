@@ -15,8 +15,8 @@ import Jan_2026 from "./Current_Affairs/Jan_2026";
 
 // PYQ Tamil imports
 import PYQTAMIL from "./PYQTAMIL/PYQ_TAMIL";
-import Special_Examination_2025 from "./PYQTAMIL/Special_Examination_2025"; // ✅ renamed file too
-import Gr_2_Mains_2025 from "./PYQTAMIL/Gr_2_Mains_2025"; // ✅ renamed file too
+import Special_Examination_2025 from "./PYQTAMIL/Special_Examination_2025";
+import Gr_2_Mains_2025 from "./PYQTAMIL/Gr_2_Mains_2025";
 import Gr_4_2025 from "./PYQTAMIL/Gr_4_2025";
 
 // Thirukkural
@@ -31,13 +31,15 @@ import SanthiPizai from "./TamilNotes/SanthiPizai";
 import Mayankoli from "./TamilNotes/Mayankoli";
 
 // TamilBook imports
- // create a home if needed
 import Ilakkanam_New from "./TamilBook/ilakkanam_new";
 import Sixth_Book from "./TamilBook/sixth_book";
 import T_Book from "./TamilBook/t_book";
 import T_NewBook from "./TamilBook/t_newbook";
 import Term1_Grammar from "./TamilBook/term1_grammar";
 import Term3_Grammar from "./TamilBook/term3_grammar";
+
+// ✅ GK imports
+import TwelvePolityUnit7 from "./GK/twelve_polity_unit7";
 
 function Home() {
   return (
@@ -61,6 +63,15 @@ function Home() {
           <Link to="/current-affairs" className="btn">Current Affairs</Link>
         </div>
       </div>
+
+      {/* ✅ GK Section */}
+      <div style={{ marginTop: "30px", textAlign: "center" }}>
+        <h2>General Knowledge (GK)</h2>
+        <div style={{ display: "flex", flexDirection: "column", gap: "15px", marginTop: "15px" }}>
+          <Link to="/gk/polity/unit7" className="btn">Class 12 Polity – Unit 7</Link>
+        </div>
+      </div>
+
     </div>
   );
 }
@@ -89,7 +100,7 @@ export default function App() {
         <Route path="/current-affairs/jan-2026" element={<Jan_2026 />} />
 
         {/* PYQ Tamil routes */}
-        <Route path="/PYQTAMIL" element={<PYQTAMIL />} />  {/* ✅ matches Tamil.html href */}
+        <Route path="/PYQTAMIL" element={<PYQTAMIL />} />
         <Route path="/PYQTAMIL/special-examination-2025" element={<Special_Examination_2025 />} />
         <Route path="/PYQTAMIL/gr-2-mains-2025" element={<Gr_2_Mains_2025 />} />
         <Route path="/PYQTAMIL/gr-4-2025" element={<Gr_4_2025 />} />
@@ -98,7 +109,7 @@ export default function App() {
         <Route path="/Thirukkural" element={<Thirukkural />} />
         <Route path="/Thirukkural/thirukkural-old" element={<ThirukkuralOld />} />
         <Route path="/Thirukkural/thirukkural-old-part1" element={<ThirukkuralOldPart1 />} />
-        <Route path="/Thirukkural/thirukkural-old-part1-quiz" element={<ThirukkuralOldPart1Quiz />} />        
+        <Route path="/Thirukkural/thirukkural-old-part1-quiz" element={<ThirukkuralOldPart1Quiz />} />
         <Route path="/Thirukkural/thirukkural-old-part2" element={<ThirukkuralOldPart2 />} />
 
         {/* Tamil Notes */}
@@ -112,7 +123,10 @@ export default function App() {
         <Route path="/tamilbook/t-newbook" element={<T_NewBook />} />
         <Route path="/tamilbook/term1-grammar" element={<Term1_Grammar />} />
         <Route path="/tamilbook/term3-grammar" element={<Term3_Grammar />} />
-                
+
+        {/* ✅ GK routes */}
+        <Route path="/gk/polity/unit7" element={<TwelvePolityUnit7 />} />
+
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
