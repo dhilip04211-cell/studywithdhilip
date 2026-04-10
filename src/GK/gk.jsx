@@ -10,7 +10,7 @@ const classes = [
   { label: "Class XII", file: "Twelve", color: "#7B2D8B" },
 ];
 
-export default function gk({ onNavigate }) {
+export default function GK({ onNavigate }) {
   const [hovered, setHovered] = useState(null);
 
   return (
@@ -227,4 +227,14 @@ const styles = {
     background: "rgba(255,255,255,0.2)",
     display: "inline-block",
   },
+arrowButton: {
+  background: "transparent",
+  border: "none",
+  fontSize: "13px",
+  fontWeight: 600,
+  cursor: "pointer",
+  transition: "all 0.25s ease",
+  letterSpacing: "0.5px",
+  padding: 0,
+},
 };
