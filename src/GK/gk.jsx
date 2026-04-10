@@ -10,7 +10,7 @@ const classes = [
   { label: "Class XII", file: "Twelve", color: "#7B2D8B" },
 ];
 
-export default function GK({ onNavigate }) {
+export default function gk({ onNavigate }) {
   const [hovered, setHovered] = useState(null);
 
   return (
