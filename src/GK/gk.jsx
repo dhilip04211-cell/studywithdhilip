@@ -1,8 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const classes = [
   { label: "Class VI", file: "/gk/six", color: "#FF6B35" },
-  { label: "Class VII", file: "/gkseven", color: "#F7C59F" },
+  { label: "Class VII", file: "/gk/seven", color: "#F7C59F" },
   { label: "Class VIII", file: "/gk/eight", color: "#EFEFD0" },
   { label: "Class IX", file: "/gk/nine", color: "#004E89" },
   { label: "Class X", file: "/gk/ten", color: "#1A936F" },
@@ -10,8 +11,9 @@ const classes = [
   { label: "Class XII", file: "/gk/twelve", color: "#7B2D8B" },
 ];
 
-export default function GK({ onNavigate }) {
+export default function GK() {
   const [hovered, setHovered] = useState(null);
+  const navigate = useNavigate();
 
   return (
     <div style={styles.page}>
@@ -45,7 +47,7 @@ export default function GK({ onNavigate }) {
               }}
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
-              onClick={() => onNavigate && onNavigate(cls.file)}
+           onClick={() => navigate(cls.file)}}
             >
               <div
                 style={{
