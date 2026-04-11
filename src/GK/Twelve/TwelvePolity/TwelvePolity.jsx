@@ -67,7 +67,7 @@ const chapters = [
     ],
   },
   {
-    title: "Electoral Process",
+    title: "தேச கட்டமைப்பின் சவால்கள்",
     topics: [
       "Election Commission",
       "Types of elections",
