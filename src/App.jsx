@@ -119,7 +119,7 @@ import TwelveGeography from "./GK/Twelve/TwelveGeography/TwelveGeography";
 import TwelveIndianHistory from "./GK/Twelve/TwelveIndianHistory/TwelveIndianHistory";
 import TwelvePhysics from "./GK/Twelve/TwelvePhysics/TwelvePhysics";
 import TwelvePolity from "./GK/Twelve/TwelvePolity/TwelvePolity";
-import TwelveEthics from "./GK/Twelve/TwelvePolity/TwelveEthics";
+import TwelveEthics from "./GK/Twelve/TwelveEthics/TwelveEthics";
 import TwelveTamilnaduHistory from "./GK/Twelve/TwelveTamilnaduHistory/TwelveTamilnaduHistory";
 
 function Home() {
