@@ -1,791 +1,979 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
-// ============================================================
-// DATA
-// ============================================================
-const NOTES_SECTIONS = [
+const styles7 = `
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap');
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  .ch7-app {
+    min-height: 100vh;
+    background: #0a1628;
+    font-family: 'Sora', sans-serif;
+    color: #dce8ff;
+    position: relative;
+    overflow-x: hidden;
+  }
+  
+  .ch7-bg {
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 15% 30%, rgba(30,100,220,0.12) 0%, transparent 50%),
+      radial-gradient(ellipse at 85% 70%, rgba(220,60,60,0.1) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 10%, rgba(255,180,0,0.06) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  .ch7-header {
+    position: relative;
+    z-index: 10;
+    padding: 30px 20px 18px;
+    text-align: center;
+    border-bottom: 1px solid rgba(60,130,255,0.2);
+  }
+  
+  .ch7-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, rgba(60,130,255,0.2), rgba(220,60,60,0.15));
+    border: 1px solid rgba(60,130,255,0.35);
+    border-radius: 50px;
+    padding: 4px 16px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #7eb5ff;
+    margin-bottom: 10px;
+  }
+  
+  .ch7-title {
+    font-family: 'Sora', sans-serif;
+    font-size: clamp(18px, 4.5vw, 32px);
+    font-weight: 800;
+    background: linear-gradient(135deg, #7eb5ff, #ffd060, #ff7060);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.25;
+  }
+  
+  .ch7-subtitle {
+    font-size: 12px;
+    color: rgba(120,170,255,0.55);
+    margin-top: 5px;
+    letter-spacing: 1px;
+  }
+  
+  .ch7-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 16px;
+    position: relative;
+    z-index: 10;
+    flex-wrap: wrap;
+  }
+  
+  .ch7-tab {
+    padding: 9px 18px;
+    border-radius: 50px;
+    border: 1px solid rgba(60,130,255,0.25);
+    background: rgba(60,130,255,0.04);
+    color: rgba(150,190,255,0.65);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Sora', sans-serif;
+    transition: all 0.3s;
+  }
+  
+  .ch7-tab:hover { border-color: rgba(60,130,255,0.5); color: #dce8ff; background: rgba(60,130,255,0.1); }
+  
+  .ch7-tab.active {
+    background: linear-gradient(135deg, rgba(60,130,255,0.3), rgba(220,60,60,0.2));
+    border-color: rgba(60,130,255,0.6);
+    color: #fff;
+    box-shadow: 0 0 18px rgba(60,130,255,0.3);
+  }
+  
+  .ch7-content {
+    position: relative;
+    z-index: 10;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 14px 40px;
+  }
+  
+  .ch7-section {
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(60,130,255,0.15);
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 18px;
+    transition: border-color 0.3s;
+  }
+  
+  .ch7-section:hover { border-color: rgba(60,130,255,0.3); }
+  
+  .ch7-section-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #7eb5ff;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(60,130,255,0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .ch7-sub-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #ffd060;
+    margin: 12px 0 7px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  .ch7-sub-title::before {
+    content: '';
+    width: 3px;
+    height: 13px;
+    background: #ffd060;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  
+  .ch7-para {
+    font-size: 13px;
+    line-height: 1.8;
+    color: rgba(200,220,255,0.82);
+    margin-bottom: 9px;
+  }
+  
+  .ch7-table-wrap { overflow-x: auto; margin: 10px 0; }
+  
+  .ch7-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  
+  .ch7-table th {
+    background: linear-gradient(135deg, rgba(60,130,255,0.22), rgba(220,60,60,0.12));
+    color: #b8d4ff;
+    padding: 9px 11px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid rgba(60,130,255,0.25);
+  }
+  
+  .ch7-table td {
+    padding: 8px 11px;
+    border-bottom: 1px solid rgba(60,130,255,0.09);
+    color: rgba(200,220,255,0.82);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  
+  .ch7-table tr:hover td { background: rgba(60,130,255,0.05); }
+  
+  .ch7-highlight {
+    background: rgba(255,180,0,0.07);
+    border-left: 3px solid #ffd060;
+    border-radius: 0 8px 8px 0;
+    padding: 10px 14px;
+    margin: 9px 0;
+    font-size: 13px;
+    color: rgba(255,220,150,0.9);
+    line-height: 1.7;
+  }
+  
+  .ch7-list { list-style: none; padding: 0; }
+  .ch7-list li {
+    padding: 4px 0 4px 16px;
+    position: relative;
+    font-size: 13px;
+    color: rgba(200,220,255,0.82);
+    line-height: 1.6;
+  }
+  .ch7-list li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: #7eb5ff;
+    font-size: 10px;
+    top: 6px;
+  }
+  
+  /* Quiz Styles */
+  .ch7-quiz-container { padding: 4px 0; }
+  
+  .ch7-quiz-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  
+  .ch7-quiz-progress {
+    font-size: 12px;
+    color: rgba(120,180,255,0.8);
+    font-weight: 600;
+  }
+  
+  .ch7-progress-bar {
+    height: 4px;
+    background: rgba(60,130,255,0.12);
+    border-radius: 4px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  
+  .ch7-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3d8aff, #ffd060);
+    border-radius: 4px;
+    transition: width 0.4s ease;
+  }
+  
+  .ch7-question-card {
+    background: rgba(255,255,255,0.035);
+    border: 1px solid rgba(60,130,255,0.18);
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 14px;
+  }
+  
+  .ch7-question-num {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(60,130,255,0.6);
+    margin-bottom: 7px;
+  }
+  
+  .ch7-question-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: #dce8ff;
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+  
+  .ch7-options { display: flex; flex-direction: column; gap: 8px; }
+  
+  .ch7-option {
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(60,130,255,0.18);
+    background: rgba(255,255,255,0.025);
+    color: rgba(200,220,255,0.8);
+    cursor: pointer;
+    font-size: 13px;
+    font-family: 'Sora', sans-serif;
+    text-align: left;
+    transition: all 0.2s;
+    line-height: 1.4;
+  }
+  
+  .ch7-option:hover:not(:disabled) { border-color: rgba(60,130,255,0.45); background: rgba(60,130,255,0.07); color: #dce8ff; }
+  .ch7-option.correct { border-color: #4ade80; background: rgba(74,222,128,0.1); color: #86efac; }
+  .ch7-option.wrong { border-color: #f87171; background: rgba(248,113,113,0.1); color: #fca5a5; }
+  
+  .ch7-explanation {
+    margin-top: 12px;
+    padding: 11px 13px;
+    background: rgba(60,130,255,0.07);
+    border: 1px solid rgba(60,130,255,0.2);
+    border-radius: 10px;
+    font-size: 12px;
+    color: rgba(180,210,255,0.9);
+    line-height: 1.6;
+  }
+  
+  .ch7-explanation strong { color: #7eb5ff; font-weight: 600; }
+  
+  .ch7-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(60,130,255,0.4);
+    background: linear-gradient(135deg, rgba(60,130,255,0.4), rgba(220,60,60,0.25));
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Sora', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 10px;
+  }
+  
+  .ch7-btn:hover {
+    background: linear-gradient(135deg, rgba(60,130,255,0.6), rgba(220,60,60,0.4));
+    box-shadow: 0 4px 18px rgba(60,130,255,0.3);
+    transform: translateY(-1px);
+  }
+  
+  /* Game */
+  .ch7-game-score-board {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  
+  .ch7-score-item {
+    background: rgba(255,255,255,0.035);
+    border: 1px solid rgba(60,130,255,0.18);
+    border-radius: 10px;
+    padding: 10px 16px;
+    text-align: center;
+    min-width: 85px;
+  }
+  
+  .ch7-score-label { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: rgba(60,130,255,0.6); margin-bottom: 3px; }
+  .ch7-score-value { font-size: 22px; font-weight: 800; color: #7eb5ff; }
+  
+  .ch7-timer-ring { width: 76px; height: 76px; margin: 0 auto 16px; position: relative; }
+  .ch7-timer-svg { transform: rotate(-90deg); }
+  .ch7-timer-text { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; color: #7eb5ff; }
+  
+  .ch7-game-options { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-bottom: 14px; }
+  
+  .ch7-game-option {
+    padding: 11px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(60,130,255,0.22);
+    background: rgba(255,255,255,0.03);
+    color: rgba(200,220,255,0.82);
+    cursor: pointer;
+    font-size: 12px;
+    font-family: 'Sora', sans-serif;
+    transition: all 0.2s;
+    line-height: 1.4;
+  }
+  
+  .ch7-game-option:hover:not(:disabled) { border-color: rgba(60,130,255,0.5); background: rgba(60,130,255,0.1); transform: translateY(-2px); }
+  .ch7-game-option.correct { border-color: #4ade80; background: rgba(74,222,128,0.12); color: #86efac; }
+  .ch7-game-option.wrong { border-color: #f87171; background: rgba(248,113,113,0.1); color: #fca5a5; }
+  
+  .ch7-result-container { text-align: center; padding: 16px 0; }
+  .ch7-result-score { font-size: 60px; font-weight: 800; background: linear-gradient(135deg, #7eb5ff, #ffd060); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin: 10px 0; }
+  .ch7-result-title { font-size: 20px; font-weight: 700; color: #dce8ff; margin-bottom: 6px; }
+  .ch7-result-sub { font-size: 13px; color: rgba(150,190,255,0.6); margin-bottom: 20px; }
+  
+  .ch7-result-table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 11px; text-align: left; }
+  .ch7-result-table th { background: rgba(60,130,255,0.18); color: #7eb5ff; padding: 7px 9px; font-weight: 700; border-bottom: 1px solid rgba(60,130,255,0.25); }
+  .ch7-result-table td { padding: 7px 9px; border-bottom: 1px solid rgba(60,130,255,0.07); color: rgba(200,220,255,0.8); vertical-align: top; }
+  
+  .ch7-correct-badge { color: #4ade80; font-weight: 700; }
+  .ch7-wrong-badge { color: #f87171; font-weight: 700; }
+
+  @media (max-width: 500px) {
+    .ch7-game-options { grid-template-columns: 1fr; }
+  }
+`;
+
+const notes7 = [
   {
-    id: "intro",
-    title: "அறிமுகம் – Indian Renaissance / இந்திய மறுமலர்ச்சி",
-    color: "#f59e0b",
-    content: [
-      {
-        type: "para",
-        text: "பதினெட்டாம் நூற்றாண்டின் பிற்பாதியில் ஐரோப்பியர்கள் இந்தியத் துணைக் கண்டத்தின் மீது அரசியல் அதிகாரத்தை நிறுவினர். பத்தொன்பதாம் நூற்றாண்டில் கல்வியறிவு பெற்ற இந்தியர்கள் காலனிய ஆதிக்கத்திற்கு எதிர்விளைவாக சமூகப் – பண்பாட்டு அடையாளங்களை கடந்த காலத்தினுள் தேடினர். இதன் விளைவே நவீன இந்தியாவின் சமய, சமூக சீர்திருத்த இயக்கங்களுக்கு வழிகோலியது – இது 'இந்திய மறுமலர்ச்சி' என அடையாளப்படுத்தப்பட்டது."
-      },
-      {
-        type: "table",
-        headers: ["அம்சம்", "விளக்கம்"],
-        rows: [
-          ["காலகட்டம்", "18ஆம் நூற்றாண்டு பிற்பாதி – 19ஆம் நூற்றாண்டு"],
-          ["கருத்தியல் அடிப்படை", "நவீனம், பகுத்தறிவு, சமூகத்தின் முற்போக்கான இயக்கம்"],
-          ["முக்கியப் பண்பு", "திறனாய்வுச் சிந்தனை, மனிதநேயம்"],
-          ["தாக்கம்", "மொழி, இலக்கியம், தத்துவம், இசை, ஓவியம், கட்டடக்கலை அனைத்திலும் படைப்பாற்றல்"],
-        ]
-      }
-    ]
+    id: "intro7",
+    icon: "⚔️",
+    title: "அறிமுகம் – பிளாசிப் போர் 1757",
+    content: (
+      <>
+        <p className="ch7-para">
+          1757 ஜூன் 23இல் நடைபெற்ற பிளாசிப் போரில் வங்காள நவாபான சிராஜ்-உத்-தௌலா ஆங்கிலேய கிழக்கிந்திய கம்பெனியால் தோற்கடிக்கப்பட்டார். ராபர்ட் கிளைவ் மீர் ஜாபரின் இரகசிய ஆதரவைப் பெற்று இப்போரை வெற்றிகொண்டார்.
+        </p>
+        <div className="ch7-table-wrap">
+          <table className="ch7-table">
+            <thead><tr><th>நிகழ்வு</th><th>விவரம்</th></tr></thead>
+            <tbody>
+              <tr><td>பிளாசிப் போர்</td><td>1757 ஜூன் 23 – சிராஜ்-உத்-தௌலா தோல்வி</td></tr>
+              <tr><td>கிழக்கிந்திய கம்பெனி பெற்றது</td><td>2 கோடியே 25 லட்சம் ரூபாய் (1757-1760 இடையே)</td></tr>
+              <tr><td>அந்தப் பணத்தின் பயன்</td><td>பிரிட்டனின் தொழில் புரட்சிக்கு முதலீடு</td></tr>
+              <tr><td>விளைவு</td><td>இந்தியாவில் தொழில்கள் முடங்கல்; பிரிட்டிஷ் பொருட்களுக்கு சந்தை</td></tr>
+              <tr><td>காலனி ஆட்சி தொடர்வு</td><td>மேலும் 190 ஆண்டுகள்</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div className="ch7-highlight">
+          <strong>கற்றலின் நோக்கங்கள்:</strong> விவசாயிகள் மற்றும் பழங்குடியினரின் போராட்டங்கள்; 1857 பெரும்கலகம்; இந்திய தேசிய காங்கிரஸ் உருவாக்கம்; 1905 வங்கப்பிரிவினை; சுதேசி இயக்கம்; தன்னாட்சி இயக்கம்.
+        </div>
+      </>
+    )
   },
   {
-    id: "tamil_renaissance",
-    title: "10.1 தமிழ் மறுமலர்ச்சி",
-    color: "#10b981",
-    content: [
-      {
-        type: "para",
-        text: "காலனியத்தின் பண்பாட்டு ஆதிக்கமும் மனிதநேயத்தின் எழுச்சியும் நவீன தமிழ்நாட்டில் பல மாற்றங்களைக் கொண்டு வந்தது. அச்சு இயந்திரத்தின் அறிமுகமும் திராவிட மொழிகளின் மீது மேற்கொள்ளப்பட்ட மொழியியல் ஆய்வுகளும் தமிழ் மறுமலர்ச்சி செயல்பாடுகளுக்கு அடியுரமாய் விளங்கின."
-      },
-      {
-        type: "subtitle",
-        text: "அச்சுத் தொழில்நுட்பத்தின் வருகை"
-      },
-      {
-        type: "table",
-        headers: ["ஆண்டு", "நிகழ்வு"],
-        rows: [
-          ["1578", "தம்பிரான் வணக்கம் (முதல் தமிழ் புத்தகம்) கோவாவில் வெளியிடப்பட்டது"],
-          ["1709", "சீகன்பால்கு என்பவரால் தரங்கம்பாடியில் முழுமையான அச்சகம் நிறுவப்பட்டது"],
-          ["1812", "திருக்குறள் அச்சில் வெளியிடப்பட்டது"],
-          ["1816", "F.W. எல்லிஸ் புனித ஜார்ஜ் கோட்டையில் கல்லூரி நிறுவினார்"],
-          ["1856", "ராபர்ட் கால்டுவெல் திராவிட மொழிகளின் ஒப்பீட்டு இலக்கணம் வெளியிட்டார்"],
-        ]
-      },
-      {
-        type: "subtitle",
-        text: "முக்கிய தமிழ் அறிஞர்கள்"
-      },
-      {
-        type: "table",
-        headers: ["அறிஞர்", "காலம்", "பங்களிப்பு"],
-        rows: [
-          ["சி.வை. தாமோதரனார்", "1832–1901", "தொல்காப்பியம், வீரசோழியம், கலித்தொகை, சூளாமணி உள்ளிட்ட நூல்களை பதிப்பித்தார்"],
-          ["உ.வே. சாமிநாதர்", "1855–1942", "சீவகசிந்தாமணி (1887), சிலப்பதிகாரம் (1892), புறநானூறு (1894), மணிமேகலை (1898) உள்ளிட்டவை வெளியிட்டார்"],
-          ["F.W. எல்லிஸ்", "1777–1819", "தென்னிந்திய மொழிகள் தனிப்பட்ட மொழிக்குடும்பம் சார்ந்தவை என நிறுவினார்"],
-          ["ராபர்ட் கால்டுவெல்", "1814–1891", "திராவிட மொழிகளுக்கிடையே ஒப்புமை, சமஸ்கிருதத்தோடு தொடர்பின்மை நிறுவினார்"],
-          ["பெ. சுந்தரனார்", "1855–1897", "மனோன்மணீயம் நாடகத்தில் தமிழ்மொழி வாழ்த்துப் பாடல் எழுதினார்"],
-          ["இராமலிங்க அடிகள் (வள்ளலார்)", "1823–1874", "நடைமுறையிலிருந்த இந்து சமய பழமைவாதத்தை கேள்விக்குள்ளாக்கினார்"],
-          ["ஆபிரகாம் பண்டிதர்", "1859–1919", "தமிழ் இசைக்கு சிறப்பு செய்தார்; தமிழ் இசை வரலாறு குறித்து நூல்கள் வெளியிட்டார்"],
-        ]
-      },
-      {
-        type: "subtitle",
-        text: "தனித்தமிழ் இயக்கம்"
-      },
-      {
-        type: "table",
-        headers: ["அம்சம்", "விவரம்"],
-        rows: [
-          ["தலைவர்", "மறைமலை அடிகள் (1876–1950)"],
-          ["நோக்கம்", "சமஸ்கிருதத் தாக்கத்திலிருந்து தமிழை விடுவிக்க தூய தமிழ் வார்த்தைகளை பயன்படுத்துவது"],
-          ["பங்கு வகித்தவர்", "நீலாம்பிகை (மறைமலை அடிகளின் மகள்) – சமஸ்கிருத சொற்களுக்கு இணையான தமிழ் சொற்கள் அகராதி தொகுத்தார்"],
-          ["பத்திரிகை மாற்றம்", "ஞானசாகரம் → அறிவுக்கடல்"],
-          ["நிறுவன மாற்றம்", "சமரச சன்மார்க்க சங்கம் → பொது நிலைக் கழகம்"],
-        ]
-      },
-      {
-        type: "subtitle",
-        text: "முக்கிய பங்களிப்பாளர்கள் – சுருக்கம்"
-      },
-      {
-        type: "table",
-        headers: ["பெயர்", "காலம்", "சிறப்பு"],
-        rows: [
-          ["பரிதிமாற் கலைஞர் (வி.கோ. சூரிய நாராயண சாஸ்திரி)", "1870–1903", "தமிழை செம்மொழி என வாதிட்டார்; 14 வரிச்செய்யுள் வடிவம் (சானட்) தமிழுக்கு அறிமுகப்படுத்தினார்"],
-          ["திரு.வி. கல்யாண சுந்தரம்", "1883–1953", "தமிழ் இலக்கியப் புத்தெழுச்சி; தொழிலாளர் இயக்கம்"],
-          ["சுப்பிரமணிய பாரதி", "1882–1921", "தமிழ் இலக்கியப் புத்தெழுச்சி"],
-          ["கவிஞர் பாரதிதாசன்", "1891–1964", "தமிழ் இலக்கியப் புத்தெழுச்சி"],
-          ["M. சிங்காரவேலர்", "1860–1946", "பௌத்தத்திற்கு புத்துயிர்; பொதுவுடமைவாதம்"],
-          ["பண்டிதர் அயோத்திதாசர்", "1845–1914", "ஒடுக்கப்பட்ட மக்கள் உரிமைகளுக்காக பகுத்தறிவு சித்தாந்தம்"],
-        ]
-      }
-    ]
+    id: "farmers",
+    icon: "🌾",
+    title: "7.1 விவசாயிகள் மற்றும் பழங்குடியினரின் எதிர்ப்பு",
+    content: (
+      <>
+        <p className="ch7-para">ஆங்கிலேய ஆட்சியில் கிட்டத்தட்ட ஒரு நூறுக்கும் குறையாத எண்ணிக்கையில் விவசாயிகளின் கிளர்ச்சிகள் நடந்தன.</p>
+        <div className="ch7-table-wrap">
+          <table className="ch7-table">
+            <thead><tr><th>கிளர்ச்சி வகை</th><th>விளக்கம்</th></tr></thead>
+            <tbody>
+              <tr><td>மறுசீரமைத்தலுக்கான கிளர்ச்சிகள்</td><td>பழைய முறைமைகள், பழைய சமூக உறவுகளை நிலைநிறுத்தும் முயற்சி</td></tr>
+              <tr><td>சமய இயக்கங்கள்</td><td>சமயத் தலைவர்கள் சமூகத்தை சீரமைப்பதன் மூலம் விடுதலைக்கு போராட்டம்</td></tr>
+              <tr><td>சமூகக் கொள்ளை</td><td>தலைவர்கள் குற்றவாளிகளாக கருதப்பட்டாலும், சமூகம் நாயகர்களாக கண்டது</td></tr>
+              <tr><td>மக்களின் கிளர்ச்சி</td><td>தலைவர்கள் இல்லாமல் திடீரெனவும் எழுந்த புரட்சி இயக்கங்கள்</td></tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <p className="ch7-sub-title">விவசாயிகளின் கிளர்ச்சிகள்</p>
+        <div className="ch7-table-wrap">
+          <table className="ch7-table">
+            <thead><tr><th>இயக்கம்</th><th>ஆண்டு</th><th>தலைவர்கள்</th><th>சிறப்பம்சம்</th></tr></thead>
+            <tbody>
+              <tr><td><strong>ஃபராசி இயக்கம்</strong></td><td>1818</td><td>ஹாஜி ஷரியத்துல்லா; பின்னர் டுடு மியான்</td><td>'நிலம் கடவுளுக்குச் சொந்தம்'; வரி மறுப்பு; 1862 டுடு மியான் மறைவு; 1870 நோவா மியான் மீண்டும்</td></tr>
+              <tr><td><strong>வஹாபி கிளர்ச்சி</strong></td><td>1827</td><td>டிடு மீர்</td><td>வங்காள பரசத் பகுதி; ஆங்கிலேய ஆட்சி, நிலப்பிரபுக்களுக்கு எதிர்</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p className="ch7-sub-title">பழங்குடியினர் கிளர்ச்சிகள்</p>
+        <div className="ch7-table-wrap">
+          <table className="ch7-table">
+            <thead><tr><th>கிளர்ச்சி</th><th>இடம்</th><th>ஆண்டு</th><th>தலைவர்கள்</th><th>விளைவு</th></tr></thead>
+            <tbody>
+              <tr><td><strong>கோல் கிளர்ச்சி</strong></td><td>சோட்டா நாக்பூர், சிங்பும் (ஜார்க்கண்ட், ஒடிஷா)</td><td>1831-32</td><td>பிந்தரராய், சிங்ரராய்</td><td>அதிக வட்டிக்கு கடன், பழங்குடியினர் வெளியேற்றம் எதிர்ப்பு; ஆங்கிலேய வன்முறையால் அடக்கல்</td></tr>
+              <tr><td><strong>சாந்தலர் கிளர்ச்சி</strong></td><td>ராஜ்மஹால் மலை (வங்காளம்)</td><td>1855</td><td>சித்து, கணு (சகோதரர்கள்)</td><td>1855 சாந்தல் பர்கானா சட்டம்; பழங்குடியினரல்லாதோர் நுழைவு தடை</td></tr>
+              <tr><td><strong>முண்டா கிளர்ச்சி</strong></td><td>ராஞ்சி</td><td>1889</td><td>பிர்சா முண்டா</td><td>1900 பிர்சா கைது; 1908 சோட்டா நாக்பூர் குத்தகைச் சட்டம்</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div className="ch7-highlight">
+          <strong>முண்டா இன சிறப்பு:</strong> குண்டக்கட்டி (கூட்டுச்சொத்து) விவசாய முறை; பிர்சா முண்டா தம்மை கடவுளின் தூதர் என அறிவித்தார்; கட்டிடங்கள் தீக்கிரை; 1900 பிர்சா சிறையில் உயிர்நீத்தார்; நாட்டுப்புறப் பாடல்களில் போற்றப்படுகிறார்.
+        </div>
+      </>
+    )
   },
   {
-    id: "dravidian",
-    title: "10.2 & 10.3 திராவிட இயக்கம் & நீதிக்கட்சி",
-    color: "#6366f1",
-    content: [
-      {
-        type: "table",
-        headers: ["நிகழ்வு", "ஆண்டு", "விவரம்"],
-        rows: [
-          ["மதராஸ் பிராமணரல்லாதோர் சங்கம்", "1909", "பிராமணர் அல்லாத மாணவர்களுக்கு உதவி செய்ய உருவாக்கப்பட்டது"],
-          ["மதராஸ் ஐக்கியக் கழகம்", "1912", "டாக்டர் சி. நடேசனார் உருவாக்கினார் – பின்னர் மதராஸ் திராவிடர் சங்கம் ஆனது"],
-          ["திராவிடர் இல்லம்", "ஜூலை 1916", "நடேசனாரால் திருவல்லிக்கேணியில் (சென்னை) நிறுவப்பட்டது"],
-          ["தென்னிந்திய நல உரிமைச் சங்கம் (நீதிக்கட்சி)", "நவம்பர் 20, 1916", "டாக்டர் நடேசனார், சர் பிட்டி தியாகராயர், டி.எம். நாயர் மற்றும் 30 தலைவர்கள் உருவாக்கினர்"],
-        ]
-      },
-      {
-        type: "subtitle",
-        text: "நீதிக்கட்சி வெளியிட்ட பத்திரிகைகள்"
-      },
-      {
-        type: "table",
-        headers: ["பத்திரிகை", "மொழி"],
-        rows: [
-          ["திராவிடன்", "தமிழ்"],
-          ["ஜஸ்டிஸ்", "ஆங்கிலம்"],
-          ["ஆந்திர பிரகாசிகா", "தெலுங்கு"],
-        ]
-      },
-      {
-        type: "subtitle",
-        text: "நீதிக்கட்சி தேர்தல் வரலாறு"
-      },
-      {
-        type: "table",
-        headers: ["ஆண்டு", "நிகழ்வு"],
-        rows: [
-          ["1920", "முதல் தேர்தல் – நீதிக்கட்சி வெற்றி; A. சுப்பராயலு முதலமைச்சர்"],
-          ["1920–1923", "நீதிக்கட்சி ஆட்சி"],
-          ["1923–1926", "நீதிக்கட்சி ஆட்சி"],
-          ["1937 வரை", "காங்கிரஸ் புறக்கணித்தால் நீதிக்கட்சி தொடர்ந்தது"],
-          ["1937", "காங்கிரஸ் நீதிக்கட்சியை படுதோல்வி அடையச் செய்தது"],
-        ]
-      },
-      {
-        type: "subtitle",
-        text: "நீதிக்கட்சியின் சாதனைகள்"
-      },
-      {
-        type: "table",
-        headers: ["சாதனை", "விவரம்"],
-        rows: [
-          ["வகுப்புவாரி அரசாணைகள்", "1921 செப்டம்பர் 16 & 1922 ஆகஸ்ட் 15 – அரசுப் பணிகளில் சமவாய்ப்பு"],
-          ["பணியாளர் தேர்வு வாரியம்", "1924ல் அமைக்கப்பட்டது (UPSC க்கு முன்னோடி)"],
-          ["இந்து சமய அறநிலையச் சட்டம்", "1926 – சாதிவேறுபாடின்றி கோவில் நிருவாக குழு உறுப்பினர்"],
-          ["பெண்கள் வாக்குரிமை", "1921 – தேர்தல் அரசியலில் பெண்கள் பங்கேற்பை அங்கீகரித்தது"],
-          ["முதல் பெண் சட்டமன்ற உறுப்பினர்", "1926 – முத்துலட்சுமி அம்மையார்"],
-          ["தங்கும் விடுதிகள்", "1923 – ஒடுக்கப்பட்ட வகுப்பு மாணவர்களுக்கு"],
-          ["பொதுக் கிணறுகள் அணுகல்", "ஒடுக்கப்பட்ட மக்கள் பயன்படுத்துவதை தடுத்த தடைகளை அகற்றினர்"],
-        ]
-      }
-    ]
+    id: "revolt1857",
+    icon: "🏹",
+    title: "7.2 1857ஆம் ஆண்டின் பெருங்கிளர்ச்சி (முதல் இந்திய சுதந்திரப் போர்)",
+    content: (
+      <>
+        <p className="ch7-sub-title">முக்கியத்துவங்கள்</p>
+        <ul className="ch7-list">
+          <li>இராணுவ வீரர்களுடன் ஆயுதமேந்திய படைகளும் இணைந்து நடந்த முதல் மாபெரும் புரட்சி</li>
+          <li>இருதரப்பிலும் தூண்டப்பட்ட அதிக அளவு வன்முறை</li>
+          <li>கிழக்கிந்திய கம்பெனி ஆட்சி முடிவுக்கு வந்து ஆங்கில மகாராணியின் நேரடி ஆட்சி</li>
+        </ul>
+        
+        <p className="ch7-sub-title">கிளர்ச்சிக்கான காரணங்கள்</p>
+        <div className="ch7-table-wrap">
+          <table className="ch7-table">
+            <thead><tr><th>காரணம்</th><th>விவரம்</th></tr></thead>
+            <tbody>
+              <tr><td>மேலாதிக்கக் கொள்கை</td><td>உள்நாட்டு ஆட்சியாளர்கள் திறனற்றவர்கள் என்ற அடிப்படையில் புதிய நிலப்பகுதிகள் இணைப்பு</td></tr>
+              <tr><td>வாரிசு இழப்புக் கொள்கை</td><td>நேரடி ஆண்வாரிசு இல்லையெனில் ஆங்கிலேய ஆட்சியில் இணைப்பு – சதாரா, சம்பல்பூர், ஜான்சி, நாக்பூர்</td></tr>
+              <tr><td>ஆடைக் கட்டுப்பாடு</td><td>1806 வேலூரில் – சமயக்குறியீடுகள் நெற்றியில் அணிய தடை, தொப்பி அணிய கட்டாயம்</td></tr>
+              <tr><td>கடல் தடுப்பு</td><td>1824 பாரக்பூர் – சிப்பாய்கள் கடல் கடந்து பர்மா செல்ல மறுப்பு</td></tr>
+              <tr><td>என்ஃபீல்டு துப்பாக்கி</td><td>பசு/பன்றிக் கொழுப்பு பசை பூசப்பட்ட காட்ரிட்ஜ் வதந்தி</td></tr>
+              <tr><td>ஊதியப் பாரபட்சம்</td><td>ஐரோப்பிய சிப்பாய்களுடன் ஒப்பிட்டு இந்திய சிப்பாய்களுக்கு குறைந்த ஊதியம்</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p className="ch7-sub-title">முக்கிய நிகழ்வுகள்</p>
+        <div className="ch7-table-wrap">
+          <table className="ch7-table">
+            <thead><tr><th>தேதி</th><th>நிகழ்வு</th></tr></thead>
+            <tbody>
+              <tr><td>மார்ச் 29, 1857</td><td>மங்கள் பாண்டே தனது ஐரோப்பிய அதிகாரியைத் தாக்கினார்; தூக்கிலிடப்பட்டார்</td></tr>
+              <tr><td>மே 11, 1857</td><td>மீரட்டில் இருந்து தில்லி செங்கோட்டைக்கு சிப்பாய்கள் அணிவகுப்பு</td></tr>
+              <tr><td>மே 1857</td><td>இரண்டாம் பகதூர் ஷா இந்துஸ்தானின் மாமன்னராக பதவியேற்பு</td></tr>
+              <tr><td>1858 நவம்பர்</td><td>இந்திய அரசு சட்டம் – நாடாளுமன்றத்தால் நேரடி ஆட்சி</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p className="ch7-sub-title">முக்கிய போராட்ட வீரர்கள்</p>
+        <div className="ch7-table-wrap">
+          <table className="ch7-table">
+            <thead><tr><th>தலைவர்</th><th>பகுதி</th><th>சிறப்பம்சம்</th></tr></thead>
+            <tbody>
+              <tr><td>நானா சாகிப்</td><td>கான்பூர்</td><td>கடைசி பேஷ்வா மன்னர் இரண்டாவது பாஜிராவின் தத்துப்பிள்ளை; ஓய்வூதியம் மறுக்கப்பட்டது</td></tr>
+              <tr><td>பேகம் ஹஸ்ரத் மகால்</td><td>லக்னோ</td><td>–</td></tr>
+              <tr><td>கான் பகதூர்</td><td>பரெய்லி</td><td>–</td></tr>
+              <tr><td>ராணி லட்சுமிபாய்</td><td>ஜான்சி</td><td>டல்ஹௌசி வாரிசு இழப்புக் கொள்கையால் அரசு இணைப்பு; இறும் வரை போராட்டம்</td></tr>
+              <tr><td>இரண்டாம் பகதூர் ஷா</td><td>தில்லி</td><td>சிறைபிடிக்கப்பட்டு பர்மா அனுப்பப்பட்டார்</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p className="ch7-sub-title">தோல்விக்கான காரணங்கள்</p>
+        <ul className="ch7-list">
+          <li>மத்திய தலைமை இல்லாமை – ஒருங்கிணைப்பு இல்லாத கிளர்ச்சி</li>
+          <li>பொதுவான செயல்திட்டம் இல்லாமை</li>
+          <li>இந்திய அரசர்களின் பொதுவான ஆதரவு குறைபாடு</li>
+          <li>ஆயுதங்கள் கிடைக்கப்பெறாமை</li>
+          <li>ஆங்கில அறிவு பெற்ற நடுத்தர வகுப்பு ஆதரவற்ற நிலை</li>
+          <li>உதவியாளர்களால் காட்டிக்கொடுக்கப்பட்டது</li>
+        </ul>
+
+        <p className="ch7-sub-title">1857க்குப் பிறகு ஆட்சி மாற்றங்கள்</p>
+        <div className="ch7-table-wrap">
+          <table className="ch7-table">
+            <thead><tr><th>மாற்றம்</th><th>விவரம்</th></tr></thead>
+            <tbody>
+              <tr><td>இந்தியர்கள் எண்ணிக்கை</td><td>இராணுவத்தில் வெகுவாகக் குறைப்பு; முக்கிய பதவிகளிலிருந்து விலக்கு</td></tr>
+              <tr><td>ஆட்டெடுப்பு மாற்றம்</td><td>ராஜபுத்திரர், பிராமணர் விலக்கு; கூர்க்காக்கள், சீக்கியர், பதான்களுக்கு முக்கியத்துவம்</td></tr>
+              <tr><td>பிரித்தாளும் கொள்கை</td><td>சாதி, மதம், மொழி, மண்டலம் வேறுபாடுகளை சாதகமாக பயன்பாடு</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </>
+    )
   },
   {
-    id: "self_respect",
-    title: "10.4 சுயமரியாதை இயக்கம்",
-    color: "#ef4444",
-    content: [
-      {
-        type: "para",
-        text: "சுயமரியாதை இயக்கம் (Self Respect Movement) சடங்குகளும் சம்பிரதாயங்களும் இல்லாத சாதிகளற்ற, பிறப்பின் அடிப்படையிலான பாகுபாடற்ற ஒரு சமூகத்தை ஆதரித்தது. பகுத்தறிவும் சுயமரியாதையும் அனைத்து மனிதர்களின் பிறப்புரிமை என்று கொண்டது."
-      },
-      {
-        type: "table",
-        headers: ["அம்சம்", "விவரம்"],
-        rows: [
-          ["தொடங்கியவர்", "பெரியார் ஈ.வெ. ராமசாமி (1879–1973)"],
-          ["தொடங்கிய ஆண்டு", "1925"],
-          ["அதிகாரபூர்வ பத்திரிகை", "குடிஅரசு (1925)"],
-          ["பிற பத்திரிகைகள்", "ரிவோல்ட் (1928), புரட்சி (1933), பகுத்தறிவு (1934), விடுதலை (1935)"],
-          ["புனைப்பெயர்", "சித்திரபுத்திரன்"],
-          ["பின்னர்", "1944ல் திராவிடர் கழகம் (திக) என பெயர் மாற்றம்"],
-        ]
-      },
-      {
-        type: "subtitle",
-        text: "பெரியார் – முக்கிய நிகழ்வுகள்"
-      },
-      {
-        type: "table",
-        headers: ["நிகழ்வு", "விவரம்"],
-        rows: [
-          ["ஈரோட்டு நகரசபைத் தலைவர்", "1918–1919"],
-          ["வைக்கம் போராட்டம்", "வைக்கம் வீரர் என்று பாராட்டப்பட்டார் – கோவில் நுழைவு உரிமைக்காக சிறை சென்றார்"],
-          ["இந்தி எதிர்ப்பு போராட்டம்", "1937–39 – ராஜாஜியின் கட்டாய இந்தி ஆணைக்கு எதிராக"],
-          ["நீதிக்கட்சி தலைவர்", "சிறையில் இருந்தபோதே தேர்ந்தெடுக்கப்பட்டார்"],
-          ["குலக்கல்வி எதிர்ப்பு", "ராஜாஜியின் குலக்கல்விக்கு எதிராக போராடி பதவி விலகலுக்கு வழிவகுத்தார்"],
-          ["காலமானது", "1973 – சென்னை பெரியார் திடலில் நல்லடக்கம்"],
-        ]
-      },
-      {
-        type: "subtitle",
-        text: "பெரியார் – ஒரு பெண்ணியவாதி"
-      },
-      {
-        type: "table",
-        headers: ["கோரிக்கை / நடவடிக்கை", "விவரம்"],
-        rows: [
-          ["குழந்தைத் திருமண எதிர்ப்பு", "கண்டனம் செய்தார்"],
-          ["தேவதாசி முறை எதிர்ப்பு", "கண்டனம் செய்தார்"],
-          ["விவாகரத்து உரிமை", "பெண்களுக்கு உரிமை உண்டு என வலியுறுத்தினார்"],
-          ["சொத்துரிமை", "பெண்களுக்கு சொத்தில் பங்கு வழங்க வேண்டும்"],
-          ["முக்கிய நூல்", "பெண் ஏன் அடிமையானாள்?"],
-          ["தமிழ்நாடு இந்து வாரிசுரிமைச் சீர்திருத்தச் சட்டம்", "1989 – முன்னோர் சொத்தில் பெண்களுக்கு சம உரிமை"],
-        ]
-      },
-      {
-        type: "subtitle",
-        text: "சுயமரியாதை இயக்கம் – முக்கிய பெண்கள்"
-      },
-      {
-        type: "table",
-        headers: ["பெயர்", "சிறப்பு"],
-        rows: [
-          ["முத்துலட்சுமி அம்மையார்", "இந்தியாவின் முதல் பெண் சட்டமன்ற உறுப்பினர் (1926); தேவதாசி ஒழிப்பு இயக்கம்"],
-          ["மூவலூர் இராமாமிர்தம்", "சுயமரியாதை இயக்கத்தில் தீவிர பங்கு"],
-          ["நீலாம்பிகை", "தனித்தமிழ் இயக்கம் உருவாக்கத்தில் பங்கு; தமிழ் சொல் அகராதி தொகுத்தார்"],
-        ]
-      },
-      {
-        type: "subtitle",
-        text: "ஒடுக்கப்பட்ட மக்கள் தலைவர்கள்"
-      },
-      {
-        type: "table",
-        headers: ["பெயர்", "காலம்", "சாதனை"],
-        rows: [
-          ["இரட்டைமலை சீனிவாசன்", "1859–1945", "1893ல் ஆதிதிராவிட மகாஜன சபை நிறுவினார்; வட்டமேஜை மாநாடுகளில் கலந்தார் (1930, 1931); பூனா ஒப்பந்தத்தில் கையெழுத்திட்டார்"],
-          ["மயிலை சின்னதம்பி ராஜா (M.C. ராஜா)", "1883–1943", "சட்டமேலவையில் ஒடுக்கப்பட்ட வகுப்பிலிருந்து முதல் உறுப்பினர் (1920–1926); 1928ல் அகில இந்திய ஒடுக்கப்பட்டோர் சங்கம் நிறுவினார்"],
-        ]
-      }
-    ]
+    id: "indigo",
+    icon: "🌿",
+    title: "7.3 பிரிட்டிஷ் ஆட்சியின் கீழ் விவசாயிகள் கிளர்ச்சிகள்",
+    content: (
+      <>
+        <p className="ch7-sub-title">அ) கருநீலச்சாய (இண்டிகோ) கிளர்ச்சி (1859-1860)</p>
+        <div className="ch7-table-wrap">
+          <table className="ch7-table">
+            <thead><tr><th>விவரம்</th><th>தகவல்</th></tr></thead>
+            <tbody>
+              <tr><td>தொடக்கம்</td><td>1859 – வங்காளம், நடியா மாவட்டம்</td></tr>
+              <tr><td>வடிவம்</td><td>வேலைநிறுத்தம் → வன்முறை கிளர்ச்சி</td></tr>
+              <tr><td>பங்கேற்றோர்</td><td>இந்து, முஸ்லிம் விவசாயிகள்; பெண்களும் பங்கேற்பு</td></tr>
+              <tr><td>நாடகம்</td><td>நீல் தர்பன் – தீனபந்து மித்ரா எழுதியது; இண்டிகோ வேதனை உலகிற்கு அறிவிப்பு</td></tr>
+              <tr><td>சிக்கல்</td><td>முன்பணம் வட்டியுடன் செலுத்த முடியாமல் கடன்; தந்தை கடன் மகன் மீது</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p className="ch7-sub-title">ஆ) தக்காண கலவரங்கள் (1875)</p>
+        <div className="ch7-table-wrap">
+          <table className="ch7-table">
+            <thead><tr><th>விவரம்</th><th>தகவல்</th></tr></thead>
+            <tbody>
+              <tr><td>முதல் வெடிப்பு</td><td>1875 மே – பூனா அருகே சூபா கிராமம்</td></tr>
+              <tr><td>பரவல்</td><td>பூனா, அகமதுநகர் – 30 கிராமங்கள்</td></tr>
+              <tr><td>குறிவைத்தது</td><td>வட்டிக்குப் பணம் வழங்குவோர்</td></tr>
+              <tr><td>காரணம்</td><td>அதிக வரி; புதிய சட்டம் – நிலம் எடுத்து ஏலம்; நிலம் உழாத வர்க்கத்திடம் கைமாற்றம்</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </>
+    )
   },
   {
-    id: "labour",
-    title: "10.5 தொழிலாளர் இயக்கங்கள்",
-    color: "#f97316",
-    content: [
-      {
-        type: "para",
-        text: "முதல் உலகப்போர் (1914–1918) இந்தியாவில் தொழில்களின் வளர்ச்சிக்கு உத்வேகம் அளித்தது. போர் முடிவடைந்ததால் ஆட்குறைப்பு மற்றும் விலைவாசி ஏற்றம் தொழிலாளர் இயக்கங்கள் தோன்றுவதற்கு வழிவகுத்தன."
-      },
-      {
-        type: "table",
-        headers: ["நிகழ்வு", "ஆண்டு", "விவரம்"],
-        rows: [
-          ["சென்னை தொழிலாளர் சங்கம் (Madras Labour Union)", "1918", "இந்தியாவின் முதல் தொழில் சங்கம்"],
-          ["அகில இந்திய தொழிலாளர் சங்கம் – முதல் மாநாடு", "அக்டோபர் 31, 1920", "பம்பாயில் நடைபெற்றது"],
-          ["முதல் மே தின விழா", "1923", "ம. சிங்காரவேலர் ஏற்பாடு செய்தார்"],
-        ]
-      },
-      {
-        type: "subtitle",
-        text: "முன்னோடிகள்"
-      },
-      {
-        type: "table",
-        headers: ["பெயர்", "பங்களிப்பு"],
-        rows: [
-          ["பி.பி. வாடியா", "தொழிலாளர் சங்கம் அமைப்பில் முன்முயற்சி"],
-          ["ம. சிங்காரவேலர் (1860–1946)", "சென்னையில் பிறந்தார்; பல மொழிகள் அறிந்தவர்; இந்திய கம்யூனிஸ்ட் கட்சியின் ஆரம்பகால தலைவர்; தொழிலாளன் பத்திரிகை வெளியிட்டார்"],
-          ["திரு.வி. கல்யாண சுந்தரம்", "தொழிலாளர் சங்கங்கள் அமைப்பில் முன்முயற்சி"],
-        ]
-      }
-    ]
+    id: "inc",
+    icon: "🏛️",
+    title: "7.4 இந்திய தேசிய காங்கிரஸ் நிறுவல் (1870-1885)",
+    content: (
+      <>
+        <p className="ch7-sub-title">தேசியத்தின் எழுச்சி</p>
+        <div className="ch7-table-wrap">
+          <table className="ch7-table">
+            <thead><tr><th>அமைப்பு</th><th>ஆண்டு</th></tr></thead>
+            <tbody>
+              <tr><td>சென்னைவாசிகள் சங்கம்</td><td>1852</td></tr>
+              <tr><td>கிழக்கிந்திய அமைப்பு</td><td>1866</td></tr>
+              <tr><td>சென்னை மகாஜன சபை</td><td>1884</td></tr>
+              <tr><td>பூனா சர்வஜனிக் சபா</td><td>1870</td></tr>
+              <tr><td>பம்பாய் மாகாண சங்கம்</td><td>1885</td></tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <p className="ch7-sub-title">முக்கிய பொருளாதார விமர்சகர்கள்</p>
+        <div className="ch7-table-wrap">
+          <table className="ch7-table">
+            <thead><tr><th>பெயர்</th><th>பங்களிப்பு</th></tr></thead>
+            <tbody>
+              <tr><td>தாதாபாய் நௌரோஜி</td><td>காலனி ஆட்சியின் பொருளாதார விமர்சனம்</td></tr>
+              <tr><td>நீதிபதி ரானடே</td><td>காலனி பொருளாதார பகுப்பாய்வு</td></tr>
+              <tr><td>ரொமேஷ் சந்திர தத்</td><td>இந்தியா பொருளாதார சுரண்டல் ஆய்வு</td></tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <div className="ch7-highlight">
+          <strong>INC முதல் கூட்டம்:</strong> 1885 டிசம்பர் 28 | முதல் தலைவர்: உமேஷ் சந்திர பானர்ஜி | INC உருவாக்கத்திற்கு உதவியவர்: A.O. ஹியூம்
+        </div>
+        
+        <p className="ch7-sub-title">முக்கிய கோரிக்கைகள்</p>
+        <ul className="ch7-list">
+          <li>மாகாண மற்றும் மத்திய அளவில் சட்டமேலவைகள் உருவாக்கம்</li>
+          <li>சட்டமேலவைகளுக்கு தேர்ந்தெடுக்கப்படும் உறுப்பினர் எண்ணிக்கை அதிகரிப்பு</li>
+          <li>நிருவாகத்துறையிலிருந்து நீதித்துறை பிரிப்பு</li>
+          <li>இராணுவச் செலவுகள் குறைப்பு</li>
+          <li>ஒரே நேரத்தில் இந்தியா-இங்கிலாந்தில் ஆட்சிப்பணித் தேர்வு</li>
+          <li>வனச்சட்டம் மறுபரிசீலனை</li>
+        </ul>
+
+        <p className="ch7-sub-title">தீவிர தேசியவாதிகள் – லால்-பால்-பால்</p>
+        <div className="ch7-table-wrap">
+          <table className="ch7-table">
+            <thead><tr><th>பெயர்</th><th>இடம்</th><th>சிறப்பம்சம்</th></tr></thead>
+            <tbody>
+              <tr><td>லாலா லஜபதி ராய் (லால்)</td><td>பஞ்சாப்</td><td>–</td></tr>
+              <tr><td>பால கங்காதர திலகர் (பால்)</td><td>மகாராஷ்டிரா</td><td>சுயராஜ்ஜியம் = முழு தன்னாட்சி + விடுதலை</td></tr>
+              <tr><td>பிபின் சந்திர பால் (பால்)</td><td>வங்காளம்</td><td>–</td></tr>
+              <tr><td>வ.உ. சிதம்பரனார்</td><td>தூத்துக்குடி</td><td>சுதேசி கப்பல் நிறுவனம்</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </>
+    )
   },
   {
-    id: "language",
-    title: "10.6 மொழிப் போராட்டம்",
-    color: "#8b5cf6",
-    content: [
-      {
-        type: "table",
-        headers: ["இயக்கம்", "தலைவர்", "நோக்கம்"],
-        rows: [
-          ["தனித்தமிழ் இயக்கம்", "மறைமலை அடிகள்", "சமஸ்கிருத ஆதிக்கத்திலிருந்து தமிழை விடுவிக்க"],
-          ["மொழிச் சீர்திருத்தம்", "பெரியார்", "இந்தி கட்டாயத்திற்கு எதிராக போராடினார்"],
-          ["தமிழிசை இயக்கம்", "ஆபிரகாம் பண்டிதர்", "இசை நிகழ்வுகளில் தமிழ் பாடல்களுக்கு முக்கியத்துவம்"],
-        ]
-      },
-      {
-        type: "table",
-        headers: ["நிகழ்வு", "ஆண்டு"],
-        rows: [
-          ["தஞ்சாவூர் சங்கீத வித்யா மகாஜன சங்கம் நிறுவல்", "1912"],
-          ["முதல் தமிழிசை மாநாடு", "1943"],
-          ["இந்தி எதிர்ப்பு போராட்டம்", "1937–1939"],
-        ]
-      }
-    ]
+    id: "bangal",
+    icon: "✂️",
+    title: "7.5 வங்கப் பிரிவினை (1905)",
+    content: (
+      <>
+        <div className="ch7-table-wrap">
+          <table className="ch7-table">
+            <thead><tr><th>விவரம்</th><th>தகவல்</th></tr></thead>
+            <tbody>
+              <tr><td>அதிகாரபூர்வ பிரிவினை</td><td>1905 அக்டோபர் 16</td></tr>
+              <tr><td>கர்சன் பிரபு நோக்கம்</td><td>வங்காளிகளின் ஆதிக்கம் கட்டுப்படுத்தி தேசியவாத இயக்கத்தை வலுவிழக்கச் செய்வது</td></tr>
+              <tr><td>முஸ்லிம்களுக்கு உறுதி</td><td>கிழக்கு வங்காளத்தில் முஸ்லிம்கள் ஒற்றுமை அனுபவிப்பார்கள் என்று உறுதி</td></tr>
+              <tr><td>துக்கநாள்</td><td>அக்டோபர் 16 – கங்கை நதியில் புனித நீராட்டல்; வந்தே மாதரம் பாடல்</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p className="ch7-sub-title">சுதேசி இயக்கத்தின் போக்குகள்</p>
+        <div className="ch7-table-wrap">
+          <table className="ch7-table">
+            <thead><tr><th>போக்கு</th><th>விளக்கம்</th></tr></thead>
+            <tbody>
+              <tr><td>மிதவாதப் போக்கு</td><td>மேல்முறையீடுகள், மனுக்கள்</td></tr>
+              <tr><td>ஆக்கபூர்வ சுதேசி</td><td>சுய உதவி; ஆங்கிலேய ஆட்சியின் கட்டுப்பாட்டில் சிக்காமல் செயல்படல்; சுதேசி கடைகள்</td></tr>
+              <tr><td>மறைமுக எதிர்ப்பு (1906)</td><td>அந்நியப் பொருட்கள், அரசுப் பள்ளிகள், நீதிமன்றங்கள், பட்டங்கள் புறக்கணிப்பு; ஆயுத போராட்டம்</td></tr>
+              <tr><td>தீவிர தேசியவாதம்</td><td>சுயராஜ்ஜியம் முழு குறிக்கோள்</td></tr>
+              <tr><td>புரட்சிகர தேசியவாதம்</td><td>ஆயுதமேந்திய போராட்டத்திற்கு ஆயத்தம்</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </>
+    )
   },
   {
-    id: "women",
-    title: "10.7 பெண்கள் இயக்கங்கள்",
-    color: "#ec4899",
-    content: [
-      {
-        type: "table",
-        headers: ["அமைப்பு", "ஆண்டு", "தொடங்கியவர்கள்"],
-        rows: [
-          ["இந்தியப் பெண்கள் சங்கம் (WIA)", "1917", "அன்னிபெசன்ட், டோரதி ஜினராஜதாசா, மார்கரெட் கசின்ஸ் – சென்னை அடையாறு"],
-          ["அகில இந்திய பெண்கள் மாநாடு (AIWC)", "1927", "இந்தியப் பெண்கள் சங்கம் கூட்டியது"],
-        ]
-      },
-      {
-        type: "subtitle",
-        text: "தேவதாசி ஒழிப்பு"
-      },
-      {
-        type: "table",
-        headers: ["அம்சம்", "விவரம்"],
-        rows: [
-          ["முதன்மை தலைவர்", "டாக்டர் முத்துலட்சுமி அம்மையார்"],
-          ["1930 மசோதா", "சென்னை சட்டமன்றத்தில் 'இந்து கோவில்களுக்கு பெண்கள் அர்பணிக்கப்படுவதை தடுப்பது' மசோதா"],
-          ["சட்டம்", "மதராஸ் தேவதாசி சட்டம் 1947"],
-          ["17 ஆண்டுகள்", "மசோதா சட்டமாக மாற 17 ஆண்டுகள் காத்திருந்தது"],
-          ["சட்டம் வழங்கியது", "திருமண அனுமதி; பொட்டு கட்டும் சடங்கு சட்ட விரோதம்; குறைந்தது 5 ஆண்டு சிறை"],
-        ]
-      }
-    ]
+    id: "homerul",
+    icon: "🏠",
+    title: "7.6 தன்னாட்சி (ஹோம் ரூல்) இயக்கம் (1916-18)",
+    content: (
+      <>
+        <div className="ch7-table-wrap">
+          <table className="ch7-table">
+            <thead><tr><th>விவரம்</th><th>தகவல்</th></tr></thead>
+            <tbody>
+              <tr><td>தலைவர்கள்</td><td>லோகமான்ய பாலகங்காதர திலகர், அன்னிபெசன்ட் அம்மையார்</td></tr>
+              <tr><td>காலம்</td><td>1916-1918</td></tr>
+              <tr><td>பின்னணி</td><td>முதல் உலகப் போர்; இந்தியா பங்கேற்பு; பிரிட்டிஷ் ஏமாற்றம்</td></tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <p className="ch7-sub-title">குறிக்கோள்கள்</p>
+        <ul className="ch7-list">
+          <li>பிரிட்டிஷ் பேரரசிற்குள் தன்னாட்சி அடைவது</li>
+          <li>தன்னாட்சிப் பகுதி (டொமினியன்) தகுதி – ஆஸ்திரேலியா, கனடா போல்</li>
+          <li>வன்முறையல்லாத அரசியல்சாசன வழிமுறைகள்</li>
+        </ul>
+        
+        <p className="ch7-sub-title">லக்னோ ஒப்பந்தம் (1916)</p>
+        <div className="ch7-table-wrap">
+          <table className="ch7-table">
+            <thead><tr><th>விவரம்</th><th>தகவல்</th></tr></thead>
+            <tbody>
+              <tr><td>பங்கேற்றோர்</td><td>காங்கிரஸ் கட்சி + முஸ்லிம் லீக்</td></tr>
+              <tr><td>ஒப்புக்கொண்டது</td><td>இந்தியாவில் விரைவில் தன்னாட்சி வேண்டும்</td></tr>
+              <tr><td>காங்கிரஸ் ஏற்றது</td><td>முஸ்லிம்களுக்கு தனித் தொகுதிகள்</td></tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <div className="ch7-highlight">
+          <strong>பிரிட்டிஷாரின் பதில்:</strong> 1919 – மாண்டேகு-செம்ஸ்ஃபோர்ட் சீர்திருத்தங்கள் (படிப்படியாக தன்னாட்சி உறுதி – ஆனால் ஏமாற்றம்); ரௌலட் சட்டம் – தன்னிச்சையான கைது, கடும் தண்டனை.
+        </div>
+      </>
+    )
   }
 ];
 
-const ALL_QUESTIONS = [
-  // SECTION 1 - Print Technology
-  { id: 1, q: "1578இல் கோவாவில் வெளியிடப்பட்ட முதல் தமிழ் புத்தகம் எது?", options: ["திருக்குறள்", "தம்பிரான் வணக்கம்", "தொல்காப்பியம்", "மனோன்மணீயம்"], ans: 1, exp: "1578இல் தம்பிரான் வணக்கம் என்னும் தமிழ் புத்தகம் கோவாவில் வெளியிடப்பட்டது. ஐரோப்பிய மொழிகளை தவிர்த்து அச்சில் ஏறிய மொழிகளில் முதல் மொழி தமிழ் மொழியாகும்.", topic: "அச்சுத் தொழில்நுட்பம்" },
-  { id: 2, q: "1709இல் தரங்கம்பாடியில் முழுமையான அச்சகத்தை நிறுவியவர் யார்?", options: ["கால்டுவெல்", "F.W. எல்லிஸ்", "சீகன்பால்கு", "மீனாட்சி சுந்தரனார்"], ans: 2, exp: "1709இல் சீகன்பால்கு என்பவரால் தரங்கம்பாடியில் முழுமையான அச்சகம் நிறுவப்பட்டது.", topic: "அச்சுத் தொழில்நுட்பம்" },
-  { id: 3, q: "திருக்குறள் எந்த ஆண்டு அச்சில் வெளியிடப்பட்டது?", options: ["1709", "1812", "1816", "1856"], ans: 1, exp: "தொடக்ககால தமிழ் இலக்கிய நூல்களில் ஒன்றான திருக்குறள் 1812இல் வெளியிடப்பட்டது.", topic: "அச்சுத் தொழில்நுட்பம்" },
-  { id: 4, q: "புனித ஜார்ஜ் கோட்டையில் கல்லூரியை 1816இல் நிறுவியவர் யார்?", options: ["ராபர்ட் கால்டுவெல்", "F.W. எல்லிஸ்", "சீகன்பால்கு", "உ.வே. சாமிநாதர்"], ans: 1, exp: "1816இல் புனித ஜார்ஜ் கோட்டையில் கல்லூரியினை நிறுவிய F.W. எல்லிஸ் (1777-1819), தென்னிந்திய மொழிகள் தனிப்பட்ட மொழிக்குடும்பத்தை சார்ந்தவை என நிறுவினார்.", topic: "தமிழ் மறுமலர்ச்சி" },
-  // SECTION 2 - Scholars
-  { id: 5, q: "சி.வை. தாமோதரனாரின் வாழ்க்கை காலம் எது?", options: ["1855–1942", "1832–1901", "1876–1950", "1870–1903"], ans: 1, exp: "சி.வை. தாமோதரனார் (1832–1901) பனையோலைகளில் கையால் எழுதப் பெற்றிருந்த பல தமிழ் இலக்கண, இலக்கிய நூல்களை பதிப்பித்தார்.", topic: "தமிழ் அறிஞர்கள்" },
-  { id: 6, q: "உ.வே. சாமிநாதர் எந்த ஆண்டு சீவகசிந்தாமணி வெளியிட்டார்?", options: ["1889", "1892", "1887", "1894"], ans: 2, exp: "உ.வே. சாமிநாதர் 1887இல் சீவகசிந்தாமணி வெளியிட்டார். பிறகு பத்துப்பாட்டு (1889), சிலப்பதிகாரம் (1892), புறநானூறு (1894) என்ற வரிசையில் வெளியிட்டார்.", topic: "தமிழ் அறிஞர்கள்" },
-  { id: 7, q: "ராபர்ட் கால்டுவெல் திராவிட மொழிகளின் ஒப்பீட்டு இலக்கணம் வெளியிட்ட ஆண்டு எது?", options: ["1816", "1812", "1856", "1878"], ans: 2, exp: "ராபர்ட் கால்டுவெல் (1814–1891) திராவிட அல்லது தென்னிந்திய மொழிகளின் ஒப்பீட்டு இலக்கணம் 1856இல் வெளியிட்டார்.", topic: "மொழியியல்" },
-  { id: 8, q: "மனோன்மணீயம் நாடகத்தில் தமிழ்மொழி வாழ்த்துப் பாடல் எழுதியவர் யார்?", options: ["மறைமலை அடிகள்", "பரிதிமாற் கலைஞர்", "பெ. சுந்தரனார்", "திரு.வி.க."], ans: 2, exp: "பெ. சுந்தரனார் (1855–1897) எழுதிய மனோன்மணீயம் என்னும் நாடக நூலில் இடம் பெற்றுள்ள தமிழ்மொழி வாழ்த்துப் பாடல் மிகவும் புகழ்பெற்றது.", topic: "தமிழ் மறுமலர்ச்சி" },
-  { id: 9, q: "'பரிதிமாற் கலைஞர்' என்ற புனைப்பெயர் யாருடையது?", options: ["சுப்பிரமணிய பாரதி", "வி.கோ. சூரிய நாராயண சாஸ்திரி", "மறைமலை அடிகள்", "உ.வே. சாமிநாதர்"], ans: 1, exp: "வி.கோ. சூரிய நாராயண சாஸ்திரி (1870–1903) தமிழில் தனக்கே பரிதிமாற் கலைஞர் என்று தூய தமிழ்ப் பெயரைச் சூடிக் கொண்டவர். தமிழ் மொழியை செம்மொழி என்று முதன்முதலாக வாதிட்டவர்.", topic: "தமிழ் அறிஞர்கள்" },
-  { id: 10, q: "14 வரிச்செய்யுள் வடிவத்தை (சானட்) தமிழுக்கு அறிமுகம் செய்தவர் யார்?", options: ["மறைமலை அடிகள்", "பரிதிமாற் கலைஞர்", "பாரதிதாசன்", "திரு.வி.க."], ans: 1, exp: "பரிதிமாற் கலைஞர் மேற்கத்திய இலக்கிய மாதிரிகள் மீது கொண்டிருந்த தாக்கத்தின் விளைவாக 14 வரிச்செய்யுள் வடிவத்தை தமிழுக்கு அறிமுகம் செய்தார்.", topic: "தமிழ் அறிஞர்கள்" },
-  // SECTION 3 - Tanit Tamil / Maraimalaiyar
-  { id: 11, q: "தமிழ் மொழியியல் தூய்மைவாதத்தின் தந்தை என்று அழைக்கப்படுபவர் யார்?", options: ["உ.வே. சாமிநாதர்", "சி.வை. தாமோதரனார்", "மறைமலை அடிகள்", "பெரியார்"], ans: 2, exp: "மறைமலை அடிகள் (1876–1950) தமிழ் மொழியியல் தூய்மைவாதத்தின் தந்தை என்றும் தனித்தமிழ் இயக்கத்தை உருவாக்கியவர் என்றும் கருதப்படுகின்றார்.", topic: "தனித்தமிழ் இயக்கம்" },
-  { id: 12, q: "மறைமலை அடிகளின் அசல் பெயர் என்ன?", options: ["சூரிய நாராயணன்", "வேதாச்சலம்", "சுப்பிரமணியன்", "ராமசாமி"], ans: 1, exp: "வேதாச்சலம் என்ற தனது பெயரை அவர் தூய தமிழில் மறைமலை அடிகள் என மாற்றிக்கொண்டார்.", topic: "தனித்தமிழ் இயக்கம்" },
-  { id: 13, q: "மறைமலை அடிகளின் ஞானசாகரம் பத்திரிகை எந்தப் பெயரில் மாற்றப்பட்டது?", options: ["விடுதலை", "அறிவுக்கடல்", "குடிஅரசு", "திராவிடன்"], ans: 1, exp: "அவருடைய ஞானசாகரம் என்னும் பத்திரிக்கை அறிவுக்கடல் எனப் பெயர் மாற்றம் செய்யப்பட்டது.", topic: "தனித்தமிழ் இயக்கம்" },
-  // SECTION 4 - Dravidian Movement
-  { id: 14, q: "1912இல் மதராஸ் ஐக்கியக் கழகம் நிறுவியவர் யார்?", options: ["சர் பிட்டி தியாகராயர்", "டி.எம். நாயர்", "டாக்டர் சி. நடேசனார்", "அலமேலுமங்கை தாயாரம்மாள்"], ans: 2, exp: "1912இல் டாக்டர் சி. நடேசனார் என்னும் மருத்துவர் மதராஸ் ஐக்கியக் கழகம் என்னும் அமைப்பை உருவாக்கினார், இது பின்னர் மதராஸ் திராவிடர் சங்கம் என்று மாறியது.", topic: "திராவிட இயக்கம்" },
-  { id: 15, q: "திராவிடர் இல்லம் எங்கு நிறுவப்பட்டது?", options: ["மதுரை", "கோயம்புத்தூர்", "திருவல்லிக்கேணி (சென்னை)", "திருவாரூர்"], ans: 2, exp: "நடேசனார் 1916 ஜூலையில் திருவல்லிக்கேணியில் (சென்னை) திராவிடர் இல்லம் என்ற பெயரில் ஒரு தங்கும் விடுதியை நிறுவினார்.", topic: "திராவிட இயக்கம்" },
-  { id: 16, q: "தென்னிந்திய நல உரிமைச் சங்கம் (நீதிக்கட்சி) எந்த ஆண்டு நவம்பர் 20ஆம் நாளில் நிறுவப்பட்டது?", options: ["1912", "1916", "1920", "1909"], ans: 1, exp: "1916 நவம்பர் 20இல் டாக்டர் நடேசனார், சர் பிட்டி தியாகராயர், டி.எம். நாயர் மற்றும் 30 முக்கிய பிராமணர் அல்லாத தலைவர்கள் தென்னிந்திய நல உரிமைச் சங்கத்தை உருவாக்கினர்.", topic: "நீதிக்கட்சி" },
-  { id: 17, q: "நீதிக்கட்சியின் தமிழ் பத்திரிகை எது?", options: ["ஜஸ்டிஸ்", "திராவிடன்", "ஆந்திர பிரகாசிகா", "குடிஅரசு"], ans: 1, exp: "நீதிக்கட்சி தமிழில் திராவிடன், ஆங்கிலத்தில் ஜஸ்டிஸ், தெலுங்கில் ஆந்திர பிரகாசிகா ஆகிய பத்திரிகைகளை வெளியிட்டது.", topic: "நீதிக்கட்சி" },
-  { id: 18, q: "1920 தேர்தலில் நீதிக்கட்சி வெற்றி பெற்றபோது சென்னை மாகாணத்தின் முதலமைச்சர் யார் ஆனார்?", options: ["சர் பிட்டி தியாகராயர்", "டி.எம். நாயர்", "A. சுப்பராயலு", "ராஜாஜி"], ans: 2, exp: "நீதிக்கட்சி 1920 தேர்தலில் வெற்றிபெற்று இந்தியாவின் முதல் அமைச்சரவையை சென்னையில் அமைத்தது. A. சுப்பராயலு சென்னை மாகாணத்தின் முதலமைச்சரானார்.", topic: "நீதிக்கட்சி" },
-  { id: 19, q: "நீதிக்கட்சி 1924இல் நிறுவிய பணியாளர் தேர்வு வாரியத்தின் அடிப்படையில் பிரிட்டிஷ் இந்திய அரசு எந்த ஆண்டு UPSC உருவாக்கியது?", options: ["1924", "1926", "1929", "1935"], ans: 2, exp: "இம்முறையை பின்பற்றி பிரிட்டிஷ் இந்திய அரசு 1929இல் பொதுப் பணியாளர் தேர்வாணையத்தை உருவாக்கியது.", topic: "நீதிக்கட்சி" },
-  { id: 20, q: "நீதிக்கட்சியின் கீழிருந்த சட்டமன்றம் தேர்தல் அரசியலில் பெண்கள் பங்கேற்பை எந்த ஆண்டு அங்கீகரித்தது?", options: ["1916", "1919", "1921", "1926"], ans: 2, exp: "நீதிக்கட்சியின் கீழிருந்த சட்டமன்றம் தேர்தல் அரசியலில் பெண்கள் பங்கேற்பதை 1921இல் அங்கீகரித்தது.", topic: "நீதிக்கட்சி" },
-  { id: 21, q: "இந்தியாவின் முதல் பெண் சட்டமன்ற உறுப்பினர் யார்?", options: ["அலமேலுமங்கை தாயாரம்மாள்", "மார்கரெட் கசின்ஸ்", "முத்துலட்சுமி அம்மையார்", "மூவலூர் இராமாமிர்தம்"], ans: 2, exp: "1926இல் முத்துலட்சுமி அம்மையார் இந்தியாவின் முதல் பெண் சட்டமன்ற உறுப்பினராக முடிந்தது. நீதிக்கட்சியின் 1921 அங்கீகாரம் இதற்கு வழிவகுத்தது.", topic: "நீதிக்கட்சி" },
-  { id: 22, q: "நீதிக்கட்சி வகுப்புவாரி அரசாணைகளை எந்த ஆண்டுகளில் இயற்றியது?", options: ["1920 மற்றும் 1921", "1921 செப்டம்பர் மற்றும் 1922 ஆகஸ்ட்", "1923 மற்றும் 1924", "1924 மற்றும் 1925"], ans: 1, exp: "இரண்டு வகுப்புவாரி அரசாணைகள் (1921 செப்டம்பர் 16 மற்றும் 1922 ஆகஸ்ட் 15) இயற்றப்பட்டன. இவை அரசுப் பணிகளில் சேர்வதற்கு சமான வாய்ப்புகளை உறுதி செய்தன.", topic: "நீதிக்கட்சி" },
-  { id: 23, q: "நீதிக்கட்சி இந்து சமய அறநிலையச் சட்டம் எந்த ஆண்டு இயற்றியது?", options: ["1920", "1921", "1924", "1926"], ans: 3, exp: "நீதிக்கட்சி 1926இல் இந்து சமய அறநிலையச் சட்டத்தை இயற்றியது. அதன்படி எந்தவொரு தனிநபரும் சாதிவேறுபாடின்றி கோவில்களின் நிருவாகக் குழுக்களில் உறுப்பினராகவும் கோவிலின் சொத்துக்களை நிர்வகிக்கவும் வழிவகை செய்யப்பட்டது.", topic: "நீதிக்கட்சி" },
-  // SECTION 5 - Periyar
-  { id: 24, q: "பெரியார் ஈ.வெ. ராமசாமியின் வாழ்க்கை காலம் என்ன?", options: ["1869–1966", "1879–1973", "1889–1963", "1875–1980"], ans: 1, exp: "பெரியார் ஈ.வெ. ராமசாமி 1879ஆம் ஆண்டு ஜூன் 17ஆம் நாளில் ஈரோட்டில் பிறந்தார். 1973இல் தொண்ணூற்று நான்காவது வயதில் இயற்கை எய்தினார்.", topic: "பெரியார்" },
-  { id: 25, q: "சுயமரியாதை இயக்கம் எந்த ஆண்டு தொடங்கப்பட்டது?", options: ["1920", "1922", "1925", "1928"], ans: 2, exp: "பெரியார் 1925இல் சுயமரியாதை இயக்கத்தை தொடங்கினார். குடிஅரசு (1925) அதன் அதிகாரபூர்வ செய்தித்தாள் ஆகும்.", topic: "பெரியார்" },
-  { id: 26, q: "சுயமரியாதை இயக்கத்தின் அதிகாரபூர்வ செய்தித்தாள் எது?", options: ["விடுதலை", "புரட்சி", "குடிஅரசு", "பகுத்தறிவு"], ans: 2, exp: "சுயமரியாதை இயக்கத்தின் அதிகாரபூர்வ செய்தித்தாள் குடிஅரசு (1925) ஆகும்.", topic: "பெரியார்" },
-  { id: 27, q: "பெரியார் எந்த போராட்டத்தில் கலந்துகொண்டு 'வைக்கம் வீரர்' என்று பாராட்டப்பட்டார்?", options: ["இந்தி எதிர்ப்பு போராட்டம்", "கோவில் நுழைவு போராட்டம் (வைக்கம்)", "சிறை ஒத்துழையாமை", "குலக்கல்வி எதிர்ப்பு"], ans: 1, exp: "வைக்கம் (திருவாங்கூர் சமஸ்தானத்தின் நகரம்) மக்கள் கோவில்களிலும் சுற்றியுள்ள வீதிகளிலும் ஒடுக்கப்பட்ட பிரிவுகளுக்கு நுழைவு மறுக்கப்பட்டதை எதிர்த்தனர். பெரியார் இந்த இயக்கத்திற்கு தலைமையேற்றதால் சிறையிலடைக்கப்பட்டார். மக்கள் அவரை 'வைக்கம் வீரர்' எனப் பாராட்டினர்.", topic: "பெரியார்" },
-  { id: 28, q: "பெரியார் எந்த ஆண்டு இந்தி எதிர்ப்பு போராட்டத்தை நடத்தினார்?", options: ["1935–37", "1937–39", "1939–41", "1940–42"], ans: 1, exp: "1937இல் ராஜாஜியின் தலைமையிலான அரசின் செயல்பாட்டினை எதிர்க்கும் விதமாக, பள்ளிகளில் இந்தியை கட்டாயப் பாடமாக அறிமுகம் செய்வதற்கு எதிராக பெரியார் இந்தி எதிர்ப்பு போராட்டத்தை நடத்தினார் (1937–39).", topic: "பெரியார்" },
-  { id: 29, q: "நீதிக்கட்சி மற்றும் சுயமரியாதை இயக்கம் இணைந்து எந்த பெயரில் 1944இல் அறியப்பட்டது?", options: ["திமுக", "திக (திராவிடர் கழகம்)", "தமிழகக் காங்கிரஸ்", "அண்ணா திராவிடர் முன்னேற்றக் கழகம்"], ans: 1, exp: "நீதிக்கட்சி சுயமரியாதை இயக்கத்துடன் இணைந்தது. அதற்கு 1944இல் திராவிடர் கழகம் (திக) எனப் புதுப்பெயர் சூட்டப்பட்டது.", topic: "பெரியார்" },
-  { id: 30, q: "பெரியார் எழுதிய பெண்ணியம் குறித்த முக்கியமான நூல் எது?", options: ["குடிஅரசு", "பெண் ஏன் அடிமையானாள்?", "சாதி ஒழிப்பு", "மனோன்மணீயம்"], ans: 1, exp: "பெண்ணியம் குறித்து பெரியார் எழுதிய மிக முக்கியமான நூல் 'பெண் ஏன் அடிமையானாள்?' என்பதாகும்.", topic: "பெரியார்" },
-  { id: 31, q: "B.R. அம்பேத்கர் எழுதிய 'சாதி ஒழிப்பு' (Annihilation of Caste) நூலை 1936இல் தமிழில் பதிப்பித்தவர் யார்?", options: ["திரு.வி. கல்யாண சுந்தரம்", "M. சிங்காரவேலர்", "பெரியார் ஈ.வெ.ரா.", "அயோத்திதாசர்"], ans: 2, exp: "B.R. அம்பேத்கர் எழுதிய சாதி ஒழிப்பு என்னும் நூலை, அந்நூல் வெளிவந்தவுடன் 1936இல் தமிழில் பெரியார் பதிப்பித்தார்.", topic: "பெரியார்" },
-  { id: 32, q: "தமிழ்நாடு இந்து வாரிசுரிமைச் சீர்திருத்தச் சட்டம் எந்த ஆண்டு அமலாக்கப்பட்டது?", options: ["1979", "1985", "1989", "1992"], ans: 2, exp: "1989இல் தமிழக அரசு தமிழ்நாடு இந்து வாரிசுரிமைச் சீர்திருத்தச் சட்டத்தை அறிமுகம் செய்தது. முன்னோர்களின் சொத்துகளை உடைமையாகப் பெறுவதில் பெண்களுக்கும் சம உரிமை உண்டென்பதை உறுதிப்படுத்தியது.", topic: "பெரியார்" },
-  // SECTION 6 - Oppressed leaders
-  { id: 33, q: "1893இல் ஆதிதிராவிட மகாஜன சபையை நிறுவியவர் யார்?", options: ["M.C. ராஜா", "இரட்டைமலை சீனிவாசன்", "அயோத்திதாசர்", "பண்டிதர்"], ans: 1, exp: "இரட்டைமலை சீனிவாசன் 1893இல் ஆதிதிராவிட மகாஜன சபை என்னும் அமைப்பை உருவாக்கினார்.", topic: "ஒடுக்கப்பட்ட மக்கள் தலைவர்கள்" },
-  { id: 34, q: "இரட்டைமலை சீனிவாசனின் சுயசரிதை நூல் எது?", options: ["என் வாழ்க்கை", "ஜீவிய சரித சுருக்கம்", "எனது நினைவுகள்", "வாழ்க்கை நினைவுகள்"], ans: 1, exp: "அவரது சுயசரிதையான ஜீவிய சரித சுருக்கம் 1939இல் வெளியிடப்பட்டது. இது முதன்முதலாக எழுதப்பெற்ற சுயசரிதை நூல்களில் ஒன்றாகும்.", topic: "ஒடுக்கப்பட்ட மக்கள் தலைவர்கள்" },
-  { id: 35, q: "சென்னை மாகாணத்தில் ஒடுக்கப்பட்ட வகுப்பிலிருந்து சட்டமேலவைக்கு தேர்ந்தெடுக்கப்பட்ட முதல் உறுப்பினர் யார்?", options: ["இரட்டைமலை சீனிவாசன்", "அயோத்திதாசர்", "M.C. ராஜா", "B.R. அம்பேத்கர்"], ans: 2, exp: "மயிலை சின்னதம்பி ராஜா (M.C. ராஜா, 1883–1943) சென்னை மாகாணத்தில் ஒடுக்கப்பட்ட வகுப்பிலிருந்து சட்டமேலவைக்கு தேர்ந்தெடுக்கப்பட்ட முதல் உறுப்பினர் (1920–1926).", topic: "ஒடுக்கப்பட்ட மக்கள் தலைவர்கள்" },
-  { id: 36, q: "M.C. ராஜா 1928இல் எந்த அமைப்பை நிறுவினார்?", options: ["ஆதிதிராவிட மகாஜன சபை", "அகில இந்திய ஒடுக்கப்பட்டோர் சங்கம்", "திராவிடர் கழகம்", "நீதிக்கட்சி"], ans: 1, exp: "M.C. ராஜா 1928இல் அகில இந்திய ஒடுக்கப்பட்டோர் சங்கம் என்னும் அமைப்பை உருவாக்கி அதன் தலைவராக நீண்டகாலம் பணியாற்றினார்.", topic: "ஒடுக்கப்பட்ட மக்கள் தலைவர்கள்" },
-  // SECTION 7 - Labour
-  { id: 37, q: "இந்தியாவின் முதல் தொழில் சங்கம் எது?", options: ["அகில இந்திய தொழிலாளர் சங்கம்", "சென்னை தொழிலாளர் சங்கம் (Madras Labour Union)", "இந்திய தேசிய தொழிலாளர் சங்கம்", "சென்னை மாகாண தொழிலாளர் சங்கம்"], ans: 1, exp: "1918இல் இந்தியாவின் முதல் தொழில் சங்கமான சென்னை தொழிலாளர் சங்கம் (Madras Labour Union) உருவாக்கப்பட்டது.", topic: "தொழிலாளர் இயக்கம்" },
-  { id: 38, q: "அகில இந்திய தொழிலாளர் சங்கத்தின் முதல் மாநாடு எங்கு நடைபெற்றது?", options: ["சென்னை", "கல்கத்தா", "பம்பாய்", "டெல்லி"], ans: 2, exp: "அகில இந்திய தொழிலாளர் சங்கத்தின் முதல் மாநாடு 1920 அக்டோபர் 31இல் பம்பாயில் நடைபெற்றது.", topic: "தொழிலாளர் இயக்கம்" },
-  { id: 39, q: "இந்தியாவில் முதல்முதலாக மே தின விழாவை ஏற்பாடு செய்தவர் யார்?", options: ["பி.பி. வாடியா", "திரு.வி. கல்யாண சுந்தரம்", "ம. சிங்காரவேலர்", "பெரியார்"], ans: 2, exp: "ம. சிங்காரவேலர் 1923இல் முதன் முதலாக மே தின விழாவை ஏற்பாடு செய்தார்.", topic: "தொழிலாளர் இயக்கம்" },
-  { id: 40, q: "ம. சிங்காரவேலர் வெளியிட்ட தொழிலாளர் பத்திரிகை எது?", options: ["குடிஅரசு", "தொழிலாளன் (Worker)", "புரட்சி", "விடுதலை"], ans: 1, exp: "தொழிலாளி வர்க்கத்தின் பிரச்சனைகளை வெளிப்படுத்துவதற்காக தொழிலாளன் (Worker) என்ற பத்திரிகையை வெளியிட்டார்.", topic: "தொழிலாளர் இயக்கம்" },
-  // SECTION 8 - Language Movement
-  { id: 41, q: "தமிழிசை இயக்கத்திற்கு முக்கியத்துவம் கொடுத்தவர் யார்?", options: ["மறைமலை அடிகள்", "ஆபிரகாம் பண்டிதர்", "பெரியார்", "திரு.வி.க."], ans: 1, exp: "ஆபிரகாம் பண்டிதர் (1859–1919) தமிழ் இசை வரலாற்றை முறையாகக் கற்றாய்ந்து, 1912இல் தஞ்சாவூர் 'சங்கீத வித்யா மகாஜன சங்கம்' என்ற அமைப்பை ஏற்படுத்தினார். அதுவே தமிழிசை இயக்கத்தின் கருமூலமானது.", topic: "தமிழிசை இயக்கம்" },
-  { id: 42, q: "முதல் தமிழிசை மாநாடு எந்த ஆண்டு நடத்தப்பட்டது?", options: ["1912", "1937", "1943", "1947"], ans: 2, exp: "தமிழிசையின் நிலை குறித்து விவாதிக்க 1943இல் முதல் தமிழிசை மாநாடு நடத்தப்பட்டது.", topic: "தமிழிசை இயக்கம்" },
-  // SECTION 9 - Women's Movement
-  { id: 43, q: "இந்தியப் பெண்கள் சங்கம் (WIA) எந்த ஆண்டு தொடங்கப்பட்டது?", options: ["1905", "1917", "1920", "1927"], ans: 1, exp: "இந்தியப் பெண்கள் சங்கம் (WIA) 1917இல் அன்னிபெசன்ட், டோரதி ஜினராஜதாசா, மார்கரெட் கசின்ஸ் ஆகியோர்களால் சென்னை அடையாறு பகுதியில் தொடங்கப்பட்டது.", topic: "பெண்கள் இயக்கம்" },
-  { id: 44, q: "தேவதாசி ஒழிப்பிற்காக சட்டம் இயற்ற முன்னுரிமை எடுத்த தலைவர் யார்?", options: ["மூவலூர் இராமாமிர்தம்", "அன்னிபெசன்ட்", "முத்துலட்சுமி அம்மையார்", "நீலாம்பிகை"], ans: 2, exp: "தேவதாசி முறையை ஒழிப்பதற்காக சட்டம் இயற்றப்பட வேண்டும் என்பதற்காக நடைபெற்ற இயக்கத்தில் டாக்டர் முத்துலட்சுமி அம்மையார் முதலிடம் வகித்தார்.", topic: "தேவதாசி ஒழிப்பு" },
-  { id: 45, q: "மதராஸ் தேவதாசி சட்டம் எந்த ஆண்டு இயற்றப்பட்டது?", options: ["1930", "1937", "1944", "1947"], ans: 3, exp: "மதராஸ் (அர்பணிப்பைத் தடுத்தல்) தேவதாசி சட்டம் 1947 என்னும் சட்டம் அரசால் இயற்றப்பட்டது. முத்துலட்சுமி அம்மையார் 1930இல் மசோதாவை அறிமுகப்படுத்திய 17 ஆண்டுகளுக்கு பிறகு.", topic: "தேவதாசி ஒழிப்பு" },
-  // SECTION 10 - General
-  { id: 46, q: "இந்தியாவில் 'ஒடுக்கப்பட்ட மக்களின் உரிமைகளுக்காக பகுத்தறிவுச் சித்தாந்தத்தை' உயர்த்திப் பிடித்தவர்கள் யார்?", options: ["சி.வை. தாமோதரனார் மற்றும் உ.வே. சாமிநாதர்", "அயோத்திதாசர் மற்றும் பெரியார் ஈ.வெ. ராமசாமி", "மறைமலை அடிகள் மற்றும் திரு.வி.க.", "ஆபிரகாம் பண்டிதர் மற்றும் சிங்காரவேலர்"], ans: 1, exp: "பண்டிதர் அயோத்திதாசரும் (1845–1914) பெரியார் ஈ.வெ. ராமசாமியும் (1879–1973) சமூகரீதியாக உரிமைகள் மறுக்கப்பட்ட, ஒடுக்கப்பட்ட மக்கள் பிரிவினரின் உரிமைகளுக்காக பகுத்தறிவுச் சித்தாந்தத்தை உயர்த்திப் பிடித்தனர்.", topic: "பொது" },
-  { id: 47, q: "ம. சிங்காரவேலர் (1860–1946) இந்திய பொதுவுடமைக் (கம்யூனிஸ்ட்) கட்சியில் எந்த பதவியில் இருந்தார்?", options: ["ஒரு சாதாரண உறுப்பினர்", "ஆரம்பகால தலைவர்களில் ஒருவர்", "கட்சி செயலாளர்", "கட்சி தலைவர்"], ans: 1, exp: "ம. சிங்காரவேலர் (1860–1946) இந்திய பொதுவுடமைக் (கம்யூனிஸ்ட்) கட்சியின் ஆரம்பகால தலைவர்களில் ஒருவராக இருந்தார். மேலும் தெலுவிசையின் முன்னோடியும் தென்னிந்தியாவின் முதல் பொதுவுடமைவாதியும் ஆவார்.", topic: "தொழிலாளர் இயக்கம்" },
-  { id: 48, q: "குலக்கல்வித் திட்டத்தை அறிமுகம் செய்த முதலமைச்சர் யார்?", options: ["A. சுப்பராயலு", "காமராஜ்", "ராஜாஜி", "காங்கிரஸ் தலைவர்"], ans: 2, exp: "சென்னை மாகாணத்தின் முதலமைச்சராக இருந்த ராஜாஜி (1952–54) பள்ளிக் குழந்தைகளுக்கு அறிமுகப்படுத்திய தொழிற் கல்வி பயிற்சித் திட்டம் (குலக்கல்வி) அவர்களின் தந்தையர்கள் செய்து வந்த தொழில்களில் பயிற்சியளிப்பதாக அமைந்தது.", topic: "பொது" },
-  { id: 49, q: "ம. சிங்காரவேலர் எத்தனை மொழிகள் அறிந்திருந்தார்?", options: ["3", "5", "7", "9"], ans: 2, exp: "ம. சிங்காரவேலர் தமிழ், ஆங்கிலம், உருது, இந்தி, ஜெர்மன், பிரெஞ்ச் மற்றும் ரஷ்யன் எனப் பல மொழிகள் (7 மொழிகள்) அறிந்திருந்தார்.", topic: "தொழிலாளர் இயக்கம்" },
-  { id: 50, q: "இரட்டைமலை சீனிவாசனுக்கு 1926ல் வழங்கப்பட்ட பட்டம் எது?", options: ["திவான் பகதூர்", "ராவ்சாகிப்", "ராவ் பகதூர்", "சர்"], ans: 1, exp: "இரட்டைமலை சீனிவாசனுக்கு ராவ்சாகிப் (1926), ராவ் பகதூர் (1930), திவான் பகதூர் (1936) ஆகிய பட்டங்களால் சிறப்புச் செய்யப்பட்டார். 1926ல் வழங்கப்பட்டது ராவ்சாகிப்.", topic: "ஒடுக்கப்பட்ட மக்கள் தலைவர்கள்" },
+const questions7 = [
+  { q: "1818ஆம் ஆண்டு கிழக்கு வங்காளத்தில் ஹாஜி ஷரியத்துல்லா தொடங்கியது?", opts: ["வஹாபி கிளர்ச்சி","ஃபராசி இயக்கம்","கோல் கிளர்ச்சி","முண்டா கிளர்ச்சி"], ans: 1, exp: "ஹாஜி ஷரியத்துல்லா என்பவரால் 1818ஆம் ஆண்டு ஃபராசி இயக்கம் தொடங்கப்பட்டது. 1839இல் ஷரியத்துல்லா மறைந்த பிறகு மகன் டுடு மியான் தலைமையேற்றார்." },
+  { q: "'நிலம் கடவுளுக்குச் சொந்தம்' என்று அறிவித்தவர்?", opts: ["டிடு மீர்","சித்து","டுடு மியான்","ஷரியத்துல்லா"], ans: 2, exp: "டுடு மியான் 'நிலம் கடவுளுக்குச் சொந்தமானது' என்று அறிவித்தார். எனவே வாடகை வசூலிப்பது அல்லது வரி விதிப்பது இறைச்சட்டத்திற்கு எதிரானது என்றார்." },
+  { q: "1831-32இல் சோட்டா நாக்பூரில் நடந்த பழங்குடியின கிளர்ச்சி?", opts: ["சாந்தலர் கிளர்ச்சி","கோல் கிளர்ச்சி","முண்டா கிளர்ச்சி","வஹாபி கிளர்ச்சி"], ans: 1, exp: "ஜார்க்கண்ட் மற்றும் ஒடிஷாவிலுள்ள சோட்டா நாக்பூர் மற்றும் சிங்பும் ஆகிய இடங்களில் 1831-32இல் நடந்த கோல் கிளர்ச்சி மிகப்பெரிய பழங்குடியின கிளர்ச்சியாகும்." },
+  { q: "சாந்தலர் கிளர்ச்சிக்கு தலைமை ஏற்ற சகோதரர்கள்?", opts: ["பிந்தரராய்-சிங்ரராய்","சித்து-கணு","டிடு மீர்-டுடு மியான்","பிர்சா-கணு"], ans: 1, exp: "1855இல் சித்து மற்றும் கணு ஆகிய இரண்டு சாந்தலர் சகோதரர்கள் கிளர்ச்சியை தலைமையேற்று நடத்தினார்கள்." },
+  { q: "4. கீழ்க்காண்போரில் தீவிர தேசியவாதி யார்?", opts: ["தாதாபாய் நௌரோஜி","நீதிபதி கோவிந்த் ரானடே","பிபின் சந்திர பால்","ரொமேஷ் சந்திரா"], ans: 2, exp: "பிபின் சந்திர பால் தீவிர தேசியவாதி. அவர் வங்காளத்தைச் சேர்ந்தவர். லாலா லஜபதி ராய், பாலகங்காதர திலகருடன் லால்-பால்-பால் மூவர் குழுவில் இருந்தார்." },
+  { q: "வங்கப்பிரிவினை எந்த நாளில் நடைமுறைக்கு வந்தது?", opts: ["1905 ஜூன் 19","1906 ஜூலை 18","1907 ஆகஸ்ட் 19","1905 அக்டோபர் 16"], ans: 3, exp: "1905 அக்டோபர் 16இல் வங்காளம் அதிகாரபூர்வமாகப் பிரிவினையானது. அந்த நாள் துக்கநாளாக அறிவிக்கப்பட்டது." },
+  { q: "சோட்டா நாக்பூர் குத்தகைச் சட்டம் எந்தப் பின்னணியில் நிறைவேற்றப்பட்டது?", opts: ["கோல் கிளர்ச்சி","இண்டிகோ கிளர்ச்சி","முண்டா கிளர்ச்சி","தக்காண கலவரங்கள்"], ans: 2, exp: "1908இல் சோட்டா நாக்பூர் குத்தகைச் சட்டம் நிறைவேற்றப்பட்டது. இது முண்டா கிளர்ச்சியை அடுத்து ஆங்கிலேய அரசு பழங்குடினி நிலம் பற்றிய கொள்கை வகுக்க முயன்றதில் இருந்து வந்தது." },
+  { q: "1916ஆம் ஆண்டு ஏப்ரலில் தன்னாட்சி இயக்கத்தை முதலில் தொடங்கியவர் யார்?", opts: ["அன்னிபெசன்ட்","பிபின் சந்திர பால்","லாலா லஜபதி ராய்","திலகர்"], ans: 3, exp: "பால கங்காதர திலகர் 1916 ஏப்ரலில் தன்னாட்சி இயக்கத்தை முதலில் தொடங்கினார். பின்னர் அன்னிபெசன்ட் 1916 செப்டம்பரில் தொடங்கினார்." },
+  { q: "நீல் தர்பன் நாடகம் மூலமாக இண்டிகோ விவசாயிகளின் இன்னல்கள் தெரிவித்தவர்?", opts: ["தீன பந்து மித்ரா","ரொமேஷ் சந்திர தத்","தாதாபாய் நௌரோஜி","பிர்சா முண்டா"], ans: 0, exp: "தீனபந்து மித்ரா 'நீல் தர்பன்' (இண்டிகோவின் கண்ணாடி) என்ற நாடகம் எழுதினார். இது இந்தியாவிலும் ஐரோப்பாவிலும் இண்டிகோ விவசாயிகளின் பிரச்சனைகளை கவனத்திற்கு கொண்டுவந்தது." },
+  { q: "1857 கிளர்ச்சியில் கான்பூர் பகுதியில் தலைமை வகித்தவர்?", opts: ["பேகம் ஹஸ்ரத் மகால்","நானா சாகிப்","கான் பகதூர்","ராணி லட்சுமிபாய்"], ans: 1, exp: "கடைசி பேஷ்வா மன்னரான இரண்டாவது பாஜிராவின் தத்துப்பிள்ளையான நானா சாகிப் கான்பூர் பகுதியில் கிளர்ச்சிக்குத் தலைமை தாங்கினார். கம்பெனி அவருக்கு ஓய்வூதியம் தர மறுத்தது." },
+  { q: "இந்திய தேசிய காங்கிரசின் முதல் கூட்டம் நடந்த தேதி?", opts: ["1885 டிசம்பர் 25","1885 டிசம்பர் 28","1886 ஜனவரி 1","1886 ஜனவரி 15"], ans: 1, exp: "1885 டிசம்பர் 28இல் இந்திய தேசிய காங்கிரசின் முதல் அமர்வு (கூட்டம்) நடைபெற்றது. A.O. ஹியூம் அமைப்பை உருவாக்க சேவைகள் வழங்கினார்." },
+  { q: "இந்திய தேசிய காங்கிரசின் முதல் தலைவர்?", opts: ["தாதாபாய் நௌரோஜி","A.O. ஹியூம்","உமேஷ் சந்திர பானர்ஜி","பால கங்காதர திலகர்"], ans: 2, exp: "இந்திய தேசிய காங்கிரசின் முதல் (1885) தலைவராக உமேஷ் சந்திர பானர்ஜி இருந்தார்." },
+  { q: "வாரிசு இழப்புக் கொள்கையின் அடிப்படையில் ஆங்கிலேய ஆட்சியில் இணைக்கப்படாத பகுதி?", opts: ["சதாரா","சம்பல்பூர்","ஜான்சி","மைசூர்"], ans: 3, exp: "சதாரா, சம்பல்பூர், பஞ்சாபின் சில பகுதிகள், ஜான்சி மற்றும் நாக்பூர் ஆகியன வாரிசு இழப்புக் கொள்கையின் அடிப்படையில் இணைக்கப்பட்டன. மைசூர் அல்ல." },
+  { q: "பிளாசிப் போரில் கிழக்கிந்திய கம்பெனி பெற்ற தொகை?", opts: ["1 கோடி ரூபாய்","2 கோடியே 25 லட்சம் ரூபாய்","3 கோடி ரூபாய்","5 கோடி ரூபாய்"], ans: 1, exp: "வங்காளத்தின் புதிய நவாபாக நியமிக்கப்பட்ட மீர் ஜாபரிடம் இருந்து கிழக்கிந்திய கம்பெனி 2 கோடியே 25 லட்சம் ரூபாயை 1757 மற்றும் 1760க்கு இடைப்பட்ட காலகட்டத்தில் பெற்றது." },
+  { q: "மங்கள் பாண்டே தனது ஐரோப்பிய அதிகாரியைத் தாக்கிய தேதி?", opts: ["மார்ச் 27, 1857","மார்ச் 29, 1857","மே 10, 1857","மே 11, 1857"], ans: 1, exp: "மார்ச் 29ஆம் தேதி மங்கள் பாண்டே என்ற சிப்பாய் தனது ஐரோப்பிய அதிகாரியைத் தாக்கினார். கைது செய்ய உத்தரவிட்டும் சக சிப்பாய்கள் மறுத்தனர்; பின்னர் தூக்கிலிடப்பட்டார்." },
+  { q: "1857 கிளர்ச்சி தோல்விக்கான முக்கிய காரணம்?", opts: ["ஆயுதங்கள் இல்லாமை","மத்திய தலைமை இல்லாமை","நிதி பற்றாக்குறை","ஆங்கிலேய அதிக படைவலிமை"], ans: 1, exp: "மத்திய தலைமை இல்லாததும் கிளர்ச்சி தோல்வியடைய முக்கிய காரணமாக அமைந்தது. தனிநபர்கள், இந்திய அரசர்கள் மற்றும் ஆங்கிலேய அரசுக்கு எதிரான பல்வேறு சக்திகளை ஒன்றிணைக்கப் பொதுவான செயல்திட்டம் இல்லாமல் போனது." },
+  { q: "தக்காண கலவரங்கள் எந்த ஆண்டு வெடித்தன?", opts: ["1870","1873","1875","1879"], ans: 2, exp: "1875ஆம் ஆண்டு மே மாதத்தில் தக்காணத்தில் வட்டிக்குப் பணம் வழங்குவோருக்கு எதிரான கலவரங்கள் பூனா அருகே உள்ள சூபா என்ற கிராமத்தில் முதன்முதலாக வெடித்தது." },
+  { q: "பிர்சா முண்டா எந்த ஆண்டு கைது செய்யப்பட்டார்?", opts: ["1898","1899","1900","1901"], ans: 2, exp: "1900ஆம் ஆண்டு பிப்ரவரி மாதம் கைது செய்யப்பட்ட பிர்சா முண்டா பின்னர் சிறையில் உயிர்நீத்தார். அவர் பழங்குடியினரின் தலைவராக இன்றளவும் நாட்டுப்புறப் பாடல்களில் போற்றப்படுகிறார்." },
+  { q: "லக்னோ ஒப்பந்தம் எந்த ஆண்டு?", opts: ["1914","1915","1916","1917"], ans: 2, exp: "லக்னோ ஒப்பந்தம் 1916இல் நடந்தது. காங்கிரஸ் கட்சியும் முஸ்லிம் லீக்கும் இந்தியாவில் விரைவில் தன்னாட்சி வேண்டும் என்பதை ஏற்றுக்கொண்டன." },
+  { q: "இண்டிகோ கிளர்ச்சி எந்த மாவட்டத்தில் தொடங்கியது?", opts: ["கல்கத்தா","நடியா","முர்சிதாபாத்","தினாஜ்பூர்"], ans: 1, exp: "இண்டிகோ கிளர்ச்சி 1859ஆம் ஆண்டு தொடங்கியது. வங்காளத்தின் நடியா மாவட்டத்தின் ஒரு கிராமத்தைச் சேர்ந்த விவசாயிகள் இனி இண்டிகோ பயிரிடப்போவதில்லை என மறுத்து வேலைநிறுத்தத்தில் ஈடுபட்டனர்." },
+  { q: "1905 வங்கப்பிரிவினையை நடத்திய வைஸ்ராய்?", opts: ["மிண்டோ","கர்சன்","செல்ம்ஸ்ஃபோர்ட்","மாண்டேகு"], ans: 1, exp: "வங்காளத்தின் தலைமை ஆளுநரான கர்சன் பிரபு வங்கப்பிரிவினை நடத்தினார். வங்காளிகளின் ஆதிக்கத்தை கட்டுப்படுத்தி தேசியவாத இயக்கத்தை வலுவிழக்கச் செய்வதே நோக்கம்." },
+  { q: "வ.உ. சிதம்பரனார் சுதேசி கப்பல் நிறுவனம் தொடங்கிய இடம்?", opts: ["சென்னை","தூத்துக்குடி","நாகப்பட்டினம்","ராமேஸ்வரம்"], ans: 1, exp: "தென்னிந்தியாவில் வ.உ. சிதம்பரனார் சுதேசி கப்பல் நிறுவனத்தை தொடங்கியதை அடுத்து தூத்துக்குடி சுதேசி இயக்கத்தின் மிக முக்கியத் தளமாக விளங்கியது." },
+  { q: "1855 சாந்தலர் கிளர்ச்சி இடம்?", opts: ["ராஜ்மஹால் மலை","சோட்டா நாக்பூர்","ராஞ்சி","பாகல்பூர்"], ans: 0, exp: "சாந்தலர்கள் நிரந்தர குடியிருப்புகளின் கீழ் ஜமீன்கள் உருவாக்கவும் தங்கள் பூர்வீக இடத்தை விட்டு இடம்பெயரவேண்டி நிர்ப்பந்திக்கப்பட்டதால் ராஜ்மஹால் மலையைச் சுற்றிலும் இருந்த வனப்பகுதியை விட்டு வெளியேற்றப்பட்டனர்." },
+  { q: "1858 இந்திய அரசு சட்டம் எந்த மாதம் நிறைவேற்றப்பட்டது?", opts: ["ஆகஸ்ட்","செப்டம்பர்","அக்டோபர்","நவம்பர்"], ans: 3, exp: "1858ஆம் ஆண்டு நவம்பர் மாதம் இந்திய அரசு சட்டம் பிரிட்டிஷ் நாடாளுமன்றம் ஏற்றுக்கொள்ளப்பட்டு, நாடாளுமன்றத்தால் நேரடியாக ஆட்சி அதிகாரம் செலுத்தப்படும் ஆங்கிலேய அரசின் காலனி அறிவிக்கப்பட்டது." },
+  { q: "1806 வேலூர் கிளர்ச்சி எதனால் வெடித்தது?", opts: ["திருமண வரி","ஆடைக் கட்டுப்பாடுகள்","நிலவரி","ஊதியக் குறைப்பு"], ans: 1, exp: "1806ஆம் ஆண்டில் வேலூரில் சிப்பாய்கள் சமயக்குறியீடுகளை நெற்றியில் அணிவதற்கும் தாடி வைத்துக்கொள்வதற்கும் தடைவிதிக்கப்பட்டதோடு தலைப்பாகைகளுக்கு பதிலான வட்ட வடிவிலான தொப்பிகளை அணியுமாறும் பணிக்கப்பட்டனர். இதை எதிர்த்து கிளர்ச்சி." },
+  { q: "மாண்டேகு-செம்ஸ்ஃபோர்ட் சீர்திருத்தங்கள் எந்த ஆண்டு?", opts: ["1917","1918","1919","1920"], ans: 2, exp: "1919இல் மாண்டேகு-செம்ஸ்ஃபோர்ட் சீர்திருத்தங்களை ஆங்கிலேய அரசு அறிவித்தது. இதன் மூலம் இந்தியா தன்னாட்சி நோக்கி படிப்படியாக முன்னேற உறுதி கூறப்பட்டது." },
+  { q: "ஃபராசி இயக்கத்தில் டுடு மியானுக்குப் பிறகு யார் தலைமை ஏற்றார்?", opts: ["நோவா மியான்","பீர் சிங்","சித்து","கணு"], ans: 0, exp: "1862இல் டுடு மியான் மறைந்தபிறகு 1870களில் நோவா மியான் என்பவரால் இந்த இயக்கம் மீண்டும் உயிர்பெற்றது." },
+  { q: "ஆங்கிலேய ஆட்சியில் நிலுவைத் தொகை செலுத்த இயலாமல் விவசாயிகள் என்ன செய்ய வேண்டி இருந்தனர்?", opts: ["நகரம் சேர்ந்தனர்","பயிரிடுதலை கைவிட்டனர்","வேறு நாட்டிற்கு சென்றனர்","படை சேர்ந்தனர்"], ans: 1, exp: "தக்காண கலவரங்களில் கடன் என்னும் மாய வலையில் சிக்கிய விவசாயிகள் நிலுவைத் தொகையைச் செலுத்த இயலாமல் பயிரிடுதலையும் விவசாயத்தையும் கைவிட வேண்டிய அவல நிலைக்குத் தள்ளப்பட்டனர்." },
+  { q: "1857 கிளர்ச்சியில் ஜான்சி ராணி லட்சுமிபாய் ஏன் போர் தொடங்கினார்?", opts: ["வரி விதிப்பு காரணம்","வாரிசு இழப்புக் கொள்கையால் அரசு இணைப்பு","ஆங்கிலேயர் மத மாற்றம் முயற்சி","சிப்பாய் அவமான நடத்தை"], ans: 1, exp: "ஜான்சியின் ராணி லட்சுமிபாயின் விஷயத்தில் டல்ஹௌசி பிரபு, அவரது கணவர் மறைந்தபிறகு ஒரு ஆண்பிள்ளையை தத்து எடுத்துக்கொள்ள அனுமதி தர மறுத்தார். வாரிசு இழப்புக் கொள்கையின் அடிப்படையில் அவரது அரசு ஆங்கிலேய அரசுடன் இணைக்கப்பட்டது." },
+  { q: "சுதேசி இயக்கத்தின் ஆக்கபூர்வ சுதேசி என்ன வலியுறுத்தியது?", opts: ["வன்முறை","சுய உதவி","மனுக்கள்","சட்டமூலங்கள்"], ans: 1, exp: "ஆக்கபூர்வ திட்டங்கள் அனைத்தும் பெரும்பாலும் சுய உதவியையே வலியுறுத்தின. ஆங்கிலேய ஆட்சியின் கட்டுப்பாட்டில் சிக்காமல் சுதந்திரமாகச் செயல்படக்கூடிய உள்ளாட்சி அமைப்புகளை மாற்றாக உருவாக்குவது குறித்து அது கவனம் செலுத்தியது." }
 ];
 
-// ============================================================
-// STYLES
-// ============================================================
-const theme = {
-  bg: "#0a0a0f",
-  surface: "#12121a",
-  card: "#1a1a28",
-  border: "#2a2a40",
-  accent1: "#f59e0b",
-  accent2: "#10b981",
-  accent3: "#6366f1",
-  text: "#e8e8f0",
-  textMuted: "#8888aa",
-  correct: "#10b981",
-  wrong: "#ef4444",
-  fontHead: "'Yatra One', serif",
-  fontBody: "'Noto Sans Tamil', 'Segoe UI', sans-serif",
-};
+const GAME_TIME7 = 15;
 
-const css = `
-  @import url('https://fonts.googleapis.com/css2?family=Yatra+One&family=Noto+Sans+Tamil:wght@300;400;600;700&display=swap');
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body, #root { height: 100%; }
-  body { background: ${theme.bg}; color: ${theme.text}; font-family: ${theme.fontBody}; }
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: ${theme.surface}; }
-  ::-webkit-scrollbar-thumb { background: ${theme.accent3}; border-radius: 3px; }
-  table { border-collapse: collapse; width: 100%; }
-  th { background: linear-gradient(135deg, #1e1e35, #2a2a45); color: ${theme.accent1}; padding: 10px 14px; font-size: 0.85rem; text-align: left; border-bottom: 2px solid ${theme.accent1}44; letter-spacing: 0.5px; }
-  td { padding: 9px 14px; font-size: 0.88rem; border-bottom: 1px solid ${theme.border}; vertical-align: top; line-height: 1.5; }
-  tr:hover td { background: #1e1e30; }
-  tr:last-child td { border-bottom: none; }
-  .tab-btn { transition: all 0.25s; cursor: pointer; border: none; outline: none; }
-  .tab-btn:hover { opacity: 0.9; }
-  .opt-btn { transition: all 0.2s; cursor: pointer; border: none; outline: none; text-align: left; }
-  .opt-btn:hover:not(:disabled) { transform: translateX(4px); }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 ${theme.accent1}44; } 50% { box-shadow: 0 0 0 8px transparent; } }
-  @keyframes confetti { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(-200px) rotate(720deg); opacity: 0; } }
-  .fadeIn { animation: fadeIn 0.4s ease both; }
-  .section-card { border-left: 4px solid; padding: 18px; border-radius: 10px; background: ${theme.card}; margin-bottom: 16px; }
-  .game-star { animation: pulse 2s infinite; }
-`;
-
-// ============================================================
-// SUBCOMPONENTS
-// ============================================================
-function TableBlock({ data }) {
-  return (
-    <div style={{ overflowX: "auto", borderRadius: 8, border: `1px solid ${theme.border}`, marginBottom: 12 }}>
-      <table>
-        <thead>
-          <tr>{data.headers.map((h, i) => <th key={i}>{h}</th>)}</tr>
-        </thead>
-        <tbody>
-          {data.rows.map((row, ri) => (
-            <tr key={ri}>{row.map((cell, ci) => <td key={ci}>{cell}</td>)}</tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
-function NotesSection({ section }) {
-  const [open, setOpen] = useState(true);
-  return (
-    <div className="section-card fadeIn" style={{ borderColor: section.color }}>
-      <button onClick={() => setOpen(!open)} style={{ background: "none", border: "none", cursor: "pointer", width: "100%", textAlign: "left", display: "flex", alignItems: "center", gap: 10 }}>
-        <span style={{ fontSize: "1.1rem", fontWeight: 700, color: section.color, fontFamily: theme.fontBody }}>{section.title}</span>
-        <span style={{ marginLeft: "auto", color: section.color, fontSize: "1.2rem" }}>{open ? "▲" : "▼"}</span>
-      </button>
-      {open && (
-        <div style={{ marginTop: 14 }}>
-          {section.content.map((block, i) => {
-            if (block.type === "para") return <p key={i} style={{ fontSize: "0.92rem", lineHeight: 1.8, color: theme.text, marginBottom: 12 }}>{block.text}</p>;
-            if (block.type === "subtitle") return <p key={i} style={{ fontWeight: 700, color: theme.accent1, fontSize: "0.95rem", margin: "14px 0 8px", borderBottom: `1px solid ${theme.border}`, paddingBottom: 4 }}>{block.text}</p>;
-            if (block.type === "table") return <TableBlock key={i} data={block} />;
-            return null;
-          })}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function QuizQuestion({ q, idx, total, onNext, isLast }) {
-  const [selected, setSelected] = useState(null);
-  const [answered, setAnswered] = useState(false);
-
-  const handleSelect = (i) => {
-    if (answered) return;
-    setSelected(i);
-    setAnswered(true);
-  };
-
-  const optColors = ["#6366f1", "#f59e0b", "#10b981", "#ef4444"];
-
-  return (
-    <div className="fadeIn" style={{ background: theme.card, borderRadius: 14, padding: 24, border: `1px solid ${theme.border}` }}>
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 16 }}>
-        <span style={{ fontSize: "0.78rem", color: theme.textMuted, background: theme.surface, padding: "4px 10px", borderRadius: 20 }}>{q.topic}</span>
-        <span style={{ fontSize: "0.78rem", color: theme.accent1 }}>{idx + 1} / {total}</span>
-      </div>
-      <p style={{ fontSize: "1rem", fontWeight: 600, lineHeight: 1.7, marginBottom: 20, color: theme.text }}>{q.q}</p>
-      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-        {q.options.map((opt, i) => {
-          let bg = theme.surface;
-          let border = theme.border;
-          if (answered) {
-            if (i === q.ans) { bg = "#10b98120"; border = theme.correct; }
-            else if (i === selected && i !== q.ans) { bg = "#ef444420"; border = theme.wrong; }
-          } else if (selected === i) { bg = "#6366f120"; border = optColors[i]; }
-          return (
-            <button key={i} className="opt-btn" disabled={answered} onClick={() => handleSelect(i)}
-              style={{ background: bg, border: `1.5px solid ${border}`, borderRadius: 10, padding: "12px 16px", color: theme.text, fontSize: "0.9rem", lineHeight: 1.5 }}>
-              <span style={{ fontWeight: 700, color: optColors[i], marginRight: 8 }}>{String.fromCharCode(65 + i)}.</span>{opt}
-            </button>
-          );
-        })}
-      </div>
-      {answered && (
-        <div style={{ marginTop: 16, background: selected === q.ans ? "#10b98115" : "#ef444415", border: `1px solid ${selected === q.ans ? theme.correct : theme.wrong}`, borderRadius: 10, padding: 14 }}>
-          <p style={{ fontSize: "0.82rem", fontWeight: 700, color: selected === q.ans ? theme.correct : theme.wrong, marginBottom: 6 }}>
-            {selected === q.ans ? "✓ சரியான விடை!" : `✗ தவறு! சரியான விடை: ${q.options[q.ans]}`}
-          </p>
-          <p style={{ fontSize: "0.85rem", color: theme.textMuted, lineHeight: 1.6 }}><strong style={{ color: theme.accent1 }}>விளக்கம்:</strong> {q.exp}</p>
-        </div>
-      )}
-      {answered && (
-        <button onClick={() => onNext(selected === q.ans)} className="tab-btn"
-          style={{ marginTop: 16, width: "100%", padding: "13px", background: `linear-gradient(135deg, ${theme.accent3}, ${theme.accent1})`, color: "#fff", borderRadius: 10, fontWeight: 700, fontSize: "0.95rem" }}>
-          {isLast ? "முடிவு காண்க →" : "அடுத்த கேள்வி →"}
-        </button>
-      )}
-    </div>
-  );
-}
-
-function ResultPage({ score, total, onRetry }) {
-  const pct = Math.round((score / total) * 100);
-  const grade = pct >= 90 ? { label: "சிறந்தது! 🏆", color: "#f59e0b" } : pct >= 70 ? { label: "நல்லது! 👍", color: "#10b981" } : pct >= 50 ? { label: "சராசரி 📚", color: "#6366f1" } : { label: "மேலும் படியுங்கள் 💪", color: "#ef4444" };
-  return (
-    <div className="fadeIn" style={{ textAlign: "center", padding: 32 }}>
-      <div style={{ fontSize: "4rem", marginBottom: 12 }}>{pct >= 70 ? "🎉" : "📖"}</div>
-      <h2 style={{ fontFamily: theme.fontHead, color: grade.color, fontSize: "2rem", marginBottom: 8 }}>{grade.label}</h2>
-      <div style={{ fontSize: "3.5rem", fontWeight: 900, color: theme.accent1, margin: "20px 0" }}>{score}<span style={{ fontSize: "1.5rem", color: theme.textMuted }}>/{total}</span></div>
-      <div style={{ width: "100%", height: 12, background: theme.border, borderRadius: 6, marginBottom: 24, overflow: "hidden" }}>
-        <div style={{ width: `${pct}%`, height: "100%", background: `linear-gradient(90deg, ${theme.accent3}, ${theme.accent1})`, borderRadius: 6, transition: "width 1s ease" }} />
-      </div>
-      <p style={{ color: theme.textMuted, fontSize: "0.95rem", marginBottom: 28 }}>{pct}% — {pct >= 80 ? "TNPSC க்கு நீங்கள் தயார்!" : "மேலும் பயிற்சி செய்யுங்கள்!"}</p>
-      <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-        <button onClick={onRetry} className="tab-btn" style={{ padding: "12px 28px", background: `linear-gradient(135deg, ${theme.accent3}, ${theme.accent1})`, color: "#fff", borderRadius: 10, fontWeight: 700 }}>மீண்டும் விளையாடு</button>
-      </div>
-    </div>
-  );
-}
-
-// ============================================================
-// GAME MODE
-// ============================================================
-function GameMode() {
-  const TOTAL_Q = 15;
-  const TIME_PER_Q = 20;
-  const [gameState, setGameState] = useState("start"); // start | playing | end
-  const [questions, setQuestions] = useState([]);
-  const [current, setCurrent] = useState(0);
-  const [score, setScore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(TIME_PER_Q);
-  const [selected, setSelected] = useState(null);
-  const [answered, setAnswered] = useState(false);
-  const [streak, setStreak] = useState(0);
-  const [maxStreak, setMaxStreak] = useState(0);
-  const timerRef = useRef(null);
-
-  const startGame = () => {
-    const shuffled = [...ALL_QUESTIONS].sort(() => Math.random() - 0.5).slice(0, TOTAL_Q);
-    setQuestions(shuffled);
-    setCurrent(0);
-    setScore(0);
-    setStreak(0);
-    setMaxStreak(0);
-    setTimeLeft(TIME_PER_Q);
-    setSelected(null);
-    setAnswered(false);
-    setGameState("playing");
-  };
-
-  useEffect(() => {
-    if (gameState !== "playing" || answered) return;
-    timerRef.current = setInterval(() => {
-      setTimeLeft(t => {
-        if (t <= 1) {
-          clearInterval(timerRef.current);
-          handleAnswer(-1);
-          return 0;
-        }
-        return t - 1;
-      });
-    }, 1000);
-    return () => clearInterval(timerRef.current);
-  }, [current, gameState, answered]);
-
-  const handleAnswer = (i) => {
-    if (answered) return;
-    clearInterval(timerRef.current);
-    setSelected(i);
-    setAnswered(true);
-    const correct = i === questions[current]?.ans;
-    if (correct) {
-      setScore(s => s + 1);
-      setStreak(s => { const ns = s + 1; setMaxStreak(m => Math.max(m, ns)); return ns; });
-    } else {
-      setStreak(0);
-    }
-  };
-
-  const next = () => {
-    if (current + 1 >= TOTAL_Q) { setGameState("end"); return; }
-    setCurrent(c => c + 1);
-    setTimeLeft(TIME_PER_Q);
-    setSelected(null);
-    setAnswered(false);
-  };
-
-  const optColors = ["#6366f1", "#f59e0b", "#10b981", "#ef4444"];
-  const q = questions[current];
-  const timerPct = (timeLeft / TIME_PER_Q) * 100;
-  const timerColor = timeLeft > 10 ? theme.correct : timeLeft > 5 ? theme.accent1 : theme.wrong;
-
-  if (gameState === "start") return (
-    <div style={{ textAlign: "center", padding: 40 }}>
-      <div style={{ fontSize: "3.5rem", marginBottom: 16 }}>⚡</div>
-      <h2 style={{ fontFamily: theme.fontHead, color: theme.accent1, fontSize: "2rem", marginBottom: 12 }}>வேக வினாடி வினா!</h2>
-      <p style={{ color: theme.textMuted, marginBottom: 8 }}>15 கேள்விகள் | {TIME_PER_Q} வினாடி வரம்பு</p>
-      <p style={{ color: theme.textMuted, fontSize: "0.85rem", marginBottom: 32 }}>சரியான விடைகளுக்கு தொடர் வரிசை (streak) கட்டுங்கள்!</p>
-      <button onClick={startGame} className="tab-btn game-star" style={{ padding: "16px 48px", background: `linear-gradient(135deg, #f59e0b, #ef4444)`, color: "#fff", borderRadius: 14, fontWeight: 800, fontSize: "1.1rem" }}>விளையாட தொடங்கு!</button>
-    </div>
-  );
-
-  if (gameState === "end") return (
-    <div className="fadeIn" style={{ textAlign: "center", padding: 32 }}>
-      <div style={{ fontSize: "4rem", marginBottom: 12 }}>🏆</div>
-      <h2 style={{ fontFamily: theme.fontHead, color: theme.accent1, fontSize: "2rem" }}>விளையாட்டு முடிந்தது!</h2>
-      <div style={{ display: "flex", gap: 16, justifyContent: "center", margin: "24px 0", flexWrap: "wrap" }}>
-        {[{ label: "மதிப்பெண்", val: `${score}/${TOTAL_Q}`, color: theme.accent1 }, { label: "சதவீதம்", val: `${Math.round(score/TOTAL_Q*100)}%`, color: theme.accent2 }, { label: "சிறந்த streak", val: `${maxStreak}🔥`, color: theme.accent3 }].map((s, i) => (
-          <div key={i} style={{ background: theme.card, borderRadius: 12, padding: "18px 28px", border: `2px solid ${s.color}` }}>
-            <div style={{ fontSize: "1.8rem", fontWeight: 900, color: s.color }}>{s.val}</div>
-            <div style={{ fontSize: "0.8rem", color: theme.textMuted, marginTop: 4 }}>{s.label}</div>
-          </div>
-        ))}
-      </div>
-      <button onClick={startGame} className="tab-btn" style={{ padding: "12px 36px", background: `linear-gradient(135deg, ${theme.accent1}, ${theme.accent3})`, color: "#fff", borderRadius: 10, fontWeight: 700, marginTop: 8 }}>மீண்டும் விளையாடு</button>
-    </div>
-  );
-
-  return (
-    <div className="fadeIn">
-      {/* HUD */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-        <div style={{ display: "flex", gap: 10 }}>
-          <span style={{ background: theme.surface, border: `1px solid ${theme.accent1}`, borderRadius: 20, padding: "4px 12px", fontSize: "0.82rem", color: theme.accent1 }}>⭐ {score}</span>
-          <span style={{ background: theme.surface, border: `1px solid #ef4444`, borderRadius: 20, padding: "4px 12px", fontSize: "0.82rem", color: "#ef4444" }}>🔥 {streak}</span>
-        </div>
-        <span style={{ fontSize: "0.82rem", color: theme.textMuted }}>{current + 1}/{TOTAL_Q}</span>
-      </div>
-      {/* Timer */}
-      <div style={{ background: theme.border, borderRadius: 4, height: 6, marginBottom: 18, overflow: "hidden" }}>
-        <div style={{ height: "100%", width: `${timerPct}%`, background: timerColor, borderRadius: 4, transition: "width 1s linear, background 0.3s" }} />
-      </div>
-      <div style={{ textAlign: "center", fontSize: "1.6rem", fontWeight: 900, color: timerColor, marginBottom: 12 }}>{timeLeft}s</div>
-      {/* Question */}
-      <div style={{ background: theme.card, borderRadius: 14, padding: 22, marginBottom: 16, border: `1px solid ${theme.border}` }}>
-        <span style={{ fontSize: "0.75rem", color: theme.textMuted, background: theme.surface, padding: "3px 10px", borderRadius: 20 }}>{q?.topic}</span>
-        <p style={{ fontSize: "1rem", fontWeight: 600, lineHeight: 1.7, marginTop: 12, color: theme.text }}>{q?.q}</p>
-      </div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-        {q?.options.map((opt, i) => {
-          let bg = theme.surface, border2 = theme.border;
-          if (answered) {
-            if (i === q.ans) { bg = "#10b98125"; border2 = theme.correct; }
-            else if (i === selected) { bg = "#ef444425"; border2 = theme.wrong; }
-          }
-          return (
-            <button key={i} className="opt-btn" disabled={answered} onClick={() => handleAnswer(i)}
-              style={{ background: bg, border: `2px solid ${border2}`, borderRadius: 10, padding: "12px 14px", color: theme.text, fontSize: "0.85rem", lineHeight: 1.4 }}>
-              <span style={{ fontWeight: 700, color: optColors[i], display: "block", marginBottom: 4 }}>{String.fromCharCode(65 + i)}</span>{opt}
-            </button>
-          );
-        })}
-      </div>
-      {answered && (
-        <div style={{ marginTop: 14 }}>
-          <div style={{ background: selected === q.ans ? "#10b98115" : "#ef444415", border: `1px solid ${selected === q.ans ? theme.correct : theme.wrong}`, borderRadius: 10, padding: 12, marginBottom: 12 }}>
-            <p style={{ fontSize: "0.82rem", color: selected === q.ans ? theme.correct : theme.wrong, fontWeight: 700 }}>{selected === q.ans ? "✓ சரியான விடை!" : `✗ தவறு! சரியான விடை: ${q.options[q.ans]}`}</p>
-            <p style={{ fontSize: "0.82rem", color: theme.textMuted, marginTop: 6, lineHeight: 1.5 }}>{q.exp}</p>
-          </div>
-          <button onClick={next} className="tab-btn" style={{ width: "100%", padding: 13, background: `linear-gradient(135deg, ${theme.accent3}, ${theme.accent1})`, color: "#fff", borderRadius: 10, fontWeight: 700 }}>
-            {current + 1 >= TOTAL_Q ? "முடிவு காண்க" : "அடுத்தது ⚡"}
-          </button>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ============================================================
-// MAIN APP
-// ============================================================
-export default function App() {
+export default function Chapter7() {
   const [tab, setTab] = useState("notes");
   const [quizIdx, setQuizIdx] = useState(0);
+  const [selected, setSelected] = useState(null);
+  const [showExp, setShowExp] = useState(false);
   const [quizScore, setQuizScore] = useState(0);
   const [quizDone, setQuizDone] = useState(false);
-  const [quizQuestions] = useState(() => [...ALL_QUESTIONS].sort(() => Math.random() - 0.5));
+  const [quizAnswers, setQuizAnswers] = useState([]);
 
-  const resetQuiz = () => { setQuizIdx(0); setQuizScore(0); setQuizDone(false); };
+  const [gameIdx, setGameIdx] = useState(0);
+  const [gameScore, setGameScore] = useState(0);
+  const [gameTimer, setGameTimer] = useState(GAME_TIME7);
+  const [gameSelected, setGameSelected] = useState(null);
+  const [gameDone, setGameDone] = useState(false);
+  const [gameAnswers, setGameAnswers] = useState([]);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [streak, setStreak] = useState(0);
 
-  const tabs = [
-    { id: "notes", label: "📖 குறிப்புகள்" },
-    { id: "quiz", label: "✏️ வினாடி வினா" },
-    { id: "game", label: "⚡ விளையாட்டு" },
-  ];
+  const allQ = questions7;
+  const gameQ = questions7.slice(0, 20);
+
+  useEffect(() => {
+    if (tab !== "game" || !gameStarted || gameDone || gameSelected !== null) return;
+    if (gameTimer <= 0) { handleGameSelect(-1); return; }
+    const t = setTimeout(() => setGameTimer(p => p - 1), 1000);
+    return () => clearTimeout(t);
+  }, [tab, gameStarted, gameDone, gameSelected, gameTimer, gameIdx]);
+
+  const handleQuizSelect = (i) => {
+    if (selected !== null) return;
+    setSelected(i);
+    setShowExp(true);
+    const correct = i === allQ[quizIdx].ans;
+    if (correct) setQuizScore(s => s + 1);
+    setQuizAnswers(prev => [...prev, { q: allQ[quizIdx].q, correct, userAns: allQ[quizIdx].opts[i], correctAns: allQ[quizIdx].opts[allQ[quizIdx].ans] }]);
+  };
+
+  const nextQuiz = () => {
+    if (quizIdx + 1 >= allQ.length) { setQuizDone(true); return; }
+    setQuizIdx(i => i + 1);
+    setSelected(null);
+    setShowExp(false);
+  };
+
+  const resetQuiz = () => { setQuizIdx(0); setSelected(null); setShowExp(false); setQuizScore(0); setQuizDone(false); setQuizAnswers([]); };
+
+  const handleGameSelect = (i) => {
+    if (gameSelected !== null) return;
+    setGameSelected(i);
+    const correct = i === gameQ[gameIdx].ans;
+    if (correct) { setGameScore(s => s + 10 + Math.floor(gameTimer * 2)); setStreak(s => s + 1); }
+    else setStreak(0);
+    setGameAnswers(prev => [...prev, { q: gameQ[gameIdx].q, correct, userAns: i >= 0 ? gameQ[gameIdx].opts[i] : "⏰ Time Up", correctAns: gameQ[gameIdx].opts[gameQ[gameIdx].ans] }]);
+    setTimeout(() => {
+      if (gameIdx + 1 >= gameQ.length) { setGameDone(true); return; }
+      setGameIdx(p => p + 1);
+      setGameSelected(null);
+      setGameTimer(GAME_TIME7);
+    }, 1200);
+  };
+
+  const resetGame = () => { setGameIdx(0); setGameScore(0); setGameTimer(GAME_TIME7); setGameSelected(null); setGameDone(false); setGameAnswers([]); setGameStarted(false); setStreak(0); };
+
+  const timerPct = gameTimer / GAME_TIME7;
+  const r = 30;
+  const circ = 2 * Math.PI * r;
 
   return (
-    <div style={{ minHeight: "100vh", background: theme.bg }}>
-      <style>{css}</style>
-      {/* Header */}
-      <div style={{ background: `linear-gradient(135deg, #12121a, #1a1a2e)`, borderBottom: `1px solid ${theme.border}`, padding: "20px 20px 0" }}>
-        <div style={{ maxWidth: 800, margin: "0 auto" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-            <div style={{ width: 44, height: 44, borderRadius: 10, background: `linear-gradient(135deg, ${theme.accent1}, ${theme.accent3})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.3rem", flexShrink: 0 }}>🏛</div>
-            <div>
-              <h1 style={{ fontFamily: theme.fontHead, fontSize: "1.2rem", color: theme.accent1, lineHeight: 1.2 }}>தமிழ்நாட்டில் சமூக மாற்றங்கள்</h1>
-              <p style={{ fontSize: "0.75rem", color: theme.textMuted }}>Class 10 History • Unit 10 • TNPSC Prep</p>
-            </div>
-          </div>
-          {/* Tabs */}
-          <div style={{ display: "flex", gap: 4 }}>
-            {tabs.map(t => (
-              <button key={t.id} className="tab-btn" onClick={() => setTab(t.id)}
-                style={{ flex: 1, padding: "11px 8px", fontSize: "0.82rem", fontWeight: 700, background: "none", color: tab === t.id ? theme.accent1 : theme.textMuted, borderBottom: `3px solid ${tab === t.id ? theme.accent1 : "transparent"}`, borderTop: "none", borderLeft: "none", borderRight: "none" }}>
-                {t.label}
-              </button>
-            ))}
-          </div>
+    <>
+      <style>{styles7}</style>
+      <div className="ch7-app">
+        <div className="ch7-bg" />
+        <div className="ch7-header">
+          <div className="ch7-badge">TNPSC · Class 10 · History</div>
+          <h1 className="ch7-title">அலகு 7 – காலனியத்துக்கு எதிரான இயக்கங்களும் தேசியத்தின் தோற்றமும்</h1>
+          <p className="ch7-subtitle">Unit 7 · Anti-Colonial Movements & Rise of Nationalism</p>
         </div>
-      </div>
+        <div className="ch7-tabs">
+          {["notes","quiz","game"].map(t => (
+            <button key={t} className={`ch7-tab ${tab===t?"active":""}`} onClick={() => setTab(t)}>
+              {t==="notes"?"📖 Notes":t==="quiz"?"✏️ Quiz":"🎮 Quiz Game"}
+            </button>
+          ))}
+        </div>
+        <div className="ch7-content">
 
-      {/* Content */}
-      <div style={{ maxWidth: 800, margin: "0 auto", padding: "20px 16px 60px" }}>
-        {/* NOTES TAB */}
-        {tab === "notes" && (
-          <div>
-            <div style={{ background: theme.card, border: `1px solid ${theme.border}`, borderRadius: 12, padding: "14px 18px", marginBottom: 20, display: "flex", alignItems: "center", gap: 10 }}>
-              <span style={{ fontSize: "1.2rem" }}>📌</span>
-              <div>
-                <p style={{ fontSize: "0.82rem", color: theme.accent1, fontWeight: 700 }}>TNPSC Study Notes</p>
-                <p style={{ fontSize: "0.78rem", color: theme.textMuted }}>அனைத்து உள்ளடக்கமும் பட்டியல் வடிவில் – Class 10 பாடப்புத்தகத்தின் படி</p>
+          {tab === "notes" && (
+            <div>
+              {notes7.map(sec => (
+                <div key={sec.id} className="ch7-section">
+                  <div className="ch7-section-title">
+                    <span>{sec.icon}</span>
+                    {sec.title}
+                  </div>
+                  {sec.content}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {tab === "quiz" && !quizDone && (
+            <div className="ch7-quiz-container">
+              <div className="ch7-quiz-header">
+                <span className="ch7-quiz-progress">கேள்வி {quizIdx + 1} / {allQ.length}</span>
+                <span className="ch7-quiz-progress">மதிப்பெண்: {quizScore}</span>
+              </div>
+              <div className="ch7-progress-bar">
+                <div className="ch7-progress-fill" style={{ width: `${(quizIdx/allQ.length)*100}%` }} />
+              </div>
+              <div className="ch7-question-card">
+                <div className="ch7-question-num">Question {quizIdx + 1}</div>
+                <div className="ch7-question-text">{allQ[quizIdx].q}</div>
+                <div className="ch7-options">
+                  {allQ[quizIdx].opts.map((opt, i) => (
+                    <button key={i} className={`ch7-option ${selected !== null ? (i === allQ[quizIdx].ans ? "correct" : i === selected ? "wrong" : "") : ""}`} onClick={() => handleQuizSelect(i)} disabled={selected !== null}>
+                      <span style={{ marginRight: 8, fontWeight: 700, opacity: 0.5 }}>{String.fromCharCode(65+i)}.</span>{opt}
+                    </button>
+                  ))}
+                </div>
+                {showExp && (
+                  <div className="ch7-explanation">
+                    <strong>{selected === allQ[quizIdx].ans ? "✅ சரி!" : "❌ தவறு!"}</strong><br />
+                    {allQ[quizIdx].exp}
+                  </div>
+                )}
+              </div>
+              {selected !== null && (
+                <button className="ch7-btn" onClick={nextQuiz}>
+                  {quizIdx + 1 < allQ.length ? "அடுத்த கேள்வி →" : "முடிவுகள் →"}
+                </button>
+              )}
+            </div>
+          )}
+
+          {tab === "quiz" && quizDone && (
+            <div className="ch7-result-container">
+              <div className="ch7-result-title">Quiz முடிந்தது! 🎉</div>
+              <div className="ch7-result-score">{quizScore}/{allQ.length}</div>
+              <div className="ch7-result-sub">
+                {quizScore >= allQ.length * 0.8 ? "மிகச் சிறப்பாக செய்தீர்கள்! 🌟" : quizScore >= allQ.length * 0.5 ? "நல்ல முயற்சி! 👍" : "மீண்டும் முயற்சி செய்யுங்கள்! 💪"}
+              </div>
+              <table className="ch7-result-table">
+                <thead><tr><th>#</th><th>கேள்வி</th><th>உங்கள் பதில்</th><th>சரியான பதில்</th><th>நிலை</th></tr></thead>
+                <tbody>
+                  {quizAnswers.map((a, i) => (
+                    <tr key={i}>
+                      <td>{i+1}</td>
+                      <td style={{ maxWidth: 180, fontSize: 10 }}>{a.q}</td>
+                      <td style={{ fontSize: 10 }}>{a.userAns}</td>
+                      <td style={{ fontSize: 10 }}>{a.correctAns}</td>
+                      <td>{a.correct ? <span className="ch7-correct-badge">✅</span> : <span className="ch7-wrong-badge">❌</span>}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <button className="ch7-btn" onClick={resetQuiz}>மீண்டும் தொடங்கு 🔄</button>
+            </div>
+          )}
+
+          {tab === "game" && !gameStarted && (
+            <div style={{ textAlign: "center" }}>
+              <div className="ch7-question-card" style={{ textAlign: "center" }}>
+                <div style={{ fontSize: 48, marginBottom: 12 }}>⚔️</div>
+                <div className="ch7-result-title">Quiz Game – அலகு 7</div>
+                <div className="ch7-result-sub" style={{ marginBottom: 20 }}>
+                  20 கேள்விகள் · {GAME_TIME7} வினாடி நேர வரம்பு · விரைவான பதிலுக்கு அதிக மதிப்பெண்
+                </div>
+                <button className="ch7-btn" onClick={() => setGameStarted(true)}>விளையாட்டு தொடங்கு 🚀</button>
               </div>
             </div>
-            {NOTES_SECTIONS.map(s => <NotesSection key={s.id} section={s} />)}
-          </div>
-        )}
+          )}
 
-        {/* QUIZ TAB */}
-        {tab === "quiz" && (
-          <div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-              <p style={{ fontSize: "0.85rem", color: theme.textMuted }}>{ALL_QUESTIONS.length} கேள்விகள் • விளக்கத்துடன்</p>
-              <div style={{ background: theme.surface, borderRadius: 20, padding: "4px 14px", fontSize: "0.82rem", color: theme.accent1 }}>{quizIdx}/{ALL_QUESTIONS.length} முடிந்தது</div>
+          {tab === "game" && gameStarted && !gameDone && (
+            <div>
+              <div className="ch7-game-score-board">
+                <div className="ch7-score-item"><div className="ch7-score-label">மதிப்பெண்</div><div className="ch7-score-value">{gameScore}</div></div>
+                <div className="ch7-score-item"><div className="ch7-score-label">கேள்வி</div><div className="ch7-score-value">{gameIdx+1}/{gameQ.length}</div></div>
+                <div className="ch7-score-item"><div className="ch7-score-label">தொடர்</div><div className="ch7-score-value">{streak}🔥</div></div>
+              </div>
+              <div className="ch7-timer-ring">
+                <svg className="ch7-timer-svg" width="76" height="76">
+                  <circle cx="38" cy="38" r={r} fill="none" stroke="rgba(60,130,255,0.12)" strokeWidth="6"/>
+                  <circle cx="38" cy="38" r={r} fill="none" stroke={gameTimer <= 5 ? "#f87171" : "#3d8aff"} strokeWidth="6" strokeDasharray={circ} strokeDashoffset={circ * (1 - timerPct)} strokeLinecap="round" style={{ transition: "stroke-dashoffset 1s linear" }}/>
+                </svg>
+                <div className="ch7-timer-text" style={{ color: gameTimer <= 5 ? "#f87171" : "#7eb5ff" }}>{gameTimer}</div>
+              </div>
+              <div className="ch7-question-card">
+                <div className="ch7-question-num">Question {gameIdx + 1}</div>
+                <div className="ch7-question-text">{gameQ[gameIdx].q}</div>
+                <div className="ch7-game-options">
+                  {gameQ[gameIdx].opts.map((opt, i) => (
+                    <button key={i} className={`ch7-game-option ${gameSelected !== null ? (i === gameQ[gameIdx].ans ? "correct" : i === gameSelected ? "wrong" : "") : ""}`} onClick={() => handleGameSelect(i)} disabled={gameSelected !== null}>
+                      <span style={{ fontWeight: 700, opacity: 0.5, marginRight: 4 }}>{String.fromCharCode(65+i)}.</span>{opt}
+                    </button>
+                  ))}
+                </div>
+                {gameSelected !== null && (
+                  <div className="ch7-explanation">{gameSelected === gameQ[gameIdx].ans ? "✅ சரி!" : "❌"} {gameQ[gameIdx].exp}</div>
+                )}
+              </div>
             </div>
-            {/* Progress bar */}
-            <div style={{ background: theme.border, borderRadius: 4, height: 5, marginBottom: 18, overflow: "hidden" }}>
-              <div style={{ height: "100%", width: `${(quizIdx / ALL_QUESTIONS.length) * 100}%`, background: `linear-gradient(90deg, ${theme.accent3}, ${theme.accent1})`, borderRadius: 4, transition: "width 0.4s ease" }} />
-            </div>
-            {!quizDone ? (
-              <QuizQuestion key={quizIdx} q={quizQuestions[quizIdx]} idx={quizIdx} total={ALL_QUESTIONS.length} isLast={quizIdx === ALL_QUESTIONS.length - 1}
-                onNext={(correct) => {
-                  if (correct) setQuizScore(s => s + 1);
-                  if (quizIdx + 1 >= ALL_QUESTIONS.length) setQuizDone(true);
-                  else setQuizIdx(i => i + 1);
-                }} />
-            ) : (
-              <ResultPage score={quizScore} total={ALL_QUESTIONS.length} onRetry={resetQuiz} />
-            )}
-          </div>
-        )}
+          )}
 
-        {/* GAME TAB */}
-        {tab === "game" && <GameMode />}
+          {tab === "game" && gameDone && (
+            <div className="ch7-result-container">
+              <div className="ch7-result-title">விளையாட்டு முடிந்தது! 🏆</div>
+              <div className="ch7-result-score">{gameScore}</div>
+              <div className="ch7-result-sub">மொத்த மதிப்பெண்கள் · {gameAnswers.filter(a=>a.correct).length}/{gameQ.length} சரியான பதில்கள்</div>
+              <table className="ch7-result-table">
+                <thead><tr><th>#</th><th>கேள்வி</th><th>நிலை</th><th>சரியான பதில்</th></tr></thead>
+                <tbody>
+                  {gameAnswers.map((a, i) => (
+                    <tr key={i}>
+                      <td>{i+1}</td>
+                      <td style={{ maxWidth: 200, fontSize: 10 }}>{a.q}</td>
+                      <td>{a.correct ? <span className="ch7-correct-badge">✅</span> : <span className="ch7-wrong-badge">❌</span>}</td>
+                      <td style={{ fontSize: 10 }}>{a.correctAns}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <button className="ch7-btn" onClick={resetGame}>மீண்டும் விளையாடு 🔄</button>
+            </div>
+          )}
+
+        </div>
       </div>
-    </div>
+    </>
   );
 }
