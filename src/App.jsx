@@ -3,6 +3,8 @@ import { HashRouter, Routes, Route, Link, Navigate } from "react-router-dom";
 import PPPartOne from "./PPPpart-1";
 import PartFourFive from "./PartFourFive";
 
+const chapterPages = import.meta.glob("./GK/**/*.jsx", { eager: true });
+
 // Dictionary imports
 import Dictionary from "./Dictionary/Dictionary";
 import A_Series from "./Dictionary/A_Series";
@@ -54,6 +56,37 @@ import SixPhysics from "./GK/Six/SixPhysics/SixPhysics";
 import SixPolity from "./GK/Six/SixPolity/SixPolity";
 import SixTamilnaduHistory from "./GK/Six/SixTamilnaduHistory/SixTamilnaduHistory";
 
+
+//✅ GK Seven imports
+import SevenBiology from "./GK/Seven/SevenBiology/SevenBiology";
+import SevenChemistry from "./GK/Seven/SevenChemistry/SevenChemistry";
+import SevenEconomics from "./GK/Seven/SevenEconomics/SevenEconomics";
+import SevenGeography from "./GK/Seven/SevenGeography/SevenGeography";
+import SevenIndianHistory from "./GK/Seven/SevenIndianHistory/SevenIndianHistory";
+import SevenPhysics from "./GK/Seven/SevenPhysics/SevenPhysics";
+import SevenPolity from "./GK/Seven/SevenPolity/SevenPolity";
+import SevenTamilnaduHistory from "./GK/Seven/SevenTamilnaduHistory/SevenTamilnaduHistory";
+
+// ✅ GK Eight imports
+import EightBiology from "./GK/Eight/EightBiology/EightBiology";
+import EightChemistry from "./GK/Eight/EightChemistry/EightChemistry";
+import EightEconomics from "./GK/Eight/EightEconomics/EightEconomics";
+import EightGeography from "./GK/Eight/EightGeography/EightGeography";
+import EightIndianHistory from "./GK/Eight/EightIndianHistory/EightIndianHistory";
+import EightPhysics from "./GK/Eight/EightPhysics/EightPhysics";
+import EightPolity from "./GK/Eight/EightPolity/EightPolity";
+import EightTamilnaduHistory from "./GK/Eight/EightTamilnaduHistory/EightTamilnaduHistory";
+
+// ✅ GK Nine imports
+import NineBiology from "./GK/Nine/NineBiology/NineBiology";
+import NineChemistry from "./GK/Nine/NineChemistry/NineChemistry";
+import NineEconomics from "./GK/Nine/NineEconomics/NineEconomics";
+import NineGeography from "./GK/Nine/NineGeography/NineGeography";
+import NineIndianHistory from "./GK/Nine/NineIndianHistory/NineIndianHistory";
+import NinePhysics from "./GK/Nine/NinePhysics/NinePhysics";
+import NinePolity from "./GK/Nine/NinePolity/NinePolity";
+import NineTamilnaduHistory from "./GK/Nine/NineTamilnaduHistory/NineTamilnaduHistory";
+
 // ✅ GK Ten imports
 import TenBiology from "./GK/Ten/TenBiology/TenBiology";
 import TenChemistry from "./GK/Ten/TenChemistry/TenChemistry";
@@ -64,6 +97,25 @@ import TenPhysics from "./GK/Ten/TenPhysics/TenPhysics";
 import TenPolity from "./GK/Ten/TenPolity/TenPolity";
 import TenTamilnaduHistory from "./GK/Ten/TenTamilnaduHistory/TenTamilnaduHistory";
 
+// ✅ GK Eleven imports
+import ElevenBiology from "./GK/Eleven/ElevenBiology/ElevenBiology";
+import ElevenChemistry from "./GK/Eleven/ElevenChemistry/ElevenChemistry";
+import ElevenEconomics from "./GK/Eleven/ElevenEconomics/ElevenEconomics";
+import ElevenGeography from "./GK/Eleven/ElevenGeography/ElevenGeography";
+import ElevenIndianHistory from "./GK/Eleven/ElevenIndianHistory/ElevenIndianHistory";
+import ElevenPhysics from "./GK/Eleven/ElevenPhysics/ElevenPhysics";
+import ElevenPolity from "./GK/Eleven/ElevenPolity/ElevenPolity";
+import ElevenTamilnaduHistory from "./GK/Eleven/ElevenTamilnaduHistory/ElevenTamilnaduHistory";
+
+// ✅ GK Twelve imports
+import TwelveBiology from "./GK/Twelve/TwelveBiology/TwelveBiology";
+import TwelveChemistry from "./GK/Twelve/TwelveChemistry/TwelveChemistry";
+import TwelveEconomics from "./GK/Twelve/TwelveEconomics/TwelveEconomics";
+import TwelveGeography from "./GK/Twelve/TwelveGeography/TwelveGeography";
+import TwelveIndianHistory from "./GK/Twelve/TwelveIndianHistory/TwelveIndianHistory";
+import TwelvePhysics from "./GK/Twelve/TwelvePhysics/TwelvePhysics";
+import TwelvePolity from "./GK/Twelve/TwelvePolity/TwelvePolity";
+import TwelveTamilnaduHistory from "./GK/Twelve/TwelveTamilnaduHistory/TwelveTamilnaduHistory";
 
 function Home() {
   return (
@@ -101,6 +153,25 @@ function Home() {
 
     </div>
   );
+}
+
+function generateGKRoutes() {
+  const usedRoutes = new Set();
+
+  return Object.entries(chapterPages)
+    .map(([path, module]) => {
+      const routePath = path
+        .replace("./GK", "/gk")
+        .replace(/\\.jsx$/, "")
+        .toLowerCase();
+
+      if (usedRoutes.has(routePath)) return null;
+      usedRoutes.add(routePath);
+
+      const Component = module.default;
+      return <Route key={routePath} path={routePath} element={<Component />} />;
+    })
+    .filter(Boolean);
 }
 
 export default function App() {
@@ -167,6 +238,36 @@ export default function App() {
         <Route path="/gk/six/polity" element={<SixPolity />} />
         <Route path="/gk/six/tamilnadu-history" element={<SixTamilnaduHistory />} />
 
+                {/* ✅ GK Seven subject routes */}
+        <Route path="/gk/seven/biology" element={<SevenBiology />} />
+        <Route path="/gk/seven/chemistry" element={<SevenChemistry />} />
+        <Route path="/gk/seven/economics" element={<SevenEconomics />} />
+        <Route path="/gk/seven/geography" element={<SevenGeography />} />
+        <Route path="/gk/seven/indian-history" element={<SevenIndianHistory />} />
+        <Route path="/gk/seven/physics" element={<SevenPhysics />} />
+        <Route path="/gk/seven/polity" element={<SevenPolity />} />
+        <Route path="/gk/seven/tamilnadu-history" element={<SevenTamilnaduHistory />} />
+
+        {/* ✅ GK Eight subject routes */}
+        <Route path="/gk/eight/biology" element={<EightBiology />} />
+        <Route path="/gk/eight/chemistry" element={<EightChemistry />} />
+        <Route path="/gk/eight/economics" element={<EightEconomics />} />
+        <Route path="/gk/eight/geography" element={<EightGeography />} />
+        <Route path="/gk/eight/indian-history" element={<EightIndianHistory />} />
+        <Route path="/gk/eight/physics" element={<EightPhysics />} />
+        <Route path="/gk/eight/polity" element={<EightPolity />} />
+        <Route path="/gk/eight/tamilnadu-history" element={<EightTamilnaduHistory />} />
+
+        {/* ✅ GK Nine subject routes */}
+        <Route path="/gk/nine/biology" element={<NineBiology />} />
+        <Route path="/gk/nine/chemistry" element={<NineChemistry />} />
+        <Route path="/gk/nine/economics" element={<NineEconomics />} />
+        <Route path="/gk/nine/geography" element={<NineGeography />} />
+        <Route path="/gk/nine/indian-history" element={<NineIndianHistory />} />
+        <Route path="/gk/nine/physics" element={<NinePhysics />} />
+        <Route path="/gk/nine/polity" element={<NinePolity />} />
+        <Route path="/gk/nine/tamilnadu-history" element={<NineTamilnaduHistory />} />
+
         {/* ✅ GK Ten subject routes */}
         <Route path="/gk/ten/biology" element={<TenBiology />} />
         <Route path="/gk/ten/chemistry" element={<TenChemistry />} />
@@ -176,6 +277,28 @@ export default function App() {
         <Route path="/gk/ten/physics" element={<TenPhysics />} />
         <Route path="/gk/ten/polity" element={<TenPolity />} />
         <Route path="/gk/ten/tamilnadu-history" element={<TenTamilnaduHistory />} />
+
+        {/* ✅ GK Eleven subject routes */}
+        <Route path="/gk/eleven/biology" element={<ElevenBiology />} />
+        <Route path="/gk/eleven/chemistry" element={<ElevenChemistry />} />
+        <Route path="/gk/eleven/economics" element={<ElevenEconomics />} />
+        <Route path="/gk/eleven/geography" element={<ElevenGeography />} />
+        <Route path="/gk/eleven/indian-history" element={<ElevenIndianHistory />} />
+        <Route path="/gk/eleven/physics" element={<ElevenPhysics />} />
+        <Route path="/gk/eleven/polity" element={<ElevenPolity />} />
+        <Route path="/gk/eleven/tamilnadu-history" element={<ElevenTamilnaduHistory />} />
+
+        {/* ✅ GK Twelve subject routes */}
+        <Route path="/gk/twelve/biology" element={<TwelveBiology />} />
+        <Route path="/gk/twelve/chemistry" element={<TwelveChemistry />} />
+        <Route path="/gk/twelve/economics" element={<TwelveEconomics />} />
+        <Route path="/gk/twelve/geography" element={<TwelveGeography />} />
+        <Route path="/gk/twelve/indian-history" element={<TwelveIndianHistory />} />
+        <Route path="/gk/twelve/physics" element={<TwelvePhysics />} />
+        <Route path="/gk/twelve/polity" element={<TwelvePolity />} />
+        <Route path="/gk/twelve/tamilnadu-history" element={<TwelveTamilnaduHistory />} />
+
+        {generateGKRoutes()}
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
