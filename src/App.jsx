@@ -40,8 +40,8 @@ import Term3_Grammar from "./TamilBook/term3_grammar";
 
 // ✅ GK imports
 import GK from "./GK/gk";
-import Six from "./GK/Six/Six";
-import Ten from "./GK/Ten/Ten";
+import Six from "./GK/Six/six";
+import Ten from "./GK/Ten/ten";
 import TwelvePolityUnit1 from "./GK/twelve_polity_unit1";
 
 
