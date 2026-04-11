@@ -49,7 +49,6 @@ import Nine from "./GK/Nine/nine";
 import Ten from "./GK/Ten/ten";
 import Eleven from "./GK/Eleven/eleven";
 import Twelve from "./GK/Twelve/twelve";
-import TwelvePolityUnit1 from "./GK/twelve_polity_unit1";
 
 // ✅ GK Six imports
 import SixBiology from "./GK/Six/SixBiology/SixBiology";
