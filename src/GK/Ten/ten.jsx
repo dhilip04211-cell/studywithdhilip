@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const subjects = [
-  { route: "/gk/ten/indian-history", label: "Indian History", icon: "🏛️", color: "#E74C3C" },
+  { route: "/gk/ten/tenindianhistory", label: "Indian History", icon: "🏛️", color: "#E74C3C" },
   { route: "/gk/ten/tamilnadu-history", label: "Tamilnadu History", icon: "🌺", color: "#E67E22" },
   { route: "/gk/ten/geography", label: "Geography", icon: "🌍", color: "#27AE60" },
   { route: "/gk/ten/polity", label: "Polity", icon: "⚖️", color: "#2980B9" },
