@@ -1,31 +1,44 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const subjects = [
-  { key: "IndianHistory", label: "Indian History", icon: "🏛️", color: "#E74C3C" },
-  { key: "TamilnaduHistory", label: "Tamilnadu History", icon: "🌺", color: "#E67E22" },
-  { key: "Geography", label: "Geography", icon: "🌍", color: "#27AE60" },
-  { key: "Polity", label: "Polity", icon: "⚖️", color: "#2980B9" },
-  { key: "Economics", label: "Economics", icon: "📈", color: "#8E44AD" },
-  { key: "Physics", label: "Physics", icon: "⚛️", color: "#16A085" },
-  { key: "Chemistry", label: "Chemistry", icon: "🧪", color: "#D35400" },
-  { key: "Biology", label: "Biology", icon: "🧬", color: "#C0392B" },
+  { route: "/gk/twelve/indian-history", label: "Indian History", icon: "🏛️", color: "#E74C3C" },
+  { route: "/gk/twelve/tamilnadu-history", label: "Tamilnadu History", icon: "🌺", color: "#E67E22" },
+  { route: "/gk/twelve/geography", label: "Geography", icon: "🌍", color: "#27AE60" },
+  { route: "/gk/twelve/twelvepolity", label: "Polity", icon: "⚖️", color: "#2980B9" },
+  { route: "/gk/twelve/economics", label: "Economics", icon: "📈", color: "#8E44AD" },
+  { route: "/gk/twelve/physics", label: "Physics", icon: "⚛️", color: "#16A085" },
+  { route: "/gk/twelve/chemistry", label: "Chemistry", icon: "🧪", color: "#D35400" },
+  { route: "/gk/twelve/biology", label: "Biology", icon: "🧬", color: "#C0392B" },
 ];
 
-export default function Twelve({ onNavigate, onBack }) {
+export default function Twelve() {
   const [hovered, setHovered] = useState(null);
+  const navigate = useNavigate();
 
   return (
     <div style={styles.page}>
       <div style={styles.bgGlow} />
       <div style={styles.container}>
-        <button style={styles.backBtn} onClick={() => onBack && onBack()}>
+        <button
+          style={styles.backBtn}
+          onClick={() => navigate("/gk/gk_1")}
+        >
           ← Back to Classes
         </button>
 
         <div style={styles.header}>
-          <div style={{...styles.classBadge, background: "#9B59B622", border: `1px solid #9B59B655`, color: "#9B59B6"}}>
+          <div
+            style={{
+              ...styles.classBadge,
+              background: "#9B59B622",
+              border: `1px solid #9B59B655`,
+              color: "#9B59B6",
+            }}
+          >
             CLASS XII
           </div>
+
           <h1 style={styles.title}>Choose Your Subject</h1>
           <p style={styles.subtitle}>Select a subject to start learning</p>
         </div>
@@ -33,42 +46,48 @@ export default function Twelve({ onNavigate, onBack }) {
         <div style={styles.grid}>
           {subjects.map((sub, i) => (
             <button
-              key={sub.key}
+              key={sub.route}
               style={{
                 ...styles.card,
                 animationDelay: `${i * 0.07}s`,
-                borderColor: hovered === i ? sub.color : "rgba(255,255,255,0.07)",
-                boxShadow: hovered === i
-                  ? `0 0 28px ${sub.color}44, 0 8px 24px rgba(0,0,0,0.4)`
-                  : "0 4px 16px rgba(0,0,0,0.25)",
-                transform: hovered === i ? "translateY(-5px) scale(1.02)" : "scale(1)",
+                borderColor:
+                  hovered === i
+                    ? sub.color
+                    : "rgba(255,255,255,0.07)",
+                boxShadow:
+                  hovered === i
+                    ? `0 0 28px ${sub.color}44, 0 8px 24px rgba(0,0,0,0.4)`
+                    : "0 4px 16px rgba(0,0,0,0.25)",
+                transform:
+                  hovered === i
+                    ? "translateY(-5px) scale(1.02)"
+                    : "scale(1)",
               }}
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
-              onClick={() => onNavigate && onNavigate(sub.key)}
+              onClick={() => navigate(sub.route)}
             >
-              <div style={{...styles.topBar, background: sub.color}} />
+              <div
+                style={{
+                  ...styles.topBar,
+                  background: sub.color,
+                }}
+              />
               <div style={styles.icon}>{sub.icon}</div>
               <div style={styles.subjectName}>{sub.label}</div>
-              <div style={{
-                ...styles.explore,
-                color: sub.color,
-                opacity: hovered === i ? 1 : 0,
-              }}>
+              <div
+                style={{
+                  ...styles.explore,
+                  color: sub.color,
+                  opacity: hovered === i ? 1 : 0,
+                }}
+              >
                 Start →
               </div>
             </button>
           ))}
         </div>
       </div>
-
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&display=swap');
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
     </div>
   );
 }
@@ -88,7 +107,8 @@ const styles = {
   bgGlow: {
     position: "absolute",
     inset: 0,
-    background: `radial-gradient(ellipse at 30% 20%, #9B59B618 0%, transparent 55%), radial-gradient(ellipse at 70% 80%, #9B59B60e 0%, transparent 55%)`,
+    background:
+      "radial-gradient(ellipse at 30% 20%, #9B59B618 0%, transparent 55%), radial-gradient(ellipse at 70% 80%, #9B59B60e 0%, transparent 55%)",
     pointerEvents: "none",
   },
   container: {
@@ -105,15 +125,11 @@ const styles = {
     borderRadius: "8px",
     cursor: "pointer",
     fontSize: "13px",
-    fontFamily: "'Sora', sans-serif",
     marginBottom: "36px",
-    transition: "all 0.2s",
-    display: "inline-block",
   },
   header: {
     textAlign: "center",
     marginBottom: "40px",
-    animation: "fadeUp 0.5s ease both",
   },
   classBadge: {
     display: "inline-block",
@@ -148,9 +164,7 @@ const styles = {
     padding: "24px 16px 20px",
     cursor: "pointer",
     textAlign: "center",
-    overflow: "hidden",
     transition: "all 0.28s cubic-bezier(0.34,1.56,0.64,1)",
-    animation: "fadeUp 0.45s ease both",
   },
   topBar: {
     position: "absolute",
@@ -163,19 +177,16 @@ const styles = {
   icon: {
     fontSize: "32px",
     marginBottom: "12px",
-    display: "block",
   },
   subjectName: {
     fontSize: "14px",
     fontWeight: 700,
     color: "#ffffff",
-    lineHeight: 1.3,
     marginBottom: "8px",
   },
   explore: {
     fontSize: "12px",
     fontWeight: 600,
     transition: "opacity 0.2s ease",
-    letterSpacing: "0.4px",
   },
 };
