@@ -119,6 +119,7 @@ import TwelveGeography from "./GK/Twelve/TwelveGeography/TwelveGeography";
 import TwelveIndianHistory from "./GK/Twelve/TwelveIndianHistory/TwelveIndianHistory";
 import TwelvePhysics from "./GK/Twelve/TwelvePhysics/TwelvePhysics";
 import TwelvePolity from "./GK/Twelve/TwelvePolity/TwelvePolity";
+import TwelveEthics from "./GK/Twelve/TwelvePolity/TwelveEthics";
 import TwelveTamilnaduHistory from "./GK/Twelve/TwelveTamilnaduHistory/TwelveTamilnaduHistory";
 
 function Home() {
@@ -308,6 +309,7 @@ export default function App() {
         <Route path="/gk/twelve/indian-history" element={<TwelveIndianHistory />} />
         <Route path="/gk/twelve/physics" element={<TwelvePhysics />} />
         <Route path="/gk/twelve/polity" element={<TwelvePolity />} />
+        <Route path="/gk/twelve/ethics" element={<TwelveEthics />} />
         <Route path="/gk/twelve/tamilnadu-history" element={<TwelveTamilnaduHistory />} />
 
         {generateGKRoutes()}
