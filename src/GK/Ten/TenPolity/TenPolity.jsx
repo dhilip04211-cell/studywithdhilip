@@ -70,15 +70,15 @@ export default function TenPolity() {
                     ))}
                   </div>
                   <div style={styles.btnRow}>
-                    <button
-  style={{ ...styles.btnStudy, background: info.color }}
-  onClick={() =>
-    navigate(`/gk/ten/tenpolity/chapter${i + 1}`)
-  }
->
-  
-</button>
-                    <button style={{ ...styles.btnPractice, borderColor: info.color, color: info.color }}>✏️ Practice MCQ</button>
+                                  <button
+                style={{ ...styles.btnStudy, background: info.color }}
+                onClick={() =>
+                  navigate(`/gk/ten/tenpolity/chapter${i + 1}`)
+                }
+              >
+              Study Now
+              </button>
+               <button style={{ ...styles.btnPractice, borderColor: info.color, color: info.color }}>✏️ Practice MCQ</button>
                   </div>
                 </div>
               )}
