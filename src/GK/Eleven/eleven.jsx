@@ -1,31 +1,44 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const subjects = [
-  { key: "IndianHistory", label: "Indian History", icon: "🏛️", color: "#E74C3C" },
-  { key: "TamilnaduHistory", label: "Tamilnadu History", icon: "🌺", color: "#E67E22" },
-  { key: "Geography", label: "Geography", icon: "🌍", color: "#27AE60" },
-  { key: "Polity", label: "Polity", icon: "⚖️", color: "#2980B9" },
-  { key: "Economics", label: "Economics", icon: "📈", color: "#8E44AD" },
-  { key: "Physics", label: "Physics", icon: "⚛️", color: "#16A085" },
-  { key: "Chemistry", label: "Chemistry", icon: "🧪", color: "#D35400" },
-  { key: "Biology", label: "Biology", icon: "🧬", color: "#C0392B" },
+  { route: "/gk/eleven/indian-history", label: "Indian History", icon: "🏛️", color: "#E74C3C" },
+  { route: "/gk/eleven/tamilnadu-history", label: "Tamilnadu History", icon: "🌺", color: "#E67E22" },
+  { route: "/gk/eleven/geography", label: "Geography", icon: "🌍", color: "#27AE60" },
+  { route: "/gk/eleven/polity", label: "Polity", icon: "⚖️", color: "#2980B9" },
+  { route: "/gk/eleven/economics", label: "Economics", icon: "📈", color: "#8E44AD" },
+  { route: "/gk/eleven/physics", label: "Physics", icon: "⚛️", color: "#16A085" },
+  { route: "/gk/eleven/chemistry", label: "Chemistry", icon: "🧪", color: "#D35400" },
+  { route: "/gk/eleven/biology", label: "Biology", icon: "🧬", color: "#C0392B" },
 ];
 
-export default function Eleven({ onNavigate, onBack }) {
+export default function Eleven() {
   const [hovered, setHovered] = useState(null);
+  const navigate = useNavigate();
 
   return (
     <div style={styles.page}>
       <div style={styles.bgGlow} />
       <div style={styles.container}>
-        <button style={styles.backBtn} onClick={() => onBack && onBack()}>
+        <button
+          style={styles.backBtn}
+          onClick={() => navigate("/gk/gk_1")}
+        >
           ← Back to Classes
         </button>
 
         <div style={styles.header}>
-          <div style={{...styles.classBadge, background: "#C6384B22", border: `1px solid #C6384B55`, color: "#C6384B"}}>
+          <div
+            style={{
+              ...styles.classBadge,
+              background: "#C6384B22",
+              border: `1px solid #C6384B55`,
+              color: "#C6384B",
+            }}
+          >
             CLASS XI
           </div>
+
           <h1 style={styles.title}>Choose Your Subject</h1>
           <p style={styles.subtitle}>Select a subject to start learning</p>
         </div>
@@ -33,28 +46,42 @@ export default function Eleven({ onNavigate, onBack }) {
         <div style={styles.grid}>
           {subjects.map((sub, i) => (
             <button
-              key={sub.key}
+              key={sub.route}
               style={{
                 ...styles.card,
                 animationDelay: `${i * 0.07}s`,
-                borderColor: hovered === i ? sub.color : "rgba(255,255,255,0.07)",
-                boxShadow: hovered === i
-                  ? `0 0 28px ${sub.color}44, 0 8px 24px rgba(0,0,0,0.4)`
-                  : "0 4px 16px rgba(0,0,0,0.25)",
-                transform: hovered === i ? "translateY(-5px) scale(1.02)" : "scale(1)",
+                borderColor:
+                  hovered === i
+                    ? sub.color
+                    : "rgba(255,255,255,0.07)",
+                boxShadow:
+                  hovered === i
+                    ? `0 0 28px ${sub.color}44, 0 8px 24px rgba(0,0,0,0.4)`
+                    : "0 4px 16px rgba(0,0,0,0.25)",
+                transform:
+                  hovered === i
+                    ? "translateY(-5px) scale(1.02)"
+                    : "scale(1)",
               }}
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
-              onClick={() => onNavigate && onNavigate(sub.key)}
+              onClick={() => navigate(sub.route)}
             >
-              <div style={{...styles.topBar, background: sub.color}} />
+              <div
+                style={{
+                  ...styles.topBar,
+                  background: sub.color,
+                }}
+              />
               <div style={styles.icon}>{sub.icon}</div>
               <div style={styles.subjectName}>{sub.label}</div>
-              <div style={{
-                ...styles.explore,
-                color: sub.color,
-                opacity: hovered === i ? 1 : 0,
-              }}>
+              <div
+                style={{
+                  ...styles.explore,
+                  color: sub.color,
+                  opacity: hovered === i ? 1 : 0,
+                }}
+              >
                 Start →
               </div>
             </button>
@@ -88,7 +115,8 @@ const styles = {
   bgGlow: {
     position: "absolute",
     inset: 0,
-    background: `radial-gradient(ellipse at 30% 20%, #C6384B18 0%, transparent 55%), radial-gradient(ellipse at 70% 80%, #C6384B0e 0%, transparent 55%)`,
+    background:
+      "radial-gradient(ellipse at 30% 20%, #C6384B18 0%, transparent 55%), radial-gradient(ellipse at 70% 80%, #C6384B0e 0%, transparent 55%)",
     pointerEvents: "none",
   },
   container: {
@@ -105,10 +133,7 @@ const styles = {
     borderRadius: "8px",
     cursor: "pointer",
     fontSize: "13px",
-    fontFamily: "'Sora', sans-serif",
     marginBottom: "36px",
-    transition: "all 0.2s",
-    display: "inline-block",
   },
   header: {
     textAlign: "center",
