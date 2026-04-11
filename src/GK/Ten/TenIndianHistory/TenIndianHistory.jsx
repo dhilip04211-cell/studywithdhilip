@@ -8,7 +8,7 @@ const info = {
   classRoman: "X",
   classColor: "#1A936F",
   backRoute: "/gk/ten",
-  subjectRoute: "/gk/ten/tenindianhistory",
+  subjectRoute: "/gk/ten/indian-history",
 };
 
 const chapters = [
