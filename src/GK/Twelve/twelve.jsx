@@ -6,6 +6,7 @@ const subjects = [
   { route: "/gk/twelve/tamilnadu-history", label: "Tamilnadu History", icon: "🌺", color: "#E67E22" },
   { route: "/gk/twelve/geography", label: "Geography", icon: "🌍", color: "#27AE60" },
   { route: "/gk/twelve/polity", label: "Polity", icon: "⚖️", color: "#2980B9" },
+  { route: "/gk/twelve/ethics", label: "Ethics", icon: "⚖️", color: "#2980B9" },
   { route: "/gk/twelve/economics", label: "Economics", icon: "📈", color: "#8E44AD" },
   { route: "/gk/twelve/physics", label: "Physics", icon: "⚛️", color: "#16A085" },
   { route: "/gk/twelve/chemistry", label: "Chemistry", icon: "🧪", color: "#D35400" },
