@@ -165,7 +165,7 @@ export default function TenIndianHistory() {
                       }}
                       onClick={() =>
                         navigate(
-                          `${info.subjectRoute}/chapter${i + 1}`
+                          `${info.subjectRoute}/Chapter${i + 1}`
                         )
                       }
                     >

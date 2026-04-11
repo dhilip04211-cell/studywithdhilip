@@ -285,7 +285,7 @@ export default function App() {
         <Route path="/gk/ten/chemistry" element={<TenChemistry />} />
         <Route path="/gk/ten/economics" element={<TenEconomics />} />
         <Route path="/gk/ten/geography" element={<TenGeography />} />
-        <Route path="/gk/ten/tenindianhistory" element={<TenIndianHistory />} />
+        <Route path="/gk/ten/indian-history" element={<TenIndianHistory />} />
         <Route path="/gk/ten/physics" element={<TenPhysics />} />
         <Route path="/gk/ten/polity" element={<TenPolity />} />
         <Route path="/gk/ten/tamilnadu-history" element={<TenTamilnaduHistory />} />
