@@ -164,14 +164,20 @@ function generateGKRoutes() {
     .map(([path, module]) => {
       const routePath = path
         .replace("./GK", "/gk")
-        .replace(/\\.jsx$/, "")
+        .replace(/\.jsx$/, "")
         .toLowerCase();
 
       if (usedRoutes.has(routePath)) return null;
       usedRoutes.add(routePath);
 
       const Component = module.default;
-      return <Route key={routePath} path={routePath} element={<Component />} />;
+      return (
+        <Route
+          key={routePath}
+          path={routePath}
+          element={<Component />}
+        />
+      );
     })
     .filter(Boolean);
 }
