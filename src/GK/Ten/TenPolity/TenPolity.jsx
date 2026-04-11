@@ -8,7 +8,7 @@ const info = {
   classRoman: "X",
   classColor: "#1A936F",
   backRoute: "/gk/ten",
-  subjectRoute: "/gk/ten/polity",
+  subjectRoute: "/gk/ten/tenpolity",
 };
 
 const chapters = [
