@@ -339,7 +339,7 @@ const QUIZ_QUESTIONS = [
 
 // ─── APP ──────────────────────────────────────────────────────────────────────
 
-export default function twelve_polity_unit7() {
+export default function Chapter7() {
   const [tab, setTab] = useState("notes");
   const [expandedSection, setExpandedSection] = useState(null);
   const [expandedSub, setExpandedSub] = useState({});

@@ -1498,7 +1498,7 @@ function GameTab() {
 
 // ─── MAIN APP ────────────────────────────────────────────────────────────────
 
-export default function twelve_polity_unit1() {
+export default function Chapter1() {
   const [tab, setTab] = useState("notes");
 
   return (

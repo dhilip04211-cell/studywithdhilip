@@ -1539,7 +1539,7 @@ function GameTab() {
 // ============================================================
 // APP
 // ============================================================
-export default function TenPolityUnit1() {
+export default function Chapter1() {
   const [tab, setTab] = useState("notes");
   const TABS = [
     { id: "notes", label: "📖 குறிப்புகள்", sub: "Notes" },

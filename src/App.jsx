@@ -43,7 +43,12 @@ import Term3_Grammar from "./TamilBook/term3_grammar";
 // ✅ GK imports
 import GK from "./GK/gk";
 import Six from "./GK/Six/six";
+import Seven from "./GK/Seven/seven";
+import Eight from "./GK/Eight/eight";
+import Nine from "./GK/Nine/nine";
 import Ten from "./GK/Ten/ten";
+import Eleven from "./GK/Eleven/eleven";
+import Twelve from "./GK/Twelve/twelve";
 import TwelvePolityUnit1 from "./GK/twelve_polity_unit1";
 
 // ✅ GK Six imports
@@ -224,9 +229,13 @@ export default function App() {
 
         {/* ✅ GK routes */}
         <Route path="/gk/gk_1" element={<GK />} />
-        <Route path="/gk/polity/unit1" element={<TwelvePolityUnit1 />} />
         <Route path="/gk/six" element={<Six />} />
         <Route path="/gk/ten" element={<Ten />} />
+        <Route path="/gk/seven" element={<Seven />} />
+        <Route path="/gk/eight" element={<Eight />} />
+        <Route path="/gk/nine" element={<Nine />} />
+        <Route path="/gk/eleven" element={<Eleven />} />
+        <Route path="/gk/twelve" element={<Twelve />} />
 
         {/* ✅ GK Six subject routes */}
         <Route path="/gk/six/biology" element={<SixBiology />} />
