@@ -5,7 +5,7 @@ const subjects = [
   { route: "/gk/ten/indian-history", label: "Indian History", icon: "🏛️", color: "#E74C3C" },
   { route: "/gk/ten/tamilnadu-history", label: "Tamilnadu History", icon: "🌺", color: "#E67E22" },
   { route: "/gk/ten/geography", label: "Geography", icon: "🌍", color: "#27AE60" },
-  { route: "/gk/ten/polity", label: "Polity", icon: "⚖️", color: "#2980B9" },
+  { route: "/gk/ten/tenpolity", label: "Polity", icon: "⚖️", color: "#2980B9" },
   { route: "/gk/ten/economics", label: "Economics", icon: "📈", color: "#8E44AD" },
   { route: "/gk/ten/physics", label: "Physics", icon: "⚛️", color: "#16A085" },
   { route: "/gk/ten/chemistry", label: "Chemistry", icon: "🧪", color: "#D35400" },
