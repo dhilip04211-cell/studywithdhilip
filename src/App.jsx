@@ -44,6 +44,26 @@ import Six from "./GK/Six/six";
 import Ten from "./GK/Ten/ten";
 import TwelvePolityUnit1 from "./GK/twelve_polity_unit1";
 
+// ✅ GK Six imports
+import SixBiology from "./GK/Six/SixBiology/SixBiology";
+import SixChemistry from "./GK/Six/SixChemistry/SixChemistry";
+import SixEconomics from "./GK/Six/SixEconomics/SixEconomics";
+import SixGeography from "./GK/Six/SixGeography/SixGeography";
+import SixIndianHistory from "./GK/Six/SixIndianHistory/SixIndianHistory";
+import SixPhysics from "./GK/Six/SixPhysics/SixPhysics";
+import SixPolity from "./GK/Six/SixPolity/SixPolity";
+import SixTamilnaduHistory from "./GK/Six/SixTamilnaduHistory/SixTamilnaduHistory";
+
+// ✅ GK Ten imports
+import TenBiology from "./GK/Ten/TenBiology/TenBiology";
+import TenChemistry from "./GK/Ten/TenChemistry/TenChemistry";
+import TenEconomics from "./GK/Ten/TenEconomics/TenEconomics";
+import TenGeography from "./GK/Ten/TenGeography/TenGeography";
+import TenIndianHistory from "./GK/Ten/TenIndianHistory/TenIndianHistory";
+import TenPhysics from "./GK/Ten/TenPhysics/TenPhysics";
+import TenPolity from "./GK/Ten/TenPolity/TenPolity";
+import TenTamilnaduHistory from "./GK/Ten/TenTamilnaduHistory/TenTamilnaduHistory";
+
 
 function Home() {
   return (
@@ -73,7 +93,9 @@ function Home() {
         <h2>General Knowledge (GK)</h2>
         <div style={{ display: "flex", flexDirection: "column", gap: "15px", marginTop: "15px" }}>
           <Link to="/gk/gk_1" className="btn">General Knowledge</Link>
-<Link to="/gk/polity/unit1" className="btn">Class 12 Polity – Unit 1</Link>
+          <Link to="/gk/polity/unit1" className="btn">Class 12 Polity – Unit 1</Link>
+          <Link to="/gk/six" className="btn">Class 6</Link>
+          <Link to="/gk/ten" className="btn">Class 10</Link>
         </div>
       </div>
 
@@ -132,9 +154,28 @@ export default function App() {
         {/* ✅ GK routes */}
         <Route path="/gk/gk_1" element={<GK />} />
         <Route path="/gk/polity/unit1" element={<TwelvePolityUnit1 />} />
-<Route path="/gk/six" element={<Six />} />
-<Route path="/gk/ten" element={<Ten />} />
+        <Route path="/gk/six" element={<Six />} />
+        <Route path="/gk/ten" element={<Ten />} />
 
+        {/* ✅ GK Six subject routes */}
+        <Route path="/gk/six/biology" element={<SixBiology />} />
+        <Route path="/gk/six/chemistry" element={<SixChemistry />} />
+        <Route path="/gk/six/economics" element={<SixEconomics />} />
+        <Route path="/gk/six/geography" element={<SixGeography />} />
+        <Route path="/gk/six/indian-history" element={<SixIndianHistory />} />
+        <Route path="/gk/six/physics" element={<SixPhysics />} />
+        <Route path="/gk/six/polity" element={<SixPolity />} />
+        <Route path="/gk/six/tamilnadu-history" element={<SixTamilnaduHistory />} />
+
+        {/* ✅ GK Ten subject routes */}
+        <Route path="/gk/ten/biology" element={<TenBiology />} />
+        <Route path="/gk/ten/chemistry" element={<TenChemistry />} />
+        <Route path="/gk/ten/economics" element={<TenEconomics />} />
+        <Route path="/gk/ten/geography" element={<TenGeography />} />
+        <Route path="/gk/ten/indian-history" element={<TenIndianHistory />} />
+        <Route path="/gk/ten/physics" element={<TenPhysics />} />
+        <Route path="/gk/ten/polity" element={<TenPolity />} />
+        <Route path="/gk/ten/tamilnadu-history" element={<TenTamilnaduHistory />} />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
