@@ -8,16 +8,29 @@ const info = {
   classRoman: "XI",
   classColor: "#C6384B",
   backRoute: "/gk/eleven",
+  subjectRoute: "/gk/eleven/elevenindianhistory",
 };
 
 const chapters = [
-  { title: "Pre-historic India", topics: ["Prehistoric periods", "Archaeological sites", "Tool technology", "Rock art"] },
-  { title: "Indus Civilisation - Deep Study", topics: ["Harappan cities", "Script and seals", "Trade networks", "Decline theories"] },
-  { title: "Vedic Period", topics: ["Vedic geography", "Rituals", "Varna system", "Vedic philosophy"] },
-  { title: "Mahajanapadas", topics: ["Sixteen Mahajanapadas", "Rise of Magadha", "Alexander's invasion", "Republic states"] },
-  { title: "Mauryan Administration", topics: ["Spy system", "Arthashastra", "Ashokan edicts", "Social life"] },
-  { title: "Post-Mauryan Period", topics: ["Shunga dynasty", "Indo-Greeks", "Kushanas", "Satavahanas"] },
-
+  { title: "பண்டைய இந்தியா: தொடக்கம் முதல் சிந்து நாகரிகம் வரை", topics: ["Stone age", "Neolithic", "Chalcolithic", "Indus Valley"] },
+  { title: "பண்டைய இந்தியா: செப்புக்கால, பெருங்கற்கால, இரும்புக்கால, வேதகாலப் பண்பாடுகள்", topics: ["Copper age", "Megalithic", "Iron age", "Vedic culture"] },
+  { title: "பிற்கால முடியரசுகளின் தோற்றமும் புதிய மதப்பிரிவுகளின் உருவாக்கமும்", topics: ["Mahajanapadas", "Jainism", "Buddhism", "Rise of states"] },
+  { title: "அரச மற்றும் பேரரசு உருவாக்கம்", topics: ["Mauryas", "Administration", "Empire expansion", "Ashoka"] },
+  { title: "தென்னிந்தியாவில் சமூக உருவாக்கம்", topics: ["Sangam age", "Social groups", "Trade", "Culture"] },
+  { title: "மெளரியருக்குப் பிந்தைய அரசியல் அமைப்பும் சமூகமும்", topics: ["Post Mauryas", "Kushanas", "Satavahanas", "Trade"] },
+  { title: "குப்தர்", topics: ["Golden age", "Science", "Literature", "Art"] },
+  { title: "ஹர்ஷர் மற்றும் பிற்கால முடியரசுகளின் எழுச்சி", topics: ["Harsha", "Regional kingdoms", "North India", "Administration"] },
+  { title: "தென்னிந்தியாவில் பல்லாட்டு வளர்ச்சி", topics: ["Pallavas", "Temple art", "Administration", "Literature"] },
+  { title: "அரபியர், துருக்கியரின் வருகை", topics: ["Arab invasion", "Turkish raids", "Cultural exchange", "Trade"] },
+  { title: "பிற்கால சோழர்கள், பாண்டியர்கள்", topics: ["Later Cholas", "Pandyas", "Temple economy", "Naval trade"] },
+  { title: "பாமினி மற்றும் விஜயநகர அரசுகள்", topics: ["Vijayanagara", "Bahmani", "Krishnadevaraya", "Administration"] },
+  { title: "பண்பாட்டு ஒருமைப்பாடு: இந்தியாவில் பக்தி இயக்கம்", topics: ["Bhakti", "Alwars", "Nayanmars", "Religious harmony"] },
+  { title: "முகலாயப் பேரரசு", topics: ["Babur", "Akbar", "Administration", "Mansabdari"] },
+  { title: "மராத்தியர்", topics: ["Shivaji", "Ashtapradhan", "Guerrilla warfare", "Expansion"] },
+  { title: "ஐரோப்பியரின் வருகை", topics: ["Portuguese", "Dutch", "French", "British"] },
+  { title: "ஆங்கிலேயர் ஆட்சியின் விளைவுகள்", topics: ["Land revenue", "Education", "Transport", "Social changes"] },
+  { title: "ஆங்கிலேய ஆட்சிக்குத் தொடக்ககால எதிர்ப்புகள்", topics: ["Polygar wars", "Vellore revolt", "Peasant revolts", "South India"] },
+  { title: "நவீனத்தை நோக்கி", topics: ["Modern India", "Nationalism", "Social reforms", "Political awakening"] },
 ];
 
 export default function ElevenIndianHistory() {
@@ -26,20 +39,36 @@ export default function ElevenIndianHistory() {
 
   return (
     <div style={styles.page}>
-      <div style={{ ...styles.heroBg, background: `radial-gradient(ellipse at 50% 0%,${info.color}18 0%,transparent 60%)` }} />
+      <div
+        style={{
+          ...styles.heroBg,
+          background: `radial-gradient(ellipse at 50% 0%,${info.color}18 0%,transparent 60%)`,
+        }}
+      />
       <div style={styles.container}>
-
-        <button style={styles.backBtn} onClick={() => navigate(info.backRoute)}>
+        <button
+          style={styles.backBtn}
+          onClick={() => navigate(info.backRoute)}
+        >
           ← Back to Class XI Subjects
         </button>
 
         <div style={styles.hero}>
           <span style={styles.heroIcon}>{info.icon}</span>
-          <div style={{ ...styles.pill, background: `${info.classColor}22`, border: `1px solid ${info.classColor}55`, color: info.classColor }}>
+          <div
+            style={{
+              ...styles.pill,
+              background: `${info.classColor}22`,
+              border: `1px solid ${info.classColor}55`,
+              color: info.classColor,
+            }}
+          >
             CLASS {info.classRoman}
           </div>
           <h1 style={styles.heroTitle}>{info.label}</h1>
-          <p style={styles.heroSub}>{chapters.length} Chapters · Tamil Nadu State Board</p>
+          <p style={styles.heroSub}>
+            {chapters.length} Chapters · Tamil Nadu State Board
+          </p>
         </div>
 
         <div style={styles.chapterList}>
@@ -48,30 +77,79 @@ export default function ElevenIndianHistory() {
               key={i}
               style={{
                 ...styles.chBlock,
-                borderColor: expanded === i ? info.color : "rgba(255,255,255,0.07)",
+                borderColor:
+                  expanded === i ? info.color : "rgba(255,255,255,0.07)",
               }}
             >
               <button
-                style={{ ...styles.chHeader, background: expanded === i ? `${info.color}15` : "transparent" }}
-                onClick={() => setExpanded(expanded === i ? null : i)}
+                style={{
+                  ...styles.chHeader,
+                  background:
+                    expanded === i ? `${info.color}15` : "transparent",
+                }}
+                onClick={() =>
+                  setExpanded(expanded === i ? null : i)
+                }
               >
-                <span style={{ ...styles.chNum, color: info.color }}>{String(i + 1).padStart(2, "0")}</span>
+                <span style={{ ...styles.chNum, color: info.color }}>
+                  {String(i + 1).padStart(2, "0")}
+                </span>
                 <span style={styles.chTitle}>{ch.title}</span>
-                <span style={{ ...styles.chArrow, color: info.color, transform: expanded === i ? "rotate(180deg)" : "rotate(0)" }}>▼</span>
+                <span
+                  style={{
+                    ...styles.chArrow,
+                    color: info.color,
+                    transform:
+                      expanded === i ? "rotate(180deg)" : "rotate(0)",
+                  }}
+                >
+                  ▼
+                </span>
               </button>
 
               {expanded === i && (
                 <div style={styles.chBody}>
                   <div style={styles.topicsWrap}>
                     {ch.topics.map((t, j) => (
-                      <div key={j} style={{ ...styles.chip, borderColor: `${info.color}44` }}>
-                        <span style={{ color: info.color, marginRight: 6 }}>◆</span>{t}
+                      <div
+                        key={j}
+                        style={{
+                          ...styles.chip,
+                          borderColor: `${info.color}44`,
+                        }}
+                      >
+                        <span style={{ color: info.color, marginRight: 6 }}>
+                          ◆
+                        </span>
+                        {t}
                       </div>
                     ))}
                   </div>
+
                   <div style={styles.btnRow}>
-                    <button style={{ ...styles.btnStudy, background: info.color }}>📖 Study Now</button>
-                    <button style={{ ...styles.btnPractice, borderColor: info.color, color: info.color }}>✏️ Practice MCQ</button>
+                    <button
+                      style={{
+                        ...styles.btnStudy,
+                        background: info.color,
+                      }}
+                      onClick={() =>
+                        navigate(
+                          `${info.subjectRoute}/chapter${i + 1}`
+                        )
+                      }
+                    >
+                      📖 Study Now
+                    </button>
+
+                    <button
+                      style={{
+                        ...styles.btnPractice,
+                        borderColor: info.color,
+                        color: info.color,
+                      }}
+                    >
+                      ✏️ Practice MCQ
+                    </button>
                   </div>
                 </div>
               )}
@@ -82,27 +160,3 @@ export default function ElevenIndianHistory() {
     </div>
   );
 }
-
-const styles = {
-  page:        { minHeight: "100vh", background: "#080c18", padding: "36px 20px 60px", position: "relative", overflow: "hidden" },
-  heroBg:      { position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0 },
-  container:   { maxWidth: "720px", margin: "0 auto", position: "relative", zIndex: 1 },
-  backBtn:     { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)", padding: "8px 18px", borderRadius: "8px", cursor: "pointer", fontSize: "13px", marginBottom: "32px" },
-  hero:        { textAlign: "center", marginBottom: "36px" },
-  heroIcon:    { fontSize: "60px", display: "block", marginBottom: "14px" },
-  pill:        { display: "inline-block", padding: "4px 16px", borderRadius: "100px", fontSize: "10px", fontWeight: 700, letterSpacing: "3px", marginBottom: "12px" },
-  heroTitle:   { fontSize: "clamp(26px,5vw,40px)", fontWeight: 800, color: "#fff", margin: "0 0 8px" },
-  heroSub:     { color: "rgba(255,255,255,0.35)", fontSize: "13px", margin: 0 },
-  chapterList: { display: "flex", flexDirection: "column", gap: "10px" },
-  chBlock:     { border: "1px solid", borderRadius: "12px", overflow: "hidden", transition: "border-color 0.25s ease" },
-  chHeader:    { width: "100%", display: "flex", alignItems: "center", gap: "14px", padding: "15px 18px", cursor: "pointer", border: "none", background: "transparent", transition: "background 0.2s ease" },
-  chNum:       { fontSize: "18px", fontWeight: 800, minWidth: "28px", letterSpacing: "-0.5px" },
-  chTitle:     { flex: 1, fontSize: "14px", fontWeight: 600, color: "#fff", textAlign: "left" },
-  chArrow:     { fontSize: "11px", transition: "transform 0.25s ease" },
-  chBody:      { padding: "4px 18px 18px", borderTop: "1px solid rgba(255,255,255,0.05)" },
-  topicsWrap:  { display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "16px", paddingTop: "14px" },
-  chip:        { background: "rgba(255,255,255,0.04)", border: "1px solid", borderRadius: "8px", padding: "6px 12px", fontSize: "12px", color: "rgba(255,255,255,0.7)", fontWeight: 500, display: "flex", alignItems: "center" },
-  btnRow:      { display: "flex", gap: "10px", flexWrap: "wrap" },
-  btnStudy:    { padding: "9px 20px", borderRadius: "8px", border: "none", color: "#fff", fontWeight: 700, fontSize: "13px", cursor: "pointer" },
-  btnPractice: { padding: "9px 20px", borderRadius: "8px", border: "2px solid", background: "transparent", fontWeight: 700, fontSize: "13px", cursor: "pointer" },
-};
