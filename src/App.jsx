@@ -150,9 +150,7 @@ function Home() {
         <h2>General Knowledge (GK)</h2>
         <div style={{ display: "flex", flexDirection: "column", gap: "15px", marginTop: "15px" }}>
           <Link to="/gk/gk_1" className="btn">General Knowledge</Link>
-          <Link to="/gk/polity/unit1" className="btn">Class 12 Polity – Unit 1</Link>
-          <Link to="/gk/six" className="btn">Class 6</Link>
-          <Link to="/gk/ten" className="btn">Class 10</Link>
+          
         </div>
       </div>
 
