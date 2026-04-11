@@ -287,7 +287,7 @@ export default function App() {
         <Route path="/gk/ten/geography" element={<TenGeography />} />
         <Route path="/gk/ten/indian-history" element={<TenIndianHistory />} />
         <Route path="/gk/ten/physics" element={<TenPhysics />} />
-        <Route path="/gk/ten/tenpolity" element={<TenPolity />} />
+        <Route path="/gk/ten/polity" element={<TenPolity />} />
         <Route path="/gk/ten/tamilnadu-history" element={<TenTamilnaduHistory />} />
 
         {/* ✅ GK Eleven subject routes */}
