@@ -1,100 +1,84 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const subjectInfo = {
-  label: "Biology",
-  icon: "🧬",
-  color: "#C0392B",
-  classRoman: "VI",
-  classColor: "#FF6B35",
+const info = {
+  label: "Polity",
+  icon: "⚖️",
+  color: "#2980B9",
+  classRoman: "X",
+  classColor: "#1A936F",
+  backRoute: "/gk/ten",
 };
 
 const chapters = [
-  { title: "The World of Living Things", topics: ["Characteristics of life", "Classification overview", "Five kingdoms", "Binomial nomenclature"] },
-  { title: "Cell - Basic Unit of Life", topics: ["Cell discovery", "Cell theory", "Plant vs animal cell", "Cell organelles overview"] },
-  { title: "Plants and Photosynthesis", topics: ["Chloroplasts", "Photosynthesis equation", "Light and dark reactions", "Importance of photosynthesis"] },
-  { title: "Animals and Nutrition", topics: ["Types of nutrition", "Digestive system basics", "Carnivores and herbivores", "Decomposers"] },
-  { title: "Reproduction in Plants", topics: ["Sexual and asexual", "Vegetative propagation", "Pollination basics", "Seed dispersal"] },
-  { title: "Health and Hygiene", topics: ["Balanced diet", "Deficiency diseases", "Personal hygiene", "Vaccination"] },
+  { title: "Indian Constitution", topics: ["Unitary vs Federal", "Indian federalism", "Cooperative federalism", "Federal disputes"] },
+  { title: "Centre-State Relations", topics: ["Division of powers", "Governor's role", "Inter-state council", "Zonal councils"] },
+  { title: "Local Self Government", topics: ["73rd and 74th Amendments", "Functions", "State Finance Commission", "MGNREGS"] },
+  { title: "Constitutional Amendments", topics: ["Amendment procedure", "Art 368", "Major amendments", "Constitutional review"] },
+  { title: "Emergency Provisions", topics: ["National Emergency", "President's Rule", "Financial Emergency", "Safeguards"] },
+  { title: "Rights and their Protection", topics: ["NHRC", "State HRCs", "RTI Act", "Lokpal and Lokayukta"] },
 
 ];
 
-export default function SixBiology({ onBack }) {
+export default function TenPolity() {
+  const navigate = useNavigate();
   const [expanded, setExpanded] = useState(null);
 
   return (
     <div style={styles.page}>
-      <div style={styles.bgGlow} />
-
+      <div style={{ ...styles.heroBg, background: `radial-gradient(ellipse at 50% 0%,${info.color}18 0%,transparent 60%)` }} />
       <div style={styles.container}>
-        {/* Back Button */}
-        <button style={styles.backBtn} onClick={() => onBack && onBack()}>
-          ← Back to Class VI Subjects
+
+        <button style={styles.backBtn} onClick={() => navigate(info.backRoute)}>
+          ← Back to Class X Subjects
         </button>
 
-        {/* Hero Header */}
         <div style={styles.hero}>
-          <span style={styles.heroIcon}>{subjectInfo.icon}</span>
-          <div style={{
-            ...styles.classPill,
-            background: `${subjectInfo.classColor}22`,
-            border: `1px solid ${subjectInfo.classColor}55`,
-            color: subjectInfo.classColor,
-          }}>
-            CLASS {subjectInfo.classRoman}
+          <span style={styles.heroIcon}>{info.icon}</span>
+          <div style={{ ...styles.pill, background: `${info.classColor}22`, border: `1px solid ${info.classColor}55`, color: info.classColor }}>
+            CLASS {info.classRoman}
           </div>
-          <h1 style={styles.heroTitle}>{subjectInfo.label}</h1>
-          <p style={styles.heroSub}>{chapters.length} Chapters &nbsp;·&nbsp; Tamil Nadu State Board</p>
+          <h1 style={styles.heroTitle}>{info.label}</h1>
+          <p style={styles.heroSub}>{chapters.length} Chapters · Tamil Nadu State Board</p>
         </div>
 
-        {/* Chapter Accordion */}
         <div style={styles.chapterList}>
           {chapters.map((ch, i) => (
             <div
               key={i}
               style={{
-                ...styles.chapterBlock,
-                borderColor: expanded === i ? subjectInfo.color : "rgba(255,255,255,0.07)",
-                animationDelay: `${i * 0.07}s`,
+                ...styles.chBlock,
+                borderColor: expanded === i ? info.color : "rgba(255,255,255,0.07)",
               }}
             >
               <button
-                style={{
-                  ...styles.chapterHeader,
-                  background: expanded === i ? `${subjectInfo.color}15` : "transparent",
-                }}
+                style={{ ...styles.chHeader, background: expanded === i ? `${info.color}15` : "transparent" }}
                 onClick={() => setExpanded(expanded === i ? null : i)}
               >
-                <span style={{...styles.chNum, color: subjectInfo.color}}>
-                  {String(i + 1).padStart(2, "0")}
-                </span>
+                <span style={{ ...styles.chNum, color: info.color }}>{String(i + 1).padStart(2, "0")}</span>
                 <span style={styles.chTitle}>{ch.title}</span>
-                <span style={{
-                  ...styles.chToggle,
-                  color: subjectInfo.color,
-                  transform: expanded === i ? "rotate(180deg)" : "rotate(0deg)",
-                }}>▼</span>
+                <span style={{ ...styles.chArrow, color: info.color, transform: expanded === i ? "rotate(180deg)" : "rotate(0)" }}>▼</span>
               </button>
 
               {expanded === i && (
-                <div style={styles.chContent}>
-                  <div style={styles.topicsGrid}>
-                    {ch.topics.map((topic, j) => (
-                      <div key={j} style={{
-                        ...styles.topicChip,
-                        borderColor: `${subjectInfo.color}44`,
-                      }}>
-                        <span style={{color: subjectInfo.color, marginRight: 6}}>◆</span>
-                        {topic}
+                <div style={styles.chBody}>
+                  <div style={styles.topicsWrap}>
+                    {ch.topics.map((t, j) => (
+                      <div key={j} style={{ ...styles.chip, borderColor: `${info.color}44` }}>
+                        <span style={{ color: info.color, marginRight: 6 }}>◆</span>{t}
                       </div>
                     ))}
                   </div>
-                  <div style={styles.studyRow}>
-                    <button style={{...styles.studyBtn, background: subjectInfo.color}}>
-                      📖 Study Now
-                    </button>
-                    <button style={{...styles.practiceBtn, borderColor: subjectInfo.color, color: subjectInfo.color}}>
-                      ✏️ Practice MCQ
-                    </button>
+                  <div style={styles.btnRow}>
+                    <button
+  style={{ ...styles.btnStudy, background: info.color }}
+  onClick={() =>
+    navigate(`/gk/ten/tenpolity/chapter${i + 1}`)
+  }
+>
+  
+</button>
+                    <button style={{ ...styles.btnPractice, borderColor: info.color, color: info.color }}>✏️ Practice MCQ</button>
                   </div>
                 </div>
               )}
@@ -102,168 +86,30 @@ export default function SixBiology({ onBack }) {
           ))}
         </div>
       </div>
-
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&display=swap');
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(16px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
     </div>
   );
 }
 
 const styles = {
-  page: {
-    minHeight: "100vh",
-    background: "#080c18",
-    fontFamily: "'Sora', sans-serif",
-    padding: "36px 20px 60px",
-    position: "relative",
-    overflow: "hidden",
-  },
-  bgGlow: {
-    position: "fixed",
-    inset: 0,
-    background: "radial-gradient(ellipse at 50% 0%, #C0392B1a 0%, transparent 55%)",
-    pointerEvents: "none",
-    zIndex: 0,
-  },
-  container: {
-    width: "100%",
-    maxWidth: "720px",
-    margin: "0 auto",
-    position: "relative",
-    zIndex: 1,
-  },
-  backBtn: {
-    background: "rgba(255,255,255,0.05)",
-    border: "1px solid rgba(255,255,255,0.1)",
-    color: "rgba(255,255,255,0.5)",
-    padding: "8px 18px",
-    borderRadius: "8px",
-    cursor: "pointer",
-    fontSize: "13px",
-    fontFamily: "'Sora', sans-serif",
-    marginBottom: "32px",
-    transition: "all 0.2s",
-  },
-  hero: {
-    textAlign: "center",
-    marginBottom: "36px",
-    animation: "fadeUp 0.5s ease both",
-  },
-  heroIcon: {
-    fontSize: "60px",
-    display: "block",
-    marginBottom: "14px",
-  },
-  classPill: {
-    display: "inline-block",
-    padding: "4px 16px",
-    borderRadius: "100px",
-    fontSize: "10px",
-    fontWeight: 700,
-    letterSpacing: "3px",
-    marginBottom: "12px",
-  },
-  heroTitle: {
-    fontSize: "clamp(26px, 5vw, 40px)",
-    fontWeight: 800,
-    color: "#fff",
-    margin: "0 0 8px",
-  },
-  heroSub: {
-    color: "rgba(255,255,255,0.35)",
-    fontSize: "13px",
-    margin: 0,
-  },
-  chapterList: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "10px",
-  },
-  chapterBlock: {
-    border: "1px solid",
-    borderRadius: "12px",
-    overflow: "hidden",
-    transition: "border-color 0.25s ease",
-    animation: "fadeUp 0.4s ease both",
-  },
-  chapterHeader: {
-    width: "100%",
-    display: "flex",
-    alignItems: "center",
-    gap: "14px",
-    padding: "15px 18px",
-    cursor: "pointer",
-    border: "none",
-    fontFamily: "'Sora', sans-serif",
-    transition: "background 0.2s ease",
-  },
-  chNum: {
-    fontSize: "18px",
-    fontWeight: 800,
-    minWidth: "28px",
-    letterSpacing: "-0.5px",
-  },
-  chTitle: {
-    flex: 1,
-    fontSize: "14px",
-    fontWeight: 600,
-    color: "#fff",
-    textAlign: "left",
-  },
-  chToggle: {
-    fontSize: "11px",
-    transition: "transform 0.25s ease",
-  },
-  chContent: {
-    padding: "4px 18px 18px",
-    borderTop: "1px solid rgba(255,255,255,0.05)",
-  },
-  topicsGrid: {
-    display: "flex",
-    flexWrap: "wrap",
-    gap: "8px",
-    marginBottom: "16px",
-    paddingTop: "14px",
-  },
-  topicChip: {
-    background: "rgba(255,255,255,0.04)",
-    border: "1px solid",
-    borderRadius: "8px",
-    padding: "6px 12px",
-    fontSize: "12px",
-    color: "rgba(255,255,255,0.7)",
-    fontWeight: 500,
-    display: "flex",
-    alignItems: "center",
-  },
-  studyRow: {
-    display: "flex",
-    gap: "10px",
-    flexWrap: "wrap",
-  },
-  studyBtn: {
-    padding: "9px 20px",
-    borderRadius: "8px",
-    border: "none",
-    color: "#fff",
-    fontFamily: "'Sora', sans-serif",
-    fontWeight: 700,
-    fontSize: "13px",
-    cursor: "pointer",
-  },
-  practiceBtn: {
-    padding: "9px 20px",
-    borderRadius: "8px",
-    border: "2px solid",
-    background: "transparent",
-    fontFamily: "'Sora', sans-serif",
-    fontWeight: 700,
-    fontSize: "13px",
-    cursor: "pointer",
-  },
+  page:        { minHeight: "100vh", background: "#080c18", padding: "36px 20px 60px", position: "relative", overflow: "hidden" },
+  heroBg:      { position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0 },
+  container:   { maxWidth: "720px", margin: "0 auto", position: "relative", zIndex: 1 },
+  backBtn:     { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)", padding: "8px 18px", borderRadius: "8px", cursor: "pointer", fontSize: "13px", marginBottom: "32px" },
+  hero:        { textAlign: "center", marginBottom: "36px" },
+  heroIcon:    { fontSize: "60px", display: "block", marginBottom: "14px" },
+  pill:        { display: "inline-block", padding: "4px 16px", borderRadius: "100px", fontSize: "10px", fontWeight: 700, letterSpacing: "3px", marginBottom: "12px" },
+  heroTitle:   { fontSize: "clamp(26px,5vw,40px)", fontWeight: 800, color: "#fff", margin: "0 0 8px" },
+  heroSub:     { color: "rgba(255,255,255,0.35)", fontSize: "13px", margin: 0 },
+  chapterList: { display: "flex", flexDirection: "column", gap: "10px" },
+  chBlock:     { border: "1px solid", borderRadius: "12px", overflow: "hidden", transition: "border-color 0.25s ease" },
+  chHeader:    { width: "100%", display: "flex", alignItems: "center", gap: "14px", padding: "15px 18px", cursor: "pointer", border: "none", background: "transparent", transition: "background 0.2s ease" },
+  chNum:       { fontSize: "18px", fontWeight: 800, minWidth: "28px", letterSpacing: "-0.5px" },
+  chTitle:     { flex: 1, fontSize: "14px", fontWeight: 600, color: "#fff", textAlign: "left" },
+  chArrow:     { fontSize: "11px", transition: "transform 0.25s ease" },
+  chBody:      { padding: "4px 18px 18px", borderTop: "1px solid rgba(255,255,255,0.05)" },
+  topicsWrap:  { display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "16px", paddingTop: "14px" },
+  chip:        { background: "rgba(255,255,255,0.04)", border: "1px solid", borderRadius: "8px", padding: "6px 12px", fontSize: "12px", color: "rgba(255,255,255,0.7)", fontWeight: 500, display: "flex", alignItems: "center" },
+  btnRow:      { display: "flex", gap: "10px", flexWrap: "wrap" },
+  btnStudy:    { padding: "9px 20px", borderRadius: "8px", border: "none", color: "#fff", fontWeight: 700, fontSize: "13px", cursor: "pointer" },
+  btnPractice: { padding: "9px 20px", borderRadius: "8px", border: "2px solid", background: "transparent", fontWeight: 700, fontSize: "13px", cursor: "pointer" },
 };
