@@ -703,7 +703,7 @@ function GameMode() {
 // ============================================================
 // MAIN APP
 // ============================================================
-export default function Chapter1() {
+export default function Chapter10() {
   const [tab, setTab] = useState("notes");
   const [quizIdx, setQuizIdx] = useState(0);
   const [quizScore, setQuizScore] = useState(0);
