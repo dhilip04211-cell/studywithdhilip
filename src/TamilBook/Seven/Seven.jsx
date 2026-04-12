@@ -1,70 +1,111 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const subjects = [
-  { key: "ilakkanam", label: "Indian History", icon: "🏛️", color: "#E74C3C" },
-  { key: "urainadai", label: "Tamilnadu History", icon: "🌺", color: "#E67E22" },
-  { key: "seiul", label: "Geography", icon: "🌍", color: "#27AE60" },
-  { key: "thunaipadam", label: "Polity", icon: "⚖️", color: "#2980B9" },
+  {
+    route: "/tamilbook/seven/ilakkanam",
+    label: "இலக்கணம்",
+    icon: "📘",
+    color: "#E74C3C",
+  },
+  {
+    route: "/tamilbook/seven/urainadai",
+    label: "உரைநடை",
+    icon: "📖",
+    color: "#E67E22",
+  },
+  {
+    route: "/tamilbook/seven/seyyul",
+    label: "செய்யுள்",
+    icon: "📝",
+    color: "#27AE60",
+  },
+  {
+    route: "/tamilbook/seven/thunaipadam",
+    label: "துணைப்பாடம்",
+    icon: "📚",
+    color: "#2980B9",
+  },
 ];
 
-export default function Seven({ onNavigate, onBack }) {
+export default function Seven() {
   const [hovered, setHovered] = useState(null);
+  const navigate = useNavigate();
 
   return (
     <div style={styles.page}>
       <div style={styles.bgGlow} />
+
       <div style={styles.container}>
-        <button style={styles.backBtn} onClick={() => onBack && onBack()}>
-          ← Back to Classes
+        <button
+          style={styles.backBtn}
+          onClick={() => navigate("/")}
+        >
+          ← Back to Home
         </button>
 
         <div style={styles.header}>
-          <div style={{...styles.classBadge, background: "#E8A83822", border: `1px solid #E8A83855`, color: "#E8A838"}}>
-            CLASS VII
+          <div
+            style={{
+              ...styles.classBadge,
+              background: "#E8A83822",
+              border: "1px solid #E8A83855",
+              color: "#E8A838",
+            }}
+          >
+            CLASS VII TAMIL
           </div>
-          <h1 style={styles.title}>Choose Your Subject</h1>
-          <p style={styles.subtitle}>Select a subject to start learning</p>
+
+          <h1 style={styles.title}>தமிழ் புத்தகம்</h1>
+          <p style={styles.subtitle}>
+            பாடப்பகுதியை தேர்ந்தெடுக்கவும்
+          </p>
         </div>
 
         <div style={styles.grid}>
           {subjects.map((sub, i) => (
             <button
-              key={sub.key}
+              key={sub.route}
               style={{
                 ...styles.card,
-                animationDelay: `${i * 0.07}s`,
-                borderColor: hovered === i ? sub.color : "rgba(255,255,255,0.07)",
-                boxShadow: hovered === i
-                  ? `0 0 28px ${sub.color}44, 0 8px 24px rgba(0,0,0,0.4)`
-                  : "0 4px 16px rgba(0,0,0,0.25)",
-                transform: hovered === i ? "translateY(-5px) scale(1.02)" : "scale(1)",
+                borderColor:
+                  hovered === i
+                    ? sub.color
+                    : "rgba(255,255,255,0.07)",
+                boxShadow:
+                  hovered === i
+                    ? `0 0 28px ${sub.color}44, 0 8px 24px rgba(0,0,0,0.4)`
+                    : "0 4px 16px rgba(0,0,0,0.25)",
+                transform:
+                  hovered === i
+                    ? "translateY(-5px) scale(1.02)"
+                    : "scale(1)",
               }}
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
-              onClick={() => onNavigate && onNavigate(sub.key)}
+              onClick={() => navigate(sub.route)}
             >
-              <div style={{...styles.topBar, background: sub.color}} />
+              <div
+                style={{
+                  ...styles.topBar,
+                  background: sub.color,
+                }}
+              />
               <div style={styles.icon}>{sub.icon}</div>
               <div style={styles.subjectName}>{sub.label}</div>
-              <div style={{
-                ...styles.explore,
-                color: sub.color,
-                opacity: hovered === i ? 1 : 0,
-              }}>
+              <div
+                style={{
+                  ...styles.explore,
+                  color: sub.color,
+                  opacity: hovered === i ? 1 : 0,
+                }}
+              >
                 Start →
               </div>
             </button>
           ))}
         </div>
       </div>
-
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&display=swap');
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
     </div>
   );
 }
@@ -73,7 +114,6 @@ const styles = {
   page: {
     minHeight: "100vh",
     background: "#080c18",
-    fontFamily: "'Sora', sans-serif",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -84,13 +124,12 @@ const styles = {
   bgGlow: {
     position: "absolute",
     inset: 0,
-    background: `radial-gradient(ellipse at 30% 20%, #E8A83818 0%, transparent 55%), radial-gradient(ellipse at 70% 80%, #E8A8380e 0%, transparent 55%)`,
-    pointerEvents: "none",
+    background:
+      "radial-gradient(ellipse at 30% 20%, #E8A83818 0%, transparent 55%), radial-gradient(ellipse at 70% 80%, #E8A8380e 0%, transparent 55%)",
   },
   container: {
     width: "100%",
     maxWidth: "860px",
-    position: "relative",
     zIndex: 1,
   },
   backBtn: {
@@ -100,16 +139,11 @@ const styles = {
     padding: "8px 18px",
     borderRadius: "8px",
     cursor: "pointer",
-    fontSize: "13px",
-    fontFamily: "'Sora', sans-serif",
     marginBottom: "36px",
-    transition: "all 0.2s",
-    display: "inline-block",
   },
   header: {
     textAlign: "center",
     marginBottom: "40px",
-    animation: "fadeUp 0.5s ease both",
   },
   classBadge: {
     display: "inline-block",
@@ -121,15 +155,12 @@ const styles = {
     marginBottom: "16px",
   },
   title: {
-    fontSize: "clamp(26px, 5vw, 42px)",
+    fontSize: "42px",
     fontWeight: 800,
-    color: "#ffffff",
-    margin: "0 0 10px",
+    color: "#fff",
   },
   subtitle: {
     color: "rgba(255,255,255,0.35)",
-    fontSize: "14px",
-    margin: 0,
   },
   grid: {
     display: "grid",
@@ -144,9 +175,7 @@ const styles = {
     padding: "24px 16px 20px",
     cursor: "pointer",
     textAlign: "center",
-    overflow: "hidden",
-    transition: "all 0.28s cubic-bezier(0.34,1.56,0.64,1)",
-    animation: "fadeUp 0.45s ease both",
+    transition: "all 0.28s",
   },
   topBar: {
     position: "absolute",
@@ -154,24 +183,18 @@ const styles = {
     left: 0,
     right: 0,
     height: "3px",
-    borderRadius: "14px 14px 0 0",
   },
   icon: {
     fontSize: "32px",
     marginBottom: "12px",
-    display: "block",
   },
   subjectName: {
     fontSize: "14px",
     fontWeight: 700,
-    color: "#ffffff",
-    lineHeight: 1.3,
-    marginBottom: "8px",
+    color: "#fff",
   },
   explore: {
     fontSize: "12px",
     fontWeight: 600,
-    transition: "opacity 0.2s ease",
-    letterSpacing: "0.4px",
   },
 };
