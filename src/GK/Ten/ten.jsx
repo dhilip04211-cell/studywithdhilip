@@ -1,15 +1,54 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 const subjects = [
-  { route: "/gk/ten/indian-history", label: "Indian History", icon: "🏛️", color: "#E74C3C" },
-  { route: "/gk/ten/tamilnadu-history", label: "Tamilnadu History", icon: "🌺", color: "#E67E22" },
-  { route: "/gk/ten/geography", label: "Geography", icon: "🌍", color: "#27AE60" },
-  { route: "/gk/ten/polity", label: "Polity", icon: "⚖️", color: "#2980B9" },
-  { route: "/gk/ten/economics", label: "Economics", icon: "📈", color: "#8E44AD" },
-  { route: "/gk/ten/physics", label: "Physics", icon: "⚛️", color: "#16A085" },
-  { route: "/gk/ten/chemistry", label: "Chemistry", icon: "🧪", color: "#D35400" },
-  { route: "/gk/ten/biology", label: "Biology", icon: "🧬", color: "#C0392B" },
+  {
+    route: "/gk/ten/tenindianhistory/tenindianhistory",
+    label: "Indian History",
+    icon: "🏛️",
+    color: "#E74C3C",
+  },
+  {
+    route: "/gk/ten/tentamilnaduhistory/tentamilnaduhistory",
+    label: "Tamilnadu History",
+    icon: "🌺",
+    color: "#E67E22",
+  },
+  {
+    route: "/gk/ten/tengeography/tengeography",
+    label: "Geography",
+    icon: "🌍",
+    color: "#27AE60",
+  },
+  {
+    route: "/gk/ten/tenpolity/tenpolity",
+    label: "Polity",
+    icon: "⚖️",
+    color: "#2980B9",
+  },
+  {
+    route: "/gk/ten/teneconomics/teneconomics",
+    label: "Economics",
+    icon: "📈",
+    color: "#8E44AD",
+  },
+  {
+    route: "/gk/ten/tenphysics/tenphysics",
+    label: "Physics",
+    icon: "⚛️",
+    color: "#16A085",
+  },
+  {
+    route: "/gk/ten/tenchemistry/tenchemistry",
+    label: "Chemistry",
+    icon: "🧪",
+    color: "#D35400",
+  },
+  {
+    route: "/gk/ten/tenbiology/tenbiology",
+    label: "Biology",
+    icon: "🧬",
+    color: "#C0392B",
+  },
 ];
 
 export default function Ten() {
