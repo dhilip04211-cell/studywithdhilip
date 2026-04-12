@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 const subjects = [
   {
-    route: "/tamilbook/seven/ilakkanam",
+    route: "/tamilbook/seven/ilakkanam/ilakkanam",
     label: "இலக்கணம்",
     icon: "📘",
     color: "#E74C3C",
