@@ -25,7 +25,7 @@ function ParticleCanvas() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       dots.forEach(d => {
         d.x += d.dx; d.y += d.dy;
-        if (d.x < 0 || d.x > canvas.width) d.dx *= -1;
+        if (d.x < 0 || d.x > canvas.width)  d.dx *= -1;
         if (d.y < 0 || d.y > canvas.height) d.dy *= -1;
         ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(201,168,76,${d.o})`; ctx.fill();
@@ -73,9 +73,11 @@ export default function Dictionary() {
             radial-gradient(ellipse 40% 55% at 88% 85%, rgba(91,155,213,0.06) 0%, transparent 55%),
             radial-gradient(ellipse 60% 40% at 50% 50%, #0b0d18 0%, #06080f 100%);
         }
-        .dict-inner { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; width: 100%; }
-
-        /* back */
+        .dict-inner {
+          position: relative; z-index: 1;
+          display: flex; flex-direction: column; align-items: center;
+          width: 100%;
+        }
         .dict-back {
           align-self: flex-start;
           display: inline-flex; align-items: center; gap: 8px;
@@ -88,11 +90,8 @@ export default function Dictionary() {
           animation: dictRise 0.5s ease both;
         }
         .dict-back:hover { opacity: 1; gap: 13px; }
-
-        /* header */
         .dict-header {
-          text-align: center;
-          margin-bottom: 44px;
+          text-align: center; margin-bottom: 44px;
           animation: dictRise 0.65s 0.05s ease both;
         }
         .dict-eyebrow {
@@ -117,8 +116,6 @@ export default function Dictionary() {
           font-style: italic; font-size: 17px;
           color: #C9A84C; opacity: 0.65; letter-spacing: 3px;
         }
-
-        /* ornament */
         .dict-orn {
           display: flex; align-items: center; gap: 10px; justify-content: center;
           margin-bottom: 44px;
@@ -128,16 +125,12 @@ export default function Dictionary() {
         .orn-l:last-child { background: linear-gradient(90deg, rgba(201,168,76,0.4), transparent); }
         .orn-d { width: 5px; height: 5px; background: #C9A84C; transform: rotate(45deg); opacity: 0.45; }
         .orn-s { width: 3px; height: 3px; background: #C9A84C; transform: rotate(45deg); opacity: 0.2; }
-
-        /* grid */
         .dict-grid {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
           gap: 16px;
           width: min(700px, 100%);
         }
-
-        /* card */
         .dict-card {
           position: relative;
           display: flex; flex-direction: column;
@@ -160,7 +153,6 @@ export default function Dictionary() {
         .dict-card:hover .dc-glow  { opacity: 1; }
         .dict-card:hover .dc-shine { opacity: 0.75; }
         .dict-card:hover .dc-arrow { transform: translateX(5px); opacity: 1; }
-
         .dc-glow {
           position: absolute; inset: 0; border-radius: 16px;
           opacity: 0; pointer-events: none; transition: opacity 0.4s;
@@ -193,8 +185,6 @@ export default function Dictionary() {
           margin-top: 18px; opacity: 0.38;
           transition: transform 0.25s, opacity 0.25s;
         }
-
-        /* footer */
         .dict-footer {
           margin-top: 64px;
           font-family: 'DM Mono', monospace;
@@ -203,30 +193,31 @@ export default function Dictionary() {
           text-transform: uppercase;
           animation: dictRise 0.7s 0.5s ease both;
         }
-
         @keyframes dictRise {
           from { opacity: 0; transform: translateY(18px); }
           to   { opacity: 1; transform: translateY(0); }
         }
-
         @media (max-width: 480px) {
           .dict-page { padding: 36px 16px 60px; }
           .dict-grid { grid-template-columns: 1fr; }
         }
       `}</style>
+
       <div className="dict-page">
         <div className="dict-mesh" />
         <ParticleCanvas />
 
-       <div className="dict-inner">
-  <Link to={`${BASE}Tamil/Tamil.html`} className="dict-back">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <path d="M19 12H5M12 19l-7-7 7-7" />
-    </svg>
-    Back to Home
-  </Link>
-</div>
+        <div className="dict-inner">
 
+          {/* ✅ FIX 1: <a> tag for external HTML page, not <Link> */}
+          <a href={`${BASE}Tamil/Tamil.html`} className="dict-back">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M19 12H5M12 19l-7-7 7-7" />
+            </svg>
+            Back to Tamil Hub
+          </a>
+
+          {/* ✅ FIX 2: header, ornament, grid, footer all inside dict-inner */}
           <header className="dict-header">
             <div className="dict-eyebrow"><span />&nbsp;Reference Tool&nbsp;<span /></div>
             <h1 className="dict-ta">அகராதி</h1>
@@ -262,8 +253,9 @@ export default function Dictionary() {
           </div>
 
           <footer className="dict-footer">© 2025 &nbsp;·&nbsp; StudyWithDhilip &nbsp;·&nbsp; Tamil Excellence</footer>
-        </div>
-      </div>
+
+        </div>{/* ✅ end dict-inner */}
+      </div>{/* ✅ end dict-page */}
     </>
   );
 }
