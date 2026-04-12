@@ -90,46 +90,144 @@ function ParticleCanvas() {
 
 export default function PYQ() {
   return (
-    <div className="pyq-page">
-      <div className="pyq-mesh" />
-      <ParticleCanvas />
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Mono:wght@400;500&family=Noto+Serif+Tamil:wght@400;700&family=Outfit:wght@300;400;500;600&display=swap');
 
-      <div className="pyq-inner">
-        <a href={`${BASE}index.html`} className="pyq-back">
-          ← Back to Home
-        </a>
+        .pyq-page {
+          min-height: 100vh;
+          background: #06080f;
+          color: #e8dfc8;
+          font-family: 'Outfit', sans-serif;
+          position: relative;
+          overflow-x: hidden;
+          padding: 60px 24px 80px;
+        }
+        .pyq-mesh {
+          position: fixed; inset: 0; z-index: 0; pointer-events: none;
+          background:
+            radial-gradient(circle at 10% 10%, rgba(201,168,76,0.08), transparent 35%),
+            radial-gradient(circle at 90% 85%, rgba(201,168,76,0.05), transparent 30%),
+            linear-gradient(180deg, #0a0d16 0%, #06080f 100%);
+        }
+        .pyq-inner {
+          position: relative; z-index: 1; max-width: 1100px; margin: 0 auto;
+        }
+        .pyq-back {
+          display: inline-flex; align-items: center; gap: 10px;
+          color: #c9a84c; text-decoration: none; letter-spacing: 3px;
+          font: 500 10px 'DM Mono', monospace; text-transform: uppercase;
+          margin-bottom: 50px; opacity: .8;
+        }
+        .pyq-header { text-align: center; margin-bottom: 40px; }
+        .pyq-ta {
+          font-family: 'Noto Serif Tamil', serif;
+          font-size: clamp(30px, 5vw, 56px); margin: 0;
+        }
+        .pyq-en {
+          font-family: 'Cormorant Garamond', serif;
+          font-size: 22px; letter-spacing: 2px; color: #c9a84c;
+          opacity: .75; margin-top: 10px;
+        }
+        .pyq-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 20px;
+        }
+        .pyq-card {
+          position: relative;
+          display: block;
+          padding: 24px;
+          border-radius: 22px;
+          text-decoration: none;
+          color: #e8dfc8;
+          background: rgba(255,255,255,0.04);
+          border: 1px solid rgba(201,168,76,0.14);
+          backdrop-filter: blur(10px);
+          box-shadow: 0 20px 40px rgba(0,0,0,.35);
+          transition: transform .35s ease, border-color .35s ease, box-shadow .35s ease;
+        }
+        .pyq-card:hover {
+          transform: translateY(-8px) scale(1.02);
+          border-color: rgba(201,168,76,0.35);
+          box-shadow: 0 30px 60px rgba(0,0,0,.5);
+        }
+        .qc-glow {
+          position: absolute; inset: 0; border-radius: 22px;
+          background: radial-gradient(circle at top, rgba(201,168,76,0.12), transparent 65%);
+          pointer-events: none;
+        }
+        .qc-shine {
+          position: absolute; top: 0; left: 10%; right: 10%; height: 1px;
+          background: linear-gradient(90deg, transparent, #c9a84c, transparent);
+          opacity: .5;
+        }
+        .qc-num {
+          font: 500 11px 'DM Mono', monospace;
+          letter-spacing: 2px; color: rgba(201,168,76,.5);
+        }
+        .qc-title {
+          font-size: 16px; font-weight: 600; line-height: 1.5;
+          margin: 14px 0 8px;
+        }
+        .qc-ta {
+          font-family: 'Noto Serif Tamil', serif;
+          font-size: 12px; opacity: .55; margin: 0 0 20px;
+        }
+        .qc-footer-row { display: flex; justify-content: flex-end; }
+        .qc-tag {
+          font: 500 9px 'DM Mono', monospace;
+          letter-spacing: 2px; color: #c9a84c;
+          border: 1px solid rgba(201,168,76,.25);
+          padding: 6px 10px; border-radius: 999px;
+          background: rgba(201,168,76,.06);
+        }
+        .pyq-footer {
+          text-align: center; margin-top: 60px;
+          font: 500 10px 'DM Mono', monospace;
+          letter-spacing: 3px; color: rgba(201,168,76,.35);
+        }
+      `}</style>
 
-        <header className="pyq-header">
-          <h1 className="pyq-ta">கடந்த ஆண்டு வினாக்கள்</h1>
-          <p className="pyq-en">Previous Year Questions</p>
-        </header>
+      <div className="pyq-page">
+        <div className="pyq-mesh" />
+        <ParticleCanvas />
 
-        <div className="pyq-grid">
-          {PYQ_ITEMS.map((q, i) => (
-            <a
-              key={q.num}
-              href={`${BASE}PYQ/${q.href}`}
-              className="pyq-card"
-              style={{ animationDelay: `${i * 0.05 + 0.15}s` }}
-            >
-              <div className="qc-glow" />
-              <div className="qc-shine" />
+        <div className="pyq-inner">
+          <a href={`${BASE}index.html`} className="pyq-back">
+            ← Back to Home
+          </a>
 
-              <span className="qc-num">{q.num}</span>
-              <p className="qc-title">{q.title}</p>
-              <p className="qc-ta">{q.tamil}</p>
+          <header className="pyq-header">
+            <h1 className="pyq-ta">கடந்த ஆண்டு வினாக்கள்</h1>
+            <p className="pyq-en">Previous Year Questions</p>
+          </header>
 
-              <div className="qc-footer-row">
-                <span className="qc-tag">HTML ↗</span>
-              </div>
-            </a>
-          ))}
+          <div className="pyq-grid">
+            {PYQ_ITEMS.map((q, i) => (
+              <a
+                key={q.num}
+                href={`${BASE}PYQ/${q.href}`}
+                className="pyq-card"
+                style={{ animationDelay: `${i * 0.05 + 0.15}s` }}
+              >
+                <div className="qc-glow" />
+                <div className="qc-shine" />
+                <span className="qc-num">{q.num}</span>
+                <p className="qc-title">{q.title}</p>
+                <p className="qc-ta">{q.tamil}</p>
+                <div className="qc-footer-row">
+                  <span className="qc-tag">OPEN HTML ↗</span>
+                </div>
+              </a>
+            ))}
+          </div>
+
+          <footer className="pyq-footer">
+            © 2025 · StudyWithDhilip · Premium PYQ Archive
+          </footer>
         </div>
-
-        <footer className="pyq-footer">
-          © 2025 · StudyWithDhilip · Tamil Excellence
-        </footer>
       </div>
-    </div>
+    </>
   );
 }
