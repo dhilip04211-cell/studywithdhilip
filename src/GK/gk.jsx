@@ -9,21 +9,8 @@ const classes = [
   { label: "Class X", file: "/gk/ten/ten", color: "#1A936F" },
   { label: "Class XI", file: "/gk/eleven/eleven", color: "#C6384B" },
   { label: "Class XII", file: "/gk/twelve/twelve", color: "#7B2D8B" },
-     {
-      title: "Previous Year Questions",
-      route: "/studywithdhilip/PYQ/previous_years.html",
-      icon: "📘",
-      color: "#E74C3C",
-      subtitle: "TNPSC & Exams",
-      external: true,
-    },
-   {
-      title: "Current Affairs",
-      route: "/current_affairs/current_affairs",
-      icon: "📰",
-      color: "#27AE60",
-      subtitle: "Daily Updates",
-    },
+  { label: "Previous Year Questions", file: "/PYQ/previous_years.html", color: "#7B2F8B" },
+  
 ];
 
 export default function GK() {
