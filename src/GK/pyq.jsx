@@ -1,5 +1,7 @@
 import React, { useEffect, useRef } from "react";
 
+const BASE = import.meta.env.BASE_URL;
+
 const PYQ_ITEMS = [
   { num: "01", title: "Special Competitive Exam", tamil: "சிறப்பு போட்டித் தேர்வு", href: "1. Special Competetive exam/1. Special Competetive exam.html" },
   { num: "02", title: "TENTATIVE KEY G2 Tamil GS Mains 2025", tamil: "குரூப் 2 தமிழ் பொது அறிவு", href: "TENTATIVE_KEY_G2_TAMIL_GS_opt_1902/TENTATIVE_KEY_G2_TAMIL_GS_opt_1902.html" },
@@ -14,8 +16,6 @@ const PYQ_ITEMS = [
   { num: "12", title: "11_2025 GRP2A Paper II GS — Non-Interview Mains", tamil: "குரூப் 2A முக்கிய தேர்வு", href: "12. 11_2025_GRP2A_PAPERII_GS non interview mains/12. 11_2025_GRP2A_PAPERII_GS non interview mains.html" },
   { num: "13", title: "Tamil Eligibility Test GS Aptitude 503 — Interview Post", tamil: "தமிழ் தகுதித் தேர்வு", href: "13. Tamil_Eligibility_Test_General_Studies_Aptitude_and_Mental_Ability_503 interview post/13. Tamil_Eligibility_Test_General_Studies_Aptitude_and_Mental_Ability_503 interview post.html" },
 ];
-
-const BASE = import.meta.env.BASE_URL;
 
 function ParticleCanvas() {
   const ref = useRef(null);
@@ -90,7 +90,6 @@ export default function PYQ() {
           width: 100%; max-width: 860px;
         }
 
-        /* back */
         .pyq-back {
           align-self: flex-start;
           display: inline-flex; align-items: center; gap: 8px;
@@ -104,7 +103,6 @@ export default function PYQ() {
         }
         .pyq-back:hover { opacity: 1; gap: 13px; }
 
-        /* header */
         .pyq-header {
           text-align: center; margin-bottom: 20px;
           animation: pyqRise 0.65s 0.05s ease both;
@@ -122,7 +120,7 @@ export default function PYQ() {
         .pyq-eyebrow span:last-child { background: linear-gradient(90deg, #C9A84C, transparent); }
         .pyq-ta {
           font-family: 'Noto Serif Tamil', serif;
-          font-size: clamp(28px, 5vw, 52px);
+          font-size: clamp(26px, 5vw, 48px);
           font-weight: 700; line-height: 1;
           color: #e8dfc8; letter-spacing: -1px; margin-bottom: 8px;
         }
@@ -133,7 +131,6 @@ export default function PYQ() {
           margin-bottom: 28px;
         }
 
-        /* ornament */
         .pyq-orn {
           display: flex; align-items: center; gap: 10px; justify-content: center;
           margin-bottom: 44px;
@@ -144,85 +141,102 @@ export default function PYQ() {
         .orn-d { width: 5px; height: 5px; background: #C9A84C; transform: rotate(45deg); opacity: 0.45; }
         .orn-s { width: 3px; height: 3px; background: #C9A84C; transform: rotate(45deg); opacity: 0.2; }
 
-        /* list */
-        .pyq-list {
-          display: flex; flex-direction: column;
-          gap: 12px; width: 100%;
+        .pyq-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+          gap: 16px;
+          width: 100%;
         }
 
-        /* row card */
         .pyq-card {
           position: relative;
-          display: flex; align-items: center; gap: 20px;
-          padding: 20px 24px;
-          border-radius: 14px;
+          display: flex; flex-direction: column;
+          padding: 26px 24px 22px;
+          border-radius: 16px;
           background: rgba(255,255,255,0.03);
           border: 1px solid rgba(201,168,76,0.11);
           text-decoration: none;
           color: #e8dfc8;
           overflow: hidden;
           backdrop-filter: blur(8px);
-          transition: transform 0.28s cubic-bezier(.22,.68,0,1.2), border-color 0.28s, box-shadow 0.28s;
+          transition: transform 0.3s cubic-bezier(.22,.68,0,1.2), border-color 0.3s, box-shadow 0.3s;
           animation: pyqRise 0.5s ease both;
         }
         .pyq-card:hover {
-          transform: translateX(6px);
+          transform: translateY(-7px) scale(1.02);
           border-color: rgba(201,168,76,0.28);
-          box-shadow: 0 16px 40px rgba(0,0,0,0.45), 0 0 0 1px rgba(201,168,76,0.06);
+          box-shadow: 0 28px 55px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,168,76,0.07);
         }
         .pyq-card:hover .qc-glow  { opacity: 1; }
-        .pyq-card:hover .qc-shine { opacity: 0.7; }
+        .pyq-card:hover .qc-shine { opacity: 0.75; }
         .pyq-card:hover .qc-arrow { transform: translateX(4px); opacity: 1; }
 
         .qc-glow {
-          position: absolute; inset: 0; border-radius: 14px;
-          background: radial-gradient(circle at 0% 50%, rgba(201,168,76,0.08) 0%, transparent 70%);
-          opacity: 0; pointer-events: none; transition: opacity 0.35s;
+          position: absolute; inset: 0; border-radius: 16px;
+          background: radial-gradient(circle at 50% 0%, rgba(201,168,76,0.1) 0%, transparent 70%);
+          opacity: 0; pointer-events: none; transition: opacity 0.4s;
         }
         .qc-shine {
-          position: absolute; top: 0; left: 0; width: 2px; bottom: 0;
-          background: linear-gradient(180deg, transparent, #C9A84C, transparent);
-          opacity: 0.25; transition: opacity 0.3s;
+          position: absolute; top: 0; left: 10%; right: 10%; height: 1px;
+          background: linear-gradient(90deg, transparent, #C9A84C, transparent);
+          opacity: 0.35; transition: opacity 0.3s;
         }
 
-        /* num badge */
         .qc-num {
-          flex-shrink: 0;
           font-family: 'DM Mono', monospace;
-          font-size: 11px; letter-spacing: 2px;
-          color: rgba(201,168,76,0.35);
-          width: 28px; text-align: center;
+          font-size: 9px; letter-spacing: 2px;
+          color: rgba(201,168,76,0.25);
+          margin-bottom: 14px;
         }
 
-        /* divider line */
-        .qc-sep {
-          flex-shrink: 0;
-          width: 1px; height: 36px;
-          background: linear-gradient(180deg, transparent, rgba(201,168,76,0.2), transparent);
+        .qc-badge {
+          display: inline-flex; align-items: center; gap: 6px;
+          font-family: 'DM Mono', monospace;
+          font-size: 8px; letter-spacing: 3px; text-transform: uppercase;
+          color: rgba(232,223,200,0.22);
+          margin-bottom: 10px;
+        }
+        .qc-badge-dot {
+          width: 4px; height: 4px; border-radius: 50%;
+          background: #C9A84C; opacity: 0.4;
         }
 
-        /* text block */
-        .qc-body { flex: 1; min-width: 0; }
         .qc-title {
           font-family: 'Outfit', sans-serif;
           font-size: 14px; font-weight: 500;
-          color: #e8dfc8; line-height: 1.4;
-          white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+          color: #e8dfc8; line-height: 1.5;
+          flex: 1; margin-bottom: 10px;
         }
         .qc-ta {
           font-family: 'Noto Serif Tamil', serif;
-          font-size: 11px; opacity: 0.35;
-          margin-top: 3px;
+          font-size: 11px; opacity: 0.32;
+          margin-bottom: 16px;
         }
 
-        /* arrow */
+        .qc-divider {
+          width: 24px; height: 1px;
+          background: linear-gradient(90deg, #C9A84C, transparent);
+          opacity: 0.3; margin-bottom: 14px;
+        }
+
+        .qc-footer-row {
+          display: flex; align-items: center;
+          justify-content: space-between;
+          margin-top: auto;
+        }
+        .qc-tag {
+          font-family: 'DM Mono', monospace;
+          font-size: 8px; letter-spacing: 2px; text-transform: uppercase;
+          background: rgba(201,168,76,0.07);
+          border: 1px solid rgba(201,168,76,0.18);
+          color: rgba(201,168,76,0.45);
+          padding: 3px 8px; border-radius: 4px;
+        }
         .qc-arrow {
-          flex-shrink: 0;
           color: #C9A84C; opacity: 0.3;
           transition: transform 0.25s, opacity 0.25s;
         }
 
-        /* footer */
         .pyq-footer {
           margin-top: 64px;
           font-family: 'DM Mono', monospace;
@@ -238,7 +252,7 @@ export default function PYQ() {
 
         @media (max-width: 500px) {
           .pyq-page { padding: 36px 16px 60px; }
-          .qc-title { font-size: 13px; white-space: normal; }
+          .pyq-grid { grid-template-columns: 1fr; }
         }
       `}</style>
 
@@ -265,29 +279,36 @@ export default function PYQ() {
             <div className="orn-l" /><div className="orn-s" /><div className="orn-d" /><div className="orn-s" /><div className="orn-l" />
           </div>
 
-          <div className="pyq-list">
+          <div className="pyq-grid">
             {PYQ_ITEMS.map((q, i) => (
               
                 key={q.num}
                 href={`${BASE}PYQ/${q.href}`}
                 className="pyq-card"
-                style={{ animationDelay: `${i * 0.04 + 0.15}s` }}
+                style={{ animationDelay: `${i * 0.05 + 0.15}s` }}
               >
                 <div className="qc-glow" />
                 <div className="qc-shine" />
 
                 <span className="qc-num">{q.num}</span>
-                <div className="qc-sep" />
 
-                <div className="qc-body">
-                  <p className="qc-title">{q.title}</p>
-                  <p className="qc-ta">{q.tamil}</p>
+                <div className="qc-badge">
+                  <div className="qc-badge-dot" />
+                  Previous Year · TNPSC
                 </div>
 
-                <div className="qc-arrow">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
+                <p className="qc-title">{q.title}</p>
+                <p className="qc-ta">{q.tamil}</p>
+
+                <div className="qc-divider" />
+
+                <div className="qc-footer-row">
+                  <span className="qc-tag">HTML ↗</span>
+                  <div className="qc-arrow">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                  </div>
                 </div>
               </a>
             ))}
