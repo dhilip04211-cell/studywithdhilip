@@ -3,8 +3,13 @@ import { HashRouter, Routes, Route, Link, Navigate } from "react-router-dom";
 import PPPartOne from "./PPPpart-1";
 import PartFourFive from "./PartFourFive";
 
-const chapterPages = import.meta.glob("./GK/**/*.jsx", { eager: true });
-
+const chapterPages = import.meta.glob(
+  [
+    "./GK/**/*.jsx",
+    "./TamilBook/**/*.jsx"
+  ],
+  { eager: true }
+);
 // Dictionary imports
 import Dictionary from "./Dictionary/Dictionary";
 import A_Series from "./Dictionary/A_Series";
@@ -158,13 +163,14 @@ function Home() {
   );
 }
 
-function generateGKRoutes() {
+function generateAutoRoutes() {
   const usedRoutes = new Set();
 
   return Object.entries(chapterPages)
     .map(([path, module]) => {
-      const routePath = path
+      let routePath = path
         .replace("./GK", "/gk")
+        .replace("./TamilBook", "/tamilbook")
         .replace(/\.jsx$/, "")
         .toLowerCase();
 
@@ -312,7 +318,7 @@ export default function App() {
         <Route path="/gk/twelve/ethics" element={<TwelveEthics />} />
         <Route path="/gk/twelve/tamilnadu-history" element={<TwelveTamilnaduHistory />} />
 
-        {generateGKRoutes()}
+       {generateAutoRoutes()}
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
