@@ -137,31 +137,29 @@ export default function App() {
 }
 
 const styles = {
-  page: {
-    minHeight: "100vh",
-    background: "#080c18",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: "40px 20px",
-    position: "relative",
-    overflow: "hidden",
-  },
+page: {
+  minHeight: "100vh",
+  background: "#080c18",
+  position: "relative",
+  overflowX: "hidden",
+},
   bgGlow: {
     position: "absolute",
     inset: 0,
     background:
       "radial-gradient(circle at 20% 20%, #E74C3C18 0%, transparent 40%), radial-gradient(circle at 80% 80%, #2980B918 0%, transparent 40%)",
   },
-  container: {
-    width: "100%",
-    maxWidth: "950px",
-    zIndex: 1,
-  },
+ container: {
+  width: "100%",
+  minHeight: "100vh",
+  padding: "40px",
+  zIndex: 1,
+},
   header: {
-    textAlign: "center",
-    marginBottom: "50px",
-  },
+  textAlign: "center",
+  marginBottom: "60px",
+  paddingTop: "40px",
+},
   badge: {
     display: "inline-block",
     padding: "6px 18px",
@@ -185,10 +183,11 @@ const styles = {
     fontSize: "14px",
   },
   grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: "20px",
-  },
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+  gap: "24px",
+  width: "100%",
+},
   card: {
     position: "relative",
     background: "rgba(255,255,255,0.04)",
