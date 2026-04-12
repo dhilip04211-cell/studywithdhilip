@@ -8,7 +8,7 @@ const info = {
   classRoman: "XII",
   classColor: "#9B59B6",
   backRoute: "/gk/twelve",
-  subjectRoute: "/gk/twelve/indian-history",
+  subjectRoute: "/gk/twelve/twelveindianhistory",
 };
 
 const chapters = [
