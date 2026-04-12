@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-const BASE = import.meta.env.BASE_URL;
-const classes = [
+
   const classes = [
   { label: "Class VI",    file: "/gk/six/six",       color: "#FF6B35" },
   { label: "Class VII",   file: "/gk/seven/seven",   color: "#F7C59F" },
@@ -13,7 +12,7 @@ const classes = [
   { label: "Previous Year Questions", file: "/gk/pyq", color: "#7B2F8B"},
 ];
   
-];
+
 
 export default function GK() {
   const [hovered, setHovered] = useState(null);
