@@ -220,8 +220,8 @@ export default function App() {
         <Route path="/Thirukkural/thirukkural-old-part2" element={<ThirukkuralOldPart2 />} />
 
         {/* Tamil Notes */}
-        <Route path="/santhipizai" element={<SanthiPizai />} />
-        <Route path="/mayankoli" element={<Mayankoli />} />
+        <Route path="/santhi-pizai" element={<SanthiPizai />} />
+        <Route path="/mayan-koli" element={<Mayankoli />} />
 
         {/* TamilBook routes */}
         <Route path="/tamilbook/ilakkanam-new" element={<Ilakkanam_New />} />
