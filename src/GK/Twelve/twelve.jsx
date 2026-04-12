@@ -2,15 +2,15 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const subjects = [
-  { route: "/gk/twelve/indian-history", label: "Indian History", icon: "🏛️", color: "#E74C3C" },
-  { route: "/gk/twelve/tamilnadu-history", label: "Tamilnadu History", icon: "🌺", color: "#E67E22" },
-  { route: "/gk/twelve/geography", label: "Geography", icon: "🌍", color: "#27AE60" },
-  { route: "/gk/twelve/polity", label: "Polity", icon: "⚖️", color: "#2980B9" },
-  { route: "/gk/twelve/ethics", label: "Ethics", icon: "⚖️", color: "#2980B9" },
-  { route: "/gk/twelve/economics", label: "Economics", icon: "📈", color: "#8E44AD" },
-  { route: "/gk/twelve/physics", label: "Physics", icon: "⚛️", color: "#16A085" },
-  { route: "/gk/twelve/chemistry", label: "Chemistry", icon: "🧪", color: "#D35400" },
-  { route: "/gk/twelve/biology", label: "Biology", icon: "🧬", color: "#C0392B" },
+  { route: "/gk/twelve/tweleveindianhistory/tweleveindianhistory", label: "Indian History", icon: "🏛️", color: "#E74C3C" },
+  { route: "/gk/twelve/twelevetamilnaduhistory/twelevetamilnaduhistory", label: "Tamilnadu History", icon: "🌺", color: "#E67E22" },
+  { route: "/gk/twelve/twelevegeography/twelevegeography", label: "Geography", icon: "🌍", color: "#27AE60" },
+  { route: "/gk/twelve/twelevepolity/twelevepolity", label: "Polity", icon: "⚖️", color: "#2980B9" },
+  { route: "/gk/twelve/tweleveethics/tweleveethics", label: "Ethics", icon: "⚖️", color: "#2980B9" },
+  { route: "/gk/twelve/tweleveeconomics/tweleveeconomics", label: "Economics", icon: "📈", color: "#8E44AD" },
+  { route: "/gk/twelve/twelevephysics/twelevephysics", label: "Physics", icon: "⚛️", color: "#16A085" },
+  { route: "/gk/twelve/twelevechemistry/twelevechemistry", label: "Chemistry", icon: "🧪", color: "#D35400" },
+  { route: "/gk/twelve/twelevebiology/twelevebiology", label: "Biology", icon: "🧬", color: "#C0392B" },
 ];
 
 export default function Twelve() {
@@ -23,7 +23,7 @@ export default function Twelve() {
       <div style={styles.container}>
         <button
           style={styles.backBtn}
-          onClick={() => navigate("/gk/gk_1")}
+          onClick={() => navigate("/gk/gk")}
         >
           ← Back to Classes
         </button>
