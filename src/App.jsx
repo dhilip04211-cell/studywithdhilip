@@ -1,48 +1,14 @@
 import React from "react";
 import { HashRouter, Routes, Route, Link, Navigate } from "react-router-dom";
 
-import PPPartOne from "./PPPpart-1";
-import PartFourFive from "./PartFourFive";
-
-// Dictionary
-import Dictionary from "./Dictionary/Dictionary";
-import A_Series from "./Dictionary/A_Series";
-import A_Part_1 from "./Dictionary/A_Part_1";
-import A_Part_2 from "./Dictionary/A_Part_2";
-
-// Current Affairs
-import CurrentAffairs from "./Current_Affairs/Current_Affairs";
-import Jan_2026 from "./Current_Affairs/Jan_2026";
-
-// PYQ Tamil
-import PYQTAMIL from "./PYQTAMIL/PYQ_TAMIL";
-import Special_Examination_2025 from "./PYQTAMIL/Special_Examination_2025";
-import Gr_2_Mains_2025 from "./PYQTAMIL/Gr_2_Mains_2025";
-import Gr_4_2025 from "./PYQTAMIL/Gr_4_2025";
-
-// Thirukkural
-import Thirukkural from "./Thirukkural/Thirukkural_home";
-import ThirukkuralOld from "./Thirukkural/thirukkural_old";
-import ThirukkuralOldPart1 from "./Thirukkural/thirukkural_old_part1";
-import ThirukkuralOldPart1Quiz from "./Thirukkural/thirukkural_old_part1_quiz";
-import ThirukkuralOldPart2 from "./Thirukkural/thirukkural_old_part2";
-
-// Tamil Notes
-import SanthiPizai from "./TamilNotes/SanthiPizai";
-import Mayankoli from "./TamilNotes/Mayankoli";
-
-// ✅ AUTO IMPORT GK + TamilBook
-const autoPages = import.meta.glob(
-  [
-    "./GK/**/*.jsx",
-    "./TamilBook/**/*.jsx",
-  ],
-  { eager: true }
-);
+// ✅ AUTO IMPORT EVERYTHING INSIDE SRC
+const autoPages = import.meta.glob("./**/*.jsx", {
+  eager: true,
+});
 
 function Home() {
   const sections = [
-     {
+    {
       title: "Previous Year Questions",
       route: "/PYQ/previous_years.html",
       icon: "📘",
@@ -51,8 +17,8 @@ function Home() {
       external: true,
     },
     {
-      title: "Tamil",
-      route: "/Tamil/Tamil.html",
+      title: "Tamil Books",
+      route: "/tamilbook/t-book",
       icon: "📚",
       color: "#E67E22",
       subtitle: "School Books",
@@ -63,10 +29,11 @@ function Home() {
       icon: "⚡",
       color: "#8E44AD",
       subtitle: "AE Electrical",
+      external: true,
     },
     {
       title: "Current Affairs",
-      route: "/current-affairs",
+      route: "/current_affairs/current_affairs",
       icon: "📰",
       color: "#27AE60",
       subtitle: "Daily Updates",
@@ -77,6 +44,27 @@ function Home() {
       icon: "🌍",
       color: "#2980B9",
       subtitle: "State Board GK",
+    },
+    {
+      title: "Dictionary",
+      route: "/dictionary/dictionary",
+      icon: "📖",
+      color: "#16A085",
+      subtitle: "Tamil Dictionary",
+    },
+    {
+      title: "Thirukkural",
+      route: "/thirukkural/thirukkural_home",
+      icon: "📜",
+      color: "#C0392B",
+      subtitle: "Learn Kural",
+    },
+    {
+      title: "Tamil Notes",
+      route: "/tamilnotes/santhipizai",
+      icon: "📝",
+      color: "#F39C12",
+      subtitle: "Grammar Notes",
     },
   ];
 
@@ -89,29 +77,34 @@ function Home() {
           <div style={styles.badge}>STUDY PORTAL</div>
           <h1 style={styles.title}>StudyWithDhilip</h1>
           <p style={styles.subtitle}>
-            TNPSC • Tamil Books • Previous Year Questions • AE Electrical • Smart Learning Hub
+            TNPSC • Tamil Books • Previous Year Questions • AE • Smart Learning Hub
           </p>
         </div>
 
         <div style={styles.grid}>
-          {sections.map((item) => (
-            <Link
-              key={item.route}
-              to={item.route}
-              style={{
-                ...styles.card,
-                borderColor: `${item.color}55`,
-              }}
-            >
-              <div style={{ ...styles.topBar, background: item.color }} />
-              <div style={styles.icon}>{item.icon}</div>
-              <div style={styles.cardTitle}>{item.title}</div>
-              <div style={styles.cardSub}>{item.subtitle}</div>
-              <div style={{ ...styles.openBtn, color: item.color }}>
-                Open →
-              </div>
-            </Link>
-          ))}
+          {sections.map((item) =>
+            item.external ? (
+              <a key={item.route} href={item.route} style={styles.card}>
+                <div style={{ ...styles.topBar, background: item.color }} />
+                <div style={styles.icon}>{item.icon}</div>
+                <div style={styles.cardTitle}>{item.title}</div>
+                <div style={styles.cardSub}>{item.subtitle}</div>
+                <div style={{ ...styles.openBtn, color: item.color }}>
+                  Open →
+                </div>
+              </a>
+            ) : (
+              <Link key={item.route} to={item.route} style={styles.card}>
+                <div style={{ ...styles.topBar, background: item.color }} />
+                <div style={styles.icon}>{item.icon}</div>
+                <div style={styles.cardTitle}>{item.title}</div>
+                <div style={styles.cardSub}>{item.subtitle}</div>
+                <div style={{ ...styles.openBtn, color: item.color }}>
+                  Open →
+                </div>
+              </Link>
+            )
+          )}
         </div>
       </div>
     </div>
@@ -122,22 +115,25 @@ function generateAutoRoutes() {
   const usedRoutes = new Set();
 
   return Object.entries(autoPages)
+    .filter(([path]) => !path.includes("main.jsx") && !path.includes("App.jsx"))
     .map(([path, module]) => {
       let routePath = path
-        .replace("./GK", "/gk")
-        .replace("./TamilBook", "/tamilbook")
+        .replace("./", "/")
         .replace(/\.jsx$/, "")
         .toLowerCase();
 
-      // Cleaner route support
+      // ✅ cleaner index support
       if (routePath.endsWith("/index")) {
         routePath = routePath.replace("/index", "");
       }
 
+      // ✅ remove duplicate routes
       if (usedRoutes.has(routePath)) return null;
       usedRoutes.add(routePath);
 
       const Component = module.default;
+      if (!Component) return null;
+
       return (
         <Route
           key={routePath}
@@ -156,40 +152,7 @@ export default function App() {
         {/* Home */}
         <Route path="/" element={<Home />} />
 
-        {/* AE */}
-        <Route path="/part1" element={<PPPartOne />} />
-        <Route path="/parts" element={<PartFourFive />} />
-        <Route path="/part4" element={<PartFourFive defaultPart={4} />} />
-        <Route path="/part5" element={<PartFourFive defaultPart={5} />} />
-
-        {/* Dictionary */}
-        <Route path="/dictionary" element={<Dictionary />} />
-        <Route path="/dictionary/a-series" element={<A_Series />} />
-        <Route path="/dictionary/a-series/part1" element={<A_Part_1 />} />
-        <Route path="/dictionary/a-series/part2" element={<A_Part_2 />} />
-
-        {/* Current Affairs */}
-        <Route path="/current-affairs" element={<CurrentAffairs />} />
-        <Route path="/current-affairs/jan-2026" element={<Jan_2026 />} />
-
-        {/* PYQ */}
-        <Route path="/PYQTAMIL" element={<PYQTAMIL />} />
-        <Route path="/PYQTAMIL/special-examination-2025" element={<Special_Examination_2025 />} />
-        <Route path="/PYQTAMIL/gr-2-mains-2025" element={<Gr_2_Mains_2025 />} />
-        <Route path="/PYQTAMIL/gr-4-2025" element={<Gr_4_2025 />} />
-
-        {/* Thirukkural */}
-        <Route path="/Thirukkural" element={<Thirukkural />} />
-        <Route path="/Thirukkural/thirukkural-old" element={<ThirukkuralOld />} />
-        <Route path="/Thirukkural/thirukkural-old-part1" element={<ThirukkuralOldPart1 />} />
-        <Route path="/Thirukkural/thirukkural-old-part1-quiz" element={<ThirukkuralOldPart1Quiz />} />
-        <Route path="/Thirukkural/thirukkural-old-part2" element={<ThirukkuralOldPart2 />} />
-
-        {/* Tamil Notes */}
-        <Route path="/santhi-pizai" element={<SanthiPizai />} />
-        <Route path="/mayan-koli" element={<Mayankoli />} />
-
-        {/* ✅ AUTO ROUTES */}
+        {/* ✅ FULL AUTO ROUTES */}
         {generateAutoRoutes()}
 
         {/* Fallback */}
@@ -255,12 +218,13 @@ const styles = {
   card: {
     position: "relative",
     background: "rgba(255,255,255,0.04)",
-    border: "1px solid",
+    border: "none",
     borderRadius: "18px",
     padding: "28px 22px",
     textDecoration: "none",
     textAlign: "center",
     transition: "all 0.28s ease",
+    boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
   },
   topBar: {
     position: "absolute",
