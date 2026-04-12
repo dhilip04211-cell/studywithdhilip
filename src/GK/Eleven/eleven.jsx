@@ -2,14 +2,14 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const subjects = [
-  { route: "/gk/eleven/indian-history", label: "Indian History", icon: "🏛️", color: "#E74C3C" },
-  { route: "/gk/eleven/tamilnadu-history", label: "Tamilnadu History", icon: "🌺", color: "#E67E22" },
-  { route: "/gk/eleven/geography", label: "Geography", icon: "🌍", color: "#27AE60" },
-  { route: "/gk/eleven/polity", label: "Polity", icon: "⚖️", color: "#2980B9" },
-  { route: "/gk/eleven/economics", label: "Economics", icon: "📈", color: "#8E44AD" },
-  { route: "/gk/eleven/physics", label: "Physics", icon: "⚛️", color: "#16A085" },
-  { route: "/gk/eleven/chemistry", label: "Chemistry", icon: "🧪", color: "#D35400" },
-  { route: "/gk/eleven/biology", label: "Biology", icon: "🧬", color: "#C0392B" },
+  { key: "IndianHistory", label: "Indian History", icon: "🏛️", color: "#E74C3C" },
+  { key: "TamilnaduHistory", label: "Tamilnadu History", icon: "🌺", color: "#E67E22" },
+  { key: "Geography", label: "Geography", icon: "🌍", color: "#27AE60" },
+  { key: "Polity", label: "Polity", icon: "⚖️", color: "#2980B9" },
+  { key: "Economics", label: "Economics", icon: "📈", color: "#8E44AD" },
+  { key: "Physics", label: "Physics", icon: "⚛️", color: "#16A085" },
+  { key: "Chemistry", label: "Chemistry", icon: "🧪", color: "#D35400" },
+  { key: "Biology", label: "Biology", icon: "🧬", color: "#C0392B" },
 ];
 
 export default function Eleven() {
@@ -22,7 +22,7 @@ export default function Eleven() {
       <div style={styles.container}>
         <button
           style={styles.backBtn}
-          onClick={() => navigate("/gk/gk_1")}
+          onClick={() => navigate("/gk/gk")}
         >
           ← Back to Classes
         </button>
@@ -65,7 +65,7 @@ export default function Eleven() {
               }}
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
-              onClick={() => navigate(sub.route)}
+              onClick={() => navigate(`/gk/eleven/eleven${sub.key.toLowerCase()}/eleven${sub.key.toLowerCase()}`)}
             >
               <div
                 style={{
