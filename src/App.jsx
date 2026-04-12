@@ -11,7 +11,7 @@ function Home() {
  
     {
       title: "Tamil",
-      route: "/studywithdhilip/Tamil/Tamil.html",
+      route: "/Tamil/Tamil.html",
       icon: "📚",
       color: "#E67E22",
       subtitle: "School Books",
@@ -25,11 +25,18 @@ function Home() {
     },
         {
       title: "Assistant Engineer",
-      route: "studywithdhilip/AE/YCT-1/YCT-1.html",
+      route: "/AE/YCT-1/YCT-1.html",
       icon: "⚡",
       color: "#8E44AD",
       subtitle: "AE Electrical",
       external: true,
+    },
+       {
+      title: "Current Affairs",
+      route: "/current_affairs/current_affairs",
+      icon: "📰",
+      color: "#27AE60",
+      subtitle: "Daily Updates",
     },
    
   ];
