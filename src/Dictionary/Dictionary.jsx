@@ -214,18 +214,18 @@ export default function Dictionary() {
           .dict-grid { grid-template-columns: 1fr; }
         }
       `}</style>
-        const BASE = import.meta.env.BASE_URL;
       <div className="dict-page">
         <div className="dict-mesh" />
         <ParticleCanvas />
 
-        <div className="dict-inner">
-                  <Link to={`${BASE}Tamil/Tamil.html`} className="dict-back">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M19 12H5M12 19l-7-7 7-7" />
-          </svg>
-          Back to Home
-        </Link>
+       <div className="dict-inner">
+  <Link to={`${BASE}Tamil/Tamil.html`} className="dict-back">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M19 12H5M12 19l-7-7 7-7" />
+    </svg>
+    Back to Home
+  </Link>
+</div>
 
           <header className="dict-header">
             <div className="dict-eyebrow"><span />&nbsp;Reference Tool&nbsp;<span /></div>
