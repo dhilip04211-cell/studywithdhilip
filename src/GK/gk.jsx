@@ -2,13 +2,21 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const classes = [
-  { label: "Class VI", file: "/gk/six", color: "#FF6B35" },
-  { label: "Class VII", file: "/gk/seven", color: "#F7C59F" },
-  { label: "Class VIII", file: "/gk/eight", color: "#EFEFD0" },
-  { label: "Class IX", file: "/gk/nine", color: "#004E89" },
-  { label: "Class X", file: "/gk/ten", color: "#1A936F" },
-  { label: "Class XI", file: "/gk/eleven", color: "#C6384B" },
-  { label: "Class XII", file: "/gk/twelve", color: "#7B2D8B" },
+  { label: "Class VI", file: "/gk/six/six", color: "#FF6B35" },
+  { label: "Class VII", file: "/gk/seven/seven", color: "#F7C59F" },
+  { label: "Class VIII", file: "/gk/eight/eight", color: "#EFEFD0" },
+  { label: "Class IX", file: "/gk/nine/nine", color: "#004E89" },
+  { label: "Class X", file: "/gk/ten/ten", color: "#1A936F" },
+  { label: "Class XI", file: "/gk/eleven/eleven", color: "#C6384B" },
+  { label: "Class XII", file: "/gk/twelve/twelve", color: "#7B2D8B" },
+     {
+      title: "Previous Year Questions",
+      route: "/studywithdhilip/PYQ/previous_years.html",
+      icon: "📘",
+      color: "#E74C3C",
+      subtitle: "TNPSC & Exams",
+      external: true,
+    },
 ];
 
 export default function GK() {
