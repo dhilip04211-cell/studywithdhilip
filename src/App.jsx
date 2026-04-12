@@ -5,16 +5,17 @@ import { HashRouter, Routes, Route, Link, Navigate } from "react-router-dom";
 const autoPages = import.meta.glob("./**/*.jsx", {
   eager: true,
 });
+const BASE = import.meta.env.BASE_URL;
 
 function Home() {
   const sections = [
- 
     {
       title: "Tamil",
-      route: "/Tamil/Tamil.html",
+      route: `${BASE}Tamil/Tamil.html`,
       icon: "📚",
       color: "#E67E22",
-      subtitle: "School Books",
+      subtitle: "Tamil Learning",
+      external: true,
     },
     {
       title: "General Knowledge",
@@ -25,7 +26,7 @@ function Home() {
     },
         {
       title: "Assistant Engineer",
-      route: "/AE/YCT-1/YCT-1.html",
+      route: `${BASE}AE/YCT-1/YCT-1.html`,
       icon: "⚡",
       color: "#8E44AD",
       subtitle: "AE Electrical",
