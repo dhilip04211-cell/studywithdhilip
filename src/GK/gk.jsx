@@ -10,7 +10,7 @@ const classes = [
   { label: "Class X",     file: "/gk/ten/ten",       color: "#1A936F" },
   { label: "Class XI",    file: "/gk/eleven/eleven", color: "#C6384B" },
   { label: "Class XII",   file: "/gk/twelve/twelve", color: "#7B2D8B" },
-  { label: "Previous Year Questions", file: `${BASE}PYQ/previous_years.html`, color: "#7B2F8B", external: true },
+  { label: "Previous Year Questions", file: "/gk/pyq", color: "#7B2F8B"},
 ];
   
 ];
@@ -51,11 +51,7 @@ export default function GK() {
               }}
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
-                        onClick={() =>
-                cls.external
-                  ? window.location.href = cls.file
-                  : navigate(cls.file)
-              }
+                       onClick={() => navigate(cls.file)}
             >
               <div
                 style={{
