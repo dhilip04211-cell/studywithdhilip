@@ -13,14 +13,14 @@ export default function A_Series() {
           {parts.map((part) => (
             <Link
               key={part}
-              to={`/dictionary/a-series/part${part}`}
+              to={`/dictionary/a-series/a_part_${part}`}
               style={styles.btn}
             >
               Part {part}
             </Link>
           ))}
         </div>
-        <Link to="/dictionary" style={styles.backLink}>← Back to Dictionary</Link>
+        <Link to="/dictionary/dictionary" style={styles.backLink}>← Back to Dictionary</Link>
       </div>
     </div>
   );
