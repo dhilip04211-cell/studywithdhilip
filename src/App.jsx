@@ -8,14 +8,7 @@ const autoPages = import.meta.glob("./**/*.jsx", {
 
 function Home() {
   const sections = [
-    {
-      title: "Previous Year Questions",
-      route: "/PYQ/previous_years.html",
-      icon: "📘",
-      color: "#E74C3C",
-      subtitle: "TNPSC & Exams",
-      external: true,
-    },
+ 
     {
       title: "Tamil Books",
       route: "/tamilbook/t-book",
