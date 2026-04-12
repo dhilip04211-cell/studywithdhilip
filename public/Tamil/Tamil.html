@@ -1,69 +1,134 @@
 <!DOCTYPE html>
 <html lang="ta">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tamil Learning Hub</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-        }
-        .container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 3rem;
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        h1 { margin-bottom: 2rem; font-size: 2.5rem; }
-        .btn-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-        }
-        .btn {
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .notes-btn { background: #fff; color: #764ba2; }
-        .quiz-btn  { background: #ff9a9e; color: white; }
-        .dict-btn  { background: #a8edea; color: #764ba2; }
-        .btn:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); opacity: 0.9; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tamil Learning Hub</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #080c18;
+      color: white;
+      overflow: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(231, 76, 60, 0.18), transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(52, 152, 219, 0.18), transparent 40%);
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      width: min(900px, 92%);
+      padding: 3rem;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 18px;
+      border-radius: 999px;
+      background: rgba(231, 76, 60, 0.15);
+      border: 1px solid rgba(231, 76, 60, 0.35);
+      color: #e74c3c;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+    }
+
+    .sub {
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 32px;
+      font-size: 14px;
+    }
+
+    .btn-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+    }
+
+    .btn {
+      position: relative;
+      padding: 22px;
+      border-radius: 18px;
+      text-decoration: none;
+      color: white;
+      font-size: 18px;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.04);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      transition: all 0.28s ease;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: currentColor;
+      opacity: 0.7;
+    }
+
+    .btn:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 0 24px currentColor;
+    }
+
+    .notes { color: #e67e22; }
+    .quiz { color: #e74c3c; }
+    .dict { color: #16a085; }
+    .pyq { color: #3498db; }
+    .kural { color: #c0392b; }
+    .books { color: #8e44ad; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>தமிழ் கல்வி (Tamil Education)</h1>
-        <div class="btn-group">
-            <a href="Notes.html"       class="btn notes-btn">Notes</a>
-            <a href="Quiz.html"        class="btn quiz-btn">Quiz</a>
-            <!-- 
-                /#/dictionary uses HashRouter so it works with your React app
-                at the root index.html. Adjust the path if your app is in a subfolder.
-            -->
-            <a href="/studywithdhilip/#/dictionary" class="btn dict-btn">Dictionary</a>
- <a href="/studywithdhilip/#/PYQTAMIL" class="btn dict-btn">PYQ TAMIL</a>
- <a href="/studywithdhilip/#/Thirukkural" class="btn dict-btn">Thirukkural</a>
-            
- <a href="/studywithdhilip/#/tamilbook/t-book" class="btn quiz-btn">Books</a>
-
-        </div>
+  <div class="container">
+    <div class="badge">TAMIL HUB</div>
+    <h1>தமிழ் கல்வி</h1>
+    <div class="sub">
+      Notes • Quiz • Dictionary • PYQ • Thirukkural • Books
     </div>
+
+    <div class="btn-group">
+      <a href="Notes.html" class="btn notes">📝 Notes</a>
+      <a href="Quiz.html" class="btn quiz">❓ Quiz</a>
+      <a href="/studywithdhilip/#/dictionary/dictionary" class="btn dict">📖 Dictionary</a>
+      <a href="/studywithdhilip/#/pyqtamil/pyq_tamil" class="btn pyq">📘 PYQ Tamil</a>
+      <a href="/studywithdhilip/#/thirukkural/thirukkural_home" class="btn kural">📜 Thirukkural</a>
+      <a href="/studywithdhilip/#/tamilbook/t_book" class="btn books">📚 Books</a>
+    </div>
+  </div>
 </body>
 </html>
