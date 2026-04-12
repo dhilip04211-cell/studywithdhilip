@@ -49,7 +49,11 @@ export default function GK() {
               }}
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
-           onClick={() => navigate(cls.file)}
+                        onClick={() =>
+                cls.external
+                  ? window.location.href = cls.file
+                  : navigate(cls.file)
+              }
             >
               <div
                 style={{
