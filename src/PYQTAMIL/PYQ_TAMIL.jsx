@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 const BASE = import.meta.env.BASE_URL;
 
 const EXAMS = [
-  { num: "01", icon: "📋", label: "Special Examination", title: "Special Exam — 2025", to: "/PYQTAMIL/special-examination-2025", color: "#C9A84C", accent: "#F0D07A" },
-  { num: "02", icon: "📘", label: "Grade 2A Mains",      title: "Gr-2A Mains — 2025",  to: "/PYQTAMIL/gr-2-mains-2025",          color: "#5B9BD5", accent: "#A8CFEE" },
-  { num: "03", icon: "📗", label: "Grade 4",             title: "Gr-4 — 2025",          to: "/PYQTAMIL/gr-4-2025",               color: "#4CAF89", accent: "#80D4B1" },
+  { num: "01", icon: "📋", label: "Special Examination", title: "Special Exam — 2025", to: "/PYQTAMIL/special_examination_2025", color: "#C9A84C", accent: "#F0D07A" },
+  { num: "02", icon: "📘", label: "Grade 2A Mains",      title: "Gr-2A Mains — 2025",  to: "/PYQTAMIL/gr_2_mains_2025",          color: "#5B9BD5", accent: "#A8CFEE" },
+  { num: "03", icon: "📗", label: "Grade 4",             title: "Gr-4 — 2025",          to: "/PYQTAMIL/gr_4_2025",               color: "#4CAF89", accent: "#80D4B1" },
 ];
 
 function ParticleCanvas() {
