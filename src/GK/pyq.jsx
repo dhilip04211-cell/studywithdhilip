@@ -279,39 +279,38 @@ export default function PYQ() {
             <div className="orn-l" /><div className="orn-s" /><div className="orn-d" /><div className="orn-s" /><div className="orn-l" />
           </div>
 
-          <div className="pyq-grid">
-            {PYQ_ITEMS.map((q, i) => (
-              
-                key={q.num}
-                href={`${BASE}PYQ/${q.href}`}
-                className="pyq-card"
-                style={{ animationDelay: `${i * 0.05 + 0.15}s` }}
-              >
-                <div className="qc-glow" />
-                <div className="qc-shine" />
+          {PYQ_ITEMS.map((q, i) => (
+  <a
+    key={q.num}
+    href={`${BASE}PYQ/${q.href}`}
+    className="pyq-card"
+    style={{ animationDelay: `${i * 0.05 + 0.15}s` }}
+  >
+    <div className="qc-glow" />
+    <div className="qc-shine" />
 
-                <span className="qc-num">{q.num}</span>
+    <span className="qc-num">{q.num}</span>
 
-                <div className="qc-badge">
-                  <div className="qc-badge-dot" />
-                  Previous Year · TNPSC
-                </div>
+    <div className="qc-badge">
+      <div className="qc-badge-dot" />
+      Previous Year · TNPSC
+    </div>
 
-                <p className="qc-title">{q.title}</p>
-                <p className="qc-ta">{q.tamil}</p>
+    <p className="qc-title">{q.title}</p>
+    <p className="qc-ta">{q.tamil}</p>
 
-                <div className="qc-divider" />
+    <div className="qc-divider" />
 
-                <div className="qc-footer-row">
-                  <span className="qc-tag">HTML ↗</span>
-                  <div className="qc-arrow">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
-                  </div>
-                </div>
-              </a>
-            ))}
+    <div className="qc-footer-row">
+      <span className="qc-tag">HTML ↗</span>
+      <div className="qc-arrow">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M5 12h14M12 5l7 7-7 7" />
+        </svg>
+      </div>
+    </div>
+  </a>
+))}
           </div>
 
           <footer className="pyq-footer">© 2025 &nbsp;·&nbsp; StudyWithDhilip &nbsp;·&nbsp; Tamil Excellence</footer>
