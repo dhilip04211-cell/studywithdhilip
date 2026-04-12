@@ -2,15 +2,15 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const subjects = [
-  { route: "/gk/twelve/tweleveindianhistory/tweleveindianhistory", label: "Indian History", icon: "🏛️", color: "#E74C3C" },
-  { route: "/gk/twelve/twelevetamilnaduhistory/twelevetamilnaduhistory", label: "Tamilnadu History", icon: "🌺", color: "#E67E22" },
-  { route: "/gk/twelve/twelevegeography/twelevegeography", label: "Geography", icon: "🌍", color: "#27AE60" },
-  { route: "/gk/twelve/twelevepolity/twelevepolity", label: "Polity", icon: "⚖️", color: "#2980B9" },
-  { route: "/gk/twelve/tweleveethics/tweleveethics", label: "Ethics", icon: "⚖️", color: "#2980B9" },
-  { route: "/gk/twelve/tweleveeconomics/tweleveeconomics", label: "Economics", icon: "📈", color: "#8E44AD" },
-  { route: "/gk/twelve/twelevephysics/twelevephysics", label: "Physics", icon: "⚛️", color: "#16A085" },
-  { route: "/gk/twelve/twelevechemistry/twelevechemistry", label: "Chemistry", icon: "🧪", color: "#D35400" },
-  { route: "/gk/twelve/twelevebiology/twelevebiology", label: "Biology", icon: "🧬", color: "#C0392B" },
+  { route: "/gk/twelve/twelveindianhistory/twelveindianhistory", label: "Indian History", icon: "🏛️", color: "#E74C3C" },
+  { route: "/gk/twelve/twelvetamilnaduhistory/twelvetamilnaduhistory", label: "Tamilnadu History", icon: "🌺", color: "#E67E22" },
+  { route: "/gk/twelve/twelvegeography/twelvegeography", label: "Geography", icon: "🌍", color: "#27AE60" },
+  { route: "/gk/twelve/twelvepolity/twelvepolity", label: "Polity", icon: "⚖️", color: "#2980B9" },
+  { route: "/gk/twelve/twelveethics/twelveethics", label: "Ethics", icon: "⚖️", color: "#2980B9" },
+  { route: "/gk/twelve/twelveeconomics/twelveeconomics", label: "Economics", icon: "📈", color: "#8E44AD" },
+  { route: "/gk/twelve/twelvephysics/twelvephysics", label: "Physics", icon: "⚛️", color: "#16A085" },
+  { route: "/gk/twelve/twelvechemistry/twelvechemistry", label: "Chemistry", icon: "🧪", color: "#D35400" },
+  { route: "/gk/twelve/twelvebiology/twelvebiology", label: "Biology", icon: "🧬", color: "#C0392B" },
 ];
 
 export default function Twelve() {
