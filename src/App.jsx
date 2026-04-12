@@ -10,26 +10,11 @@ function Home() {
   const sections = [
  
     {
-      title: "Tamil Books",
-      route: "/tamilbook/t-book",
+      title: "Tamil",
+      route: "/studywithdhilip/Tamil/Tamil.html",
       icon: "📚",
       color: "#E67E22",
       subtitle: "School Books",
-    },
-    {
-      title: "Assistant Engineer",
-      route: "/AE/YCT-1/YCT-1.html",
-      icon: "⚡",
-      color: "#8E44AD",
-      subtitle: "AE Electrical",
-      external: true,
-    },
-    {
-      title: "Current Affairs",
-      route: "/current_affairs/current_affairs",
-      icon: "📰",
-      color: "#27AE60",
-      subtitle: "Daily Updates",
     },
     {
       title: "General Knowledge",
@@ -38,27 +23,15 @@ function Home() {
       color: "#2980B9",
       subtitle: "State Board GK",
     },
-    {
-      title: "Dictionary",
-      route: "/dictionary/dictionary",
-      icon: "📖",
-      color: "#16A085",
-      subtitle: "Tamil Dictionary",
+        {
+      title: "Assistant Engineer",
+      route: "studywithdhilip/AE/YCT-1/YCT-1.html",
+      icon: "⚡",
+      color: "#8E44AD",
+      subtitle: "AE Electrical",
+      external: true,
     },
-    {
-      title: "Thirukkural",
-      route: "/thirukkural/thirukkural_home",
-      icon: "📜",
-      color: "#C0392B",
-      subtitle: "Learn Kural",
-    },
-    {
-      title: "Tamil Notes",
-      route: "/tamilnotes/santhipizai",
-      icon: "📝",
-      color: "#F39C12",
-      subtitle: "Grammar Notes",
-    },
+   
   ];
 
   return (
