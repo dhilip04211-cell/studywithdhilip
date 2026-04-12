@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const BASE = import.meta.env.BASE_URL;
 
 const BOOKS = [
-  { num: "01", icon: "📜", label: "Classic Edition", title: "Old Book", tamil: "பழைய நூல்", to: "/Thirukkural/thirukkural-old", color: "#C9A84C", accent: "#F0D07A" },
+  { num: "01", icon: "📜", label: "Classic Edition", title: "Old Book", tamil: "பழைய நூல்", to: "/Thirukkural/thirukkural_old", color: "#C9A84C", accent: "#F0D07A" },
 ];
 
 function ParticleCanvas() {
