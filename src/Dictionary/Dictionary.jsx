@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-
+const BASE = import.meta.env.BASE_URL;
 const SERIES = [
-  { id: "a-series", label: "A Series", tamil: "அ தொடர்", num: "01", color: "#C9A84C", accent: "#F0D07A" },
+  { id: "a_series", label: "A Series", tamil: "அ தொடர்", num: "01", color: "#C9A84C", accent: "#F0D07A" },
 ];
 
 function ParticleCanvas() {
@@ -220,7 +220,7 @@ export default function Dictionary() {
         <ParticleCanvas />
 
         <div className="dict-inner">
-          <Link to="/" className="dict-back">
+          <Link to=`${BASE}Tamil/Tamil.html` className="dict-back">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
