@@ -17,6 +17,13 @@ const classes = [
       subtitle: "TNPSC & Exams",
       external: true,
     },
+   {
+      title: "Current Affairs",
+      route: "/current_affairs/current_affairs",
+      icon: "📰",
+      color: "#27AE60",
+      subtitle: "Daily Updates",
+    },
 ];
 
 export default function GK() {
