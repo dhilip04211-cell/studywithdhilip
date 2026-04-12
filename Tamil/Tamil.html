@@ -4,131 +4,373 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tamil Learning Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Mono:wght@400;500&family=Noto+Serif+Tamil:wght@400;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
-    * {
-      box-sizing: border-box;
+    :root {
+      --gold:    #C9A84C;
+      --gold-lt: #F0D07A;
+      --ink:     #06080f;
+      --paper:   #f0e8d5;
+      --cream:   #e8dfc8;
+      --muted:   rgba(232,223,200,0.35);
+      --card-bg: rgba(255,255,255,0.03);
+      --border:  rgba(201,168,76,0.14);
     }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      margin: 0;
-      font-family: "Segoe UI", sans-serif;
+      background: var(--ink);
+      font-family: 'Outfit', sans-serif;
+      color: var(--cream);
       min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #080c18;
-      color: white;
-      overflow: hidden;
+      overflow-x: hidden;
       position: relative;
     }
 
-    body::before {
-      content: "";
-      position: absolute;
+    /* ── canvas ── */
+    #bg-canvas {
+      position: fixed;
       inset: 0;
-      background:
-        radial-gradient(circle at 20% 20%, rgba(231, 76, 60, 0.18), transparent 40%),
-        radial-gradient(circle at 80% 80%, rgba(52, 152, 219, 0.18), transparent 40%);
       z-index: 0;
+      pointer-events: none;
     }
 
-    .container {
+    /* ── mesh glow ── */
+    .mesh {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 55% 45% at 12% 8%,  rgba(201,168,76,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 45% 55% at 88% 88%, rgba(180,80,60,0.06)  0%, transparent 55%),
+        radial-gradient(ellipse 60% 40% at 55% 50%, #0b0d18 0%, #06080f 100%);
+    }
+
+    /* ── page wrapper ── */
+    .page {
       position: relative;
       z-index: 1;
-      width: min(900px, 92%);
-      padding: 3rem;
-      border-radius: 24px;
-      background: rgba(255, 255, 255, 0.04);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
-      text-align: center;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 24px 80px;
     }
 
-    .badge {
-      display: inline-block;
-      padding: 6px 18px;
-      border-radius: 999px;
-      background: rgba(231, 76, 60, 0.15);
-      border: 1px solid rgba(231, 76, 60, 0.35);
-      color: #e74c3c;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 3px;
+    /* ── HEADER ── */
+    header {
+      text-align: center;
+      margin-bottom: 56px;
+      animation: riseIn 0.8s cubic-bezier(.22,.68,0,1) both;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.75;
       margin-bottom: 20px;
     }
+    .eyebrow span { display: inline-block; width: 30px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold)); }
+    .eyebrow span:last-child { background: linear-gradient(90deg, var(--gold), transparent); }
 
-    h1 {
-      margin: 0 0 12px;
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      font-weight: 800;
-    }
-
-    .sub {
-      color: rgba(255, 255, 255, 0.5);
-      margin-bottom: 32px;
-      font-size: 14px;
-    }
-
-    .btn-group {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 18px;
-    }
-
-    .btn {
-      position: relative;
-      padding: 22px;
-      border-radius: 18px;
-      text-decoration: none;
-      color: white;
-      font-size: 18px;
+    .tamil-title {
+      font-family: 'Noto Serif Tamil', serif;
+      font-size: clamp(44px, 7vw, 82px);
       font-weight: 700;
-      background: rgba(255, 255, 255, 0.04);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-      transition: all 0.28s ease;
-      overflow: hidden;
+      color: var(--cream);
+      line-height: 1;
+      margin-bottom: 6px;
+      letter-spacing: -1px;
     }
 
-    .btn::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: currentColor;
+    .en-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(15px, 2vw, 20px);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--gold);
       opacity: 0.7;
+      letter-spacing: 3px;
+      margin-bottom: 18px;
     }
 
-    .btn:hover {
-      transform: translateY(-5px) scale(1.02);
-      box-shadow: 0 0 24px currentColor;
+    .tagline {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 300;
     }
 
-    .notes { color: #e67e22; }
-    .quiz { color: #e74c3c; }
-    .dict { color: #16a085; }
-    .pyq { color: #3498db; }
-    .kural { color: #c0392b; }
-    .books { color: #8e44ad; }
+    /* ── ornament ── */
+    .ornament {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 48px;
+      animation: riseIn 0.8s 0.1s cubic-bezier(.22,.68,0,1) both;
+    }
+    .orn-line {
+      width: 50px; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(201,168,76,0.4));
+    }
+    .orn-line:last-child { background: linear-gradient(90deg, rgba(201,168,76,0.4), transparent); }
+    .orn-dot {
+      width: 5px; height: 5px;
+      background: var(--gold);
+      transform: rotate(45deg);
+      opacity: 0.5;
+    }
+    .orn-dot.sm { width: 3px; height: 3px; opacity: 0.25; }
+
+    /* ── GRID ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      width: min(960px, 100%);
+    }
+
+    @media (max-width: 700px) {
+      .grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 420px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── CARD ── */
+    .card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 26px 22px 22px;
+      border-radius: 16px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      text-decoration: none;
+      color: var(--cream);
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+      transition:
+        transform 0.3s cubic-bezier(.22,.68,0,1.2),
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+      animation: riseIn 0.55s ease both;
+    }
+
+    .card:hover {
+      transform: translateY(-7px) scale(1.02);
+      border-color: rgba(201,168,76,0.32);
+      box-shadow: 0 28px 55px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,168,76,0.06);
+    }
+    .card:hover .card-glow { opacity: 1; }
+    .card:hover .arrow { transform: translateX(5px); opacity: 1; }
+    .card:hover .top-shine { opacity: 0.8; }
+
+    /* glow layer */
+    .card-glow {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+      border-radius: 16px;
+    }
+
+    /* top accent line */
+    .top-shine {
+      position: absolute;
+      top: 0; left: 12%; right: 12%;
+      height: 1px;
+      opacity: 0.5;
+      transition: opacity 0.3s;
+    }
+
+    /* card number */
+    .card-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 2px;
+      color: rgba(201,168,76,0.2);
+      position: absolute;
+      top: 14px; right: 16px;
+    }
+
+    .card-icon {
+      font-size: 28px;
+      margin-bottom: 16px;
+      line-height: 1;
+    }
+
+    .card-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 8px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--cream);
+      line-height: 1.1;
+      margin-bottom: 0;
+    }
+
+    .arrow {
+      margin-top: 18px;
+      opacity: 0.4;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      margin-top: 60px;
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 3px;
+      color: rgba(201,168,76,0.18);
+      text-transform: uppercase;
+      text-align: center;
+      animation: riseIn 0.7s 0.55s ease both;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="badge">TAMIL HUB</div>
-    <h1>தமிழ் கல்வி</h1>
-    <div class="sub">
-      Notes • Quiz • Dictionary • PYQ • Thirukkural • Books
-    </div>
 
-    <div class="btn-group">
-      <a href="Notes.html" class="btn notes">📝 Notes</a>
-      <a href="Quiz.html" class="btn quiz">❓ Quiz</a>
-      <a href="/studywithdhilip/#/dictionary/dictionary" class="btn dict">📖 Dictionary</a>
-      <a href="/studywithdhilip/#/pyqtamil/pyq_tamil" class="btn pyq">📘 PYQ Tamil</a>
-      <a href="/studywithdhilip/#/thirukkural/thirukkural_home" class="btn kural">📜 Thirukkural</a>
-      <a href="/studywithdhilip/#/tamilbook/t_book" class="btn books">📚 Books</a>
+<canvas id="bg-canvas"></canvas>
+<div class="mesh"></div>
+
+<div class="page">
+
+  <header>
+    <div class="eyebrow">
+      <span></span>
+      Tamil Learning Hub
+      <span></span>
     </div>
+    <h1 class="tamil-title">தமிழ் கல்வி</h1>
+    <p class="en-title">Tamil Learning</p>
+    <p class="tagline">Notes · Quiz · Dictionary · PYQ · Thirukkural · Books</p>
+  </header>
+
+  <div class="ornament">
+    <div class="orn-line"></div>
+    <div class="orn-dot sm"></div>
+    <div class="orn-dot"></div>
+    <div class="orn-dot sm"></div>
+    <div class="orn-line"></div>
   </div>
+
+  <!-- CARDS -->
+  <div class="grid" id="grid"></div>
+
+  <footer>© 2025 &nbsp;·&nbsp; StudyWithDhilip &nbsp;·&nbsp; Tamil Excellence</footer>
+</div>
+
+<script>
+  /* ── Particle canvas ── */
+  (() => {
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let raf;
+
+    const resize = () => { canvas.width = innerWidth; canvas.height = innerHeight; };
+    resize();
+    window.addEventListener('resize', resize);
+
+    const dots = Array.from({ length: 50 }, () => ({
+      x: Math.random() * innerWidth,
+      y: Math.random() * innerHeight,
+      r: Math.random() * 1.2 + 0.3,
+      dx: (Math.random() - 0.5) * 0.22,
+      dy: (Math.random() - 0.5) * 0.22,
+      o: Math.random() * 0.35 + 0.08,
+    }));
+
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      dots.forEach(d => {
+        d.x += d.dx; d.y += d.dy;
+        if (d.x < 0 || d.x > canvas.width)  d.dx *= -1;
+        if (d.y < 0 || d.y > canvas.height) d.dy *= -1;
+        ctx.beginPath();
+        ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(201,168,76,${d.o})`;
+        ctx.fill();
+      });
+      for (let i = 0; i < dots.length; i++) {
+        for (let j = i + 1; j < dots.length; j++) {
+          const dist = Math.hypot(dots[i].x - dots[j].x, dots[i].y - dots[j].y);
+          if (dist < 110) {
+            ctx.beginPath();
+            ctx.moveTo(dots[i].x, dots[i].y);
+            ctx.lineTo(dots[j].x, dots[j].y);
+            ctx.strokeStyle = `rgba(201,168,76,${0.06 * (1 - dist / 110)})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+      raf = requestAnimationFrame(draw);
+    };
+    draw();
+  })();
+
+  /* ── Card data ── */
+  const cards = [
+    { num:'01', icon:'📝', label:'Study Material', title:'Notes',       href:'Notes.html',                                          color:'#C9A84C', accent:'#F0D07A' },
+    { num:'02', icon:'❓', label:'Practice',       title:'Quiz',        href:'Quiz.html',                                           color:'#E05C4A', accent:'#F0907A' },
+    { num:'03', icon:'📖', label:'Reference',      title:'Dictionary',  href:'/studywithdhilip/#/dictionary/dictionary',            color:'#4CAF89', accent:'#80D4B1' },
+    { num:'04', icon:'📘', label:'Previous Years', title:'PYQ Tamil',   href:'/studywithdhilip/#/pyqtamil/pyq_tamil',              color:'#5B9BD5', accent:'#A8CFEE' },
+    { num:'05', icon:'📜', label:'Classic',        title:'Thirukkural', href:'/studywithdhilip/#/thirukkural/thirukkural_home',    color:'#B04040', accent:'#E07070' },
+    { num:'06', icon:'📚', label:'Library',        title:'Books',       href:'/studywithdhilip/#/tamilbook/t_book',                color:'#9B7FD4', accent:'#C4AAEE' },
+  ];
+
+  const grid = document.getElementById('grid');
+
+  cards.forEach((c, i) => {
+    const a = document.createElement('a');
+    a.href = c.href;
+    a.className = 'card';
+    a.style.animationDelay = `${i * 0.07 + 0.15}s`;
+    a.innerHTML = `
+      <div class="card-glow" style="background:radial-gradient(circle at 50% 0%, ${c.color}1e 0%, transparent 70%)"></div>
+      <div class="top-shine" style="background:linear-gradient(90deg,transparent,${c.color},transparent)"></div>
+      <span class="card-num">${c.num}</span>
+      <div class="card-icon">${c.icon}</div>
+      <p class="card-label">${c.label}</p>
+      <h2 class="card-title" style="color:${c.accent}">${c.title}</h2>
+      <div class="arrow" style="color:${c.color}">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </div>
+    `;
+    grid.appendChild(a);
+  });
+</script>
 </body>
 </html>
