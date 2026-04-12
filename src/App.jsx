@@ -42,11 +42,42 @@ const autoPages = import.meta.glob(
 
 function Home() {
   const sections = [
-    { title: "Previous Year Questions", route: "/PYQTAMIL", icon: "📘", color: "#E74C3C" },
-    { title: "Tamil Books", route: "/tamilbook/t-book", icon: "📚", color: "#E67E22" },
-    { title: "Assistant Engineer", route: "/part1", icon: "⚡", color: "#8E44AD" },
-    { title: "Current Affairs", route: "/current-affairs", icon: "📰", color: "#27AE60" },
-    { title: "General Knowledge", route: "/gk/gk", icon: "🌍", color: "#2980B9" },
+     {
+      title: "Previous Year Questions",
+      route: "/PYQ/previous_years.html",
+      icon: "📘",
+      color: "#E74C3C",
+      subtitle: "TNPSC & Exams",
+      external: true,
+    },
+    {
+      title: "Tamil",
+      route: "/Tamil/Tamil.html",
+      icon: "📚",
+      color: "#E67E22",
+      subtitle: "School Books",
+    },
+    {
+      title: "Assistant Engineer",
+      route: "/AE/YCT-1/YCT-1.html",
+      icon: "⚡",
+      color: "#8E44AD",
+      subtitle: "AE Electrical",
+    },
+    {
+      title: "Current Affairs",
+      route: "/current-affairs",
+      icon: "📰",
+      color: "#27AE60",
+      subtitle: "Daily Updates",
+    },
+    {
+      title: "General Knowledge",
+      route: "/gk/gk",
+      icon: "🌍",
+      color: "#2980B9",
+      subtitle: "State Board GK",
+    },
   ];
 
   return (
@@ -58,7 +89,7 @@ function Home() {
           <div style={styles.badge}>STUDY PORTAL</div>
           <h1 style={styles.title}>StudyWithDhilip</h1>
           <p style={styles.subtitle}>
-            TNPSC • Tamil Books • GK • AE • PYQ • Current Affairs
+            TNPSC • Tamil Books • Previous Year Questions • AE Electrical • Smart Learning Hub
           </p>
         </div>
 
@@ -75,6 +106,7 @@ function Home() {
               <div style={{ ...styles.topBar, background: item.color }} />
               <div style={styles.icon}>{item.icon}</div>
               <div style={styles.cardTitle}>{item.title}</div>
+              <div style={styles.cardSub}>{item.subtitle}</div>
               <div style={{ ...styles.openBtn, color: item.color }}>
                 Open →
               </div>
@@ -97,6 +129,7 @@ function generateAutoRoutes() {
         .replace(/\.jsx$/, "")
         .toLowerCase();
 
+      // Cleaner route support
       if (routePath.endsWith("/index")) {
         routePath = routePath.replace("/index", "");
       }
@@ -185,12 +218,12 @@ const styles = {
   },
   container: {
     width: "100%",
-    maxWidth: "900px",
+    maxWidth: "950px",
     zIndex: 1,
   },
   header: {
     textAlign: "center",
-    marginBottom: "40px",
+    marginBottom: "50px",
   },
   badge: {
     display: "inline-block",
@@ -205,7 +238,7 @@ const styles = {
     marginBottom: "18px",
   },
   title: {
-    fontSize: "clamp(34px,5vw,60px)",
+    fontSize: "clamp(34px,5vw,64px)",
     fontWeight: 800,
     color: "#fff",
     marginBottom: "10px",
@@ -217,13 +250,13 @@ const styles = {
   grid: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: "18px",
+    gap: "20px",
   },
   card: {
     position: "relative",
     background: "rgba(255,255,255,0.04)",
     border: "1px solid",
-    borderRadius: "16px",
+    borderRadius: "18px",
     padding: "28px 22px",
     textDecoration: "none",
     textAlign: "center",
@@ -237,13 +270,18 @@ const styles = {
     height: "3px",
   },
   icon: {
-    fontSize: "40px",
+    fontSize: "42px",
     marginBottom: "14px",
   },
   cardTitle: {
     fontSize: "18px",
     fontWeight: 700,
     color: "#fff",
+    marginBottom: "6px",
+  },
+  cardSub: {
+    fontSize: "13px",
+    color: "rgba(255,255,255,0.4)",
     marginBottom: "10px",
   },
   openBtn: {
