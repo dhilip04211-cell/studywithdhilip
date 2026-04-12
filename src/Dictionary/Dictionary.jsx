@@ -214,7 +214,7 @@ export default function Dictionary() {
           .dict-grid { grid-template-columns: 1fr; }
         }
       `}</style>
-
+        const BASE = import.meta.env.BASE_URL;
       <div className="dict-page">
         <div className="dict-mesh" />
         <ParticleCanvas />
