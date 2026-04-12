@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+const BASE = import.meta.env.BASE_URL;
 const classes = [
   { label: "Class VI", file: "/gk/six/six", color: "#FF6B35" },
   { label: "Class VII", file: "/gk/seven/seven", color: "#F7C59F" },
@@ -9,7 +9,7 @@ const classes = [
   { label: "Class X", file: "/gk/ten/ten", color: "#1A936F" },
   { label: "Class XI", file: "/gk/eleven/eleven", color: "#C6384B" },
   { label: "Class XII", file: "/gk/twelve/twelve", color: "#7B2D8B" },
-  { label: "Previous Year Questions", file: "/PYQ/previous_years.html", color: "#7B2F8B" },
+  { label: "Previous Year Questions", file: `${BASE}PYQ/previous_years.html`, color: "#7B2F8B" },
   
 ];
 
