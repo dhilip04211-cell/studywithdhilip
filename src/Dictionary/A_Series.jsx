@@ -252,7 +252,7 @@ export default function A_Series() {
             {PARTS.map((p, i) => (
               <Link
                 key={p.num}
-                to={`/dictionary/a_series/a_part_${p.num}`}
+                to={`/dictionary/a_series/part${p.num}`}
                 className="as-card"
                 style={{ animationDelay: `${i * 0.07 + 0.18}s` }}
               >
