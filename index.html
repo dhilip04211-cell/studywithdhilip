@@ -1,52 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudyWithDhilip - Home</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            margin: 0;
-        }
-        h1 {
-            color: #2c3e50;
-            margin-bottom: 30px;
-        }
-        .btn {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            margin: 10px;
-            font-size: 18px;
-            border-radius: 8px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            transition: background 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .btn:hover {
-            background-color: #2980b9;
-            transform: translateY(-2px);
-        }
-    </style>
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudyWithDhilip - Home</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="min-h-screen bg-[#080c18] text-white overflow-hidden relative">
 
-    <div id="root">
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; width: 100%;">
-            <h1>StudyWithDhilip</h1>
-            <a href="PYQ/previous_years.html" class="btn">Previous Year Questions</a>
-            <a href="Tamil/Tamil.html" class="btn">Tamil</a>
-            <a href="AE/YCT-1/YCT-1.html" class="btn">Assistant Engineer</a>
-        </div>
+  <!-- Background glow -->
+  <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(231,76,60,0.18),transparent_40%),radial-gradient(circle_at_80%_80%,rgba(52,152,219,0.18),transparent_40%)]"></div>
+
+  <div id="root">
+    <div class="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 text-center">
+      
+      <!-- Badge -->
+      <div class="mb-6 px-5 py-2 rounded-full border border-red-400/40 bg-red-500/10 text-red-400 text-xs tracking-[3px] font-bold">
+        STUDY PORTAL
+      </div>
+
+      <!-- Title -->
+      <h1 class="text-4xl md:text-6xl font-extrabold mb-4">
+        StudyWithDhilip
+      </h1>
+
+      <p class="text-white/50 text-sm md:text-base mb-10 max-w-xl">
+        TNPSC • Tamil Books • Previous Year Questions • AE Electrical • Smart Learning Hub
+      </p>
+
+      <!-- Buttons -->
+      <div class="grid gap-4 w-full max-w-sm">
+        <a href="PYQ/previous_years.html"
+           class="rounded-xl border border-white/10 bg-white/5 hover:bg-blue-500/20 hover:border-blue-400/50 transition-all duration-300 py-4 text-lg font-semibold shadow-lg">
+          📘 Previous Year Questions
+        </a>
+
+        <a href="Tamil/Tamil.html"
+           class="rounded-xl border border-white/10 bg-white/5 hover:bg-green-500/20 hover:border-green-400/50 transition-all duration-300 py-4 text-lg font-semibold shadow-lg">
+          📚 Tamil
+        </a>
+
+        <a href="AE/YCT-1/YCT-1.html"
+           class="rounded-xl border border-white/10 bg-white/5 hover:bg-purple-500/20 hover:border-purple-400/50 transition-all duration-300 py-4 text-lg font-semibold shadow-lg">
+          ⚡ Assistant Engineer
+        </a>
+      </div>
     </div>
+  </div>
 
-    <script type="module" src="/src/main.jsx"></script>
-
+  <script type="module" src="/src/main.jsx"></script>
 </body>
 </html>
