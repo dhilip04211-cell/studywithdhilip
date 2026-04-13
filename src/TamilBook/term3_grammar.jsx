@@ -915,7 +915,7 @@ function NotesTab() {
           </button>
         ))}
       </div>
-      <div style={{ marginBottom: 8, padding: "12px 0", borderBottom: "1px solid rgba(255,255,255,0.1)", marginBottom: 20 }}>
+      <div style={{ padding: "12px 0", borderBottom: "1px solid rgba(255,255,255,0.1)", marginBottom: 20 }}>
         <div style={{ fontSize: "1.25rem", fontWeight: 700, color: "#fc67fa" }}>{iyal.title}</div>
       </div>
       {iyal.sections.map((sec, i) => (

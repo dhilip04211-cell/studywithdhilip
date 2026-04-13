@@ -1219,7 +1219,9 @@ function HomeScreen({ setMode, savedResults, chapters, quizQs }) {
           <div style={S.cardIcon}>📚</div>
           <h2 style={S.cardTitle}>குறிப்புகள் படிக்க</h2>
           <p style={S.cardDesc}>அனைத்து குறள்களும், பொருள், சொற்பொருள், இலக்கணம் உடன்</p>
-          <span style={S.cardBadge}>{chapters.length} அதிகாரங்கள் • {chapters.reduce((a,c)=>a+c.kurals.length,0)} குறள்கள்}</span>
+         <span style={S.cardBadge}>
+  {chapters.length} அதிகாரங்கள் • {chapters.reduce((a,c)=>a+c.kurals.length,0)} குறள்கள்
+</span>
         </div>
         <div style={{ ...S.modeCard, background: "linear-gradient(135deg,#1a3a1a,#2d5a1b)" }} onClick={() => setMode("quiz")}>
           <div style={S.cardIcon}>🎯</div>
