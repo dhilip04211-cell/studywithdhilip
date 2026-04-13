@@ -1410,9 +1410,8 @@ function NotesTab() {
                               fontSize: 14,
                               fontFamily:
                                 "'Noto Sans Tamil', sans-serif",
-                              marginBottom: sub.table ? 16 : 0,
-                              margin: 0,
-                              marginBottom: sub.table ? 14 : 0,
+                               margin: 0,
+                                marginBottom: sub.table ? 14 : 0,
                             }}
                           >
                             {sub.content}
