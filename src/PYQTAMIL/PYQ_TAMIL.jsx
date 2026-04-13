@@ -15,7 +15,7 @@ const EXAMS = [
   },
   
   {
-    num: "03",
+    num: "02",
     icon: "📘",
     label: "Gr 2 Prelims",
     title: "Gr 2 Prelims — 2025",
@@ -24,7 +24,7 @@ const EXAMS = [
     accent: "#80D4B1",
   },
   {
-    num: "04",
+    num: "03",
     icon: "📙",
     label: "Gr 2 Mains",
     title: "Gr 2 Mains — 2025",
@@ -33,7 +33,7 @@ const EXAMS = [
     accent: "#F0907A",
   },
   {
-    num: "05",
+    num: "04",
     icon: "📗",
     label: "Gr 4",
     title: "Gr 4 — 2025",
@@ -42,16 +42,7 @@ const EXAMS = [
     accent: "#C4AAEE",
   },
   {
-    num: "06",
-    icon: "📝",
-    label: "Special Examination",
-    title: "Special Examination — 2025",
-    to: "/PYQTAMIL/special_examination_2025",
-    color: "#F39C12",
-    accent: "#FFD27A",
-  },
-  {
-    num: "07",
+    num: "05",
     icon: "🛠️",
     label: "Technical Diploma",
     title: "Technical Diploma — 2025",
@@ -60,16 +51,7 @@ const EXAMS = [
     accent: "#F48FB1",
   },
   {
-    num: "08",
-    icon: "⚙️",
-    label: "Technical ITI",
-    title: "Technical ITI — 2025",
-    to: "/PYQTAMIL/technical_exam_iti_2025",
-    color: "#3F51B5",
-    accent: "#9FA8DA",
-  },
-  {
-    num: "09",
+    num: "06",
     icon: "🎯",
     label: "Technical Non Interview",
     title: "Technical Non Interview — 2025",
@@ -78,7 +60,7 @@ const EXAMS = [
     accent: "#80CBC4",
   },
   {
-    num: "10",
+    num: "07",
     icon: "🎤",
     label: "Technical Interview",
     title: "Technical Interview — 2025",
