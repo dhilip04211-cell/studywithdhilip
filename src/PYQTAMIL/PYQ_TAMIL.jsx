@@ -13,15 +13,7 @@ const EXAMS = [
     color: "#C9A84C",
     accent: "#F0D07A",
   },
-  {
-    num: "02",
-    icon: "📘",
-    label: "Gr 2 Eligibility",
-    title: "Gr 2 Eligibility — 2025",
-    to: "/PYQTAMIL/gr2_mains_eligibility_2025",
-    color: "#5B9BD5",
-    accent: "#A8CFEE",
-  },
+  
   {
     num: "03",
     icon: "📘",
