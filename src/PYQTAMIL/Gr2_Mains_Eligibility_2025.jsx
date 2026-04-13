@@ -2173,19 +2173,41 @@ export default function Gr2_Mains_Eligibility_2025() {
                 }}>
                   <div style={{ fontSize: 60, marginBottom: 16 }}>🏆</div>
                   <h2 style={{ color: "#f39c12", margin: "0 0 8px" }}>விளையாட்டு முடிந்தது!</h2>
-                  <div style={{ fontSize: 40, fontWeight: 900, color: "#fff", margin: "16px 0" }}>{gameScore} pts</div>
-                  <div style={{ fontSize: 14, color: "rgba(255,255,255,0.6)" }}>
-                    {filteredQuestions.length} வினாக்கள் முடிந்தன
-                  </div>
-                  <button onClick={() => { setQuizMode("game"); startGame(); }} style={{
-                    marginTop: 20, background: "#e74c3c", border: "none", borderRadius: 12,
-                    padding: "12px 28px", fontWeight: 800, cursor: "pointer", color: "#fff", fontSize: 15,
-                  }}>🔄 மீண்டும் விளையாடு</button>
-                </div>
-              </div>
-            ) : null}
-          </div>
-        )}
+                  Size: 18, fontWeight: 900, color: "#fff", marginBottom: 8 }}>
+  Final Score: {gameScore}
+</div>
+
+<div style={{
+  color: "rgba(255,255,255,0.7)",
+  fontSize: 14,
+  marginBottom: 20
+}}>
+  You completed all {filteredQuestions.length} questions successfully.
+</div>
+
+<button
+  onClick={restartQuiz}
+  style={{
+    background: "#f39c12",
+    border: "none",
+    borderRadius: 10,
+    padding: "12px 24px",
+    fontWeight: 800,
+    cursor: "pointer",
+    color: "#000",
+  }}
+>
+  🔄 Restart Game
+</button>
+</div>
+</div>
+)}
+</div>
+)}
+</div>
+</div>
+);
+}
 
         {/* ════════════════════════════════ RESULTS ════════════════════════ */}
         {activeTab === "results" && (
