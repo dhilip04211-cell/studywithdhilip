@@ -31,5 +31,5 @@ const servePublicHtml = () => ({
 
 export default defineConfig({
   plugins: [react(), servePublicHtml()],
-  base: "/studywithdhilip/",
+ base: mode === "production" ? "/studywithdhilip/" : "./",
 });
