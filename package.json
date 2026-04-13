@@ -4,13 +4,16 @@
   "version": "0.0.0",
   "homepage": "https://dhilip04211-cell.github.io/studywithdhilip",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
-  },
+  "dev": "vite",
+  "build": "vite build",
+  "build:android": "vite build --mode android",
+  "sync:android": "npm run build:android && npx cap sync",
+  "android": "npm run sync:android && npx cap open android",
+  "lint": "eslint .",
+  "preview": "vite preview",
+  "predeploy": "npm run build",
+  "deploy": "gh-pages -d dist"
+},
   "dependencies": {
     "@capacitor/android": "^8.3.0",
     "@capacitor/cli": "^8.3.0",
