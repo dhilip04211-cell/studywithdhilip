@@ -10,6 +10,7 @@ const servePublicHtml = () => ({
       if (req.url?.endsWith(".html")) {
         let cleanUrl = req.url.split("?")[0];
 
+        // remove base only for github pages mode
         if (cleanUrl.startsWith("/studywithdhilip/")) {
           cleanUrl = cleanUrl.replace("/studywithdhilip/", "");
         } else if (cleanUrl.startsWith("/")) {
@@ -31,5 +32,5 @@ const servePublicHtml = () => ({
 
 export default defineConfig(({ mode }) => ({
   plugins: [react(), servePublicHtml()],
-  base: mode === "production" ? "/studywithdhilip/" : "./",
+  base: mode === "android" ? "./" : "/studywithdhilip/",
 }));
