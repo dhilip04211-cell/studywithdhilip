@@ -28,8 +28,8 @@ const servePublicHtml = () => ({
     });
   }
 });
-
+// vite.config.js
 export default defineConfig({
   plugins: [react(), servePublicHtml()],
-  base: "/studywithdhilip/",
+  base: "/", // Changed from "/studywithdhilip/" to "/"
 });
