@@ -36,7 +36,7 @@ export default function seven() {
               color: "#3DBFA8",
             }}
           >
-            CLASS VIII
+            CLASS VII
           </div>
 
           <h1 style={styles.title}>Choose Your Subject</h1>
@@ -102,7 +102,7 @@ export default function seven() {
 
 const styles = {
   page: {
-    minHseven: "100vh",
+    minHeight: "100vh",
     background: "#080c18",
     fontFamily: "'Sora', sans-serif",
     display: "flex",
@@ -145,13 +145,13 @@ const styles = {
     padding: "5px 18px",
     borderRadius: "100px",
     fontSize: "11px",
-    fontWseven: 700,
+    fontWeight: 700,
     letterSpacing: "3px",
     marginBottom: "16px",
   },
   title: {
     fontSize: "clamp(26px, 5vw, 42px)",
-    fontWseven: 800,
+    fontWeight: 800,
     color: "#ffffff",
     margin: "0 0 10px",
   },
@@ -182,7 +182,7 @@ const styles = {
     top: 0,
     left: 0,
     right: 0,
-    hseven: "3px",
+    height: "3px",
     borderRadius: "14px 14px 0 0",
   },
   icon: {
@@ -192,14 +192,14 @@ const styles = {
   },
   subjectName: {
     fontSize: "14px",
-    fontWseven: 700,
+    fontWeight: 700,
     color: "#ffffff",
-    lineHseven: 1.3,
+    lineHeight: 1.3,
     marginBottom: "8px",
   },
   explore: {
     fontSize: "12px",
-    fontWseven: 600,
+    fontWeight: 600,
     transition: "opacity 0.2s ease",
     letterSpacing: "0.4px",
   },
