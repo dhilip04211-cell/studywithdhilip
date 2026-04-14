@@ -1,14 +1,54 @@
 import { useState } from "react";
 
 const subjects = [
-  { key: "IndianHistory", label: "Indian History", icon: "🏛️", color: "#E74C3C" },
-  { key: "TamilnaduHistory", label: "Tamilnadu History", icon: "🌺", color: "#E67E22" },
-  { key: "Geography", label: "Geography", icon: "🌍", color: "#27AE60" },
-  { key: "Polity", label: "Polity", icon: "⚖️", color: "#2980B9" },
-  { key: "Economics", label: "Economics", icon: "📈", color: "#8E44AD" },
-  { key: "Physics", label: "Physics", icon: "⚛️", color: "#16A085" },
-  { key: "Chemistry", label: "Chemistry", icon: "🧪", color: "#D35400" },
-  { key: "Biology", label: "Biology", icon: "🧬", color: "#C0392B" },
+  {
+    route: "/gk/six/sixindianhistory/sixindianhistory",
+    label: "Indian History",
+    icon: "🏛️",
+    color: "#E74C3C",
+  },
+  {
+    route: "/gk/six/sixtamilnaduhistory/sixtamilnaduhistory",
+    label: "Tamilnadu History",
+    icon: "🌺",
+    color: "#E67E22",
+  },
+  {
+    route: "/gk/six/sixgeography/sixgeography",
+    label: "Geography",
+    icon: "🌍",
+    color: "#27AE60",
+  },
+  {
+    route: "/gk/six/sixpolity/sixpolity",
+    label: "Polity",
+    icon: "⚖️",
+    color: "#2980B9",
+  },
+  {
+    route: "/gk/six/sixeconomics/sixeconomics",
+    label: "Economics",
+    icon: "📈",
+    color: "#8E44AD",
+  },
+  {
+    route: "/gk/six/sixphysics/sixphysics",
+    label: "Physics",
+    icon: "⚛️",
+    color: "#16A085",
+  },
+  {
+    route: "/gk/six/sixchemistry/sixchemistry",
+    label: "Chemistry",
+    icon: "🧪",
+    color: "#D35400",
+  },
+  {
+    route: "/gk/six/sixbiology/sixbiology",
+    label: "Biology",
+    icon: "🧬",
+    color: "#C0392B",
+  },
 ];
 
 export default function Six({ onNavigate, onBack }) {
