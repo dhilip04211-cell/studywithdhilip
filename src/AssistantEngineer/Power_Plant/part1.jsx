@@ -995,7 +995,7 @@ const questions = [
 
 const TOTAL = questions.length;
 
-export default function PPPartOne() {
+export default function Part1() {
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState(null);
   const [revealed, setRevealed] = useState(false);

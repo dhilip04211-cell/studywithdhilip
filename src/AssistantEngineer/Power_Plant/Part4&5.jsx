@@ -3082,7 +3082,7 @@ const PART4_START = 0;
 const PART4_END = allQuestions.findIndex(q => q.part === 5);
 const PART5_START = PART4_END;
 
-export default function PartFourFive({ defaultPart }) {
+export default function Part4&5({ defaultPart }) {
   const [selectedPart, setSelectedPart] = useState(defaultPart || null);
   const [questions, setQuestions] = useState(() => {
     return defaultPart ? allQuestions.filter(q => q.part === defaultPart) : [];
