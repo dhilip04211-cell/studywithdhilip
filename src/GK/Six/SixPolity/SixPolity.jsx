@@ -55,9 +55,13 @@ export default function SixPolity() {
 
       <div style={styles.container}>
         {/* Back Button */}
-     onClick={() => navigate(subjectInfo.backRoute)}
-          ← Back to Class VI Subjects
-        </button>
+{/* Back Button */}
+<button
+  style={styles.backBtn}
+  onClick={() => navigate(subjectInfo.backRoute)}
+>
+  ← Back to Class VI Subjects
+</button>
 
         {/* Hero Header */}
         <div style={styles.hero}>
