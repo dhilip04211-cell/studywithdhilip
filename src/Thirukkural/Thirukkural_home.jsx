@@ -5,6 +5,7 @@ const BASE = import.meta.env.BASE_URL;
 
 const BOOKS = [
   { num: "01", icon: "📜", label: "Classic Edition", title: "Old Book", tamil: "பழைய நூல்", to: "/Thirukkural/thirukkural_old", color: "#C9A84C", accent: "#F0D07A" },
+  { num: "02", icon: "📜", label: "Classic Edition", title: "Video Test - 02", tamil: "Videos", to: "/Thirukkural/videos/thirukkural_video_test2", color: "#C9A84C", accent: "#F0D07A" },
 ];
 
 function ParticleCanvas() {
