@@ -1,52 +1,373 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Power Plant</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background: #f5f5f5;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Power Plant – AE (EEE)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        h1 {
-            color: #222;
-        }
+    body {
+      background: #06080f;
+      font-family: 'Outfit', sans-serif;
+      color: #e8dfc8;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
 
-        .btn {
-            display: inline-block;
-            padding: 12px 25px;
-            background: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            width: 220px;
-            text-align: center;
-            font-size: 18px;
-        }
+    canvas#particles {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
 
-        .btn:hover {
-            background: #0056b3;
-        }
-    </style>
+    .bg-mesh {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 15% 10%, #C9A84C0d 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 85% 85%, #9B7FD40a 0%, transparent 55%),
+        radial-gradient(ellipse 40% 60% at 50% 50%, #0d0f1a 0%, #06080f 100%);
+      pointer-events: none;
+    }
+
+    .page-root {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      padding: 52px 40px 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ── BACK ── */
+    .back-btn {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(201,168,76,0.5);
+      text-decoration: none;
+      margin-bottom: 52px;
+      transition: color 0.2s;
+      animation: fadeUp 0.45s ease both;
+    }
+    .back-btn:hover { color: rgba(201,168,76,0.95); }
+    .back-btn svg { transition: transform 0.2s; }
+    .back-btn:hover svg { transform: translateX(-3px); }
+
+    /* ── HEADER ── */
+    header {
+      text-align: center;
+      margin-bottom: 62px;
+      animation: fadeUp 0.65s 0.05s ease both;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 4px;
+      color: #C9A84C;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      opacity: 0.8;
+    }
+    .eyebrow::before, .eyebrow::after {
+      content: '';
+      width: 32px; height: 1px;
+      background: linear-gradient(90deg, transparent, #C9A84C);
+    }
+    .eyebrow::after { background: linear-gradient(90deg, #C9A84C, transparent); }
+
+    .main-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(40px, 6vw, 76px);
+      font-weight: 700;
+      line-height: 1.05;
+      color: #f0e8d0;
+      letter-spacing: -1px;
+      margin-bottom: 14px;
+    }
+    .main-title em {
+      font-style: italic;
+      background: linear-gradient(135deg, #C9A84C, #F5D07A, #C9A84C);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .tagline {
+      font-size: 12px;
+      color: rgba(232,223,200,0.32);
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      font-weight: 300;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      justify-content: center;
+      margin-bottom: 46px;
+      animation: fadeUp 0.65s 0.12s ease both;
+    }
+    .divider-line {
+      height: 1px; width: 60px;
+      background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3));
+    }
+    .divider-line:last-child { background: linear-gradient(90deg, rgba(201,168,76,0.3), transparent); }
+    .divider-diamond {
+      width: 6px; height: 6px;
+      background: #C9A84C;
+      transform: rotate(45deg);
+      opacity: 0.6;
+    }
+
+    /* ── GRID ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    /* ── CARD ── */
+    .card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(201,168,76,0.1);
+      border-radius: 16px;
+      padding: 28px 24px 22px;
+      text-decoration: none;
+      overflow: hidden;
+      backdrop-filter: blur(6px);
+      transition:
+        transform 0.3s cubic-bezier(.22,.68,0,1.2),
+        border-color 0.3s,
+        box-shadow 0.3s;
+      min-height: 180px;
+      animation: fadeUp 0.55s ease both;
+    }
+    .card:hover {
+      transform: translateY(-6px) scale(1.01);
+      border-color: rgba(201,168,76,0.28);
+      box-shadow: 0 24px 50px rgba(0,0,0,0.45), 0 0 0 1px rgba(201,168,76,0.08);
+    }
+    .card:hover .card-glow { opacity: 1; }
+    .card:hover .card-arrow { transform: translateX(4px); }
+
+    .card-glow {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, #C9A84C22 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.4s;
+      pointer-events: none;
+    }
+    .card-top-line {
+      position: absolute;
+      top: 0; left: 10%; right: 10%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #C9A84C, transparent);
+      opacity: 0.55;
+    }
+    .card-num {
+      position: absolute;
+      top: 16px; right: 20px;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: rgba(201,168,76,0.22);
+      letter-spacing: 2px;
+    }
+    .card-icon {
+      font-size: 26px;
+      margin-bottom: 18px;
+      display: block;
+      line-height: 1;
+      color: #F5D07A;
+    }
+    .card-sub {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(232,223,200,0.28);
+      margin-bottom: 7px;
+    }
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      font-weight: 600;
+      color: #f0e8d0;
+      line-height: 1.1;
+    }
+    .card-arrow {
+      margin-top: 18px;
+      transition: transform 0.25s;
+      opacity: 0.65;
+      color: #C9A84C;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      margin-top: 68px;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: rgba(201,168,76,0.18);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      animation: fadeUp 0.7s 0.5s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .page-root { padding: 36px 18px 60px; }
+      .grid { grid-template-columns: 1fr; }
+      .main-title { font-size: 38px; }
+    }
+  </style>
 </head>
 <body>
 
-    <h1>Assistant Engineer (EEE)</h1>
+<canvas id="particles"></canvas>
+<div class="bg-mesh"></div>
 
-    <a href="PPPart-1.html" class="btn">Part-1</a>
-    <a href="/studywithdhilip/#/part1" class="btn">Part-1 (JSX)</a>
-    <a href="PPPart-2.html" class="btn">Part-2</a>
-    <a href="PPPart-3.html" class="btn">Part-3</a>
-    <a href="/studywithdhilip/#/part4" class="btn">Part-4 and 5</a>
+<div class="page-root">
 
+  <a href="javascript:history.back()" class="back-btn">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M19 12H5M12 19l-7-7 7-7"/>
+    </svg>
+    Back
+  </a>
+
+  <header>
+    <div class="eyebrow">AE · EEE · YCT Series</div>
+    <h1 class="main-title">Power<em>Plant</em></h1>
+    <p class="tagline">Thermal · Hydro · Nuclear · Diesel</p>
+  </header>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-diamond"></div>
+    <div class="divider-diamond" style="opacity:0.28;transform:rotate(45deg) scale(0.6)"></div>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <footer>© <span id="yr"></span> &nbsp;·&nbsp; StudyWithDhilip &nbsp;·&nbsp; All Rights Reserved</footer>
+</div>
+
+<script>
+  /* ── PARTICLE CANVAS ── */
+  (function () {
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    let animId;
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const dots = Array.from({ length: 55 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.4 + 0.3,
+      dx: (Math.random() - 0.5) * 0.25,
+      dy: (Math.random() - 0.5) * 0.25,
+      o: Math.random() * 0.4 + 0.1,
+    }));
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      dots.forEach(d => {
+        d.x += d.dx; d.y += d.dy;
+        if (d.x < 0 || d.x > canvas.width) d.dx *= -1;
+        if (d.y < 0 || d.y > canvas.height) d.dy *= -1;
+        ctx.beginPath();
+        ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(201,168,76,${d.o})`;
+        ctx.fill();
+      });
+      for (let i = 0; i < dots.length; i++) {
+        for (let j = i + 1; j < dots.length; j++) {
+          const dist = Math.hypot(dots[i].x - dots[j].x, dots[i].y - dots[j].y);
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(dots[i].x, dots[i].y);
+            ctx.lineTo(dots[j].x, dots[j].y);
+            ctx.strokeStyle = `rgba(201,168,76,${0.07 * (1 - dist / 120)})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+      animId = requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+
+  /* ── CARDS ── */
+  const parts = [
+    { num: '01', title: 'Part 1',  sub: 'Thermal Power',  icon: '🔥', href: 'PPPart-1.html' },
+    { num: '02', title: 'Part 1',  sub: 'JSX Version',    icon: '⚛️', href: '/studywithdhilip/#/part1' },
+    { num: '03', title: 'Part 2',  sub: 'Hydro Power',    icon: '💧', href: 'PPPart-2.html' },
+    { num: '04', title: 'Part 3',  sub: 'Nuclear & Diesel',icon: '☢️', href: 'PPPart-3.html' },
+    { num: '05', title: 'Part 4&5',sub: 'JSX Version',    icon: '⚡', href: '/studywithdhilip/#/part4' },
+  ];
+
+  const grid = document.getElementById('grid');
+
+  parts.forEach((p, i) => {
+    const a = document.createElement('a');
+    a.href = p.href;
+    a.className = 'card';
+    a.style.animationDelay = `${i * 0.08 + 0.1}s`;
+    a.innerHTML = `
+      <div class="card-glow"></div>
+      <div class="card-top-line"></div>
+      <span class="card-num">${p.num}</span>
+      <span class="card-icon">${p.icon}</span>
+      <div>
+        <p class="card-sub">${p.sub}</p>
+        <h3 class="card-title">${p.title}</h3>
+      </div>
+      <div class="card-arrow">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </div>`;
+    grid.appendChild(a);
+  });
+
+  document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
 </body>
 </html>
