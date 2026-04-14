@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from "react";
-
+const BASE = import.meta.env.BASE_URL;
 const sections = [
   {
     title: "Power Plant",
-    route: "Power_plant/YCT_Power_Plant.html",
+    route: `${BASE}AE/YCT-1/Power_plant/YCT_Power_Plant.html`,
     icon: "⚡",
     color: "#C9A84C",
     accent: "#F5D07A",
