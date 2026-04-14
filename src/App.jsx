@@ -27,7 +27,7 @@ const sections = [
   },
   {
     title: "Assistant Engineer",
-    route: `assistantengineer/home`,
+    route: "/assistantengineer/home",
     icon: "⚡",
     color: "#9B7FD4",
     accent: "#C4AAEE",
