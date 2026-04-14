@@ -2,57 +2,17 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const subjects = [
-  {
-    route: "/gk/seven/sevenindianhistory/sevenindianhistory",
-    label: "Indian History",
-    icon: "🏛️",
-    color: "#E74C3C",
-  },
-  {
-    route: "/gk/seven/seventamilnaduhistory/seventamilnaduhistory",
-    label: "Tamilnadu History",
-    icon: "🌺",
-    color: "#E67E22",
-  },
-  {
-    route: "/gk/seven/sevengeography/sevengeography",
-    label: "Geography",
-    icon: "🌍",
-    color: "#27AE60",
-  },
-  {
-    route: "/gk/seven/sevenpolity/sevenpolity",
-    label: "Polity",
-    icon: "⚖️",
-    color: "#2980B9",
-  },
-  {
-    route: "/gk/seven/seveneconomics/seveneconomics",
-    label: "Economics",
-    icon: "📈",
-    color: "#8E44AD",
-  },
-  {
-    route: "/gk/seven/sevenphysics/sevenphysics",
-    label: "Physics",
-    icon: "⚛️",
-    color: "#16A085",
-  },
-  {
-    route: "/gk/seven/sevenchemistry/sevenchemistry",
-    label: "Chemistry",
-    icon: "🧪",
-    color: "#D35400",
-  },
-  {
-    route: "/gk/seven/sevenbiology/sevenbiology",
-    label: "Biology",
-    icon: "🧬",
-    color: "#C0392B",
-  },
+  { key: "IndianHistory", label: "Indian History", icon: "🏛️", color: "#E74C3C" },
+  { key: "TamilnaduHistory", label: "Tamilnadu History", icon: "🌺", color: "#E67E22" },
+  { key: "Geography", label: "Geography", icon: "🌍", color: "#27AE60" },
+  { key: "Polity", label: "Polity", icon: "⚖️", color: "#2980B9" },
+  { key: "Economics", label: "Economics", icon: "📈", color: "#8E44AD" },
+  { key: "Physics", label: "Physics", icon: "⚛️", color: "#16A085" },
+  { key: "Chemistry", label: "Chemistry", icon: "🧪", color: "#D35400" },
+  { key: "Biology", label: "Biology", icon: "🧬", color: "#C0392B" },
 ];
 
-export default function Seven() {
+export default function seven() {
   const [hovered, setHovered] = useState(null);
   const navigate = useNavigate();
 
@@ -62,7 +22,7 @@ export default function Seven() {
       <div style={styles.container}>
         <button
           style={styles.backBtn}
-          onClick={() => navigate("/gk/gk_1")}
+          onClick={() => navigate("/gk/gk")}
         >
           ← Back to Classes
         </button>
@@ -71,13 +31,14 @@ export default function Seven() {
           <div
             style={{
               ...styles.classBadge,
-              background: "#E8A83822",
-              border: "1px solid #E8A83855",
-              color: "#E8A838",
+              background: "#3DBFA822",
+              border: `1px solid #3DBFA855`,
+              color: "#3DBFA8",
             }}
           >
-            CLASS VII
+            CLASS VIII
           </div>
+
           <h1 style={styles.title}>Choose Your Subject</h1>
           <p style={styles.subtitle}>Select a subject to start learning</p>
         </div>
@@ -104,7 +65,7 @@ export default function Seven() {
               }}
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
-              onClick={() => navigate(sub.route)}
+              onClick={() => navigate(`/gk/seven/seven${sub.key.toLowerCase()}/seven${sub.key.toLowerCase()}`)}
             >
               <div
                 style={{
@@ -138,3 +99,108 @@ export default function Seven() {
     </div>
   );
 }
+
+const styles = {
+  page: {
+    minHseven: "100vh",
+    background: "#080c18",
+    fontFamily: "'Sora', sans-serif",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "40px 20px",
+    position: "relative",
+    overflow: "hidden",
+  },
+  bgGlow: {
+    position: "absolute",
+    inset: 0,
+    background:
+      "radial-gradient(ellipse at 30% 20%, #3DBFA818 0%, transparent 55%), radial-gradient(ellipse at 70% 80%, #3DBFA80e 0%, transparent 55%)",
+    pointerEvents: "none",
+  },
+  container: {
+    width: "100%",
+    maxWidth: "860px",
+    position: "relative",
+    zIndex: 1,
+  },
+  backBtn: {
+    background: "rgba(255,255,255,0.05)",
+    border: "1px solid rgba(255,255,255,0.1)",
+    color: "rgba(255,255,255,0.5)",
+    padding: "8px 18px",
+    borderRadius: "8px",
+    cursor: "pointer",
+    fontSize: "13px",
+    marginBottom: "36px",
+  },
+  header: {
+    textAlign: "center",
+    marginBottom: "40px",
+    animation: "fadeUp 0.5s ease both",
+  },
+  classBadge: {
+    display: "inline-block",
+    padding: "5px 18px",
+    borderRadius: "100px",
+    fontSize: "11px",
+    fontWseven: 700,
+    letterSpacing: "3px",
+    marginBottom: "16px",
+  },
+  title: {
+    fontSize: "clamp(26px, 5vw, 42px)",
+    fontWseven: 800,
+    color: "#ffffff",
+    margin: "0 0 10px",
+  },
+  subtitle: {
+    color: "rgba(255,255,255,0.35)",
+    fontSize: "14px",
+    margin: 0,
+  },
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))",
+    gap: "14px",
+  },
+  card: {
+    position: "relative",
+    background: "rgba(255,255,255,0.04)",
+    border: "1px solid rgba(255,255,255,0.07)",
+    borderRadius: "14px",
+    padding: "24px 16px 20px",
+    cursor: "pointer",
+    textAlign: "center",
+    overflow: "hidden",
+    transition: "all 0.28s cubic-bezier(0.34,1.56,0.64,1)",
+    animation: "fadeUp 0.45s ease both",
+  },
+  topBar: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    hseven: "3px",
+    borderRadius: "14px 14px 0 0",
+  },
+  icon: {
+    fontSize: "32px",
+    marginBottom: "12px",
+    display: "block",
+  },
+  subjectName: {
+    fontSize: "14px",
+    fontWseven: 700,
+    color: "#ffffff",
+    lineHseven: 1.3,
+    marginBottom: "8px",
+  },
+  explore: {
+    fontSize: "12px",
+    fontWseven: 600,
+    transition: "opacity 0.2s ease",
+    letterSpacing: "0.4px",
+  },
+};
