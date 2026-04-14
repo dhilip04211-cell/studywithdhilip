@@ -36,7 +36,7 @@ export default function six() {
               color: "#3DBFA8",
             }}
           >
-            CLASS VIII
+            CLASS VI
           </div>
 
           <h1 style={styles.title}>Choose Your Subject</h1>
