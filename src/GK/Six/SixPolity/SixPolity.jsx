@@ -1,25 +1,53 @@
 import { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 const subjectInfo = {
   label: "Polity",
   icon: "⚖️",
   color: "#2980B9",
   classRoman: "VI",
   classColor: "#FF6B35",
+  backRoute: "/gk/six",
+  subjectRoute: "/gk/six/sixpolity/sixpolity",
 };
-
 const chapters = [
-  { title: "What is Government?", topics: ["Need for government", "Types of government", "Democratic government", "Functions of government"] },
-  { title: "Local Self Government", topics: ["Gram Panchayat", "Panchayat Samiti", "Zila Parishad", "74th Amendment"] },
-  { title: "Panchayati Raj", topics: ["Three-tier system", "Gram Sabha", "Village development", "Gram Panchayat funds"] },
-  { title: "Urban Local Bodies", topics: ["Municipal corporation", "Town panchayat", "Urban functions", "Urban elections"] },
-  { title: "State Government", topics: ["Chief Minister", "State cabinet", "State legislature", "Governor's role"] },
-  { title: "Central Government", topics: ["Prime Minister", "Union cabinet", "Parliament", "Presidential role"] },
+  // Term 1
+  {
+    title: "பன்முகத் தன்மையிலே அறிவோம்",
+    topics: ["பன்முகத்தன்மை", "சமூகம்", "மக்கள்", "வேறுபாடு"],
+  },
+  {
+    title: "சமத்துவம் பெறுதல்",
+    topics: ["சமத்துவம்", "உரிமைகள்", "சமூக நீதி", "ஒற்றுமை"],
+  },
 
+  // Term 2
+  {
+    title: "தேசிய சின்னங்கள்",
+    topics: ["தேசிய கொடி", "தேசிய கீதம்", "தேசிய விலங்கு", "தேசிய பறவை"],
+  },
+  {
+    title: "இந்திய அரசியலமைப்புச் சட்டம்",
+    topics: ["அரசியலமைப்பு", "முகவுரை", "அடிப்படை உரிமைகள்", "கடமைகள்"],
+  },
+
+  // Term 3
+  {
+    title: "மக்களாட்சி",
+    topics: ["மக்கள் ஆட்சி", "தேர்தல்", "வாக்குரிமை", "அரசு"],
+  },
+  {
+    title: "உள்ளாட்சி அமைப்பு – ஊரகமும் நகர்ப்புறமும்",
+    topics: ["கிராம பஞ்சாயத்து", "நகராட்சி", "மாவட்டம்", "உள்ளாட்சி"],
+  },
+  {
+    title: "சாலை பாதுகாப்பு",
+    topics: ["சாலை விதிகள்", "பாதுகாப்பு", "வாகன ஒழுங்கு", "அபராதம்"],
+  },
 ];
 
-export default function SixPolity({ onBack }) {
+export default function SixPolity() {
   const [expanded, setExpanded] = useState(null);
+  const navigate = useNavigate();
 
   return (
     <div style={styles.page}>
@@ -27,7 +55,7 @@ export default function SixPolity({ onBack }) {
 
       <div style={styles.container}>
         {/* Back Button */}
-        <button style={styles.backBtn} onClick={() => onBack && onBack()}>
+     onClick={() => navigate(subjectInfo.backRoute)}
           ← Back to Class VI Subjects
         </button>
 
@@ -89,9 +117,14 @@ export default function SixPolity({ onBack }) {
                     ))}
                   </div>
                   <div style={styles.studyRow}>
-                    <button style={{...styles.studyBtn, background: subjectInfo.color}}>
-                      📖 Study Now
-                    </button>
+                <button
+  style={{ ...styles.studyBtn, background: subjectInfo.color }}
+  onClick={() =>
+    navigate(`${subjectInfo.subjectRoute}/Chapter${i + 1}`)
+  }
+>
+  📖 Study Now
+</button>
                     <button style={{...styles.practiceBtn, borderColor: subjectInfo.color, color: subjectInfo.color}}>
                       ✏️ Practice MCQ
                     </button>
