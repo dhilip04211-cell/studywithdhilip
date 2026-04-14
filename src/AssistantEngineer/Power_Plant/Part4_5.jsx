@@ -3082,11 +3082,9 @@ const PART4_START = 0;
 const PART4_END = allQuestions.findIndex(q => q.part === 5);
 const PART5_START = PART4_END;
 
-export default function Part4_5({ defaultPart }) {
-  const [selectedPart, setSelectedPart] = useState(defaultPart || null);
-  const [questions, setQuestions] = useState(() => {
-    return defaultPart ? allQuestions.filter(q => q.part === defaultPart) : [];
-  });
+export default function Part4_5() {
+  const [selectedPart, setSelectedPart] = useState(null);
+  const [questions, setQuestions] = useState([]);
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState(null);
   const [showExplanation, setShowExplanation] = useState(false);
@@ -3131,8 +3129,6 @@ export default function Part4_5({ defaultPart }) {
   };
 
   const reset = () => {
-    // If they were given a default part, resetting should take them back to their source, or just show menu.
-    // For now, let's just show menu so they can switch between 4 and 5
     setSelectedPart(null);
     setQuestions([]);
     setCurrent(0);
