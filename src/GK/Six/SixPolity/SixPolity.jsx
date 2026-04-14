@@ -184,3 +184,139 @@ export default function SixPolity() {
     </div>
   );
 }
+
+const styles = {
+  page: {
+    minHeight: "100vh",
+    background: "#080c18",
+    padding: "36px 20px 60px",
+    position: "relative",
+    overflow: "hidden",
+  },
+  bgGlow: {
+    position: "fixed",
+    inset: 0,
+    background:
+      "radial-gradient(ellipse at 50% 0%, #2980B91a 0%, transparent 55%)",
+    pointerEvents: "none",
+    zIndex: 0,
+  },
+  container: {
+    maxWidth: "720px",
+    margin: "0 auto",
+    position: "relative",
+    zIndex: 1,
+  },
+  backBtn: {
+    background: "rgba(255,255,255,0.05)",
+    border: "1px solid rgba(255,255,255,0.1)",
+    color: "rgba(255,255,255,0.5)",
+    padding: "8px 18px",
+    borderRadius: "8px",
+    cursor: "pointer",
+    fontSize: "13px",
+    marginBottom: "32px",
+  },
+  hero: { textAlign: "center", marginBottom: "36px" },
+  heroIcon: {
+    fontSize: "60px",
+    display: "block",
+    marginBottom: "14px",
+  },
+  classPill: {
+    display: "inline-block",
+    padding: "4px 16px",
+    borderRadius: "100px",
+    fontSize: "10px",
+    fontWeight: 700,
+    letterSpacing: "3px",
+    marginBottom: "12px",
+  },
+  heroTitle: {
+    fontSize: "clamp(26px,5vw,40px)",
+    fontWeight: 800,
+    color: "#fff",
+    margin: "0 0 8px",
+  },
+  heroSub: {
+    color: "rgba(255,255,255,0.35)",
+    fontSize: "13px",
+  },
+  chapterList: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
+  },
+  chapterBlock: {
+    border: "1px solid",
+    borderRadius: "12px",
+    overflow: "hidden",
+  },
+  chapterHeader: {
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    gap: "14px",
+    padding: "15px 18px",
+    cursor: "pointer",
+    border: "none",
+    background: "transparent",
+  },
+  chNum: {
+    fontSize: "18px",
+    fontWeight: 800,
+    minWidth: "28px",
+  },
+  chTitle: {
+    flex: 1,
+    fontSize: "14px",
+    fontWeight: 600,
+    color: "#fff",
+    textAlign: "left",
+  },
+  chToggle: {
+    fontSize: "11px",
+  },
+  chContent: {
+    padding: "4px 18px 18px",
+    borderTop: "1px solid rgba(255,255,255,0.05)",
+  },
+  topicsGrid: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "8px",
+    marginBottom: "16px",
+    paddingTop: "14px",
+  },
+  topicChip: {
+    background: "rgba(255,255,255,0.04)",
+    border: "1px solid",
+    borderRadius: "8px",
+    padding: "6px 12px",
+    fontSize: "12px",
+    color: "rgba(255,255,255,0.7)",
+    display: "flex",
+    alignItems: "center",
+  },
+  studyRow: {
+    display: "flex",
+    gap: "10px",
+    flexWrap: "wrap",
+  },
+  studyBtn: {
+    padding: "9px 20px",
+    borderRadius: "8px",
+    border: "none",
+    color: "#fff",
+    fontWeight: 700,
+    cursor: "pointer",
+  },
+  practiceBtn: {
+    padding: "9px 20px",
+    borderRadius: "8px",
+    border: "2px solid",
+    background: "transparent",
+    fontWeight: 700,
+    cursor: "pointer",
+  },
+};
