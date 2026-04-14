@@ -135,7 +135,7 @@ function CardItem({ item, index }) {
   );
 }
 
-export default function AE1() {
+export default function Home() {
   return (
     <>
       <style>{`
