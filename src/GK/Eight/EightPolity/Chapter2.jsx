@@ -307,7 +307,7 @@ const NOTES2_SECTIONS = [
   },
 ];
 
-export default function Chapter2App() {
+export default function Chapter2() {
   const [tab, setTab] = useState("notes");
   const [qIdx, setQIdx] = useState(0);
   const [sel, setSel] = useState(null);
