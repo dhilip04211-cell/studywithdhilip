@@ -27,7 +27,7 @@ const sections = [
   },
   {
     title: "Assistant Engineer",
-    route: `${BASE}AE/YCT-1/YCT-1.html`,
+    route: `assistantengineer/home`,
     icon: "⚡",
     color: "#9B7FD4",
     accent: "#C4AAEE",
