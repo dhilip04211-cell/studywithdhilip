@@ -32,7 +32,7 @@ const sections = [
     color: "#9B7FD4",
     accent: "#C4AAEE",
     subtitle: "AE Electrical",
-    external: true,
+    external: false,
     num: "03",
   },
   {
