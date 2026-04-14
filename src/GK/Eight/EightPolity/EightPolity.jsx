@@ -8,7 +8,7 @@ const info = {
   classRoman: "VIII",
   classColor: "#3DBFA8",
   backRoute: "/gk/eight",
-  subjectRoute: "/gk/eight/eightpolity/eightpolity",
+  subjectRoute: "/gk/eight/eightpolity",
 };
 
 const chapters = [
