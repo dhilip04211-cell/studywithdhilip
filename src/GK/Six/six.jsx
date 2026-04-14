@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 const subjects = [
   {
@@ -51,8 +53,9 @@ const subjects = [
   },
 ];
 
-export default function Six({ onNavigate, onBack }) {
+export default function Six() {
   const [hovered, setHovered] = useState(null);
+  const navigate = useNavigate();
 
   return (
     <div style={styles.page}>
