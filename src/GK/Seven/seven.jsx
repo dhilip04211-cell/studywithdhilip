@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+
 
 const subjects = [
   {
@@ -50,10 +53,9 @@ const subjects = [
     color: "#C0392B",
   },
 ];
-
-export default function Seven({ onNavigate, onBack }) {
+export default function Seven() {
   const [hovered, setHovered] = useState(null);
-
+  const navigate = useNavigate();
   return (
     <div style={styles.page}>
       <div style={styles.bgGlow} />
