@@ -1,14 +1,54 @@
 import { useState } from "react";
 
 const subjects = [
-  { key: "IndianHistory", label: "Indian History", icon: "🏛️", color: "#E74C3C" },
-  { key: "TamilnaduHistory", label: "Tamilnadu History", icon: "🌺", color: "#E67E22" },
-  { key: "Geography", label: "Geography", icon: "🌍", color: "#27AE60" },
-  { key: "Polity", label: "Polity", icon: "⚖️", color: "#2980B9" },
-  { key: "Economics", label: "Economics", icon: "📈", color: "#8E44AD" },
-  { key: "Physics", label: "Physics", icon: "⚛️", color: "#16A085" },
-  { key: "Chemistry", label: "Chemistry", icon: "🧪", color: "#D35400" },
-  { key: "Biology", label: "Biology", icon: "🧬", color: "#C0392B" },
+  {
+    route: "/gk/seven/sevenindianhistory/sevenindianhistory",
+    label: "Indian History",
+    icon: "🏛️",
+    color: "#E74C3C",
+  },
+  {
+    route: "/gk/seven/seventamilnaduhistory/seventamilnaduhistory",
+    label: "Tamilnadu History",
+    icon: "🌺",
+    color: "#E67E22",
+  },
+  {
+    route: "/gk/seven/sevengeography/sevengeography",
+    label: "Geography",
+    icon: "🌍",
+    color: "#27AE60",
+  },
+  {
+    route: "/gk/seven/sevenpolity/sevenpolity",
+    label: "Polity",
+    icon: "⚖️",
+    color: "#2980B9",
+  },
+  {
+    route: "/gk/seven/seveneconomics/seveneconomics",
+    label: "Economics",
+    icon: "📈",
+    color: "#8E44AD",
+  },
+  {
+    route: "/gk/seven/sevenphysics/sevenphysics",
+    label: "Physics",
+    icon: "⚛️",
+    color: "#16A085",
+  },
+  {
+    route: "/gk/seven/sevenchemistry/sevenchemistry",
+    label: "Chemistry",
+    icon: "🧪",
+    color: "#D35400",
+  },
+  {
+    route: "/gk/seven/sevenbiology/sevenbiology",
+    label: "Biology",
+    icon: "🧬",
+    color: "#C0392B",
+  },
 ];
 
 export default function Seven({ onNavigate, onBack }) {
@@ -45,7 +85,7 @@ export default function Seven({ onNavigate, onBack }) {
               }}
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
-              onClick={() => onNavigate && onNavigate(sub.key)}
+              onClick={() => navigate(sub.route)}
             >
               <div style={{...styles.topBar, background: sub.color}} />
               <div style={styles.icon}>{sub.icon}</div>
