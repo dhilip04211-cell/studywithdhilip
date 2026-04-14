@@ -7,7 +7,7 @@ const subjectInfo = {
   classRoman: "VI",
   classColor: "#FF6B35",
   backRoute: "/gk/six",
-  subjectRoute: "/gk/six/sixpolity/sixpolity",
+  subjectRoute: "/gk/six/sixpolity",
 };
 const chapters = [
   // Term 1
