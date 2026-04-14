@@ -8,16 +8,38 @@ const info = {
   classRoman: "VIII",
   classColor: "#3DBFA8",
   backRoute: "/gk/eight",
+  subjectRoute: "/gk/eight/eightpolity/eightpolity",
 };
 
 const chapters = [
-  { title: "Indian Constitution - Overview", topics: ["Historical background", "Objectives", "Salient features", "Comparison"] },
-  { title: "Citizenship", topics: ["Citizenship at birth", "By registration", "Dual citizenship", "Loss"] },
-  { title: "Fundamental Duties", topics: ["11 Fundamental Duties", "Importance", "Criticism", "Comparison"] },
-  { title: "Elections in India", topics: ["Election Commission", "Voter registration", "Model Code of Conduct", "EVM"] },
-  { title: "Parliament - Detailed Study", topics: ["Powers of Lok Sabha", "Powers of Rajya Sabha", "Joint sittings", "Financial bills"] },
-  { title: "The President and Prime Minister", topics: ["Powers of President", "Powers of PM", "Council of Ministers", "Coalition"] },
-
+  {
+    title: "மாநில அரசு எவ்வாறு செயல்படுகிறது",
+    topics: ["முதல்வர்", "அமைச்சரவை", "சட்டமன்றம்", "நிர்வாகம்"],
+  },
+  {
+    title: "குடிமக்களும் குடியுரிமையும்",
+    topics: ["குடிமகன்", "உரிமைகள்", "கடமைகள்", "அரசியலமைப்பு"],
+  },
+  {
+    title: "சமயச்சார்பின்மையைப் புரிந்துகொள்ளுதல்",
+    topics: ["மதச்சார்பின்மை", "சமத்துவம்", "மத சுதந்திரம்", "ஒற்றுமை"],
+  },
+  {
+    title: "மனித உரிமைகளும் சமூக நீதிகள் சவாலும்",
+    topics: ["மனித உரிமைகள்", "சமூக நீதி", "சட்டம்", "சமத்துவம்"],
+  },
+  {
+    title: "சாலை பாதுகாப்பு விதிகள் மற்றும் நெறிமுறைகள்",
+    topics: ["சாலை விதிகள்", "பாதுகாப்பு", "வாகன ஒழுங்கு", "அபராதம்"],
+  },
+  {
+    title: "பாதுகாப்பு மற்றும் வெளிவிவகாரக் கொள்கை",
+    topics: ["தேசிய பாதுகாப்பு", "வெளிநாட்டு கொள்கை", "இந்தியா", "அரசு"],
+  },
+  {
+    title: "நீதித்துறை",
+    topics: ["உச்சநீதிமன்றம்", "உயர்நீதிமன்றம்", "மாவட்ட நீதிமன்றம்", "நீதிபதி"],
+  },
 ];
 
 export default function EightPolity() {
@@ -70,7 +92,14 @@ export default function EightPolity() {
                     ))}
                   </div>
                   <div style={styles.btnRow}>
-                    <button style={{ ...styles.btnStudy, background: info.color }}>📖 Study Now</button>
+                    <button
+  style={{ ...styles.btnStudy, background: info.color }}
+  onClick={() =>
+    navigate(`${info.subjectRoute}/Chapter${i + 1}`)
+  }
+>
+  📖 Study Now
+</button>
                     <button style={{ ...styles.btnPractice, borderColor: info.color, color: info.color }}>✏️ Practice MCQ</button>
                   </div>
                 </div>
