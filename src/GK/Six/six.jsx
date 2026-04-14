@@ -71,34 +71,40 @@ export default function Six({ onNavigate, onBack }) {
         </div>
 
         <div style={styles.grid}>
-          {subjects.map((sub, i) => (
-            <button
-              key={sub.key}
-              style={{
-                ...styles.card,
-                animationDelay: `${i * 0.07}s`,
-                borderColor: hovered === i ? sub.color : "rgba(255,255,255,0.07)",
-                boxShadow: hovered === i
-                  ? `0 0 28px ${sub.color}44, 0 8px 24px rgba(0,0,0,0.4)`
-                  : "0 4px 16px rgba(0,0,0,0.25)",
-                transform: hovered === i ? "translateY(-5px) scale(1.02)" : "scale(1)",
-              }}
-              onMouseEnter={() => setHovered(i)}
-              onMouseLeave={() => setHovered(null)}
-              onClick={() => onNavigate && onNavigate(sub.key)}
-            >
-              <div style={{...styles.topBar, background: sub.color}} />
-              <div style={styles.icon}>{sub.icon}</div>
-              <div style={styles.subjectName}>{sub.label}</div>
-              <div style={{
-                ...styles.explore,
-                color: sub.color,
-                opacity: hovered === i ? 1 : 0,
-              }}>
-                Start →
-              </div>
-            </button>
-          ))}
+         {subjects.map((sub, i) => (
+  <button
+    key={sub.route}
+    style={{
+      ...styles.card,
+      animationDelay: `${i * 0.07}s`,
+      borderColor: hovered === i ? sub.color : "rgba(255,255,255,0.07)",
+      boxShadow:
+        hovered === i
+          ? `0 0 28px ${sub.color}44, 0 8px 24px rgba(0,0,0,0.4)`
+          : "0 4px 16px rgba(0,0,0,0.25)",
+      transform:
+        hovered === i
+          ? "translateY(-5px) scale(1.02)"
+          : "scale(1)",
+    }}
+    onMouseEnter={() => setHovered(i)}
+    onMouseLeave={() => setHovered(null)}
+    onClick={() => onNavigate && onNavigate(sub.route)}
+  >
+    <div style={{ ...styles.topBar, background: sub.color }} />
+    <div style={styles.icon}>{sub.icon}</div>
+    <div style={styles.subjectName}>{sub.label}</div>
+    <div
+      style={{
+        ...styles.explore,
+        color: sub.color,
+        opacity: hovered === i ? 1 : 0,
+      }}
+    >
+      Start →
+    </div>
+  </button>
+))}
         </div>
       </div>
 
