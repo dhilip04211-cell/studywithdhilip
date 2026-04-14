@@ -8,18 +8,40 @@ const info = {
   classRoman: "VII",
   classColor: "#E8A838",
   backRoute: "/gk/seven",
+  subjectRoute: "/gk/seven/sevenpolity/sevenpolity",
 };
 
 const chapters = [
-  { title: "Democracy", topics: ["Democracy definition", "Types", "Features", "Values"] },
-  { title: "The Constitution", topics: ["Making of Constitution", "Constituent Assembly", "Preamble", "Key features"] },
-  { title: "Fundamental Rights", topics: ["Right to Equality", "Right to Freedom", "Right against Exploitation", "Educational rights"] },
-  { title: "Directive Principles", topics: ["DPSPs overview", "Economic DPSPs", "Social DPSPs", "DPSPs vs Rights"] },
-  { title: "The Parliament", topics: ["Lok Sabha", "Rajya Sabha", "Law making", "Parliamentary sessions"] },
-  { title: "The Judiciary", topics: ["Supreme Court", "High Courts", "District Courts", "Judicial review"] },
+  // Term 1
+  {
+    title: "சமத்துவம்",
+    topics: ["சமத்துவம்", "உரிமைகள்", "சமூக நீதி", "ஒற்றுமை"],
+  },
+  {
+    title: "அரசாங்கத்தின் வகைகள்",
+    topics: ["மக்களாட்சி", "மன்னராட்சி", "குடியரசு", "அரசு"],
+  },
 
+  // Term 2
+  {
+    title: "மாநில அரசு",
+    topics: ["முதல்வர்", "அமைச்சரவை", "சட்டமன்றம்", "ஆளுநர்"],
+  },
+  {
+    title: "உள்ளாட்சி",
+    topics: ["பஞ்சாயத்து", "நகராட்சி", "மாவட்டம்", "உள்ளாட்சி அமைப்பு"],
+  },
+
+  // Term 3
+  {
+    title: "பெண்களின் நிலை",
+    topics: ["பெண்கள் உரிமை", "சமத்துவம்", "கல்வி", "சமூக நிலை"],
+  },
+  {
+    title: "சந்தை மற்றும் நுகர்வோர் பாதுகாப்பு",
+    topics: ["சந்தை", "நுகர்வோர் உரிமைகள்", "பாதுகாப்பு", "சட்டம்"],
+  },
 ];
-
 export default function SevenPolity() {
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(null);
@@ -70,7 +92,14 @@ export default function SevenPolity() {
                     ))}
                   </div>
                   <div style={styles.btnRow}>
-                    <button style={{ ...styles.btnStudy, background: info.color }}>📖 Study Now</button>
+                   <button
+  style={{ ...styles.btnStudy, background: info.color }}
+  onClick={() =>
+    navigate(`${info.subjectRoute}/Chapter${i + 1}`)
+  }
+>
+  📖 Study Now
+</button>
                     <button style={{ ...styles.btnPractice, borderColor: info.color, color: info.color }}>✏️ Practice MCQ</button>
                   </div>
                 </div>
