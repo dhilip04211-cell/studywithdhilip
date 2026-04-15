@@ -77,6 +77,15 @@ const EXAMS = [
     color: "#795548",
     accent: "#BCAAA4",
   },
+    {
+    num: "09",
+    icon: "📙",
+    label: "Gr 2 Mains Eligibility",
+    title: "Gr 2 Mains Eligibility — 2025",
+    to: "/PYQTAMIL/gr_2_mains_eligibility_2025",
+    color: "#E05C4A",
+    accent: "#F0907A",
+  },
 ];
 
 function ParticleCanvas() {
