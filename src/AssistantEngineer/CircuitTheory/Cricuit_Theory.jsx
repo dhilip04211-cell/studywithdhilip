@@ -122,7 +122,7 @@ function CardItem({ item }) {
   );
 }
 
-export default function Circuit_Theory() {
+export default function Circuit_Theory(){
   return (
     <>
       <style>{`
