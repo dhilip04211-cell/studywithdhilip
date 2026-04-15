@@ -1,12 +1,10 @@
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
-const BASE = import.meta.env.BASE_URL;
-
 const sections = [
   {
     title: "Basic Circuit 1",
-    route: `${BASE}AssistantEngineer/CircuitTheory/Basic_Circuits1`,
+    route: "/assistantengineer/circuittheory/basic_circuits1",
     icon: "🔌",
     color: "#C9A84C",
     accent: "#F5D07A",
@@ -15,7 +13,7 @@ const sections = [
   },
   {
     title: "Basic Circuit 2",
-    route: `${BASE}AssistantEngineer/CircuitTheory/Basic_Circuits2`,
+    route: "/assistantengineer/circuittheory/basic_circuits2",
     icon: "⚡",
     color: "#C9A84C",
     accent: "#F5D07A",
@@ -24,7 +22,7 @@ const sections = [
   },
   {
     title: "Basic Circuit 3",
-    route: `${BASE}AssistantEngineer/CircuitTheory/Basic_Circuits3`,
+    route: "/assistantengineer/circuittheory/basic_circuits3",
     icon: "🔋",
     color: "#C9A84C",
     accent: "#F5D07A",
@@ -33,7 +31,7 @@ const sections = [
   },
   {
     title: "Basic Circuit 4",
-    route: `${BASE}AssistantEngineer/CircuitTheory/Basic_Circuits4`,
+    route: "/assistantengineer/circuittheory/basic_circuits4",
     icon: "🧲",
     color: "#C9A84C",
     accent: "#F5D07A",
@@ -124,7 +122,7 @@ function CardItem({ item }) {
   );
 }
 
-export default function Cricuit_Theory() {
+export default function Circuit_Theory() {
   return (
     <>
       <style>{`
@@ -166,6 +164,7 @@ export default function Cricuit_Theory() {
           text-decoration: none;
           color: white;
           transition: 0.3s;
+          display: block;
         }
 
         .premium-card:hover {
