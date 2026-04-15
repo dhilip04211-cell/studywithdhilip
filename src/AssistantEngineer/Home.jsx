@@ -16,7 +16,7 @@ const sections = [
   },
   {
     title: "Circuit Theory",
-    route: "/AssistantEngineer/CircuitTheory/Circuit_Theory",
+    route: "/assistantengineer/circuittheory/circuit_theory",
     icon: "🔌",
     color: "#C9A84C",
     accent: "#F5D07A",
