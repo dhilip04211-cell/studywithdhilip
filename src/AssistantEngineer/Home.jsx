@@ -11,6 +11,16 @@ const sections = [
     external: true,
     num: "01",
   },
+    {
+    title: "Circuit Theory",
+    route: "/assistantengineer/circuittheory/circuit_theory",
+    icon: "⚡",
+    color: "#C9A84C",
+    accent: "#F5D07A",
+    subtitle: "Basic Circuits · Analysis · Series",
+    external: true,
+    num: "02",
+  },
 ];
 
 function ParticleCanvas() {
