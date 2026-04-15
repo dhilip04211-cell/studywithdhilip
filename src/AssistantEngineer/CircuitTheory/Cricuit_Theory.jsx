@@ -124,7 +124,7 @@ function CardItem({ item }) {
   );
 }
 
-export default function Basic_Circuits() {
+export default function Cricuit_Theory() {
   return (
     <>
       <style>{`
