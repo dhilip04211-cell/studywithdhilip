@@ -15,15 +15,15 @@ const sections = [
     isExternal: true,
   },
   {
-    title: "Circuit Theory",
-    route: "/assistantengineer/circuittheory/circuit_theory",
-    icon: "🔌",
-    color: "#C9A84C",
-    accent: "#F5D07A",
-    subtitle: "Basic Circuits · Analysis · Series",
-    num: "02",
-    isExternal: false,
-  },
+  title: "Circuit Theory",
+  route: "/assistantengineer/circuittheory/circuit_theory",
+  icon: "🔌",
+  color: "#C9A84C",
+  accent: "#F5D07A",
+  subtitle: "Basic Circuits · Analysis · Series",
+  external: false,
+  num: "02",
+},
 ];
 
 function ParticleCanvas() {
