@@ -2357,17 +2357,3 @@ function ResultsPanel({ questions, selectedAnswers, onRestart, isStudy }) {
   );
 }
 
-function getCategoryColor(cat) {
-  const COLORS = {
-    "Tamil Grammar": "#3498db",
-    "Tamil Vocabulary": "#e67e22",
-    "Tamil Literature": "#9b59b6",
-    "General Knowledge": "#27ae60",
-  };
-  for (const [key, col] of Object.entries(COLORS)) {
-    if (cat.startsWith(key)) return col;
-  }
-  const hash = cat.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
-  const palette = ["#3498db","#e74c3c","#2ecc71","#f39c12","#9b59b6","#1abc9c","#e67e22","#c0392b","#16a085","#8e44ad"];
-  return palette[hash % palette.length];
-}
