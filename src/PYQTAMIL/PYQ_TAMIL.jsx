@@ -68,6 +68,15 @@ const EXAMS = [
     color: "#795548",
     accent: "#BCAAA4",
   },
+    {
+    num: "08",
+    icon: "🎤",
+    label: "Technical ITI",
+    title: "Technical ITI — 2025",
+    to: "/PYQTAMIL/technical_exam_iti_2025",
+    color: "#795548",
+    accent: "#BCAAA4",
+  },
 ];
 
 function ParticleCanvas() {
