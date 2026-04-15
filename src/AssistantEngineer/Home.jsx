@@ -15,15 +15,15 @@ const sections = [
     isExternal: true,
   },
   {
-  title: "Circuit Theory",
-  route: "/assistantengineer/circuittheory/circuit_theory",
-  icon: "🔌",
-  color: "#C9A84C",
-  accent: "#F5D07A",
-  subtitle: "Basic Circuits · Analysis · Series",
-  external: false,
-  num: "02",
-},
+    title: "Circuit Theory",
+    route: "/assistantengineer/circuittheory/circuit_theory",
+    icon: "🔌",
+    color: "#C9A84C",
+    accent: "#F5D07A",
+    subtitle: "Basic Circuits · Analysis · Series",
+    isExternal: false,
+    num: "02",
+  },
 ];
 
 function ParticleCanvas() {
@@ -158,19 +158,15 @@ function CardItem({ item, index }) {
     </>
   );
 
-  if (item.isExternal) {
-    return (
-      <a
-        href={item.route}
-        style={{ textDecoration: "none", animationDelay: delay }}
-        className="premium-card"
-      >
-        {cardContent}
-      </a>
-    );
-  }
-
-  return (
+  return item.isExternal ? (
+    <a
+      href={item.route}
+      style={{ textDecoration: "none", animationDelay: delay }}
+      className="premium-card"
+    >
+      {cardContent}
+    </a>
+  ) : (
     <Link
       to={item.route}
       style={{ textDecoration: "none", animationDelay: delay }}
@@ -185,83 +181,15 @@ export default function Home() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap');
-
-        *, *::before, *::after {
-          box-sizing: border-box;
-          margin: 0;
-          padding: 0;
-        }
-
         body {
           background: #06080f;
-          font-family: 'Outfit', sans-serif;
           color: #e8dfc8;
-          overflow-x: hidden;
+          font-family: sans-serif;
         }
 
         .page-root {
-          position: relative;
           min-height: 100vh;
-          padding: 60px 40px 80px;
-          z-index: 1;
-        }
-
-        .grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-          gap: 20px;
-          max-width: 1100px;
-          margin: 0 auto;
-        }
-
-        .premium-card {
-          position: relative;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          background: rgba(255,255,255,0.025);
-          border: 1px solid rgba(201,168,76,0.1);
-          border-radius: 16px;
-          padding: 30px 26px 24px;
-          cursor: pointer;
-          overflow: hidden;
-          transition: 0.3s;
-          min-height: 200px;
-          text-decoration: none;
-          color: inherit;
-        }
-
-        .premium-card:hover {
-          transform: translateY(-6px);
-          border-color: rgba(201,168,76,0.28);
-        }
-
-        .card-num {
-          position: absolute;
-          top: 18px;
-          right: 22px;
-          font-size: 10px;
-          opacity: 0.4;
-        }
-
-        .card-icon {
-          font-size: 28px;
-          margin-bottom: 20px;
-        }
-
-        .card-sub {
-          font-size: 10px;
-          opacity: 0.7;
-          margin-bottom: 8px;
-        }
-
-        .card-title {
-          font-size: 26px;
-        }
-
-        .card-arrow {
-          margin-top: 20px;
+          padding: 60px 40px;
         }
 
         .header {
@@ -279,11 +207,52 @@ export default function Home() {
           opacity: 0.7;
         }
 
-        .back-btn {
-          display: inline-block;
-          margin-bottom: 40px;
-          color: #C9A84C;
+        .grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+          gap: 20px;
+          max-width: 1100px;
+          margin: 0 auto;
+        }
+
+        .premium-card {
+          position: relative;
+          display: block;
+          background: rgba(255,255,255,0.025);
+          border: 1px solid rgba(201,168,76,0.1);
+          border-radius: 16px;
+          padding: 30px;
+          min-height: 200px;
           text-decoration: none;
+          color: inherit;
+          transition: 0.3s;
+        }
+
+        .premium-card:hover {
+          transform: translateY(-6px);
+          border-color: rgba(201,168,76,0.28);
+        }
+
+        .card-num {
+          position: absolute;
+          top: 18px;
+          right: 22px;
+          opacity: 0.4;
+        }
+
+        .card-icon {
+          font-size: 28px;
+          margin-bottom: 20px;
+        }
+
+        .card-sub {
+          font-size: 10px;
+          opacity: 0.7;
+          margin-bottom: 8px;
+        }
+
+        .card-title {
+          font-size: 26px;
         }
       `}</style>
 
