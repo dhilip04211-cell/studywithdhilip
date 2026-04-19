@@ -8,7 +8,7 @@ const info = {
   classRoman: "VII",
   classColor: "#E8A838",
   backRoute: "/gk/seven",
-  subjectRoute: "/gk/seven/sevenhistory", // ✅ navigation fix
+  subjectRoute: "/gk/seven/sevenindianhistory", // ✅ navigation fix
 };
 
 const chapters = [
