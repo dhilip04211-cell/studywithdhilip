@@ -17,11 +17,11 @@ const chapters = [
     topics: ["காரணங்கள்", "நடப்பு", "வெர்செய்ல்ஸ் ஒப்பந்தம்", "பின்விளைவுகள்"],
   },
   {
-    title: "இரு உலகப்போர்களுக்கு இடையில் உலகம்",
+    title: "இரு உலகப்போர்களுக்கு இடையில் உலகம் Tamilnadu Freedom Struggle vengatesan part1",
     topics: ["பொருளாதார மந்தநிலை", "ஃபாசிசம்", "நாசிசம்", "சமூக மாற்றங்கள்"],
   },
   {
-    title: "இரண்டாம் உலகப்போர் Tamilnadu Freedom Struggle vengatesan",
+    title: "இரண்டாம் உலகப்போர் Tamilnadu Freedom Struggle vengatesan part2 ",
     topics: ["காரணங்கள்", "அச்சு நாடுகள்", "நேச நாடுகள்", "முடிவு"],
   },
   {
