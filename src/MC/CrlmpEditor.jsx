@@ -12,7 +12,6 @@ const LS_TOKEN_EXP  = "crlmp_token_exp";
 const LS_SHEET      = "crlmp_sheet";
 const LS_YEAR       = "crlmp_year";
 const LS_APIKEY     = "crlmp_apikey";
-const VISION_KEY    = API_KEY; // same GCP key — enable Cloud Vision API in console
 
 /* ─── COLUMN MAP (0-based) ───────────────────────────────────────────────── */
 const COL       = { SR:0, CASE:1, ADDR:2, FIR_DATE:3, NEXT_DATE:4, ACT:5, PS:6, FIR_NO:7 };
@@ -22,10 +21,7 @@ const READONLY  = new Set([COL.SR, COL.CASE]);
 
 /* ─── HELPERS ────────────────────────────────────────────────────────────── */
 const toA1    = (row, col) => `${String.fromCharCode(65 + col)}${row}`;
-
-/* FIX 1: digits-only normStr — handles any prefix/separator in Case No. */
 const normStr = (s = "") => s.toString().replace(/\D/g, "");
-
 const ls      = { get: k => { try { return localStorage.getItem(k); } catch { return null; } },
                   set: (k,v) => { try { localStorage.setItem(k,v); } catch {} },
                   del: k => { try { localStorage.removeItem(k); } catch {} } };
@@ -50,6 +46,7 @@ function injectCSS() {
     body{background:#f8f6f1;font-family:'JetBrains Mono',monospace}
     @keyframes spin   {to{transform:rotate(360deg)}}
     @keyframes fadeUp {from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes pulse  {0%,100%{opacity:1}50%{opacity:0.5}}
     .tab-btn:hover  {background:#fff8e8!important;border-color:#C9A84C!important;color:#8B5E0A!important}
     .mod-btn:hover  {background:#fff8ec!important;border-color:#C9A84C!important;color:#8B5E0A!important}
     .save-btn:hover {opacity:.88!important}
@@ -57,8 +54,48 @@ function injectCSS() {
     input:focus,textarea:focus{outline:none!important;border-color:#C9A84C!important;box-shadow:0 0 0 3px #C9A84C22!important}
     .field-card{animation:fadeUp .22s ease both}
     .ocr-overlay{position:fixed;inset:0;background:#000c;z-index:9999;display:flex;align-items:center;justify-content:center}
+    .ocr-progress-bar{height:4px;background:#e0d8cc;border-radius:2px;overflow:hidden;margin:8px 0}
+    .ocr-progress-fill{height:100%;background:linear-gradient(90deg,#C9A84C,#8B5E0A);border-radius:2px;transition:width 0.3s ease}
+    .tess-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;background:#f0fff4;border:1px solid #6bcf8a;border-radius:3px;font-size:9px;color:#1a7a3a;letter-spacing:0.08em}
   `;
   document.head.appendChild(s);
+}
+
+/* ─── TESSERACT LOADER ───────────────────────────────────────────────────── */
+let tesseractWorker = null;
+let tesseractLoading = false;
+let tesseractReady = false;
+
+async function loadTesseract() {
+  if (tesseractReady && tesseractWorker) return tesseractWorker;
+  if (tesseractLoading) {
+    // wait until ready
+    await new Promise(resolve => {
+      const interval = setInterval(() => {
+        if (tesseractReady) { clearInterval(interval); resolve(); }
+      }, 200);
+    });
+    return tesseractWorker;
+  }
+  tesseractLoading = true;
+  // Dynamically load Tesseract.js from CDN
+  if (!window.Tesseract) {
+    await new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = "https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
+  tesseractWorker = await window.Tesseract.createWorker(["eng", "tam"], 1, {
+    workerPath: "https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/worker.min.js",
+    corePath:   "https://cdn.jsdelivr.net/npm/tesseract.js-core@5/tesseract-core.wasm.js",
+    langPath:   "https://tessdata.projectnaptha.com/4.0.0",
+  });
+  tesseractReady = true;
+  tesseractLoading = false;
+  return tesseractWorker;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -86,24 +123,23 @@ export default function CRLMPEditor() {
   const [token,       setToken]       = useState("");
   const [apiKey,      setApiKey]      = useState(ls.get(LS_APIKEY) || "");
   const [gisReady,    setGisReady]    = useState(false);
-  const [userEmail,   setUserEmail]   = useState("");
   const tokenRef      = useRef("");
   const tokenClient   = useRef(null);
 
   /* ── camera/OCR ── */
   const [ocrOpen,       setOcrOpen]       = useState(false);
   const [ocrProcessing, setOcrProcessing] = useState(false);
+  const [ocrProgress,   setOcrProgress]   = useState(0);
+  const [ocrStatus,     setOcrStatus]     = useState("");
   const [ocrError,      setOcrError]      = useState("");
-  const [ocrMode,       setOcrMode]       = useState("camera"); // "camera"|"crop"|"preview"
+  const [ocrMode,       setOcrMode]       = useState("camera");
   const [capturedBlob,  setCapturedBlob]  = useState(null);
   const [capturedUrl,   setCapturedUrl]   = useState("");
-  // crop state
   const [cropStart,     setCropStart]     = useState(null);
   const [cropRect,      setCropRect]      = useState(null);
   const [isDragging,    setIsDragging]    = useState(false);
   const [focusRing,     setFocusRing]     = useState({ x:0, y:0, show:false });
   const cropImgRef    = useRef(null);
-  const cropOverRef   = useRef(null);
   const videoRef  = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
@@ -112,6 +148,11 @@ export default function CRLMPEditor() {
   /* ── focus ── */
   const caseNumRef  = useRef(null);
   const caseYearRef = useRef(null);
+
+  /* ── Preload Tesseract in background on mount ── */
+  useEffect(() => {
+    loadTesseract().catch(() => {}); // silent background load
+  }, []);
 
   /* ══════════════════════════════════════════════════════════════
      RESTORE TOKEN FROM LOCALSTORAGE ON MOUNT
@@ -156,9 +197,7 @@ export default function CRLMPEditor() {
         },
       });
       setGisReady(true);
-      if (!restoreToken()) {
-        silentSignIn();
-      }
+      if (!restoreToken()) silentSignIn();
     };
     document.head.appendChild(gis);
   }, []);
@@ -228,8 +267,6 @@ export default function CRLMPEditor() {
       for (let i = 1; i < rows.length; i++) {
         const cellNorm  = normStr(rows[i][COL.CASE] || "");
         const queryNorm = normStr(q);
-        /* FIX 2: use .includes() so "CRLMP 5944/2023" → digits "59442023"
-           still matches query "5944/2023" → digits "59442023"            */
         if (cellNorm.includes(queryNorm) && queryNorm.length > 0) {
           found = { rowIndex: i + 1, data: rows[i] }; break;
         }
@@ -301,6 +338,7 @@ export default function CRLMPEditor() {
   const openCamera = async () => {
     setOcrOpen(true); setOcrError(""); setOcrProcessing(false);
     setOcrMode("camera"); setCapturedBlob(null); setCapturedUrl(""); setCropRect(null);
+    setOcrProgress(0); setOcrStatus("");
     try {
       const s = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: "environment", width: { ideal: 1920 }, height: { ideal: 1080 } }
@@ -324,7 +362,6 @@ export default function CRLMPEditor() {
     const x = (e.clientX - rect.left) / rect.width;
     const y = (e.clientY - rect.top)  / rect.height;
     track.applyConstraints({ advanced: [{ focusMode:"manual", pointsOfInterest:[{x,y}] }] }).catch(()=>{});
-    /* show focus ring */
     setFocusRing({ x: e.clientX - rect.left, y: e.clientY - rect.top, show: true });
     setTimeout(() => setFocusRing(r => ({...r, show:false})), 900);
   };
@@ -386,7 +423,7 @@ export default function CRLMPEditor() {
       };
       imgEl.src = capturedUrl;
     } else {
-      runOCR(capturedBlob); // no crop — use full image
+      runOCR(capturedBlob);
     }
   };
 
@@ -403,41 +440,37 @@ export default function CRLMPEditor() {
     setOcrMode("crop");
   };
 
+  /* ══════════════════════════════════════════════════════════════
+     RUN OCR — Tesseract.js (free, in-browser, supports Tamil+English)
+  ══════════════════════════════════════════════════════════════ */
   const runOCR = async (blob) => {
-    setOcrMode("camera"); // show spinner
-    setOcrProcessing(true); setOcrError("");
+    setOcrMode("processing");
+    setOcrProcessing(true);
+    setOcrError("");
+    setOcrProgress(0);
+    setOcrStatus("Loading Tesseract engine…");
+
     try {
-      const b64 = await new Promise((res, rej) => {
-        const r = new FileReader();
-        r.onload  = () => { const d = r.result; const i = d.indexOf(","); res(i>=0?d.slice(i+1):d); };
-        r.onerror = () => rej(new Error("FileReader failed"));
-        r.readAsDataURL(blob);
+      /* Load / reuse Tesseract worker */
+      const worker = await loadTesseract();
+
+      setOcrStatus("Recognising text…");
+
+      /* Convert blob to image URL for Tesseract */
+      const imgUrl = URL.createObjectURL(blob);
+
+      const { data } = await worker.recognize(imgUrl, {}, {
+        text: true,
       });
-      /* ── Google Cloud Vision TEXT_DETECTION (free 1000/month) ── */
-      const resp = await fetch(
-        `https://vision.googleapis.com/v1/images:annotate?key=${VISION_KEY}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            requests: [{
-              image: { content: b64 },
-              features: [{ type: "TEXT_DETECTION", maxResults: 1 }],
-              imageContext: { languageHints: ["ta", "en"] }
-            }]
-          })
-        }
-      );
-      if (!resp.ok) {
-        const errJson = await resp.json().catch(() => ({}));
-        throw new Error(errJson.error?.message || `Vision API HTTP ${resp.status}`);
-      }
-      const j   = await resp.json();
-      const ann = j.responses?.[0];
-      if (ann?.error) throw new Error(ann.error.message);
-      const txt = ann?.fullTextAnnotation?.text || ann?.textAnnotations?.[0]?.description || "";
-      if (txt.trim()) {
-        setEditData(p => ({ ...p, [COL.ADDR]: txt.trim() }));
+
+      // Simulate progress updates since Tesseract v5 doesn't expose per-step callbacks easily
+      setOcrProgress(100);
+      URL.revokeObjectURL(imgUrl);
+
+      const txt = data.text?.trim() || "";
+
+      if (txt) {
+        setEditData(p => ({ ...p, [COL.ADDR]: txt }));
         setModCols(p => new Set([...p, COL.ADDR]));
         setOcrOpen(false);
         if (capturedUrl) URL.revokeObjectURL(capturedUrl);
@@ -450,10 +483,18 @@ export default function CRLMPEditor() {
       setOcrMode("crop");
     } finally {
       setOcrProcessing(false);
+      setOcrProgress(0);
+      setOcrStatus("");
     }
   };
 
-  const closeOcr = () => { stopStream(); setOcrOpen(false); setOcrError(""); setOcrProcessing(false); setOcrMode("camera"); if(capturedUrl) URL.revokeObjectURL(capturedUrl); setCapturedUrl(""); setCapturedBlob(null); };
+  const closeOcr = () => {
+    stopStream();
+    setOcrOpen(false); setOcrError(""); setOcrProcessing(false);
+    setOcrMode("camera"); setOcrProgress(0); setOcrStatus("");
+    if (capturedUrl) URL.revokeObjectURL(capturedUrl);
+    setCapturedUrl(""); setCapturedBlob(null);
+  };
 
   /* ═══════════════ RENDER ═════════════════════════════════════════════════ */
   const caseQuery  = caseNum && caseYear ? `${caseNum}/${caseYear}` : null;
@@ -619,29 +660,41 @@ export default function CRLMPEditor() {
 
             {/* Header */}
             <div style={S.ocrHead}>
-              <span style={S.ocrTitle}>
-                {ocrMode==="crop" ? "✂️ Crop & Scan" : "📷 Scan Address"}
-              </span>
+              <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                <span style={S.ocrTitle}>
+                  {ocrMode==="crop" ? "✂️ Crop & Scan" : ocrMode==="processing" ? "🔍 Scanning…" : "📷 Scan Address"}
+                </span>
+                {/* FREE badge */}
+                <span className="tess-badge">✦ FREE · Tesseract.js</span>
+              </div>
               <button style={S.ocrClose} onClick={closeOcr}>✕</button>
             </div>
 
-
             {/* Processing */}
-            {ocrProcessing ? (
+            {ocrMode === "processing" ? (
               <div style={S.ocrCenter}>
                 <div style={S.bigSpin} />
-                <p style={S.ocrMsg}>Google Vision OCR…</p>
+                <p style={S.ocrStatusTxt}>{ocrStatus || "Processing…"}</p>
+                {/* Progress bar */}
+                <div style={{ width:"80%", marginTop:8 }}>
+                  <div className="ocr-progress-bar">
+                    <div className="ocr-progress-fill"
+                      style={{ width: ocrProgress > 0 ? `${ocrProgress}%` : "60%",
+                               animation: ocrProgress === 0 ? "pulse 1.5s ease-in-out infinite" : "none" }} />
+                  </div>
+                  <p style={{ fontSize:10, color:"#bbb", textAlign:"center", marginTop:4, letterSpacing:"0.08em" }}>
+                    RUNNING IN BROWSER · NO DATA SENT TO SERVER
+                  </p>
+                </div>
               </div>
 
             /* Crop / Preview mode */
             ) : ocrMode==="crop" && capturedUrl ? (
               <div style={{ position:"relative", userSelect:"none" }}>
-                {/* instruction */}
                 <p style={{ fontSize:11, color:"#888", textAlign:"center", padding:"8px 0 4px",
                             background:"#f8f6f1", letterSpacing:"0.05em" }}>
                   DRAG to select area · leave empty for full image
                 </p>
-                {/* image + crop overlay */}
                 <div style={{ position:"relative", lineHeight:0, touchAction:"none" }}
                   onMouseDown={onCropStart} onMouseMove={onCropMove} onMouseUp={onCropEnd}
                   onTouchStart={onCropStart} onTouchMove={onCropMove} onTouchEnd={onCropEnd}>
@@ -663,7 +716,6 @@ export default function CRLMPEditor() {
                   <p style={{ color:"#c0392b", fontSize:12, padding:"6px 14px",
                                background:"#fff0f0", textAlign:"center" }}>{ocrError}</p>
                 )}
-                {/* action buttons */}
                 <div style={{ display:"flex", gap:8, padding:"10px 12px" }}>
                   <button style={S.galleryBtn} onClick={openCamera}>🔄 Retake</button>
                   <button style={S.galleryBtn} onClick={() => fileRef.current?.click()}>🖼 Gallery</button>
@@ -679,7 +731,6 @@ export default function CRLMPEditor() {
               <div style={{ position:"relative" }}>
                 <div style={{ position:"relative", lineHeight:0 }} onClick={tapFocus}>
                   <video ref={videoRef} autoPlay playsInline muted style={S.video} />
-                  {/* tap-to-focus ring */}
                   {focusRing.show && (
                     <div style={{
                       position:"absolute",
@@ -730,7 +781,7 @@ function AddressField({ value, onChange, onCamera, onFile }) {
   );
 }
 
-/* ─── DATE FIELD — always editable inline ────────────────────────────────── */
+/* ─── DATE FIELD ─────────────────────────────────────────────────────────── */
 function DateField({ value, isMod, onChange }) {
   const [draft, setDraft] = useState(value);
   useEffect(() => setDraft(value), [value]);
@@ -853,16 +904,16 @@ const S = {
   pending: { fontSize:12, color:"#8B5E0A" },
   saveBtn: { padding:"11px 32px", background:`linear-gradient(135deg,${G},#8B5E0A)`, border:"none", borderRadius:8, color:"#fff", fontWeight:700, fontSize:14, cursor:"pointer", fontFamily:"inherit", transition:"opacity .2s" },
 
-  ocrCard:    { background:"#fff", borderRadius:16, width:"min(92vw,420px)", overflow:"hidden", boxShadow:"0 24px 64px #000c" },
-  ocrHead:    { display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 18px", background:"#1a1a2e" },
-  ocrTitle:   { color:G, fontWeight:700, fontSize:16, fontFamily:"'Rajdhani',sans-serif" },
-  ocrClose:   { background:"transparent", border:"none", color:"#fff", fontSize:20, cursor:"pointer" },
-  ocrCenter:  { display:"flex", flexDirection:"column", alignItems:"center", padding:40, gap:16 },
-  ocrMsg:     { color:"#888", fontSize:13 },
-  bigSpin:    { width:44, height:44, border:`3px solid #e0d8cc`, borderTopColor:G, borderRadius:"50%", animation:"spin .8s linear infinite" },
-  video:      { width:"100%", maxHeight:280, objectFit:"cover", display:"block" },
-  ocrErr:     { color:"#c0392b", fontSize:12, padding:"8px 16px", background:"#fff0f0" },
-  ocrBtns:    { display:"flex", gap:12, padding:"14px 18px" },
-  capBtn:     { flex:1, padding:11, background:`linear-gradient(135deg,${G},#8B5E0A)`, border:"none", borderRadius:8, color:"#fff", fontWeight:700, fontSize:14, cursor:"pointer", fontFamily:"inherit" },
-  galleryBtn: { flex:1, padding:11, background:"#f0f6ff", border:"1.5px solid #c0d8ff", borderRadius:8, color:"#3B6BF5", fontWeight:700, fontSize:14, cursor:"pointer", fontFamily:"inherit" },
+  ocrCard:      { background:"#fff", borderRadius:16, width:"min(92vw,420px)", overflow:"hidden", boxShadow:"0 24px 64px #000c" },
+  ocrHead:      { display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 18px", background:"#1a1a2e" },
+  ocrTitle:     { color:G, fontWeight:700, fontSize:16, fontFamily:"'Rajdhani',sans-serif" },
+  ocrClose:     { background:"transparent", border:"none", color:"#fff", fontSize:20, cursor:"pointer" },
+  ocrCenter:    { display:"flex", flexDirection:"column", alignItems:"center", padding:40, gap:12 },
+  ocrMsg:       { color:"#888", fontSize:13 },
+  ocrStatusTxt: { color:"#555", fontSize:13, letterSpacing:"0.05em", textAlign:"center" },
+  bigSpin:      { width:44, height:44, border:`3px solid #e0d8cc`, borderTopColor:G, borderRadius:"50%", animation:"spin .8s linear infinite" },
+  video:        { width:"100%", maxHeight:280, objectFit:"cover", display:"block" },
+  ocrBtns:      { display:"flex", gap:12, padding:"14px 18px" },
+  capBtn:       { flex:1, padding:11, background:`linear-gradient(135deg,${G},#8B5E0A)`, border:"none", borderRadius:8, color:"#fff", fontWeight:700, fontSize:14, cursor:"pointer", fontFamily:"inherit" },
+  galleryBtn:   { flex:1, padding:11, background:"#f0f6ff", border:"1.5px solid #c0d8ff", borderRadius:8, color:"#3B6BF5", fontWeight:700, fontSize:14, cursor:"pointer", fontFamily:"inherit" },
 };
