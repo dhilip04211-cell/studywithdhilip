@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import { createPortal } from "react-dom";
 
 /* ─── GOOGLE CONFIG ──────────────────────────────────────────────────────── */
 const SHEET_ID  = "1eIwrFpP9nRa8o2kl7eeBtiffUs2CU5-xWcAGKtHSgjw";
@@ -163,9 +164,9 @@ function injectCSS() {
     input:focus,textarea:focus{outline:none!important;border-color:#C9A84C!important;box-shadow:0 0 0 3px #C9A84C22!important}
     .field-card{animation:fadeUp .22s ease both}
     .warn-banner{animation:warnPop .3s ease both}
-    /* FIX: sug-popup uses absolute positioning within a positioned parent to avoid fixed glitch */
-    .sug-popup{animation:sugIn .15s ease both;position:absolute;left:0;right:0;top:100%;z-index:9999}
-    .ac-dropdown{animation:slideDown .15s ease both;position:absolute;left:0;right:0;top:100%;z-index:9998}
+    /* Dropdowns are rendered via React portals at body level — no CSS position needed */
+    .sug-popup{animation:sugIn .15s ease both}
+    .ac-dropdown{animation:slideDown .15s ease both}
     .ocr-overlay{position:fixed;inset:0;background:#000c;z-index:9999;display:flex;align-items:center;justify-content:center}
     .miss-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#e74c3c;margin-right:5px;animation:pulse 1.4s ease-in-out infinite}
     .tess-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;background:#f0fff4;border:1px solid #6bcf8a;border-radius:3px;font-size:9px;color:#1a7a3a;letter-spacing:.08em}
@@ -327,25 +328,52 @@ function MissingFieldBanner({ editData, onDismiss }) {
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
-   FIX 3: ADDRESS FIELD — fixed dropdown positioning
-   Dropdowns now use position:absolute within a relative wrapper instead
-   of position:fixed, eliminating scroll/resize glitches entirely.
+   ADDRESS FIELD — portals for dropdowns so they escape all overflow/
+   z-index stacking contexts (grid cards, sticky header, etc.)
 ══════════════════════════════════════════════════════════════════════════ */
+
+/* Measures textarea position and returns coords for the dropdown portal */
+function useDropdownRect(anchorRef, isOpen) {
+  const [rect, setRect] = useState(null);
+
+  useEffect(() => {
+    if (!isOpen) { setRect(null); return; }
+    const update = () => {
+      const el = anchorRef.current;
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      setRect({ top: r.bottom + window.scrollY + 2, left: r.left + window.scrollX, width: r.width });
+    };
+    update();
+    window.addEventListener("scroll", update, true);
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update, true);
+      window.removeEventListener("resize", update);
+    };
+  }, [isOpen, anchorRef]);
+
+  return rect;
+}
+
 function AddressField({ value, onChange, onCamera, onFile, sheetAddresses }) {
-  const [sugList,    setSugList]    = useState([]);
-  const [sugLoading, setSugLoading] = useState(false);
-  const [sugOpen,    setSugOpen]    = useState(false);
-  const [activeIdx,  setActiveIdx]  = useState(0);
-  const [acList,     setAcList]     = useState([]);
-  const [acOpen,     setAcOpen]     = useState(false);
+  const [sugList,     setSugList]     = useState([]);
+  const [sugLoading,  setSugLoading]  = useState(false);
+  const [sugOpen,     setSugOpen]     = useState(false);
+  const [activeIdx,   setActiveIdx]   = useState(0);
+  const [acList,      setAcList]      = useState([]);
+  const [acOpen,      setAcOpen]      = useState(false);
   const [currentWord, setCurrentWord] = useState("");
-  const [wordStart,  setWordStart]  = useState(0);
-  const [wordEnd,    setWordEnd]    = useState(0);
+  const [wordStart,   setWordStart]   = useState(0);
+  const [wordEnd,     setWordEnd]     = useState(0);
 
   const textareaRef = useRef(null);
   const debounceRef = useRef(null);
   const lastWordRef = useRef("");
-  const wrapRef     = useRef(null);   // FIX: relative wrapper for dropdown positioning
+
+  // Portal rects — track textarea position for both dropdowns
+  const sugRect = useDropdownRect(textareaRef, sugOpen && (sugLoading || sugList.length > 0));
+  const acRect  = useDropdownRect(textareaRef, acOpen && acList.length > 0);
 
   const handleChange = (e) => {
     const newVal = e.target.value;
@@ -358,7 +386,6 @@ function AddressField({ value, onChange, onCamera, onFile, sheetAddresses }) {
     const wStart = pos - word.length;
 
     if (word.length >= 2 && /^[a-zA-Z]+$/.test(word)) {
-      // Tanglish mode
       setWordStart(wStart);
       setWordEnd(pos);
       setCurrentWord(word);
@@ -381,7 +408,6 @@ function AddressField({ value, onChange, onCamera, onFile, sheetAddresses }) {
       }, 280);
 
     } else {
-      // Sheet autocomplete mode
       clearTimeout(debounceRef.current);
       lastWordRef.current = "";
       setSugOpen(false);
@@ -403,19 +429,14 @@ function AddressField({ value, onChange, onCamera, onFile, sheetAddresses }) {
   const insertSug = (tamil) => {
     const before = value.slice(0, wordStart);
     const after  = value.slice(wordEnd);
-    const newVal = before + tamil + " " + after;
-    onChange(newVal);
+    onChange(before + tamil + " " + after);
     setSugOpen(false);
     setSugList([]);
     lastWordRef.current = "";
     setCurrentWord("");
     setTimeout(() => {
       const ta = textareaRef.current;
-      if (ta) {
-        const p = wordStart + tamil.length + 1;
-        ta.setSelectionRange(p, p);
-        ta.focus();
-      }
+      if (ta) { const p = wordStart + tamil.length + 1; ta.setSelectionRange(p, p); ta.focus(); }
     }, 0);
   };
 
@@ -429,12 +450,11 @@ function AddressField({ value, onChange, onCamera, onFile, sheetAddresses }) {
 
   const handleKeyDown = (e) => {
     if (sugOpen) {
-      if (e.key === "ArrowRight" || e.key === "Tab") {
-        if (sugList.length) { e.preventDefault(); insertSug(sugList[activeIdx]); }
-      } else if (e.key === "ArrowDown") { e.preventDefault(); setActiveIdx(i => Math.min(i+1, sugList.length-1)); }
-      else if (e.key === "ArrowUp")     { e.preventDefault(); setActiveIdx(i => Math.max(i-1, 0)); }
-      else if (e.key === "Escape")      { setSugOpen(false); setSugList([]); }
-      else if (e.key === "Enter")       { if (sugList.length) { e.preventDefault(); insertSug(sugList[activeIdx]); } }
+      if (e.key === "ArrowRight" || e.key === "Tab") { if (sugList.length) { e.preventDefault(); insertSug(sugList[activeIdx]); } }
+      else if (e.key === "ArrowDown") { e.preventDefault(); setActiveIdx(i => Math.min(i+1, sugList.length-1)); }
+      else if (e.key === "ArrowUp")   { e.preventDefault(); setActiveIdx(i => Math.max(i-1, 0)); }
+      else if (e.key === "Escape")    { setSugOpen(false); setSugList([]); }
+      else if (e.key === "Enter")     { if (sugList.length) { e.preventDefault(); insertSug(sugList[activeIdx]); } }
     } else if (acOpen) {
       if (e.key === "Escape") { setAcOpen(false); setAcList([]); }
     }
@@ -442,16 +462,12 @@ function AddressField({ value, onChange, onCamera, onFile, sheetAddresses }) {
 
   const handleBlur = () => {
     const v = value.trim();
-    if (v.length > 8) {
-      const h = ls.getArr(LS_ADDR_HIST);
-      ls.setArr(LS_ADDR_HIST, [v, ...h.filter(a => a !== v)].slice(0, 20));
-    }
-    // Delay close so click events on dropdowns fire first
+    if (v.length > 8) { const h = ls.getArr(LS_ADDR_HIST); ls.setArr(LS_ADDR_HIST, [v, ...h.filter(a => a !== v)].slice(0, 20)); }
     setTimeout(() => { setSugOpen(false); setAcOpen(false); }, 200);
   };
 
   return (
-    <div ref={wrapRef} style={{ position: "relative" }}>
+    <div style={{ position: "relative" }}>
 
       {/* ── HINT BAR ── */}
       <div style={S.tanglishHint}>
@@ -471,22 +487,31 @@ function AddressField({ value, onChange, onCamera, onFile, sheetAddresses }) {
         onBlur={handleBlur}
       />
 
-      {/* ── TANGLISH SUGGESTION POPUP (absolute, no fixed glitch) ── */}
-      {sugOpen && (sugLoading || sugList.length > 0) && (
-        <div className="sug-popup" style={S.sugPop}>
+      {/* ── TANGLISH SUGGESTION POPUP — rendered via portal at body level ── */}
+      {sugOpen && (sugLoading || sugList.length > 0) && sugRect && createPortal(
+        <div style={{
+          position: "absolute",
+          top:   sugRect.top,
+          left:  sugRect.left,
+          width: sugRect.width,
+          zIndex: 99999,
+          background: "#fff",
+          border: `1.5px solid #C9A84C`,
+          borderRadius: 10,
+          boxShadow: "0 10px 32px rgba(0,0,0,.22)",
+          overflow: "hidden",
+          animation: "sugIn .15s ease both",
+        }}>
           <div style={S.sugHeader}>
             <span style={S.sugTitle}>
               {sugLoading && sugList.length === 0
                 ? <><span style={S.miniSpin}/> transliterating "{currentWord}"…</>
-                : `Tamil suggestions for "${currentWord}"`
-              }
+                : `Tamil suggestions for "${currentWord}"`}
             </span>
             <span style={S.sugNav}>Tab/→ insert · ↑↓ cycle · Esc close</span>
           </div>
           <div style={S.sugRow}>
-            {sugLoading && sugList.length === 0 && (
-              [1,2,3].map(i => <div key={i} style={S.sugSkeleton}/>)
-            )}
+            {sugLoading && sugList.length === 0 && [1,2,3].map(i => <div key={i} style={S.sugSkeleton}/>)}
             {sugList.map((s, i) => (
               <button key={i}
                 className={"sug-item" + (i === activeIdx ? " sel" : "")}
@@ -501,12 +526,26 @@ function AddressField({ value, onChange, onCamera, onFile, sheetAddresses }) {
           {!sugLoading && sugList.length === 0 && (
             <div style={S.sugEmpty}>No suggestions — keep typing or enter Tamil directly</div>
           )}
-        </div>
+        </div>,
+        document.body
       )}
 
-      {/* ── AUTOCOMPLETE DROPDOWN (absolute, no fixed glitch) ── */}
-      {acOpen && acList.length > 0 && (
-        <div className="ac-dropdown" style={S.acDrop}>
+      {/* ── AUTOCOMPLETE DROPDOWN — rendered via portal at body level ── */}
+      {acOpen && acList.length > 0 && acRect && createPortal(
+        <div style={{
+          position: "absolute",
+          top:   acRect.top,
+          left:  acRect.left,
+          width: acRect.width,
+          zIndex: 99998,
+          background: "#fff",
+          border: `1.5px solid #C9A84C`,
+          borderRadius: "0 0 10px 10px",
+          boxShadow: "0 8px 24px rgba(0,0,0,.16)",
+          maxHeight: 220,
+          overflowY: "auto",
+          animation: "slideDown .15s ease both",
+        }}>
           <div style={S.acHeader}><span style={S.acHeaderTxt}>📋 Sheet / History suggestions</span></div>
           {acList.map((addr, i) => (
             <button key={i} className="ac-item" style={S.acItem} onMouseDown={() => selectAC(addr)}>
@@ -514,7 +553,8 @@ function AddressField({ value, onChange, onCamera, onFile, sheetAddresses }) {
               <span style={S.acText}>{addr}</span>
             </button>
           ))}
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* ── CAMERA / IMAGE ── */}
@@ -716,7 +756,7 @@ export default function CRLMPEditor() {
       for (let i = 1; i < rows.length; i++) {
         const cn = normStr(rows[i][COL.CASE] || "");
         const qn = normStr(q);
-        if (cn.includes(qn) && qn.length > 0) { found = {rowIndex: i+1, data: rows[i]}; break; }
+        if (cn === qn) && qn.length > 0) { found = {rowIndex: i+1, data: rows[i]}; break; }
       }
       if (!found) { setError(`"${q}" not found in sheet "${activeSheet}".`); }
       else {
