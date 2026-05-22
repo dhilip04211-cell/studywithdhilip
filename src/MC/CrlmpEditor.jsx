@@ -213,7 +213,7 @@ async function loadTesseract() {
   });
   // FIX: Set optimal Tesseract parameters for document/address OCR
   await tesseractWorker.setParameters({
-    tessedit_pageseg_mode: "6",      // PSM 6: assume single uniform block of text
+    tessedit_pageseg_mode: "11",      // PSM 6: assume single uniform block of text
     preserve_interword_spaces: "1",
     tessedit_char_whitelist: "",     // allow all characters
   });
@@ -626,7 +626,9 @@ function EditField({ value, isMod, onChange, isEmpty }) {
    MAIN COMPONENT
 ══════════════════════════════════════════════════════════════════════════ */
 export default function CRLMPEditor() {
+  useEffect(() => {
   injectCSS();
+}, []);
 
   const [sheets,        setSheets]        = useState([]);
   const [activeSheet,   setActiveSheet]   = useState(ls.get(LS_SHEET) || "");
@@ -756,7 +758,13 @@ export default function CRLMPEditor() {
       for (let i = 1; i < rows.length; i++) {
         const cn = normStr(rows[i][COL.CASE] || "");
         const qn = normStr(q);
-        if (cn === qn) && qn.length > 0) { found = {rowIndex: i+1, data: rows[i]}; break; }
+        if (cn === qn && qn.length > 0) {
+  found = {
+    rowIndex: i + 1,
+    data: rows[i]
+  };
+  break;
+}
       }
       if (!found) { setError(`"${q}" not found in sheet "${activeSheet}".`); }
       else {
@@ -805,12 +813,33 @@ export default function CRLMPEditor() {
     finally { setSaving(false); }
   };
 
-  const markMod = (ci, val) => {
-    setEditData(p => ({...p, [ci]: val}));
-    setModCols(p => new Set([...p, ci]));
-    const updated = {...editData, [ci]: val};
-    if (![...REQUIRED_COLS].some(c => !(updated[c] || "").toString().trim())) { setShowWarn(false); setWarnDismissed(false); }
-  };
+const markMod = (ci, val) => {
+  setEditData(prev => {
+    const updated = {
+      ...prev,
+      [ci]: val
+    };
+
+    const hasMissing =
+      [...REQUIRED_COLS].some(
+        c =>
+          !(updated[c] || "")
+            .toString()
+            .trim()
+      );
+
+    if (!hasMissing) {
+      setShowWarn(false);
+      setWarnDismissed(false);
+    }
+
+    return updated;
+  });
+
+  setModCols(prev =>
+    new Set([...prev, ci])
+  );
+};
 
   useEffect(() => { if (caseYear) ls.set(LS_YEAR, caseYear); }, [caseYear]);
 
@@ -881,6 +910,15 @@ export default function CRLMPEditor() {
   };
 
   const stopStream = () => { streamRef.current?.getTracks().forEach(t => t.stop()); streamRef.current = null; };
+  useEffect(() => {
+  return () => {
+    stopStream();
+
+    if (capturedUrl) {
+      URL.revokeObjectURL(capturedUrl);
+    }
+  };
+}, [capturedUrl]);
   const pickFile   = (e) => {
     const f = e.target.files[0]; if (!f) return; e.target.value = "";
     const url = URL.createObjectURL(f);
@@ -1083,7 +1121,10 @@ export default function CRLMPEditor() {
             <div className="saveBar" style={S.saveBar}>
               {modCols.size > 0 && <span style={S.pending}>{modCols.size} field{modCols.size>1?"s":""} pending</span>}
               {missingCount > 0 && !warnDismissed && <span style={S.warnSaveHint}>⚠ {missingCount} empty</span>}
-              <button className="save-btn" style={{...S.saveBtn, ...(saving ? {opacity:.6} : {})}} onClick={save} disabled={saving}>
+              <button className="save-btn" style={{...S.saveBtn, ...(saving ? {opacity:.6} : {})}} onClick={save} disabled={
+  saving ||
+  modCols.size === 0
+}>
                 {saving ? "Saving…" : "💾 Save to Sheet"}
               </button>
             </div>
@@ -1134,7 +1175,7 @@ export default function CRLMPEditor() {
                     style={{width:"100%", maxHeight:300, objectFit:"contain", display:"block", cursor:"crosshair"}} draggable={false}/>
                   {cropRect && cropRect.w > 4 && cropRect.h > 4 && (
                     <div style={{position:"absolute", left:cropRect.x, top:cropRect.y, width:cropRect.w, height:cropRect.h,
-                                 border:"2px solid #C9A84C", background:"rgba(201,168,76,.15)", pointerEvents:"none"}}/>
+                                 border:"2px solid #C9A84C", background:"rgba(201,168,76,.15)", pointerEvents:"auto"}}/>
                   )}
                 </div>
                 {ocrError && (
