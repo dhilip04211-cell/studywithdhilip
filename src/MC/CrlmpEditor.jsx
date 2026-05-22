@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 const SHEET_ID  = "1eIwrFpP9nRa8o2kl7eeBtiffUs2CU5-xWcAGKtHSgjw";
 const API_KEY   = "AIzaSyAm8cnPYK9-2L7bl81osszkW_UfldW356g";
 const CLIENT_ID = "879226759032-dp5gjt6cemobr34kcmi1lg638e37f36q.apps.googleusercontent.com";
+const VISION_KEY = API_KEY; /* reuses same GCP API key — enable Cloud Vision API in console */
 const SCOPES    = "https://www.googleapis.com/auth/spreadsheets";
 
 /* Token stored in localStorage — key names */
@@ -91,6 +92,16 @@ export default function CRLMPEditor() {
   const [ocrOpen,       setOcrOpen]       = useState(false);
   const [ocrProcessing, setOcrProcessing] = useState(false);
   const [ocrError,      setOcrError]      = useState("");
+  const [ocrMode,       setOcrMode]       = useState("camera"); // "camera"|"crop"|"preview"
+  const [capturedBlob,  setCapturedBlob]  = useState(null);
+  const [capturedUrl,   setCapturedUrl]   = useState("");
+  // crop state
+  const [cropStart,     setCropStart]     = useState(null);
+  const [cropRect,      setCropRect]      = useState(null);
+  const [isDragging,    setIsDragging]    = useState(false);
+  const [focusRing,     setFocusRing]     = useState({ x:0, y:0, show:false });
+  const cropImgRef    = useRef(null);
+  const cropOverRef   = useRef(null);
   const videoRef  = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
@@ -245,10 +256,8 @@ export default function CRLMPEditor() {
     setSaving(true); setSaveMsg(""); setError("");
     try {
       const data = [];
-      data.push({ range: `${activeSheet}!${toA1(result.rowIndex, COL.ADDR)}`, values: [[editData[COL.ADDR]]] });
       modCols.forEach(ci => {
-        if (ci !== COL.ADDR)
-          data.push({ range: `${activeSheet}!${toA1(result.rowIndex, ci)}`, values: [[editData[ci]]] });
+        data.push({ range: `${activeSheet}!${toA1(result.rowIndex, ci)}`, values: [[editData[ci]]] });
       });
       if (!data.length) { setSaveMsg("Nothing changed."); setSaving(false); return; }
       const res = await fetch(
@@ -288,13 +297,33 @@ export default function CRLMPEditor() {
   /* ── Camera / OCR ── */
   const openCamera = async () => {
     setOcrOpen(true); setOcrError(""); setOcrProcessing(false);
+    setOcrMode("camera"); setCapturedBlob(null); setCapturedUrl(""); setCropRect(null);
     try {
-      const s = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+      const s = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "environment", width: { ideal: 1920 }, height: { ideal: 1080 } }
+      });
       streamRef.current = s;
-      setTimeout(() => { if (videoRef.current) { videoRef.current.srcObject = s; videoRef.current.play(); } }, 100);
+      setTimeout(() => {
+        if (videoRef.current) { videoRef.current.srcObject = s; videoRef.current.play(); }
+      }, 100);
     } catch (e) {
       setOcrError("Camera access denied. Use the Image button to pick from gallery.");
     }
+  };
+
+  /* Tap-to-focus on video */
+  const tapFocus = (e) => {
+    const track = streamRef.current?.getVideoTracks?.()?.[0];
+    if (!track) return;
+    const caps = track.getCapabilities?.() || {};
+    if (!caps.focusMode) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top)  / rect.height;
+    track.applyConstraints({ advanced: [{ focusMode:"manual", pointsOfInterest:[{x,y}] }] }).catch(()=>{});
+    /* show focus ring */
+    setFocusRing({ x: e.clientX - rect.left, y: e.clientY - rect.top, show: true });
+    setTimeout(() => setFocusRing(r => ({...r, show:false})), 900);
   };
 
   const capturePhoto = () => {
@@ -302,8 +331,60 @@ export default function CRLMPEditor() {
     if (!v || !c) return;
     c.width = v.videoWidth; c.height = v.videoHeight;
     c.getContext("2d").drawImage(v, 0, 0);
-    c.toBlob(blob => runOCR(blob), "image/jpeg", 0.95);
     stopStream();
+    c.toBlob(blob => {
+      const url = URL.createObjectURL(blob);
+      setCapturedBlob(blob); setCapturedUrl(url);
+      setCropRect(null); setCropStart(null);
+      setOcrMode("crop");
+    }, "image/jpeg", 0.95);
+  };
+
+  /* ── Crop helpers ── */
+  const getImgCoords = (e, el) => {
+    const r = el.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    return { x: clientX - r.left, y: clientY - r.top, w: r.width, h: r.height };
+  };
+  const onCropStart = (e) => {
+    e.preventDefault();
+    const el = cropImgRef.current; if (!el) return;
+    const { x, y } = getImgCoords(e, el);
+    setCropStart({ x, y }); setCropRect(null); setIsDragging(true);
+  };
+  const onCropMove = (e) => {
+    if (!isDragging || !cropStart) return;
+    e.preventDefault();
+    const el = cropImgRef.current; if (!el) return;
+    const { x, y } = getImgCoords(e, el);
+    setCropRect({
+      x: Math.min(cropStart.x, x), y: Math.min(cropStart.y, y),
+      w: Math.abs(x - cropStart.x), h: Math.abs(y - cropStart.y)
+    });
+  };
+  const onCropEnd = () => setIsDragging(false);
+
+  const applyCrop = () => {
+    if (!capturedBlob) return;
+    const img = cropImgRef.current; if (!img) return;
+    const c = canvasRef.current; if (!c) return;
+    const scaleX = img.naturalWidth  / img.getBoundingClientRect().width;
+    const scaleY = img.naturalHeight / img.getBoundingClientRect().height;
+    if (cropRect && cropRect.w > 10 && cropRect.h > 10) {
+      c.width  = cropRect.w * scaleX;
+      c.height = cropRect.h * scaleY;
+      const imgEl = new Image();
+      imgEl.onload = () => {
+        c.getContext("2d").drawImage(imgEl,
+          cropRect.x * scaleX, cropRect.y * scaleY, c.width, c.height,
+          0, 0, c.width, c.height);
+        c.toBlob(b => runOCR(b), "image/jpeg", 0.95);
+      };
+      imgEl.src = capturedUrl;
+    } else {
+      runOCR(capturedBlob); // no crop — use full image
+    }
   };
 
   const stopStream = () => { streamRef.current?.getTracks().forEach(t => t.stop()); streamRef.current = null; };
@@ -311,51 +392,65 @@ export default function CRLMPEditor() {
   const pickFile = (e) => {
     const f = e.target.files[0];
     if (!f) return;
+    e.target.value = "";
+    const url = URL.createObjectURL(f);
+    setCapturedBlob(f); setCapturedUrl(url);
+    setCropRect(null); setCropStart(null);
     setOcrOpen(true); setOcrError(""); setOcrProcessing(false);
-    runOCR(f); e.target.value = "";
+    setOcrMode("crop");
   };
 
   const runOCR = async (blob) => {
+    setOcrMode("camera"); // hide crop UI while processing
     setOcrProcessing(true); setOcrError("");
     try {
       const b64 = await new Promise((res, rej) => {
         const r = new FileReader();
-        r.onload  = () => res(r.result.split(",")[1]);
-        r.onerror = () => rej(new Error("Read failed"));
+        r.onload  = () => { const d = r.result; const i = d.indexOf(","); res(i>=0?d.slice(i+1):d); };
+        r.onerror = () => rej(new Error("FileReader failed"));
         r.readAsDataURL(blob);
       });
-      const resp = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 500,
-          messages: [{
-            role: "user",
-            content: [
-              { type: "image", source: { type: "base64", media_type: "image/jpeg", data: b64 } },
-              { type: "text",  text: "Extract ALL text visible in this image. Return ONLY the raw text exactly as it appears — no explanation, no formatting. This is an address or legal document field in Tamil or English." }
-            ]
-          }]
-        })
-      });
+      /* ── Google Cloud Vision TEXT_DETECTION ── */
+      const resp = await fetch(
+        `https://vision.googleapis.com/v1/images:annotate?key=${VISION_KEY}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            requests: [{
+              image: { content: b64 },
+              features: [{ type: "TEXT_DETECTION", maxResults: 1 }],
+              imageContext: { languageHints: ["ta","en"] }
+            }]
+          })
+        }
+      );
+      if (!resp.ok) {
+        const errJson = await resp.json().catch(() => ({}));
+        throw new Error(errJson.error?.message || `Vision API HTTP ${resp.status}`);
+      }
       const j   = await resp.json();
-      const txt = j.content?.[0]?.text || "";
+      const ann = j.responses?.[0];
+      if (ann?.error) throw new Error(ann.error.message);
+      const txt = ann?.fullTextAnnotation?.text || ann?.textAnnotations?.[0]?.description || "";
       if (txt.trim()) {
         setEditData(p => ({ ...p, [COL.ADDR]: txt.trim() }));
         setModCols(p => new Set([...p, COL.ADDR]));
         setOcrOpen(false);
+        if (capturedUrl) URL.revokeObjectURL(capturedUrl);
       } else {
-        setOcrError("No text detected. Try a clearer photo.");
+        setOcrError("No text detected. Try cropping closer to the text.");
+        setOcrMode("crop");
       }
     } catch (e) {
       setOcrError("OCR error: " + e.message);
+      setOcrMode("crop");
     } finally {
       setOcrProcessing(false);
     }
   };
 
-  const closeOcr = () => { stopStream(); setOcrOpen(false); setOcrError(""); setOcrProcessing(false); };
+  const closeOcr = () => { stopStream(); setOcrOpen(false); setOcrError(""); setOcrProcessing(false); setOcrMode("camera"); if(capturedUrl) URL.revokeObjectURL(capturedUrl); setCapturedUrl(""); setCapturedBlob(null); };
 
   /* ═══════════════ RENDER ═════════════════════════════════════════════════ */
   const caseQuery  = caseNum && caseYear ? `${caseNum}/${caseYear}` : null;
@@ -518,26 +613,95 @@ export default function CRLMPEditor() {
       {ocrOpen && (
         <div className="ocr-overlay">
           <div style={S.ocrCard}>
+
+            {/* Header */}
             <div style={S.ocrHead}>
-              <span style={S.ocrTitle}>📷 Scan Address Text</span>
+              <span style={S.ocrTitle}>
+                {ocrMode==="crop" ? "✂️ Crop & Scan" : "📷 Scan Address"}
+              </span>
               <button style={S.ocrClose} onClick={closeOcr}>✕</button>
             </div>
+
+            {/* Processing */}
             {ocrProcessing ? (
               <div style={S.ocrCenter}>
                 <div style={S.bigSpin} />
-                <p style={S.ocrMsg}>Extracting text with AI…</p>
+                <p style={S.ocrMsg}>Google Vision OCR…</p>
               </div>
-            ) : (
-              <>
-                <video ref={videoRef} autoPlay playsInline muted style={S.video} />
-                <canvas ref={canvasRef} style={{ display:"none" }} />
-                {ocrError && <p style={S.ocrErr}>{ocrError}</p>}
-                <div style={S.ocrBtns}>
-                  <button style={S.capBtn} onClick={capturePhoto}>📸 Capture Photo</button>
-                  <button style={S.galleryBtn} onClick={() => fileRef.current?.click()}>🖼 Gallery</button>
+
+            /* Crop / Preview mode */
+            ) : ocrMode==="crop" && capturedUrl ? (
+              <div style={{ position:"relative", userSelect:"none" }}>
+                {/* instruction */}
+                <p style={{ fontSize:11, color:"#888", textAlign:"center", padding:"8px 0 4px",
+                            background:"#f8f6f1", letterSpacing:"0.05em" }}>
+                  DRAG to select area · leave empty for full image
+                </p>
+                {/* image + crop overlay */}
+                <div style={{ position:"relative", lineHeight:0, touchAction:"none" }}
+                  onMouseDown={onCropStart} onMouseMove={onCropMove} onMouseUp={onCropEnd}
+                  onTouchStart={onCropStart} onTouchMove={onCropMove} onTouchEnd={onCropEnd}>
+                  <img ref={cropImgRef} src={capturedUrl} alt="captured"
+                    style={{ width:"100%", maxHeight:300, objectFit:"contain", display:"block",
+                             cursor:"crosshair" }} draggable={false} />
+                  {cropRect && cropRect.w > 4 && cropRect.h > 4 && (
+                    <div style={{
+                      position:"absolute",
+                      left:cropRect.x, top:cropRect.y,
+                      width:cropRect.w, height:cropRect.h,
+                      border:"2px solid #C9A84C",
+                      background:"rgba(201,168,76,0.15)",
+                      pointerEvents:"none"
+                    }} />
+                  )}
                 </div>
-              </>
+                {ocrError && (
+                  <p style={{ color:"#c0392b", fontSize:12, padding:"6px 14px",
+                               background:"#fff0f0", textAlign:"center" }}>{ocrError}</p>
+                )}
+                {/* action buttons */}
+                <div style={{ display:"flex", gap:8, padding:"10px 12px" }}>
+                  <button style={S.galleryBtn} onClick={openCamera}>🔄 Retake</button>
+                  <button style={S.galleryBtn} onClick={() => fileRef.current?.click()}>🖼 Gallery</button>
+                  <button style={{ ...S.capBtn, flex:2 }} onClick={applyCrop}>
+                    {cropRect && cropRect.w > 10 ? "✂️ Crop & Scan" : "🔍 Scan Full"}
+                  </button>
+                </div>
+                <canvas ref={canvasRef} style={{ display:"none" }} />
+              </div>
+
+            /* Camera live view */
+            ) : (
+              <div style={{ position:"relative" }}>
+                <div style={{ position:"relative", lineHeight:0 }} onClick={tapFocus}>
+                  <video ref={videoRef} autoPlay playsInline muted style={S.video} />
+                  {/* tap-to-focus ring */}
+                  {focusRing.show && (
+                    <div style={{
+                      position:"absolute",
+                      left: focusRing.x - 22, top: focusRing.y - 22,
+                      width:44, height:44,
+                      border:`2px solid ${G}`, borderRadius:"50%",
+                      pointerEvents:"none", animation:"fadeUp .2s ease"
+                    }} />
+                  )}
+                  <p style={{ position:"absolute", bottom:6, left:0, right:0, textAlign:"center",
+                               fontSize:10, color:"#fff9", letterSpacing:"0.1em" }}>
+                    TAP TO FOCUS
+                  </p>
+                </div>
+                <canvas ref={canvasRef} style={{ display:"none" }} />
+                {ocrError && (
+                  <p style={{ color:"#c0392b", fontSize:12, padding:"8px 14px",
+                               background:"#fff0f0", textAlign:"center" }}>{ocrError}</p>
+                )}
+                <div style={S.ocrBtns}>
+                  <button style={S.galleryBtn} onClick={() => fileRef.current?.click()}>🖼 Gallery</button>
+                  <button style={{ ...S.capBtn, flex:2 }} onClick={capturePhoto}>📸 Capture</button>
+                </div>
+              </div>
             )}
+
           </div>
         </div>
       )}
@@ -562,42 +726,31 @@ function AddressField({ value, onChange, onCamera, onFile }) {
   );
 }
 
-/* ─── DATE FIELD ─────────────────────────────────────────────────────────── */
+/* ─── DATE FIELD — always editable inline ────────────────────────────────── */
 function DateField({ value, isMod, onChange }) {
-  const [editing, setEditing] = useState(false);
-  const [draft,   setDraft]   = useState(value);
-  const ref = useRef();
+  const [draft, setDraft] = useState(value);
   useEffect(() => setDraft(value), [value]);
-  useEffect(() => { if (editing) ref.current?.focus(); }, [editing]);
 
-  const handleInput = (e) => {
+  const handleChange = (e) => {
     let v = e.target.value.replace(/\D/g, "");
     if (v.length > 2) v = v.slice(0,2) + "-" + v.slice(2);
     if (v.length > 5) v = v.slice(0,5) + "-" + v.slice(5);
-    if (v.length > 10) v = v.slice(0,10);
+    v = v.slice(0,10);
     setDraft(v);
+    onChange(v);
   };
-  const commit = () => { onChange(draft); setEditing(false); };
-  const cancel = () => { setDraft(value); setEditing(false); };
 
-  return editing ? (
-    <div style={{ display:"flex", gap:6, alignItems:"center" }}>
-      <input ref={ref}
-        style={{ ...S.inpInline, ...(isMod ? { borderColor:"#C9A84C" } : {}) }}
-        value={draft} onChange={handleInput}
-        inputMode="numeric" enterKeyHint="done"
-        placeholder="dd-mm-yyyy" maxLength={10}
-        onKeyDown={e => { if (e.key==="Enter") commit(); if (e.key==="Escape") cancel(); }} />
-      <button style={S.okBtn} onClick={commit}>✓</button>
-      <button style={S.cancelBtn} onClick={cancel}>✕</button>
-    </div>
-  ) : (
-    <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-      <span style={{ ...S.dispVal, ...(isMod ? { color:"#C9A84C", fontWeight:700 } : {}) }}>
-        {value || <em style={{ opacity:.35 }}>—</em>}
-      </span>
-      <button className="mod-btn" style={S.modBtn} onClick={() => setEditing(true)}>Modify</button>
-    </div>
+  return (
+    <input
+      style={{ ...S.inpInline, width:"100%", boxSizing:"border-box",
+               ...(isMod ? { borderColor:"#C9A84C", background:"#fffbf0" } : {}) }}
+      value={draft}
+      onChange={handleChange}
+      inputMode="numeric"
+      enterKeyHint="done"
+      placeholder="dd-mm-yyyy"
+      maxLength={10}
+    />
   );
 }
 
