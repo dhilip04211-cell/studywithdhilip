@@ -45,6 +45,16 @@ const sections = [
     external: false,
     num: "04",
   },
+{
+    title: "Crlmp Portal",
+    route: "/mc/crlmpeditor",
+    icon: "📰",
+    color: "#4CAF89",
+    accent: "#80D4B1",
+    subtitle: "crlmp",
+    external: false,
+    num: "05",
+  },
 ];
 
 function ParticleCanvas() {
