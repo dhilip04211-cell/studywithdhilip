@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback, useRef } from "react";
 const SHEET_ID  = "1eIwrFpP9nRa8o2kl7eeBtiffUs2CU5-xWcAGKtHSgjw";
 const API_KEY   = "AIzaSyAm8cnPYK9-2L7bl81osszkW_UfldW356g";
 const CLIENT_ID = "879226759032-dp5gjt6cemobr34kcmi1lg638e37f36q.apps.googleusercontent.com";
-const VISION_KEY = API_KEY; /* reuses same GCP API key — enable Cloud Vision API in console */
 const SCOPES    = "https://www.googleapis.com/auth/spreadsheets";
 
 /* Token stored in localStorage — key names */
@@ -401,38 +400,43 @@ export default function CRLMPEditor() {
   };
 
   const runOCR = async (blob) => {
-    setOcrMode("camera"); // hide crop UI while processing
+    setOcrMode("camera"); // show spinner
     setOcrProcessing(true); setOcrError("");
     try {
+      const mimeType = (blob.type && blob.type.startsWith("image/")) ? blob.type : "image/jpeg";
       const b64 = await new Promise((res, rej) => {
         const r = new FileReader();
         r.onload  = () => { const d = r.result; const i = d.indexOf(","); res(i>=0?d.slice(i+1):d); };
         r.onerror = () => rej(new Error("FileReader failed"));
         r.readAsDataURL(blob);
       });
-      /* ── Google Cloud Vision TEXT_DETECTION ── */
-      const resp = await fetch(
-        `https://vision.googleapis.com/v1/images:annotate?key=${VISION_KEY}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            requests: [{
-              image: { content: b64 },
-              features: [{ type: "TEXT_DETECTION", maxResults: 1 }],
-              imageContext: { languageHints: ["ta","en"] }
-            }]
-          })
-        }
-      );
+      /* ── Anthropic Claude Vision OCR (browser-safe) ── */
+      const resp = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": "",
+          "anthropic-version": "2023-06-01",
+          "anthropic-dangerous-direct-browser-access": "true"
+        },
+        body: JSON.stringify({
+          model: "claude-opus-4-5",
+          max_tokens: 1024,
+          messages: [{
+            role: "user",
+            content: [
+              { type: "image", source: { type: "base64", media_type: mimeType, data: b64 } },
+              { type: "text", text: "This image contains an address or legal document text in Tamil or English. Extract ALL visible text exactly as written. Return ONLY the raw text, no explanation, no formatting, no markdown." }
+            ]
+          }]
+        })
+      });
       if (!resp.ok) {
         const errJson = await resp.json().catch(() => ({}));
-        throw new Error(errJson.error?.message || `Vision API HTTP ${resp.status}`);
+        throw new Error(errJson.error?.message || `API error ${resp.status}`);
       }
       const j   = await resp.json();
-      const ann = j.responses?.[0];
-      if (ann?.error) throw new Error(ann.error.message);
-      const txt = ann?.fullTextAnnotation?.text || ann?.textAnnotations?.[0]?.description || "";
+      const txt = j.content?.find(b => b.type==="text")?.text || "";
       if (txt.trim()) {
         setEditData(p => ({ ...p, [COL.ADDR]: txt.trim() }));
         setModCols(p => new Set([...p, COL.ADDR]));
