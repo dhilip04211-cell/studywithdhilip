@@ -20,7 +20,7 @@ const READONLY  = new Set([COL.SR, COL.CASE]);
 
 /* ─── HELPERS ────────────────────────────────────────────────────────────── */
 const toA1    = (row, col) => `${String.fromCharCode(65 + col)}${row}`;
-const normStr = (s = "")   => s.toString().trim().toLowerCase().replace(/\s+/g, "");
+const normStr = (s = "") => s.toString().replace(/\D/g, "");
 const ls      = { get: k => { try { return localStorage.getItem(k); } catch { return null; } },
                   set: (k,v) => { try { localStorage.setItem(k,v); } catch {} },
                   del: k => { try { localStorage.removeItem(k); } catch {} } };
