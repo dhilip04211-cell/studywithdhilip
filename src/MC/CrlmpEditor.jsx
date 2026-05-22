@@ -7,12 +7,13 @@ const API_KEY   = "AIzaSyAm8cnPYK9-2L7bl81osszkW_UfldW356g";
 const CLIENT_ID = "879226759032-dp5gjt6cemobr34kcmi1lg638e37f36q.apps.googleusercontent.com";
 const SCOPES    = "https://www.googleapis.com/auth/spreadsheets";
 
-const LS_TOKEN     = "crlmp_token";
-const LS_TOKEN_EXP = "crlmp_token_exp";
-const LS_SHEET     = "crlmp_sheet";
-const LS_YEAR      = "crlmp_year";
-const LS_ADDR_HIST = "crlmp_addr_history";
-const LS_TA_CACHE  = "crlmp_ta_cache";
+const LS_TOKEN      = "crlmp_token";
+const LS_TOKEN_EXP  = "crlmp_token_exp";
+const LS_SHEET      = "crlmp_sheet";
+const LS_YEAR       = "crlmp_year";
+const LS_ADDR_HIST  = "crlmp_addr_history";
+const LS_TA_CACHE   = "crlmp_ta_cache";
+const LS_CASE_HIST  = "crlmp_case_history";   /* ★ NEW recent cases */
 
 /* ─── COLUMN MAP ─────────────────────────────────────────────────────────── */
 const COL     = { SR:0, CASE:1, ADDR:2, FIR_DATE:3, NEXT_DATE:4, ACT:5, PS:6, FIR_NO:7 };
@@ -23,51 +24,80 @@ const REQUIRED_COLS = new Set([COL.ADDR, COL.FIR_DATE, COL.NEXT_DATE, COL.ACT, C
 
 /* ─── THEME ──────────────────────────────────────────────────────────────── */
 const T = {
-  bg:       "#0a0b0f",
-  bgPanel:  "#0f1118",
-  bgCard:   "#13151f",
-  bgCardHov:"#171a27",
-  bgInput:  "#0c0e16",
-  border:   "#1e2235",
+  bg:        "#0a0b0f",
+  bgPanel:   "#0f1118",
+  bgCard:    "#13151f",
+  bgCardHov: "#171a27",
+  bgInput:   "#0c0e16",
+  border:    "#1e2235",
   borderGlow:"#2a3060",
-  gold:     "#d4a843",
-  goldDim:  "#8a6920",
-  goldGlow: "rgba(212,168,67,.15)",
-  crimson:  "#c0392b",
+  gold:      "#d4a843",
+  goldDim:   "#8a6920",
+  goldGlow:  "rgba(212,168,67,.15)",
+  crimson:   "#c0392b",
   crimsonDim:"#7a1f15",
   crimsonGlow:"rgba(192,57,43,.18)",
-  green:    "#27ae60",
-  greenGlow:"rgba(39,174,96,.15)",
-  text:     "#e8eaf0",
-  textDim:  "#7a8099",
-  textMuted:"#3d4260",
-  white:    "#ffffff",
+  green:     "#27ae60",
+  greenGlow: "rgba(39,174,96,.15)",
+  blue:      "#4a7aff",
+  blueGlow:  "rgba(74,122,255,.15)",
+  orange:    "#e67e22",
+  orangeGlow:"rgba(230,126,34,.18)",
+  text:      "#e8eaf0",
+  textDim:   "#7a8099",
+  textMuted: "#3d4260",
+  white:     "#ffffff",
 };
 
 /* ─── HELPERS ────────────────────────────────────────────────────────────── */
 const toA1    = (row, col) => `${String.fromCharCode(65 + col)}${row}`;
 const normStr = (s = "") => s.toString().replace(/\D/g, "");
 const ls = {
-  get:     k     => { try { return localStorage.getItem(k); }             catch { return null; } },
-  set:     (k,v) => { try { localStorage.setItem(k,v); }                  catch {} },
-  del:     k     => { try { localStorage.removeItem(k); }                 catch {} },
-  getJSON: k     => { try { return JSON.parse(localStorage.getItem(k) || "{}"); } catch { return {}; } },
-  setJSON: (k,v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
-  getArr:  k     => { try { return JSON.parse(localStorage.getItem(k) || "[]"); } catch { return []; } },
-  setArr:  (k,v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+  get:     k     => { try { return localStorage.getItem(k); }              catch { return null; } },
+  set:     (k,v) => { try { localStorage.setItem(k,v); }                   catch {} },
+  del:     k     => { try { localStorage.removeItem(k); }                  catch {} },
+  getJSON: k     => { try { return JSON.parse(localStorage.getItem(k)||"{}"); } catch { return {}; } },
+  setJSON: (k,v) => { try { localStorage.setItem(k,JSON.stringify(v)); }   catch {} },
+  getArr:  k     => { try { return JSON.parse(localStorage.getItem(k)||"[]"); } catch { return []; } },
+  setArr:  (k,v) => { try { localStorage.setItem(k,JSON.stringify(v)); }   catch {} },
 };
 
-function fmtDate(raw = "") {
-  if (!raw) return "";
-  if (/^\d{2}-\d{2}-\d{4}$/.test(raw.trim())) return raw.trim();
-  const m = raw.trim().match(/^(\d{1,2})[\/\.\-](\d{1,2})[\/\.\-](\d{2,4})$/);
-  if (m) return `${m[1].padStart(2,"0")}-${m[2].padStart(2,"0")}-${m[3].padStart(4,"0")}`;
+function fmtDate(raw="") {
+  if(!raw)return"";
+  if(/^\d{2}-\d{2}-\d{4}$/.test(raw.trim()))return raw.trim();
+  const m=raw.trim().match(/^(\d{1,2})[\/\.\-](\d{1,2})[\/\.\-](\d{2,4})$/);
+  if(m)return`${m[1].padStart(2,"0")}-${m[2].padStart(2,"0")}-${m[3].padStart(4,"0")}`;
   return raw;
 }
 
-/* ─── TAMIL ADDRESS QUICK MAP (offline / instant) ────────────────────────── */
+/* ★ DATE VALIDATION ─────────────────────────────────────────────────────── */
+function isValidDate(d="") {
+  if(!d||d.length<10)return false;
+  const parts=d.split("-");
+  if(parts.length!==3)return false;
+  const [dd,mm,yyyy]=parts.map(Number);
+  if(isNaN(dd)||isNaN(mm)||isNaN(yyyy))return false;
+  if(dd<1||dd>31||mm<1||mm>12||yyyy<1900||yyyy>2100)return false;
+  const date=new Date(yyyy,mm-1,dd);
+  return date.getDate()===dd&&date.getMonth()===mm-1&&date.getFullYear()===yyyy;
+}
+
+/* ★ NEXT DATE URGENCY ───────────────────────────────────────────────────── */
+function getDateUrgency(dateStr="") {
+  if(!dateStr||!isValidDate(dateStr))return null;
+  const [dd,mm,yyyy]=dateStr.split("-").map(Number);
+  const target=new Date(yyyy,mm-1,dd);
+  const today=new Date(); today.setHours(0,0,0,0); target.setHours(0,0,0,0);
+  const diff=Math.round((target-today)/(1000*60*60*24));
+  if(diff<0)return{label:"OVERDUE",color:"#ff4040",glow:"rgba(255,64,64,.25)",days:diff};
+  if(diff===0)return{label:"TODAY",color:"#ff8c00",glow:"rgba(255,140,0,.25)",days:0};
+  if(diff===1)return{label:"TOMORROW",color:"#e67e22",glow:"rgba(230,126,34,.2)",days:1};
+  if(diff<=7)return{label:`${diff}d`,color:T.gold,glow:T.goldGlow,days:diff};
+  return null;
+}
+
+/* ─── TAMIL ADDRESS QUICK MAP (offline/instant) ──────────────────────────── */
 const TAMIL_ADDR_MAP = {
-  /* cities & districts */
   "chennai":"சென்னை","madurai":"மதுரை","coimbatore":"கோயம்புத்தூர்",
   "trichy":"திருச்சிராப்பள்ளி","tiruchirappalli":"திருச்சிராப்பள்ளி",
   "salem":"சேலம்","tirunelveli":"திருநெல்வேலி","vellore":"வேலூர்",
@@ -81,7 +111,6 @@ const TAMIL_ADDR_MAP = {
   "karur":"கரூர்","nilgiris":"நீலகிரி","ooty":"உதகமண்டலம்",
   "hosur":"ஹோசூர்","ambattur":"அம்பத்தூர்","avadi":"ஆவடி",
   "tambaram":"தாம்பரம்","pallavaram":"பல்லாவரம்","thiruvallur":"திருவள்ளூர்",
-  /* address words */
   "veedu":"வீடு","theru":"தெரு","nagar":"நகர்","salai":"சாலை",
   "road":"சாலை","street":"தெரு","main":"மெயின்","new":"புதிய",
   "old":"பழைய","big":"பெரிய","small":"சிறிய","north":"வடக்கு",
@@ -92,98 +121,79 @@ const TAMIL_ADDR_MAP = {
   "door":"கதவு","plot":"பிளாட்","house":"வீடு","building":"கட்டிடம்",
 };
 
-/* ─── VARNAM + GOOGLE TAMIL ENGINE (100% FREE) ───────────────────────────── */
+/* ─── VARNAM + GOOGLE TAMIL ENGINE (★ fixed AbortSignal) ─────────────────── */
 const pendingRequests = {};
 
 async function fetchTamilSuggestions(word) {
-  if (!word || word.length < 2 || !/^[a-zA-Z]+$/.test(word)) return [];
-  const lw = word.toLowerCase().trim();
+  if(!word||word.length<2||!/^[a-zA-Z]+$/.test(word))return[];
+  const lw=word.toLowerCase().trim();
+  const cache=ls.getJSON(LS_TA_CACHE);
+  if(cache[lw]&&Array.isArray(cache[lw])&&cache[lw].length>0)return cache[lw];
+  if(TAMIL_ADDR_MAP[lw])return[TAMIL_ADDR_MAP[lw]];
+  if(pendingRequests[lw])return pendingRequests[lw];
 
-  /* 1. localStorage cache */
-  const cache = ls.getJSON(LS_TA_CACHE);
-  if (cache[lw] && Array.isArray(cache[lw]) && cache[lw].length > 0) return cache[lw];
+  pendingRequests[lw]=(async()=>{
+    let sugs=[];
 
-  /* 2. Instant local map */
-  if (TAMIL_ADDR_MAP[lw]) return [TAMIL_ADDR_MAP[lw]];
+    /* Varnam API – with ★ safe AbortController (works on all browsers) */
+    try{
+      const ctrl=new AbortController();
+      const timer=setTimeout(()=>ctrl.abort(),4000);
+      try{
+        const resp=await fetch(`https://api.varnamproject.com/tl/ta/${encodeURIComponent(lw)}`,{signal:ctrl.signal});
+        if(resp.ok){const data=await resp.json();sugs=(data?.result||[]).filter(s=>typeof s==="string"&&/[\u0B80-\u0BFF]/.test(s)).slice(0,6);}
+      }finally{clearTimeout(timer);}
+    }catch{}
 
-  /* 3. Deduplicate in-flight requests */
-  if (pendingRequests[lw]) return pendingRequests[lw];
-
-  pendingRequests[lw] = (async () => {
-    let sugs = [];
-
-    /* 4. Varnam API (primary — open source, free, Tamil-optimised) */
-    try {
-      const resp = await fetch(
-        `https://api.varnamproject.com/tl/ta/${encodeURIComponent(lw)}`,
-        { signal: AbortSignal.timeout(4000) }
-      );
-      if (resp.ok) {
-        const data = await resp.json();
-        sugs = (data?.result || [])
-          .filter(s => typeof s === "string" && /[\u0B80-\u0BFF]/.test(s))
-          .slice(0, 6);
-      }
-    } catch { /* Varnam down or timeout — fall through */ }
-
-    /* 5. Google Input Tools fallback (free, unofficial) */
-    if (!sugs.length) {
-      try {
-        const resp = await fetch(
-          `https://inputtools.google.com/request?text=${encodeURIComponent(lw)}&itc=ta-t-i0-und&num=6&cp=0&cs=1&ie=utf-8&oe=utf-8`,
-          { signal: AbortSignal.timeout(4000) }
-        );
-        if (resp.ok) {
-          const data = await resp.json();
-          sugs = (data?.[1]?.[0]?.[1] || [])
-            .filter(s => typeof s === "string" && /[\u0B80-\u0BFF]/.test(s))
-            .slice(0, 6);
-        }
-      } catch { /* both failed */ }
+    /* Google Input Tools fallback */
+    if(!sugs.length){
+      try{
+        const ctrl=new AbortController();
+        const timer=setTimeout(()=>ctrl.abort(),4000);
+        try{
+          const resp=await fetch(`https://inputtools.google.com/request?text=${encodeURIComponent(lw)}&itc=ta-t-i0-und&num=6&cp=0&cs=1&ie=utf-8&oe=utf-8`,{signal:ctrl.signal});
+          if(resp.ok){const data=await resp.json();sugs=(data?.[1]?.[0]?.[1]||[]).filter(s=>typeof s==="string"&&/[\u0B80-\u0BFF]/.test(s)).slice(0,6);}
+        }finally{clearTimeout(timer);}
+      }catch{}
     }
 
-    /* 6. Save to cache */
-    if (sugs.length) {
-      const uc = ls.getJSON(LS_TA_CACHE);
-      const keys = Object.keys(uc);
-      if (keys.length > 500) delete uc[keys[0]];
-      uc[lw] = sugs;
-      ls.setJSON(LS_TA_CACHE, uc);
+    if(sugs.length){
+      const uc=ls.getJSON(LS_TA_CACHE);const keys=Object.keys(uc);
+      if(keys.length>500)delete uc[keys[0]];
+      uc[lw]=sugs;ls.setJSON(LS_TA_CACHE,uc);
     }
-
     delete pendingRequests[lw];
     return sugs;
   })();
-
   return pendingRequests[lw];
 }
 
 /* ─── IMAGE PRE-PROCESSING ───────────────────────────────────────────────── */
-function preprocessImageForOCR(blob) {
-  return new Promise((resolve) => {
-    const img = new Image(); const url = URL.createObjectURL(blob);
-    img.onload = () => {
+function preprocessImageForOCR(blob){
+  return new Promise((resolve)=>{
+    const img=new Image();const url=URL.createObjectURL(blob);
+    img.onload=()=>{
       URL.revokeObjectURL(url);
-      const canvas = document.createElement("canvas");
-      const scale = Math.max(1, 1200 / img.width);
-      canvas.width = img.width * scale; canvas.height = img.height * scale;
-      const ctx = canvas.getContext("2d"); ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height); const data = imageData.data;
-      for (let i = 0; i < data.length; i += 4) { const g = 0.299*data[i]+0.587*data[i+1]+0.114*data[i+2]; data[i]=data[i+1]=data[i+2]=g; }
-      let mn=255,mx=0; for (let i=0;i<data.length;i+=4){if(data[i]<mn)mn=data[i];if(data[i]>mx)mx=data[i];}
-      const rng=mx-mn||1; for(let i=0;i<data.length;i+=4){const v=Math.round(((data[i]-mn)/rng)*255);data[i]=data[i+1]=data[i+2]=v;}
+      const canvas=document.createElement("canvas");
+      const scale=Math.max(1,1200/img.width);
+      canvas.width=img.width*scale;canvas.height=img.height*scale;
+      const ctx=canvas.getContext("2d");ctx.drawImage(img,0,0,canvas.width,canvas.height);
+      const imageData=ctx.getImageData(0,0,canvas.width,canvas.height);const data=imageData.data;
+      for(let i=0;i<data.length;i+=4){const g=0.299*data[i]+0.587*data[i+1]+0.114*data[i+2];data[i]=data[i+1]=data[i+2]=g;}
+      let mn=255,mx=0;for(let i=0;i<data.length;i+=4){if(data[i]<mn)mn=data[i];if(data[i]>mx)mx=data[i];}
+      const rng=mx-mn||1;for(let i=0;i<data.length;i+=4){const v=Math.round(((data[i]-mn)/rng)*255);data[i]=data[i+1]=data[i+2]=v;}
       for(let i=0;i<data.length;i+=4){const v=data[i]/255;const b=Math.round(255*(v<.5?2*v*v:1-Math.pow(-2*v+2,2)/2));data[i]=data[i+1]=data[i+2]=Math.min(255,Math.max(0,b));}
       const copy=new Uint8ClampedArray(data),w=canvas.width,h=canvas.height;
       for(let y=1;y<h-1;y++)for(let x=1;x<w-1;x++){const idx=(y*w+x)*4;const lap=-copy[idx-w*4]-copy[idx+w*4]-copy[idx-4]-copy[idx+4]+4*copy[idx];const sh=Math.min(255,Math.max(0,copy[idx]-.6*lap));data[idx]=data[idx+1]=data[idx+2]=Math.round(sh);}
-      ctx.putImageData(imageData,0,0); canvas.toBlob(resolve,"image/png");
+      ctx.putImageData(imageData,0,0);canvas.toBlob(resolve,"image/png");
     };
-    img.onerror=()=>{URL.revokeObjectURL(url);resolve(blob);}; img.src=url;
+    img.onerror=()=>{URL.revokeObjectURL(url);resolve(blob);};img.src=url;
   });
 }
 
 /* ─── TESSERACT LOADER ───────────────────────────────────────────────────── */
 let tesseractWorker=null,tesseractLoading=false,tesseractReady=false;
-async function loadTesseract() {
+async function loadTesseract(){
   if(tesseractReady&&tesseractWorker)return tesseractWorker;
   if(tesseractLoading){await new Promise(r=>{const iv=setInterval(()=>{if(tesseractReady){clearInterval(iv);r();}},200);});return tesseractWorker;}
   tesseractLoading=true;
@@ -196,7 +206,7 @@ async function loadTesseract() {
 /* ─── GLOBAL CSS ─────────────────────────────────────────────────────────── */
 const INJECTED={done:false};
 function injectCSS(){
-  if(INJECTED.done)return; INJECTED.done=true;
+  if(INJECTED.done)return;INJECTED.done=true;
   const s=document.createElement("style");
   s.textContent=`
     @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap');
@@ -211,10 +221,8 @@ function injectCSS(){
     @keyframes fadeIn    {from{opacity:0}to{opacity:1}}
     @keyframes slideDown {from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
     @keyframes pulse     {0%,100%{opacity:1}50%{opacity:.3}}
-    @keyframes scanline  {0%{transform:translateY(-100%)}100%{transform:translateY(100vh)}}
-    @keyframes glowPulse {0%,100%{box-shadow:0 0 0 0 transparent}50%{box-shadow:0 0 16px 2px ${T.goldGlow}}}
-    @keyframes borderFlow{0%{background-position:0% 50%}100%{background-position:200% 50%}}
-    @keyframes blink     {0%,100%{opacity:1}49%{opacity:1}50%{opacity:0}99%{opacity:0}}
+    @keyframes urgentPulse{0%,100%{box-shadow:0 0 0 0 transparent}50%{box-shadow:0 0 16px 3px rgba(255,64,64,.35)}}
+    @keyframes copyPop   {0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
 
     .tab-btn{transition:all .2s!important}
     .tab-btn:hover{background:${T.bgCardHov}!important;border-color:${T.gold}!important;color:${T.gold}!important;box-shadow:0 0 12px ${T.goldGlow}!important}
@@ -224,6 +232,7 @@ function injectCSS(){
     .field-card:hover{background:${T.bgCardHov}!important;border-color:${T.borderGlow}!important}
     .field-card.modified{border-color:${T.gold}!important;box-shadow:inset 3px 0 0 ${T.gold},0 0 20px ${T.goldGlow}!important}
     .field-card.empty{border-color:${T.crimsonDim}!important;box-shadow:inset 3px 0 0 ${T.crimson}!important}
+    .field-card.urgent{animation:urgentPulse 2s ease-in-out infinite!important}
 
     .mod-btn{transition:all .15s!important}
     .mod-btn:hover{background:${T.goldGlow}!important;border-color:${T.gold}!important;color:${T.gold}!important}
@@ -232,8 +241,15 @@ function injectCSS(){
     .save-btn:hover:not(:disabled){transform:translateY(-1px)!important;box-shadow:0 6px 24px rgba(212,168,67,.4)!important}
     .save-btn:active{transform:translateY(0)!important}
 
+    .copy-btn{transition:all .15s!important}
+    .copy-btn:hover{background:${T.blueGlow}!important;border-color:${T.blue}!important;color:${T.blue}!important}
+    .copy-btn.copied{animation:copyPop .3s ease!important}
+
     .cam-btn{transition:all .15s!important}
     .cam-btn:hover{background:#0a1535!important;border-color:#4a7aff!important;color:#7aabff!important;box-shadow:0 0 10px rgba(74,122,255,.2)!important}
+
+    .hist-btn{transition:all .15s!important}
+    .hist-btn:hover{background:${T.goldGlow}!important;border-color:${T.goldDim}!important;color:${T.gold}!important}
 
     .sug-item{transition:all .12s!important}
     .sug-item:hover,.sug-item.sel{background:${T.goldGlow}!important;border-color:${T.gold}!important;color:${T.gold}!important}
@@ -243,12 +259,14 @@ function injectCSS(){
 
     input,textarea{transition:border-color .2s,box-shadow .2s!important}
     input:focus,textarea:focus{outline:none!important;border-color:${T.gold}!important;box-shadow:0 0 0 2px ${T.goldGlow},0 0 20px ${T.goldGlow}!important}
+    input.date-invalid{border-color:${T.crimson}!important;box-shadow:0 0 0 2px ${T.crimsonGlow}!important}
 
     .search-btn:hover{box-shadow:0 0 24px rgba(212,168,67,.5)!important;transform:translateY(-1px)!important}
     .sign-btn:hover{background:${T.goldGlow}!important;box-shadow:0 0 16px ${T.goldGlow}!important}
 
     .warn-pop{animation:slideDown .2s ease both}
     .ok-box{animation:fadeIn .3s ease both}
+    .offline-banner{animation:slideDown .2s ease both}
 
     .miss-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:${T.crimson};margin-right:6px;animation:pulse 1.2s ease-in-out infinite}
     .tess-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;background:rgba(39,174,96,.1);border:1px solid rgba(39,174,96,.3);border-radius:3px;font-size:9px;color:${T.green};letter-spacing:.1em;font-family:'IBM Plex Mono',monospace}
@@ -272,7 +290,7 @@ function injectCSS(){
 }
 
 /* ─── PORTAL DROPDOWN RECT HOOK ──────────────────────────────────────────── */
-function useDropdownRect(anchorRef, isOpen) {
+function useDropdownRect(anchorRef,isOpen){
   const [rect,setRect]=useState(null);
   useEffect(()=>{
     if(!isOpen){setRect(null);return;}
@@ -285,7 +303,7 @@ function useDropdownRect(anchorRef, isOpen) {
 }
 
 /* ─── MISSING FIELD BANNER ───────────────────────────────────────────────── */
-function MissingFieldBanner({editData,onDismiss}) {
+function MissingFieldBanner({editData,onDismiss}){
   const missing=[];REQUIRED_COLS.forEach(ci=>{if(!(editData[ci]||"").toString().trim())missing.push(HEADERS[ci]);});
   if(!missing.length)return null;
   return(
@@ -308,8 +326,24 @@ function MissingFieldBanner({editData,onDismiss}) {
   );
 }
 
+/* ★ OFFLINE BANNER ──────────────────────────────────────────────────────── */
+function OfflineBanner(){
+  const [offline,setOffline]=useState(!navigator.onLine);
+  useEffect(()=>{
+    const on=()=>setOffline(false);const off=()=>setOffline(true);
+    window.addEventListener("online",on);window.addEventListener("offline",off);
+    return()=>{window.removeEventListener("online",on);window.removeEventListener("offline",off);};
+  },[]);
+  if(!offline)return null;
+  return(
+    <div className="offline-banner" style={{padding:"8px 16px",background:"rgba(230,126,34,.12)",border:`1px solid ${T.orange}`,borderLeft:`3px solid ${T.orange}`,borderRadius:6,display:"flex",alignItems:"center",gap:8,fontSize:11,color:T.orange,fontFamily:"'IBM Plex Mono',monospace",letterSpacing:"0.06em"}}>
+      <span>⚡</span> Offline — using local Tamil map only · Sheet changes will fail
+    </div>
+  );
+}
+
 /* ─── ADDRESS FIELD ──────────────────────────────────────────────────────── */
-function AddressField({value,onChange,onCamera,onFile,sheetAddresses}) {
+function AddressField({value,onChange,onCamera,onFile,sheetAddresses}){
   const [sugList,setSugList]=useState([]);
   const [sugLoading,setSugLoading]=useState(false);
   const [sugOpen,setSugOpen]=useState(false);
@@ -326,7 +360,7 @@ function AddressField({value,onChange,onCamera,onFile,sheetAddresses}) {
   const acRect=useDropdownRect(textareaRef,acOpen&&acList.length>0);
 
   const handleChange=(e)=>{
-    const newVal=e.target.value; onChange(newVal);
+    const newVal=e.target.value;onChange(newVal);
     const pos=e.target.selectionStart,before=newVal.slice(0,pos),words=before.split(/\s/),word=words[words.length-1],wStart=pos-word.length;
     if(word.length>=2&&/^[a-zA-Z]+$/.test(word)){
       setWordStart(wStart);setWordEnd(pos);setCurrentWord(word);setAcOpen(false);setAcList([]);
@@ -336,7 +370,7 @@ function AddressField({value,onChange,onCamera,onFile,sheetAddresses}) {
         lastWordRef.current=lw;setSugLoading(true);setSugOpen(true);setSugList([]);setActiveIdx(0);
         const sugs=await fetchTamilSuggestions(word);setSugList(sugs);setSugLoading(false);if(!sugs.length)setSugOpen(false);
       },280);
-    } else {
+    }else{
       clearTimeout(debounceRef.current);lastWordRef.current="";setSugOpen(false);setSugLoading(false);
       const q=newVal.trim().toLowerCase();
       if(q.length>=3){
@@ -360,7 +394,7 @@ function AddressField({value,onChange,onCamera,onFile,sheetAddresses}) {
       else if(e.key==="ArrowUp"){e.preventDefault();setActiveIdx(i=>Math.max(i-1,0));}
       else if(e.key==="Escape"){setSugOpen(false);setSugList([]);}
       else if(e.key==="Enter"){if(sugList.length){e.preventDefault();insertSug(sugList[activeIdx]);}}
-    } else if(acOpen&&e.key==="Escape"){setAcOpen(false);setAcList([]);}
+    }else if(acOpen&&e.key==="Escape"){setAcOpen(false);setAcList([]);}
   };
   const handleBlur=()=>{
     const v=value.trim();if(v.length>8){const h=ls.getArr(LS_ADDR_HIST);ls.setArr(LS_ADDR_HIST,[v,...h.filter(a=>a!==v)].slice(0,20));}
@@ -373,14 +407,11 @@ function AddressField({value,onChange,onCamera,onFile,sheetAddresses}) {
         <span style={{fontSize:9,padding:"2px 9px",background:`linear-gradient(90deg,${T.goldGlow},transparent)`,border:`1px solid ${T.goldDim}`,borderRadius:2,color:T.gold,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase"}}>✦ Varnam Tamil</span>
         <span style={{fontSize:9,color:T.textMuted,letterSpacing:"0.05em"}}>type English → Tamil · 100% free</span>
       </div>
-      <textarea
-        ref={textareaRef}
+      <textarea ref={textareaRef}
         style={{width:"100%",background:T.bgInput,border:`1px solid ${T.border}`,borderRadius:6,color:T.text,fontSize:13,padding:"10px 12px",fontFamily:"'IBM Plex Mono',monospace",resize:"vertical",lineHeight:1.7,boxSizing:"border-box",minHeight:72}}
         value={value} rows={3}
         placeholder="வீடு எண், தெரு, நகர்… or type English for Tamil"
-        onChange={handleChange} onKeyDown={handleKeyDown} onBlur={handleBlur}
-      />
-      {/* Suggestion portal */}
+        onChange={handleChange} onKeyDown={handleKeyDown} onBlur={handleBlur}/>
       {sugOpen&&(sugLoading||sugList.length>0)&&sugRect&&createPortal(
         <div style={{position:"absolute",top:sugRect.top,left:sugRect.left,width:sugRect.width,zIndex:99999,background:T.bgPanel,border:`1px solid ${T.gold}`,borderRadius:8,boxShadow:`0 16px 48px rgba(0,0,0,.8),0 0 40px ${T.goldGlow}`,overflow:"hidden",animation:"slideDown .15s ease both"}}>
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"7px 12px",background:`linear-gradient(90deg,${T.goldGlow},transparent)`,borderBottom:`1px solid ${T.border}`}}>
@@ -400,10 +431,8 @@ function AddressField({value,onChange,onCamera,onFile,sheetAddresses}) {
             ))}
           </div>
           {!sugLoading&&sugList.length===0&&<div style={{fontSize:11,color:T.textDim,padding:"8px 14px",textAlign:"center"}}>No suggestions — type more or enter Tamil directly</div>}
-        </div>,
-        document.body
+        </div>,document.body
       )}
-      {/* Autocomplete portal */}
       {acOpen&&acList.length>0&&acRect&&createPortal(
         <div style={{position:"absolute",top:acRect.top,left:acRect.left,width:acRect.width,zIndex:99998,background:T.bgPanel,border:`1px solid ${T.gold}`,borderRadius:"0 0 8px 8px",boxShadow:`0 12px 32px rgba(0,0,0,.7)`,maxHeight:220,overflowY:"auto",animation:"slideDown .15s ease both"}}>
           <div style={{padding:"5px 12px",background:T.goldGlow,borderBottom:`1px solid ${T.border}`}}><span style={{fontSize:9,color:T.gold,letterSpacing:"0.1em",textTransform:"uppercase"}}>📋 Sheet / History</span></div>
@@ -413,8 +442,7 @@ function AddressField({value,onChange,onCamera,onFile,sheetAddresses}) {
               <span style={{fontSize:12,color:T.text,lineHeight:1.5,wordBreak:"break-word"}}>{addr}</span>
             </button>
           ))}
-        </div>,
-        document.body
+        </div>,document.body
       )}
       <div style={{display:"flex",gap:8,marginTop:8}}>
         <button className="cam-btn" style={{flex:1,padding:"7px 10px",background:"#070d20",border:"1px solid #1a3060",borderRadius:5,color:"#5a8aff",fontSize:11,cursor:"pointer",fontFamily:"inherit",letterSpacing:"0.05em"}} onClick={onCamera}>📷 Camera OCR</button>
@@ -424,21 +452,36 @@ function AddressField({value,onChange,onCamera,onFile,sheetAddresses}) {
   );
 }
 
-/* ─── DATE FIELD ─────────────────────────────────────────────────────────── */
-function DateField({value,isMod,onChange}) {
+/* ★ DATE FIELD with validation ──────────────────────────────────────────── */
+function DateField({value,isMod,onChange,colIndex}){
   const [draft,setDraft]=useState(value);
   useEffect(()=>setDraft(value),[value]);
-  const handleChange=(e)=>{let v=e.target.value.replace(/\D/g,"");if(v.length>2)v=v.slice(0,2)+"-"+v.slice(2);if(v.length>5)v=v.slice(0,5)+"-"+v.slice(5);v=v.slice(0,10);setDraft(v);onChange(v);};
+  const isNext=colIndex===COL.NEXT_DATE;
+  const urgency=isNext?getDateUrgency(draft):null;
+  const valid=draft.length===0||isValidDate(draft);
+
+  const handleChange=(e)=>{
+    let v=e.target.value.replace(/\D/g,"");
+    if(v.length>2)v=v.slice(0,2)+"-"+v.slice(2);
+    if(v.length>5)v=v.slice(0,5)+"-"+v.slice(5);
+    v=v.slice(0,10);setDraft(v);onChange(v);
+  };
   return(
-    <input
-      style={{width:"100%",boxSizing:"border-box",padding:"8px 11px",background:T.bgInput,border:`1px solid ${isMod?T.gold:T.border}`,borderRadius:5,color:isMod?T.gold:T.text,fontSize:14,fontFamily:"'IBM Plex Mono',monospace",letterSpacing:"0.08em",...(isMod?{boxShadow:`0 0 10px ${T.goldGlow}`}:{})}}
-      value={draft} onChange={handleChange} inputMode="numeric" enterKeyHint="done" placeholder="dd-mm-yyyy" maxLength={10}
-    />
+    <div>
+      <input
+        className={!valid&&draft.length===10?"date-invalid":""}
+        style={{width:"100%",boxSizing:"border-box",padding:"8px 11px",background:T.bgInput,border:`1px solid ${isMod?T.gold:T.border}`,borderRadius:5,color:isMod?T.gold:T.text,fontSize:14,fontFamily:"'IBM Plex Mono',monospace",letterSpacing:"0.08em",...(isMod?{boxShadow:`0 0 10px ${T.goldGlow}`}:{})}}
+        value={draft} onChange={handleChange} inputMode="numeric" enterKeyHint="done" placeholder="dd-mm-yyyy" maxLength={10}/>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginTop:4}}>
+        {!valid&&draft.length===10&&<span style={{fontSize:9,color:T.crimson,letterSpacing:"0.06em"}}>⚠ Invalid date</span>}
+        {urgency&&<span style={{fontSize:9,padding:"2px 8px",background:urgency.glow,border:`1px solid ${urgency.color}`,borderRadius:3,color:urgency.color,fontWeight:700,letterSpacing:"0.1em",marginLeft:"auto"}}>{urgency.label}</span>}
+      </div>
+    </div>
   );
 }
 
 /* ─── GENERIC EDIT FIELD ─────────────────────────────────────────────────── */
-function EditField({value,isMod,onChange,isEmpty}) {
+function EditField({value,isMod,onChange,isEmpty}){
   const [editing,setEditing]=useState(false);
   const [draft,setDraft]=useState(value);
   const ref=useRef();
@@ -471,7 +514,7 @@ function EditField({value,isMod,onChange,isEmpty}) {
 /* ══════════════════════════════════════════════════════════════════════════
    MAIN COMPONENT
 ══════════════════════════════════════════════════════════════════════════ */
-export default function CRLMPEditor() {
+export default function CRLMPEditor(){
   useEffect(()=>{injectCSS();},[]);
 
   const [sheets,setSheets]=useState([]);
@@ -490,6 +533,8 @@ export default function CRLMPEditor() {
   const [sheetAddresses,setSheetAddresses]=useState([]);
   const [token,setToken]=useState("");
   const [gisReady,setGisReady]=useState(false);
+  const [copied,setCopied]=useState(false);               /* ★ copy state */
+  const [caseHistory,setCaseHistory]=useState(()=>ls.getArr(LS_CASE_HIST)); /* ★ recent cases */
   const tokenRef=useRef("");
   const tokenClient=useRef(null);
 
@@ -509,6 +554,15 @@ export default function CRLMPEditor() {
   const streamRef=useRef(null);const fileRef=useRef(null);const caseNumRef=useRef(null);const caseYearRef=useRef(null);
 
   useEffect(()=>{loadTesseract().catch(()=>{});},[]);
+
+  /* ★ Ctrl+S / Cmd+S save shortcut */
+  useEffect(()=>{
+    const handler=(e)=>{
+      if((e.ctrlKey||e.metaKey)&&e.key==="s"){e.preventDefault();if(result&&modCols.size>0)save();}
+    };
+    window.addEventListener("keydown",handler);
+    return()=>window.removeEventListener("keydown",handler);
+  },[result,modCols,editData,warnDismissed]);
 
   const restoreToken=useCallback(()=>{
     const saved=ls.get(LS_TOKEN),expiry=parseInt(ls.get(LS_TOKEN_EXP)||"0",10);
@@ -553,8 +607,14 @@ export default function CRLMPEditor() {
   },[]);
 
   useEffect(()=>{if(activeSheet)fetchSheetAddresses(activeSheet);},[activeSheet]);
-
   const selectSheet=(name)=>{setActiveSheet(name);ls.set(LS_SHEET,name);setResult(null);setEditData({});setModCols(new Set());setError("");setSaveMsg("");setShowWarn(false);setWarnDismissed(false);};
+
+  /* ★ Push to recent cases history */
+  const pushCaseHistory=(num,year)=>{
+    const key=`${num}/${year}`;
+    const updated=[key,...caseHistory.filter(k=>k!==key)].slice(0,6);
+    setCaseHistory(updated);ls.setArr(LS_CASE_HIST,updated);
+  };
 
   const search=async()=>{
     const q=`${caseNum.trim()}/${caseYear.trim()}`;
@@ -567,9 +627,21 @@ export default function CRLMPEditor() {
       const rows=json.values||[];let found=null;
       for(let i=1;i<rows.length;i++){const cn=normStr(rows[i][COL.CASE]||""),qn=normStr(q);if(cn===qn&&qn.length>0){found={rowIndex:i+1,data:rows[i]};break;}}
       if(!found){setError(`"${q}" not found in sheet "${activeSheet}".`);}
-      else{setResult(found);const init={};HEADERS.forEach((_,ci)=>{init[ci]=DATE_COLS.has(ci)?fmtDate(found.data[ci]||""):(found.data[ci]||"");});setEditData(init);
-        if([...REQUIRED_COLS].some(ci=>!(found.data[ci]||"").toString().trim()))setShowWarn(true);}
+      else{
+        setResult(found);
+        const init={};HEADERS.forEach((_,ci)=>{init[ci]=DATE_COLS.has(ci)?fmtDate(found.data[ci]||""):(found.data[ci]||"");});
+        setEditData(init);
+        pushCaseHistory(caseNum.trim(),caseYear.trim()); /* ★ save to history */
+        if([...REQUIRED_COLS].some(ci=>!(found.data[ci]||"").toString().trim()))setShowWarn(true);
+      }
     }catch(e){setError("Search error: "+e.message);}finally{setSearching(false);}
+  };
+
+  /* ★ Quick-load from recent history */
+  const loadFromHistory=(key)=>{
+    const [num,year]=key.split("/");
+    setCaseNum(num);setCaseYear(year);
+    setTimeout(()=>search(),0);
   };
 
   const save=async()=>{
@@ -588,6 +660,20 @@ export default function CRLMPEditor() {
       const addrVal=(editData[COL.ADDR]||"").trim();if(addrVal.length>8){const h=ls.getArr(LS_ADDR_HIST);ls.setArr(LS_ADDR_HIST,[addrVal,...h.filter(a=>a!==addrVal)].slice(0,20));}
       setTimeout(()=>caseNumRef.current?.focus(),150);
     }catch(e){setError("Save failed: "+e.message);}finally{setSaving(false);}
+  };
+
+  /* ★ COPY ROW as formatted text */
+  const copyRow=()=>{
+    if(!result)return;
+    const fieldIcons2=["#","⚖","📍","📅","📅","§","🏛","📋"];
+    const text=HEADERS.map((h,ci)=>`${fieldIcons2[ci]} ${h}: ${editData[ci]||"—"}`).join("\n");
+    navigator.clipboard.writeText(text).then(()=>{
+      setCopied(true);setTimeout(()=>setCopied(false),2000);
+    }).catch(()=>{
+      /* fallback for older browsers */
+      const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);
+      setCopied(true);setTimeout(()=>setCopied(false),2000);
+    });
   };
 
   const markMod=(ci,val)=>{
@@ -627,12 +713,9 @@ export default function CRLMPEditor() {
   };
   const closeOcr=()=>{stopStream();setOcrOpen(false);setOcrError("");setOcrProcessing(false);setOcrMode("camera");setOcrProgress(0);setOcrStatus("");if(capturedUrl)URL.revokeObjectURL(capturedUrl);setCapturedUrl("");setCapturedBlob(null);};
 
-  /* ── derived ── */
   const caseQuery=caseNum&&caseYear?`${caseNum}/${caseYear}`:null;
   const isLoggedIn=!!token;
   const missingCount=result?[...REQUIRED_COLS].filter(ci=>!(editData[ci]||"").toString().trim()).length:0;
-
-  /* ── FIELD ICONS ── */
   const fieldIcons=["#","⚖","📍","📅","📅","§","🏛","📋"];
 
   return(
@@ -669,6 +752,9 @@ export default function CRLMPEditor() {
       </header>
 
       <div style={{maxWidth:1040,margin:"0 auto",padding:"24px 20px",display:"flex",flexDirection:"column",gap:20}}>
+
+        {/* ★ OFFLINE BANNER */}
+        <OfflineBanner/>
 
         {/* ── SHEET TABS ── */}
         <section style={{background:T.bgPanel,border:`1px solid ${T.border}`,borderRadius:8,padding:"18px 20px"}}>
@@ -725,13 +811,31 @@ export default function CRLMPEditor() {
               </button>
             </div>
           </div>
+
+          {/* ★ RECENT CASES HISTORY */}
+          {caseHistory.length>0&&(
+            <div style={{marginTop:14,paddingTop:14,borderTop:`1px solid ${T.border}`}}>
+              <span style={{fontSize:9,color:T.textMuted,letterSpacing:"0.15em",textTransform:"uppercase",marginRight:10}}>Recent:</span>
+              <div style={{display:"inline-flex",flexWrap:"wrap",gap:6,marginTop:6}}>
+                {caseHistory.map(key=>(
+                  <button key={key} className="hist-btn"
+                    style={{padding:"4px 12px",background:T.bgCard,border:`1px solid ${T.border}`,borderRadius:3,color:T.textDim,fontSize:11,cursor:"pointer",fontFamily:"'IBM Plex Mono',monospace",letterSpacing:"0.06em"}}
+                    onClick={()=>{const[n,y]=key.split("/");setCaseNum(n);setCaseYear(y);}}>
+                    {key}
+                  </button>
+                ))}
+                <button onClick={()=>{setCaseHistory([]);ls.setArr(LS_CASE_HIST,[]);}}
+                  style={{padding:"4px 8px",background:"transparent",border:`1px solid ${T.textMuted}`,borderRadius:3,color:T.textMuted,fontSize:10,cursor:"pointer",fontFamily:"inherit"}}>✕ clear</button>
+              </div>
+            </div>
+          )}
         </section>
 
         {error&&<div style={{padding:"12px 18px",background:T.crimsonGlow,border:`1px solid ${T.crimsonDim}`,borderLeft:`3px solid ${T.crimson}`,borderRadius:6,color:"#ff8070",fontSize:12,fontFamily:"'IBM Plex Mono',monospace"}}>⚠ {error}</div>}
         {saveMsg&&<div className="ok-box" style={{padding:"12px 18px",background:"rgba(39,174,96,.1)",border:"1px solid rgba(39,174,96,.3)",borderLeft:`3px solid ${T.green}`,borderRadius:6,color:"#6eff9a",fontSize:12,fontFamily:"'IBM Plex Mono',monospace"}}>{saveMsg}</div>}
-
         {result&&showWarn&&!warnDismissed&&<MissingFieldBanner editData={editData} onDismiss={()=>{setWarnDismissed(true);setShowWarn(false);}}/>}
 
+        {/* ── RESULT ── */}
         {result&&(
           <section style={{background:T.bgPanel,border:`1px solid ${T.gold}`,borderRadius:8,overflow:"hidden",boxShadow:`0 0 40px ${T.goldGlow}`}}>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",padding:"14px 20px",borderBottom:`1px solid ${T.border}`,background:`linear-gradient(90deg,${T.goldGlow},transparent)`,gap:8}}>
@@ -740,33 +844,43 @@ export default function CRLMPEditor() {
                 <span style={{fontFamily:"'Cinzel',serif",fontSize:20,fontWeight:700,color:T.text,letterSpacing:"0.08em"}}>{editData[COL.CASE]}</span>
                 {missingCount>0&&<span style={{display:"flex",alignItems:"center",padding:"3px 10px",background:T.crimsonGlow,border:`1px solid ${T.crimsonDim}`,borderRadius:3,fontSize:9,color:"#ff8070"}}><span className="miss-dot"/>{missingCount} empty</span>}
               </div>
-              <span style={{fontSize:10,color:T.textDim,fontFamily:"'IBM Plex Mono',monospace"}}>
-                <span style={{color:T.textMuted}}>SHEET</span> {activeSheet} <span style={{color:T.textMuted,marginLeft:8}}>ROW</span> {result.rowIndex}
-              </span>
+              <div style={{display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
+                {/* ★ COPY ROW BUTTON */}
+                <button className={"copy-btn"+(copied?" copied":"")} onClick={copyRow}
+                  style={{padding:"5px 14px",background:copied?"rgba(39,174,96,.12)":T.bgCard,border:`1px solid ${copied?"rgba(39,174,96,.4)":T.border}`,borderRadius:4,color:copied?T.green:T.textDim,fontSize:10,cursor:"pointer",fontFamily:"inherit",letterSpacing:"0.08em",display:"flex",alignItems:"center",gap:5,transition:"all .2s"}}>
+                  {copied?"✓ COPIED":"📋 COPY ROW"}
+                </button>
+                <span style={{fontSize:10,color:T.textDim,fontFamily:"'IBM Plex Mono',monospace"}}>
+                  <span style={{color:T.textMuted}}>SHEET</span> {activeSheet} <span style={{color:T.textMuted,marginLeft:8}}>ROW</span> {result.rowIndex}
+                </span>
+              </div>
             </div>
 
             <div className="grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(270px,1fr))"}}>
               {HEADERS.map((hdr,ci)=>{
                 const isMod=modCols.has(ci),isDate=DATE_COLS.has(ci),isAddr=ci===COL.ADDR,isRO=READONLY.has(ci);
                 const isEmpty=REQUIRED_COLS.has(ci)&&!(editData[ci]||"").toString().trim();
+                const urgency=ci===COL.NEXT_DATE?getDateUrgency(editData[ci]||""):null;
+                const isUrgent=!!urgency&&urgency.days<=1;
                 return(
-                  <div key={ci} className={`field-card${isMod?" modified":""}${isEmpty?" empty":""}`}
-                    style={{padding:"16px 18px",background:T.bgCard,borderRight:`1px solid ${T.border}`,borderBottom:`1px solid ${T.border}`,animationDelay:`${ci*30}ms`,position:"relative"}}>
-                    <div style={{position:"absolute",top:0,left:0,right:0,height:2,background:isEmpty?`linear-gradient(90deg,${T.crimson},transparent)`:isMod?`linear-gradient(90deg,${T.gold},transparent)`:"transparent",transition:"background .3s"}}/>
+                  <div key={ci} className={`field-card${isMod?" modified":""}${isEmpty?" empty":""}${isUrgent?" urgent":""}`}
+                    style={{padding:"16px 18px",background:isUrgent?`linear-gradient(135deg,${T.bgCard},#1a0a00)`:T.bgCard,borderRight:`1px solid ${T.border}`,borderBottom:`1px solid ${T.border}`,animationDelay:`${ci*30}ms`,position:"relative"}}>
+                    <div style={{position:"absolute",top:0,left:0,right:0,height:2,background:isEmpty?`linear-gradient(90deg,${T.crimson},transparent)`:isMod?`linear-gradient(90deg,${T.gold},transparent)`:isUrgent?`linear-gradient(90deg,${urgency.color},transparent)`:"transparent",transition:"background .3s"}}/>
                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
                       <div style={{display:"flex",alignItems:"center",gap:7}}>
                         <span style={{fontSize:12,opacity:.5}}>{fieldIcons[ci]}</span>
-                        <span style={{fontSize:9,color:isEmpty?T.crimson:isMod?T.gold:T.textDim,letterSpacing:"0.15em",textTransform:"uppercase",fontFamily:"'IBM Plex Mono',monospace",display:"flex",alignItems:"center"}}>
+                        <span style={{fontSize:9,color:isEmpty?T.crimson:isMod?T.gold:isUrgent?urgency.color:T.textDim,letterSpacing:"0.15em",textTransform:"uppercase",fontFamily:"'IBM Plex Mono',monospace",display:"flex",alignItems:"center"}}>
                           {isEmpty&&<span className="miss-dot"/>}{hdr}
                         </span>
                       </div>
                       <div style={{display:"flex",gap:4}}>
                         {isMod&&<span style={{fontSize:8,padding:"2px 6px",background:T.goldGlow,border:`1px solid ${T.goldDim}`,color:T.gold,borderRadius:2,letterSpacing:"0.1em"}}>MOD</span>}
                         {isEmpty&&<span style={{fontSize:8,padding:"2px 6px",background:T.crimsonGlow,border:`1px solid ${T.crimsonDim}`,color:"#ff8070",borderRadius:2,letterSpacing:"0.1em"}}>EMPTY</span>}
+                        {urgency&&!isEmpty&&<span style={{fontSize:8,padding:"2px 6px",background:urgency.glow,border:`1px solid ${urgency.color}`,color:urgency.color,borderRadius:2,letterSpacing:"0.1em",fontWeight:700}}>{urgency.label}</span>}
                       </div>
                     </div>
                     {isAddr?(<AddressField value={editData[ci]||""} onChange={v=>markMod(ci,v)} onCamera={openCamera} onFile={()=>fileRef.current?.click()} sheetAddresses={sheetAddresses}/>)
-                      :isDate?(<DateField value={editData[ci]||""} isMod={isMod} onChange={v=>markMod(ci,v)}/>)
+                      :isDate?(<DateField value={editData[ci]||""} isMod={isMod} onChange={v=>markMod(ci,v)} colIndex={ci}/>)
                       :isRO?(<div style={{fontSize:14,color:T.textDim,fontFamily:"'IBM Plex Mono',monospace",letterSpacing:"0.05em"}}>{editData[ci]||"—"}</div>)
                       :(<EditField value={editData[ci]||""} isMod={isMod} isEmpty={isEmpty} onChange={v=>markMod(ci,v)}/>)}
                   </div>
@@ -775,6 +889,7 @@ export default function CRLMPEditor() {
             </div>
 
             <div className="save-bar" style={{display:"flex",alignItems:"center",justifyContent:"flex-end",gap:16,padding:"14px 20px",borderTop:`1px solid ${T.border}`,background:`linear-gradient(90deg,transparent,${T.bgCard})`,flexWrap:"wrap"}}>
+              <span style={{fontSize:10,color:T.textMuted,letterSpacing:"0.06em"}}>Ctrl+S to save</span>
               {modCols.size>0&&<span style={{fontSize:11,color:T.gold,fontFamily:"'IBM Plex Mono',monospace"}}>{modCols.size} field{modCols.size>1?"s":""} modified</span>}
               {missingCount>0&&!warnDismissed&&<span style={{fontSize:11,color:"#ff8070"}}>⚠ {missingCount} empty</span>}
               <button className="save-btn" onClick={save} disabled={saving||modCols.size===0}
@@ -800,7 +915,6 @@ export default function CRLMPEditor() {
               </div>
               <button onClick={closeOcr} style={{background:"transparent",border:"none",color:T.textDim,fontSize:18,cursor:"pointer",lineHeight:1,padding:"0 4px"}}>✕</button>
             </div>
-
             {ocrMode==="processing"?(
               <div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:"40px 32px",gap:14}}>
                 <div style={{width:48,height:48,border:`3px solid ${T.border}`,borderTopColor:T.gold,borderRadius:"50%",animation:"spin .8s linear infinite"}}/>
