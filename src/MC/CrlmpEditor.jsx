@@ -65,44 +65,96 @@ function fmtDate(raw = "") {
   return raw;
 }
 
-/* ─── CLAUDE TANGLISH ENGINE ─────────────────────────────────────────────── */
+/* ─── TAMIL ADDRESS QUICK MAP (offline / instant) ────────────────────────── */
+const TAMIL_ADDR_MAP = {
+  /* cities & districts */
+  "chennai":"சென்னை","madurai":"மதுரை","coimbatore":"கோயம்புத்தூர்",
+  "trichy":"திருச்சிராப்பள்ளி","tiruchirappalli":"திருச்சிராப்பள்ளி",
+  "salem":"சேலம்","tirunelveli":"திருநெல்வேலி","vellore":"வேலூர்",
+  "erode":"ஈரோடு","thoothukudi":"தூத்துக்குடி","tuticorin":"தூத்துக்குடி",
+  "thanjavur":"தஞ்சாவூர்","tanjore":"தஞ்சாவூர்","dindigul":"திண்டுக்கல்",
+  "cuddalore":"கடலூர்","nagapattinam":"நாகப்பட்டினம்","kanchipuram":"காஞ்சிபுரம்",
+  "tiruppur":"திருப்பூர்","namakkal":"நாமக்கல்","dharmapuri":"தர்மபுரி",
+  "krishnagiri":"கிருஷ்ணகிரி","villupuram":"விழுப்புரம்","ariyalur":"அரியலூர்",
+  "perambalur":"பெரம்பலூர்","pudukottai":"புதுக்கோட்டை","ramanathapuram":"ராமநாதபுரம்",
+  "sivaganga":"சிவகங்கை","theni":"தேனி","virudhunagar":"விருதுநகர்",
+  "karur":"கரூர்","nilgiris":"நீலகிரி","ooty":"உதகமண்டலம்",
+  "hosur":"ஹோசூர்","ambattur":"அம்பத்தூர்","avadi":"ஆவடி",
+  "tambaram":"தாம்பரம்","pallavaram":"பல்லாவரம்","thiruvallur":"திருவள்ளூர்",
+  /* address words */
+  "veedu":"வீடு","theru":"தெரு","nagar":"நகர்","salai":"சாலை",
+  "road":"சாலை","street":"தெரு","main":"மெயின்","new":"புதிய",
+  "old":"பழைய","big":"பெரிய","small":"சிறிய","north":"வடக்கு",
+  "south":"தெற்கு","east":"கிழக்கு","west":"மேற்கு","kovil":"கோவில்",
+  "puram":"புரம்","patti":"பட்டி","palayam":"பாளையம்","kuppam":"குப்பம்",
+  "colony":"காலனி","layout":"லேஅவுட்","avenue":"அவென்யூ","cross":"கிராஸ்",
+  "near":"அருகில்","opposite":"எதிரில்","behind":"பின்னால்","flat":"பிளாட்",
+  "door":"கதவு","plot":"பிளாட்","house":"வீடு","building":"கட்டிடம்",
+};
+
+/* ─── VARNAM + GOOGLE TAMIL ENGINE (100% FREE) ───────────────────────────── */
 const pendingRequests = {};
+
 async function fetchTamilSuggestions(word) {
   if (!word || word.length < 2 || !/^[a-zA-Z]+$/.test(word)) return [];
   const lw = word.toLowerCase().trim();
+
+  /* 1. localStorage cache */
   const cache = ls.getJSON(LS_TA_CACHE);
   if (cache[lw] && Array.isArray(cache[lw]) && cache[lw].length > 0) return cache[lw];
+
+  /* 2. Instant local map */
+  if (TAMIL_ADDR_MAP[lw]) return [TAMIL_ADDR_MAP[lw]];
+
+  /* 3. Deduplicate in-flight requests */
   if (pendingRequests[lw]) return pendingRequests[lw];
+
   pendingRequests[lw] = (async () => {
+    let sugs = [];
+
+    /* 4. Varnam API (primary — open source, free, Tamil-optimised) */
     try {
-      const resp = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "anthropic-version": "2023-06-01",
-          "anthropic-dangerous-direct-browser-access": "true",
-        },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 150,
-          system: `You are a Tamil transliteration engine. The user types Tamil words/names in English (Tanglish). Return ONLY a JSON array of up to 6 Tamil Unicode suggestions, best match first. ONLY Tamil Unicode (U+0B80–U+0BFF). Output ONLY the raw JSON array. No explanation, no markdown fences.`,
-          messages: [{ role: "user", content: lw }]
-        })
-      });
-      if (!resp.ok) return [];
-      const data = await resp.json();
-      const rawText = data.content?.filter(b => b.type === "text")?.map(b => b.text)?.join("") || "";
-      const clean = rawText.replace(/```json\s*/gi,"").replace(/```\s*/g,"").trim();
-      let sugs = [];
-      try { const m = clean.match(/\[[\s\S]*\]/); sugs = m ? JSON.parse(m[0]) : JSON.parse(clean); } catch { sugs = []; }
-      if (!Array.isArray(sugs)) sugs = [];
-      sugs = sugs.filter(s => typeof s === "string" && /[\u0B80-\u0BFF]/.test(s)).slice(0,6);
-      const uc = ls.getJSON(LS_TA_CACHE); const keys = Object.keys(uc);
+      const resp = await fetch(
+        `https://api.varnamproject.com/tl/ta/${encodeURIComponent(lw)}`,
+        { signal: AbortSignal.timeout(4000) }
+      );
+      if (resp.ok) {
+        const data = await resp.json();
+        sugs = (data?.result || [])
+          .filter(s => typeof s === "string" && /[\u0B80-\u0BFF]/.test(s))
+          .slice(0, 6);
+      }
+    } catch { /* Varnam down or timeout — fall through */ }
+
+    /* 5. Google Input Tools fallback (free, unofficial) */
+    if (!sugs.length) {
+      try {
+        const resp = await fetch(
+          `https://inputtools.google.com/request?text=${encodeURIComponent(lw)}&itc=ta-t-i0-und&num=6&cp=0&cs=1&ie=utf-8&oe=utf-8`,
+          { signal: AbortSignal.timeout(4000) }
+        );
+        if (resp.ok) {
+          const data = await resp.json();
+          sugs = (data?.[1]?.[0]?.[1] || [])
+            .filter(s => typeof s === "string" && /[\u0B80-\u0BFF]/.test(s))
+            .slice(0, 6);
+        }
+      } catch { /* both failed */ }
+    }
+
+    /* 6. Save to cache */
+    if (sugs.length) {
+      const uc = ls.getJSON(LS_TA_CACHE);
+      const keys = Object.keys(uc);
       if (keys.length > 500) delete uc[keys[0]];
-      uc[lw] = sugs; ls.setJSON(LS_TA_CACHE, uc);
-      return sugs;
-    } catch { return []; } finally { delete pendingRequests[lw]; }
+      uc[lw] = sugs;
+      ls.setJSON(LS_TA_CACHE, uc);
+    }
+
+    delete pendingRequests[lw];
+    return sugs;
   })();
+
   return pendingRequests[lw];
 }
 
@@ -318,8 +370,8 @@ function AddressField({value,onChange,onCamera,onFile,sheetAddresses}) {
   return(
     <div style={{position:"relative"}}>
       <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:7}}>
-        <span style={{fontSize:9,padding:"2px 9px",background:`linear-gradient(90deg,${T.goldGlow},transparent)`,border:`1px solid ${T.goldDim}`,borderRadius:2,color:T.gold,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase"}}>✦ AI Tamil</span>
-        <span style={{fontSize:9,color:T.textMuted,letterSpacing:"0.05em"}}>type English → Tamil suggestions</span>
+        <span style={{fontSize:9,padding:"2px 9px",background:`linear-gradient(90deg,${T.goldGlow},transparent)`,border:`1px solid ${T.goldDim}`,borderRadius:2,color:T.gold,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase"}}>✦ Varnam Tamil</span>
+        <span style={{fontSize:9,color:T.textMuted,letterSpacing:"0.05em"}}>type English → Tamil · 100% free</span>
       </div>
       <textarea
         ref={textareaRef}
@@ -333,7 +385,7 @@ function AddressField({value,onChange,onCamera,onFile,sheetAddresses}) {
         <div style={{position:"absolute",top:sugRect.top,left:sugRect.left,width:sugRect.width,zIndex:99999,background:T.bgPanel,border:`1px solid ${T.gold}`,borderRadius:8,boxShadow:`0 16px 48px rgba(0,0,0,.8),0 0 40px ${T.goldGlow}`,overflow:"hidden",animation:"slideDown .15s ease both"}}>
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"7px 12px",background:`linear-gradient(90deg,${T.goldGlow},transparent)`,borderBottom:`1px solid ${T.border}`}}>
             <span style={{fontSize:10,color:T.gold,fontWeight:600,display:"flex",alignItems:"center",gap:6,fontFamily:"'IBM Plex Mono',monospace"}}>
-              {sugLoading&&sugList.length===0?<><span style={{display:"inline-block",width:10,height:10,border:`1.5px solid ${T.goldDim}`,borderTopColor:T.gold,borderRadius:"50%",animation:"spin .7s linear infinite"}}/> AI transliterating "{currentWord}"…</>:`Tamil for "${currentWord}"`}
+              {sugLoading&&sugList.length===0?<><span style={{display:"inline-block",width:10,height:10,border:`1.5px solid ${T.goldDim}`,borderTopColor:T.gold,borderRadius:"50%",animation:"spin .7s linear infinite"}}/> transliterating "{currentWord}"…</>:`Tamil for "${currentWord}"`}
             </span>
             <span style={{fontSize:9,color:T.goldDim,letterSpacing:"0.06em"}}>Tab/→ · ↑↓ · Esc</span>
           </div>
@@ -588,11 +640,9 @@ export default function CRLMPEditor() {
 
       {/* ── HEADER ── */}
       <header style={{background:T.bgPanel,borderBottom:`1px solid ${T.border}`,position:"sticky",top:0,zIndex:100,boxShadow:`0 4px 32px rgba(0,0,0,.6)`}}>
-        {/* top accent line */}
         <div style={{height:2,background:`linear-gradient(90deg,transparent,${T.gold},${T.crimson},${T.gold},transparent)`}}/>
         <div className="h-inner" style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"12px 24px",gap:12,flexWrap:"wrap"}}>
           <div style={{display:"flex",alignItems:"center",gap:16}}>
-            {/* emblem */}
             <div style={{width:40,height:40,borderRadius:4,background:`linear-gradient(135deg,${T.bgCard},${T.bgCardHov})`,border:`1px solid ${T.goldDim}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0,boxShadow:`0 0 16px ${T.goldGlow}`}}>⚖</div>
             <div>
               <h1 style={{fontFamily:"'Cinzel',serif",fontSize:18,fontWeight:700,color:T.gold,letterSpacing:"0.1em",lineHeight:1}}>CRLMP CASE EDITOR</h1>
@@ -677,16 +727,13 @@ export default function CRLMPEditor() {
           </div>
         </section>
 
-        {/* ── ERROR / SUCCESS ── */}
         {error&&<div style={{padding:"12px 18px",background:T.crimsonGlow,border:`1px solid ${T.crimsonDim}`,borderLeft:`3px solid ${T.crimson}`,borderRadius:6,color:"#ff8070",fontSize:12,fontFamily:"'IBM Plex Mono',monospace"}}>⚠ {error}</div>}
         {saveMsg&&<div className="ok-box" style={{padding:"12px 18px",background:"rgba(39,174,96,.1)",border:"1px solid rgba(39,174,96,.3)",borderLeft:`3px solid ${T.green}`,borderRadius:6,color:"#6eff9a",fontSize:12,fontFamily:"'IBM Plex Mono',monospace"}}>{saveMsg}</div>}
 
         {result&&showWarn&&!warnDismissed&&<MissingFieldBanner editData={editData} onDismiss={()=>{setWarnDismissed(true);setShowWarn(false);}}/>}
 
-        {/* ── RESULT ── */}
         {result&&(
           <section style={{background:T.bgPanel,border:`1px solid ${T.gold}`,borderRadius:8,overflow:"hidden",boxShadow:`0 0 40px ${T.goldGlow}`}}>
-            {/* result header */}
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",padding:"14px 20px",borderBottom:`1px solid ${T.border}`,background:`linear-gradient(90deg,${T.goldGlow},transparent)`,gap:8}}>
               <div style={{display:"flex",alignItems:"center",gap:12,flexWrap:"wrap"}}>
                 <span style={{padding:"3px 10px",background:T.goldGlow,border:`1px solid ${T.gold}`,borderRadius:3,fontSize:9,color:T.gold,letterSpacing:"0.15em",fontWeight:600}}>CASE FOUND</span>
@@ -698,7 +745,6 @@ export default function CRLMPEditor() {
               </span>
             </div>
 
-            {/* fields grid */}
             <div className="grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(270px,1fr))"}}>
               {HEADERS.map((hdr,ci)=>{
                 const isMod=modCols.has(ci),isDate=DATE_COLS.has(ci),isAddr=ci===COL.ADDR,isRO=READONLY.has(ci);
@@ -706,7 +752,6 @@ export default function CRLMPEditor() {
                 return(
                   <div key={ci} className={`field-card${isMod?" modified":""}${isEmpty?" empty":""}`}
                     style={{padding:"16px 18px",background:T.bgCard,borderRight:`1px solid ${T.border}`,borderBottom:`1px solid ${T.border}`,animationDelay:`${ci*30}ms`,position:"relative"}}>
-                    {/* col indicator */}
                     <div style={{position:"absolute",top:0,left:0,right:0,height:2,background:isEmpty?`linear-gradient(90deg,${T.crimson},transparent)`:isMod?`linear-gradient(90deg,${T.gold},transparent)`:"transparent",transition:"background .3s"}}/>
                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
                       <div style={{display:"flex",alignItems:"center",gap:7}}>
@@ -729,7 +774,6 @@ export default function CRLMPEditor() {
               })}
             </div>
 
-            {/* save bar */}
             <div className="save-bar" style={{display:"flex",alignItems:"center",justifyContent:"flex-end",gap:16,padding:"14px 20px",borderTop:`1px solid ${T.border}`,background:`linear-gradient(90deg,transparent,${T.bgCard})`,flexWrap:"wrap"}}>
               {modCols.size>0&&<span style={{fontSize:11,color:T.gold,fontFamily:"'IBM Plex Mono',monospace"}}>{modCols.size} field{modCols.size>1?"s":""} modified</span>}
               {missingCount>0&&!warnDismissed&&<span style={{fontSize:11,color:"#ff8070"}}>⚠ {missingCount} empty</span>}
