@@ -10,47 +10,116 @@ const LS_TOKEN     = "crlmp_token";
 const LS_TOKEN_EXP = "crlmp_token_exp";
 const LS_SHEET     = "crlmp_sheet";
 const LS_YEAR      = "crlmp_year";
-const LS_APIKEY    = "crlmp_apikey";
-const LS_ADDR_HIST = "crlmp_addr_history"; // local address history
+const LS_ADDR_HIST = "crlmp_addr_history";
 
 /* ─── COLUMN MAP ─────────────────────────────────────────────────────────── */
 const COL     = { SR:0, CASE:1, ADDR:2, FIR_DATE:3, NEXT_DATE:4, ACT:5, PS:6, FIR_NO:7 };
 const HEADERS = ["Sr.No","Case No.","Address","FIR Date","Next Date","Act Section","Police Station","FIR No."];
 const DATE_COLS = new Set([COL.FIR_DATE, COL.NEXT_DATE]);
 const READONLY  = new Set([COL.SR, COL.CASE]);
-
-/* Fields that should NOT be empty — for missing-field warnings */
 const REQUIRED_COLS = new Set([COL.ADDR, COL.FIR_DATE, COL.NEXT_DATE, COL.ACT, COL.PS, COL.FIR_NO]);
 
-/* ─── QUICK-CHIPS DATA (Tamil + English) ────────────────────────────────── */
-const CHIPS = [
-  { ta: "வீடு எண்", en: "Door No" },
-  { ta: "தெரு",     en: "Street" },
-  { ta: "நகர்",     en: "Nagar" },
-  { ta: "கிராமம்",  en: "Village" },
-  { ta: "வட்டம்",   en: "Taluk" },
-  { ta: "மாவட்டம்", en: "District" },
-  { ta: "தாலுகா",   en: "Taluka" },
-  { ta: "பஞ்சாயத்து", en: "Panchayat" },
-  { ta: "அருகில்",  en: "Near" },
-  { ta: "பின்கோடு", en: "Pincode" },
-  { ta: "முகவரி",   en: "Address" },
-  { ta: "சென்னை",   en: "Chennai" },
-  { ta: "மதுரை",    en: "Madurai" },
-  { ta: "கோயம்புத்தூர்", en: "Coimbatore" },
-  { ta: "திருச்சி", en: "Trichy" },
-  { ta: "சேலம்",    en: "Salem" },
+/* ─── TANGLISH → TAMIL WORD MAP ─────────────────────────────────────────── */
+const TANGLISH_WORDS = {
+  "veedu":["வீடு"],"theru":["தெரு"],"nagar":["நகர்"],"gramam":["கிராமம்"],
+  "village":["கிராமம்"],"taluk":["தாலுகா"],"maavattam":["மாவட்டம்"],
+  "district":["மாவட்டம்"],"panchayat":["பஞ்சாயத்து"],"arugil":["அருகில்"],
+  "near":["அருகில்"],"pincode":["பின்கோடு"],"mukavarri":["முகவரி"],
+  "mukavari":["முகவரி"],"address":["முகவரி"],
+  "chennai":["சென்னை"],"madurai":["மதுரை"],"coimbatore":["கோயம்புத்தூர்"],
+  "trichy":["திருச்சி"],"tiruchi":["திருச்சி"],"salem":["சேலம்"],
+  "erode":["ஈரோடு"],"vellore":["வேலூர்"],"tirunelveli":["திருநெல்வேலி"],
+  "door":["வீடு எண்"],"no":["எண்"],"street":["தெரு"],"road":["சாலை"],
+  "main":["மெயின்"],"north":["வடக்கு"],"south":["தெற்கு"],
+  "east":["கிழக்கு"],"west":["மேற்கு"],"colony":["காலனி"],
+  "layout":["லேஅவுட்"],"plot":["நிலம்"],"area":["பகுதி"],
+  "kovil":["கோயில்"],"koil":["கோயில்"],"palayam":["பாளையம்"],
+  "puram":["புரம்"],"nallur":["நல்லூர்"],"salai":["சாலை"],
+  "anna":["அண்ணா"],"nehru":["நேரு"],"gandhi":["காந்தி"],
+  "rajaji":["ராஜாஜி"],"bharathi":["பாரதி"],"ambedkar":["அம்பேத்கர்"],
+  "periyar":["பெரியார்"],"kamaraj":["காமராஜ்"],
+};
+
+/* ─── PHONETIC TRANSLITERATION MAP ──────────────────────────────────────── */
+const PHON_MAP = [
+  ["ksh","க்ஷ"],["thr","த்ர"],["str","ஸ்த்ர"],
+  ["oo","ூ"],["aa","ா"],["ii","ீ"],["ee","ே"],["ai","ை"],["au","ௌ"],
+  ["th","த"],["zh","ழ"],["nh","ந"],["ng","ங"],["nj","ஞ"],["sh","ஷ"],["ch","ச"],
+  ["ka","க"],["ki","கி"],["ku","கு"],["ke","கே"],["ko","கோ"],["kaa","கா"],["koo","கூ"],
+  ["ga","க"],["gi","கி"],["gu","கு"],
+  ["cha","ச"],["chi","சி"],["chu","சு"],["che","சே"],["cho","சோ"],
+  ["ja","ஜ"],["ji","ஜி"],["ju","ஜு"],["je","ஜே"],["jo","ஜோ"],
+  ["ta","ட"],["ti","டி"],["tu","டு"],["te","டே"],["to","டோ"],
+  ["da","ட"],["di","டி"],["du","டு"],
+  ["na","ன"],["ni","னி"],["nu","னு"],["ne","னே"],["no","னோ"],["naa","னா"],
+  ["pa","ப"],["pi","பி"],["pu","பு"],["pe","பே"],["po","போ"],["paa","பா"],["poo","பூ"],
+  ["ba","ப"],["bi","பி"],["bu","பு"],
+  ["ma","ம"],["mi","மி"],["mu","மு"],["me","மே"],["mo","மோ"],["maa","மா"],["moo","மூ"],
+  ["ya","ய"],["yi","யி"],["yu","யு"],["ye","யே"],["yo","யோ"],
+  ["ra","ர"],["ri","ரி"],["ru","ரு"],["re","ரே"],["ro","ரோ"],["raa","ரா"],
+  ["la","ல"],["li","லி"],["lu","லு"],["le","லே"],["lo","லோ"],["laa","லா"],
+  ["La","ள"],["Li","ளி"],["Lu","ளு"],
+  ["va","வ"],["vi","வி"],["vu","வு"],["ve","வே"],["vo","வோ"],["vaa","வா"],
+  ["wa","வ"],["wi","வி"],
+  ["sa","ச"],["si","சி"],["su","சு"],["se","சே"],["so","சோ"],
+  ["ha","ஹ"],["hi","ஹி"],["hu","ஹு"],["he","ஹே"],["ho","ஹோ"],
+  ["a","அ"],["aa","ஆ"],["i","இ"],["ii","ஈ"],["u","உ"],["uu","ஊ"],["e","எ"],["o","ஒ"],
+  ["k","க்"],["c","ச்"],["t","த்"],["n","ன்"],["p","ப்"],["m","ம்"],
+  ["y","ய்"],["r","ர்"],["l","ல்"],["v","வ்"],["s","ஸ்"],["h","ஹ்"],
 ];
+
+function tanglishToTamil(word) {
+  if (!word) return "";
+  const lw = word.toLowerCase();
+  /* exact word match */
+  if (TANGLISH_WORDS[lw]) return TANGLISH_WORDS[lw][0];
+  /* partial word match */
+  const partials = Object.keys(TANGLISH_WORDS).filter(k => k.startsWith(lw));
+  if (partials.length) return TANGLISH_WORDS[partials[0]][0];
+  /* phonetic conversion */
+  let rem = lw, result = "";
+  while (rem.length > 0) {
+    let matched = false;
+    for (const [pat, ta] of PHON_MAP) {
+      if (rem.toLowerCase().startsWith(pat)) {
+        result += ta; rem = rem.slice(pat.length); matched = true; break;
+      }
+    }
+    if (!matched) { result += rem[0]; rem = rem.slice(1); }
+  }
+  return result;
+}
+
+function getTanglishSuggestions(word) {
+  if (!word || word.length < 2 || !/^[a-zA-Z]+$/.test(word)) return [];
+  const lw = word.toLowerCase();
+  const sugs = new Set();
+  /* word-dict hits */
+  if (TANGLISH_WORDS[lw]) TANGLISH_WORDS[lw].forEach(s => sugs.add(s));
+  Object.keys(TANGLISH_WORDS)
+    .filter(k => k.startsWith(lw) && k !== lw)
+    .slice(0,3)
+    .forEach(k => TANGLISH_WORDS[k].forEach(s => sugs.add(s)));
+  /* phonetic conversion always shown */
+  const phonetic = tanglishToTamil(word);
+  if (phonetic && phonetic !== word) sugs.add(phonetic);
+  /* common suffixes */
+  ["ல்","ன்","ம்","ர்","க்","ப்"].forEach(sfx => {
+    const variant = phonetic + sfx;
+    if (variant !== phonetic) sugs.add(variant);
+  });
+  return [...sugs].slice(0, 6);
+}
 
 /* ─── HELPERS ────────────────────────────────────────────────────────────── */
 const toA1    = (row, col) => `${String.fromCharCode(65 + col)}${row}`;
 const normStr = (s = "") => s.toString().replace(/\D/g, "");
 const ls      = {
-  get:  k    => { try { return localStorage.getItem(k); }    catch { return null; } },
-  set:  (k,v)=> { try { localStorage.setItem(k,v); }         catch {} },
-  del:  k    => { try { localStorage.removeItem(k); }        catch {} },
-  getJSON: k => { try { return JSON.parse(localStorage.getItem(k) || "[]"); } catch { return []; } },
-  setJSON: (k,v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+  get:     k    => { try { return localStorage.getItem(k); }    catch { return null; } },
+  set:     (k,v)=> { try { localStorage.setItem(k,v); }         catch {} },
+  del:     k    => { try { localStorage.removeItem(k); }        catch {} },
+  getJSON: k    => { try { return JSON.parse(localStorage.getItem(k) || "[]"); } catch { return []; } },
+  setJSON: (k,v)=> { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
 };
 
 function fmtDate(raw = "") {
@@ -71,27 +140,44 @@ function injectCSS() {
     @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
     *{box-sizing:border-box;margin:0;padding:0}
     body{background:#f8f6f1;font-family:'JetBrains Mono',monospace}
-    @keyframes spin    {to{transform:rotate(360deg)}}
-    @keyframes fadeUp  {from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-    @keyframes fadeIn  {from{opacity:0}to{opacity:1}}
+    @keyframes spin     {to{transform:rotate(360deg)}}
+    @keyframes fadeUp   {from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
     @keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
-    @keyframes pulse   {0%,100%{opacity:1}50%{opacity:0.5}}
-    @keyframes warnPop {0%{transform:scale(.96)}60%{transform:scale(1.02)}100%{transform:scale(1)}}
+    @keyframes pulse    {0%,100%{opacity:1}50%{opacity:0.5}}
+    @keyframes warnPop  {0%{transform:scale(.96)}60%{transform:scale(1.02)}100%{transform:scale(1)}}
+    @keyframes sugPop   {from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
     .tab-btn:hover  {background:#fff8e8!important;border-color:#C9A84C!important;color:#8B5E0A!important}
     .mod-btn:hover  {background:#fff8ec!important;border-color:#C9A84C!important;color:#8B5E0A!important}
     .save-btn:hover {opacity:.88!important}
     .cam-btn:hover  {background:#e8f4ff!important;border-color:#3B6BF5!important}
-    .chip:hover     {background:#fff8e8!important;border-color:#C9A84C!important;color:#8B5E0A!important;transform:translateY(-1px)}
+    .sug-item:hover,.sug-item.active{background:#fff8e8!important;border-color:#C9A84C!important;color:#8B5E0A!important}
     .ac-item:hover  {background:#fff8e8!important;color:#8B5E0A!important}
     input:focus,textarea:focus{outline:none!important;border-color:#C9A84C!important;box-shadow:0 0 0 3px #C9A84C22!important}
     .field-card{animation:fadeUp .22s ease both}
     .warn-banner{animation:warnPop .3s ease both}
+    .sug-popup{animation:sugPop .15s ease both}
     .ac-dropdown{animation:slideDown .15s ease both}
     .ocr-overlay{position:fixed;inset:0;background:#000c;z-index:9999;display:flex;align-items:center;justify-content:center}
     .ocr-progress-bar{height:4px;background:#e0d8cc;border-radius:2px;overflow:hidden;margin:8px 0}
     .ocr-progress-fill{height:100%;background:linear-gradient(90deg,#C9A84C,#8B5E0A);border-radius:2px;transition:width 0.3s ease}
     .tess-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;background:#f0fff4;border:1px solid #6bcf8a;border-radius:3px;font-size:9px;color:#1a7a3a;letter-spacing:0.08em}
     .miss-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#e74c3c;margin-right:5px;animation:pulse 1.4s ease-in-out infinite}
+
+    /* ── MOBILE RESPONSIVE ── */
+    @media (max-width:600px){
+      .hInner{flex-direction:column!important;align-items:flex-start!important;gap:10px!important}
+      .authArea{width:100%}
+      .searchRow{flex-direction:column!important;align-items:stretch!important}
+      .inp-case{width:100%!important}
+      .searchBtn{width:100%!important;justify-content:center}
+      .resHead{flex-direction:column!important;align-items:flex-start!important}
+      .grid{grid-template-columns:1fr!important}
+      .saveBar{flex-direction:column!important;align-items:stretch!important}
+      .save-btn{width:100%!important;text-align:center}
+      .tabBar{gap:6px!important}
+      .tab-btn{font-size:11px!important;padding:6px 12px!important}
+      .preview-badge{display:none!important}
+    }
   `;
   document.head.appendChild(s);
 }
@@ -159,140 +245,220 @@ function MissingFieldBanner({ editData, onDismiss }) {
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
-   ADDRESS FIELD — Quick-chips + History Autocomplete
+   ADDRESS FIELD — Tanglish Input + History Autocomplete (NO chips)
 ══════════════════════════════════════════════════════════════════════════ */
 function AddressField({ value, onChange, onCamera, onFile, sheetAddresses }) {
-  const [acList,    setAcList]    = useState([]);
-  const [acOpen,    setAcOpen]    = useState(false);
-  const [chipPage,  setChipPage]  = useState(0);
+  /* tanglish suggestion state */
+  const [sugList,   setSugList]   = useState([]);
+  const [sugOpen,   setSugOpen]   = useState(false);
+  const [sugRect,   setSugRect]   = useState(null);   // {top,left,width} for absolute pos
+  const [activeSug, setActiveSug] = useState(0);
+  const [wordStart, setWordStart] = useState(0);
+  const [wordEnd,   setWordEnd]   = useState(0);
+
+  /* autocomplete (sheet addresses) */
+  const [acList,  setAcList]  = useState([]);
+  const [acOpen,  setAcOpen]  = useState(false);
+  const [acRect,  setAcRect]  = useState(null);
+
   const textareaRef = useRef(null);
-  const acRef       = useRef(null);
-  const CHIPS_PER_PAGE = 8;
 
-  /* ── build autocomplete list ── */
-  useEffect(() => {
-    const query = value.trim().toLowerCase();
-    if (query.length < 2) { setAcList([]); setAcOpen(false); return; }
-
-    const localHist  = ls.getJSON(LS_ADDR_HIST);
-    const combined   = [...new Set([...localHist, ...sheetAddresses])].filter(Boolean);
-    const filtered   = combined.filter(a =>
-      a.toLowerCase().includes(query) && a.trim() !== value.trim()
-    ).slice(0, 8);
-    setAcList(filtered);
-    setAcOpen(filtered.length > 0);
-  }, [value, sheetAddresses]);
-
-  /* close dropdown on outside click */
-  useEffect(() => {
-    const handler = (e) => {
-      if (acRef.current && !acRef.current.contains(e.target) &&
-          textareaRef.current && !textareaRef.current.contains(e.target)) {
-        setAcOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+  /* ── compute dropdown position (fixed, above field card scroll) ── */
+  const getDropRect = useCallback(() => {
+    const ta = textareaRef.current;
+    if (!ta) return null;
+    const r = ta.getBoundingClientRect();
+    return { top: r.bottom + 4, left: r.left, width: r.width };
   }, []);
 
-  /* insert chip at cursor */
-  const insertChip = (word) => {
-    const ta  = textareaRef.current;
-    if (!ta) { onChange(value + " " + word + " "); return; }
-    const start = ta.selectionStart;
-    const end   = ta.selectionEnd;
-    const before = value.slice(0, start);
-    const after  = value.slice(end);
-    const sep    = before.length && !before.endsWith(" ") ? " " : "";
-    const newVal = before + sep + word + " " + after;
+  /* ── tanglish: run on every keystroke ── */
+  const handleChange = (e) => {
+    const newVal = e.target.value;
     onChange(newVal);
-    setTimeout(() => {
-      const pos = start + sep.length + word.length + 1;
-      ta.setSelectionRange(pos, pos);
-      ta.focus();
-    }, 0);
+
+    const pos   = e.target.selectionStart;
+    const before = newVal.slice(0, pos);
+    const parts  = before.split(/\s/);
+    const word   = parts[parts.length - 1];
+    const wStart = pos - word.length;
+
+    if (word.length >= 2 && /^[a-zA-Z]+$/.test(word)) {
+      const sugs = getTanglishSuggestions(word);
+      if (sugs.length) {
+        setSugList(sugs);
+        setActiveSug(0);
+        setWordStart(wStart);
+        setWordEnd(pos);
+        setSugRect(getDropRect());
+        setSugOpen(true);
+        setAcOpen(false);
+        return;
+      }
+    }
+    setSugOpen(false);
+
+    /* sheet autocomplete when no tanglish */
+    const q = newVal.trim().toLowerCase();
+    if (q.length >= 3) {
+      const hist    = ls.getJSON(LS_ADDR_HIST);
+      const combined = [...new Set([...hist, ...sheetAddresses])].filter(Boolean);
+      const hits     = combined.filter(a =>
+        a.toLowerCase().includes(q) && a.trim() !== newVal.trim()
+      ).slice(0, 8);
+      if (hits.length) {
+        setAcList(hits); setAcOpen(true); setAcRect(getDropRect()); return;
+      }
+    }
+    setAcOpen(false);
   };
 
-  /* select autocomplete suggestion + save to local history */
+  /* ── insert tanglish suggestion ── */
+  const insertSug = (tamil) => {
+    const before = value.slice(0, wordStart);
+    const after  = value.slice(wordEnd);
+    const sep    = before.length && !before.endsWith(" ") ? "" : "";
+    const newVal = before + tamil + " " + after;
+    onChange(newVal);
+    setSugOpen(false);
+    const ta = textareaRef.current;
+    if (ta) {
+      setTimeout(() => {
+        const p = wordStart + tamil.length + 1;
+        ta.setSelectionRange(p, p);
+        ta.focus();
+      }, 0);
+    }
+  };
+
+  /* ── select autocomplete entry ── */
   const selectAC = (addr) => {
     onChange(addr);
     setAcOpen(false);
-    const hist = ls.getJSON(LS_ADDR_HIST);
+    const hist    = ls.getJSON(LS_ADDR_HIST);
     const updated = [addr, ...hist.filter(a => a !== addr)].slice(0, 20);
     ls.setJSON(LS_ADDR_HIST, updated);
+  };
+
+  /* ── keyboard nav ── */
+  const handleKeyDown = (e) => {
+    if (sugOpen && sugList.length) {
+      if (e.key === "ArrowRight" || e.key === "Tab") {
+        e.preventDefault();
+        insertSug(sugList[activeSug]);
+      } else if (e.key === "ArrowDown") {
+        e.preventDefault();
+        setActiveSug(i => Math.min(i + 1, sugList.length - 1));
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        setActiveSug(i => Math.max(i - 1, 0));
+      } else if (e.key === "Escape") {
+        setSugOpen(false);
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        insertSug(sugList[activeSug]);
+      }
+    }
   };
 
   /* save to history on blur */
   const handleBlur = () => {
     const v = value.trim();
     if (v.length > 8) {
-      const hist = ls.getJSON(LS_ADDR_HIST);
+      const hist    = ls.getJSON(LS_ADDR_HIST);
       const updated = [v, ...hist.filter(a => a !== v)].slice(0, 20);
       ls.setJSON(LS_ADDR_HIST, updated);
     }
-    setTimeout(() => setAcOpen(false), 150);
+    setTimeout(() => { setSugOpen(false); setAcOpen(false); }, 180);
   };
 
-  const visibleChips = CHIPS.slice(chipPage * CHIPS_PER_PAGE, (chipPage + 1) * CHIPS_PER_PAGE);
-  const totalPages   = Math.ceil(CHIPS.length / CHIPS_PER_PAGE);
+  /* recompute rects on scroll/resize */
+  useEffect(() => {
+    if (!sugOpen && !acOpen) return;
+    const update = () => {
+      const r = getDropRect();
+      if (sugOpen) setSugRect(r);
+      if (acOpen)  setAcRect(r);
+    };
+    window.addEventListener("scroll", update, true);
+    window.addEventListener("resize", update);
+    return () => { window.removeEventListener("scroll", update, true); window.removeEventListener("resize", update); };
+  }, [sugOpen, acOpen, getDropRect]);
 
   return (
-    <div style={{ position:"relative" }}>
+    <div style={{ position: "relative" }}>
 
-      {/* ── QUICK CHIPS ── */}
-      <div style={S.chipSection}>
-        <div style={S.chipBar}>
-          {visibleChips.map(c => (
-            <button key={c.en} className="chip" style={S.chip}
-              onClick={() => insertChip(c.ta)}
-              title={c.en}>
-              <span style={{ fontSize:13 }}>{c.ta}</span>
-              <span style={S.chipEn}>{c.en}</span>
-            </button>
-          ))}
-        </div>
-        {totalPages > 1 && (
-          <div style={S.chipNav}>
-            {Array.from({ length: totalPages }).map((_, i) => (
-              <button key={i} style={{ ...S.chipDot, ...(chipPage===i ? S.chipDotOn : {}) }}
-                onClick={() => setChipPage(i)} />
-            ))}
-          </div>
-        )}
+      {/* ── TANGLISH HINT ── */}
+      <div style={S.tanglishHint}>
+        <span style={S.tanglishBadge}>⌨ Tanglish</span>
+        <span style={S.tanglishTip}>type English → pick Tamil (Tab / →)</span>
       </div>
 
       {/* ── TEXTAREA ── */}
-      <div style={{ position:"relative" }}>
-        <textarea
-          ref={textareaRef}
-          style={S.addrArea}
-          value={value}
-          rows={3}
-          placeholder="முகவரி தட்டச்சு செய்யவும் அல்லது கீழே உள்ள சொற்களை தட்டவும்…"
-          onChange={e => onChange(e.target.value)}
-          onBlur={handleBlur}
-          onFocus={() => value.trim().length >= 2 && acList.length && setAcOpen(true)}
-        />
+      <textarea
+        ref={textareaRef}
+        style={S.addrArea}
+        value={value}
+        rows={3}
+        placeholder="வீடு எண், தெரு, நகர்… அல்லது English-ல் தட்டச்சு செய்து Tamil தேர்வு செய்யவும்"
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+        onBlur={handleBlur}
+      />
 
-        {/* autocomplete dropdown */}
-        {acOpen && acList.length > 0 && (
-          <div ref={acRef} className="ac-dropdown" style={S.acDrop}>
-            <div style={S.acHeader}>
-              <span style={S.acHeaderTxt}>📋 Suggestions</span>
-            </div>
-            {acList.map((addr, i) => (
-              <button key={i} className="ac-item" style={S.acItem}
-                onMouseDown={() => selectAC(addr)}>
-                <span style={S.acIcon}>🕐</span>
-                <span style={S.acText}>{addr}</span>
+      {/* ── TANGLISH SUGGESTION POPUP (fixed position) ── */}
+      {sugOpen && sugRect && sugList.length > 0 && (
+        <div className="sug-popup" style={{
+          ...S.sugPop,
+          position: "fixed",
+          top: sugRect.top,
+          left: sugRect.left,
+          width: sugRect.width,
+          zIndex: 9998,
+        }}>
+          <div style={S.sugHeader}>
+            <span style={S.sugHeaderTxt}>⌨ Tamil suggestions</span>
+            <span style={S.sugNav}>Tab / → to insert</span>
+          </div>
+          <div style={S.sugRow}>
+            {sugList.map((s, i) => (
+              <button
+                key={i}
+                className={"sug-item" + (i === activeSug ? " active" : "")}
+                style={{ ...S.sugItem, ...(i === activeSug ? S.sugItemActive : {}) }}
+                onMouseDown={(e) => { e.preventDefault(); insertSug(s); }}
+              >
+                {s}
               </button>
             ))}
           </div>
-        )}
-      </div>
+        </div>
+      )}
+
+      {/* ── AUTOCOMPLETE DROPDOWN (fixed position) ── */}
+      {acOpen && acRect && acList.length > 0 && (
+        <div className="ac-dropdown" style={{
+          ...S.acDrop,
+          position: "fixed",
+          top: acRect.top,
+          left: acRect.left,
+          width: acRect.width,
+          zIndex: 9997,
+        }}>
+          <div style={S.acHeader}>
+            <span style={S.acHeaderTxt}>📋 Sheet suggestions</span>
+          </div>
+          {acList.map((addr, i) => (
+            <button key={i} className="ac-item" style={S.acItem}
+              onMouseDown={() => selectAC(addr)}>
+              <span style={S.acIcon}>🕐</span>
+              <span style={S.acText}>{addr}</span>
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* ── CAMERA / IMAGE BUTTONS ── */}
-      <div style={{ display:"flex", gap:8, marginTop:7 }}>
+      <div style={S.camRow}>
         <button className="cam-btn" style={S.camBtn} onClick={onCamera}>📷 Camera</button>
         <button className="cam-btn" style={S.camBtn} onClick={onFile}>🖼 Image</button>
       </div>
@@ -334,7 +500,7 @@ function EditField({ value, isMod, onChange, isEmpty }) {
   return editing ? (
     <div style={{ display:"flex", gap:6, alignItems:"center" }}>
       <input ref={ref}
-        style={{ ...S.inpInline, ...(isMod ? { borderColor:"#C9A84C" } : {}) }}
+        style={{ ...S.inpInline, flex:1, ...(isMod ? { borderColor:"#C9A84C" } : {}) }}
         value={draft} onChange={e => setDraft(e.target.value)}
         enterKeyHint="done"
         onKeyDown={e => { if (e.key==="Enter") commit(); if (e.key==="Escape") cancel(); }} />
@@ -342,7 +508,7 @@ function EditField({ value, isMod, onChange, isEmpty }) {
       <button style={S.cancelBtn} onClick={cancel}>✕</button>
     </div>
   ) : (
-    <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+    <div style={{ display:"flex", alignItems:"center", gap:8, flexWrap:"wrap" }}>
       <span style={{ ...S.dispVal,
         ...(isMod  ? { color:"#C9A84C", fontWeight:700 } : {}),
         ...(isEmpty ? { color:"#e74c3c", opacity:.7 }    : {}) }}>
@@ -372,19 +538,17 @@ export default function CRLMPEditor() {
   const [saveMsg,     setSaveMsg]     = useState("");
   const [error,       setError]       = useState("");
 
-  /* ── missing-field warning state ── */
-  const [showWarn,    setShowWarn]    = useState(false);
+  const [showWarn,      setShowWarn]      = useState(false);
   const [warnDismissed, setWarnDismissed] = useState(false);
 
-  /* ── sheet addresses (for autocomplete) ── */
   const [sheetAddresses, setSheetAddresses] = useState([]);
 
-  const [token,       setToken]       = useState("");
-  const [gisReady,    setGisReady]    = useState(false);
+  const [token,    setToken]    = useState("");
+  const [gisReady, setGisReady] = useState(false);
   const tokenRef    = useRef("");
   const tokenClient = useRef(null);
 
-  /* ── camera/OCR ── */
+  /* camera/OCR */
   const [ocrOpen,       setOcrOpen]       = useState(false);
   const [ocrProcessing, setOcrProcessing] = useState(false);
   const [ocrProgress,   setOcrProgress]   = useState(0);
@@ -405,10 +569,8 @@ export default function CRLMPEditor() {
   const caseNumRef  = useRef(null);
   const caseYearRef = useRef(null);
 
-  /* preload Tesseract */
   useEffect(() => { loadTesseract().catch(() => {}); }, []);
 
-  /* ── restore token ── */
   const restoreToken = useCallback(() => {
     const saved  = ls.get(LS_TOKEN);
     const expiry = parseInt(ls.get(LS_TOKEN_EXP) || "0", 10);
@@ -416,7 +578,6 @@ export default function CRLMPEditor() {
     ls.del(LS_TOKEN); ls.del(LS_TOKEN_EXP); return false;
   }, []);
 
-  /* ── load GIS + sheets ── */
   useEffect(() => {
     restoreToken();
     fetchSheetNames();
@@ -449,7 +610,6 @@ export default function CRLMPEditor() {
     tokenRef.current = ""; setToken(""); ls.del(LS_TOKEN); ls.del(LS_TOKEN_EXP);
   };
 
-  /* ── fetch sheet names ── */
   const fetchSheetNames = useCallback(async () => {
     try {
       const r = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}?fields=sheets.properties.title&key=${API_KEY}`);
@@ -458,12 +618,11 @@ export default function CRLMPEditor() {
       const names = j.sheets?.map(s => s.properties.title) || [];
       setSheets(names);
       const saved = ls.get(LS_SHEET);
-      if (saved && names.includes(saved)) { setActiveSheet(saved); }
+      if (saved && names.includes(saved)) setActiveSheet(saved);
       else if (names.length) { setActiveSheet(names[0]); ls.set(LS_SHEET, names[0]); }
     } catch { setError("Cannot load sheet tabs."); }
   }, []);
 
-  /* ── fetch all addresses from sheet (for autocomplete) ── */
   const fetchSheetAddresses = useCallback(async (sheetName) => {
     if (!sheetName) return;
     try {
@@ -476,7 +635,6 @@ export default function CRLMPEditor() {
     } catch {}
   }, []);
 
-  /* refetch addresses when sheet changes */
   useEffect(() => { if (activeSheet) fetchSheetAddresses(activeSheet); }, [activeSheet]);
 
   const selectSheet = (name) => {
@@ -485,7 +643,6 @@ export default function CRLMPEditor() {
     setError(""); setSaveMsg(""); setShowWarn(false); setWarnDismissed(false);
   };
 
-  /* ── search ── */
   const search = async () => {
     const q = `${caseNum.trim()}/${caseYear.trim()}`;
     if (!caseNum || !caseYear) { setError("Enter case number and year."); return; }
@@ -516,7 +673,6 @@ export default function CRLMPEditor() {
           init[ci] = DATE_COLS.has(ci) ? fmtDate(found.data[ci] || "") : (found.data[ci] || "");
         });
         setEditData(init);
-        /* check missing fields immediately after load */
         const hasMissing = [...REQUIRED_COLS].some(ci => !(found.data[ci] || "").toString().trim());
         if (hasMissing) setShowWarn(true);
       }
@@ -527,15 +683,10 @@ export default function CRLMPEditor() {
     }
   };
 
-  /* ── save ── */
   const save = async () => {
     if (!result) return;
-    /* check missing fields before save */
     const missing = [...REQUIRED_COLS].filter(ci => !(editData[ci] || "").toString().trim());
-    if (missing.length && !warnDismissed) {
-      setShowWarn(true);
-      return; // block save — user must dismiss warning first
-    }
+    if (missing.length && !warnDismissed) { setShowWarn(true); return; }
     if (!tokenRef.current) { setError("Not signed in. Click Sign In first."); return; }
     setSaving(true); setSaveMsg(""); setError("");
     try {
@@ -559,10 +710,9 @@ export default function CRLMPEditor() {
       }
       setSaveMsg(`✓ Saved ${data.length} field${data.length > 1 ? "s" : ""} to "${activeSheet}"!`);
       setModCols(new Set()); setShowWarn(false); setWarnDismissed(false);
-      /* save address to local history */
       const addrVal = (editData[COL.ADDR] || "").trim();
       if (addrVal.length > 8) {
-        const hist = ls.getJSON(LS_ADDR_HIST);
+        const hist    = ls.getJSON(LS_ADDR_HIST);
         const updated = [addrVal, ...hist.filter(a => a !== addrVal)].slice(0, 20);
         ls.setJSON(LS_ADDR_HIST, updated);
       }
@@ -577,7 +727,6 @@ export default function CRLMPEditor() {
   const markMod = (ci, val) => {
     setEditData(p => ({ ...p, [ci]: val }));
     setModCols(p => new Set([...p, ci]));
-    /* re-evaluate warning live */
     const updated = { ...editData, [ci]: val };
     const hasMissing = [...REQUIRED_COLS].some(c => !(updated[c] || "").toString().trim());
     if (!hasMissing) { setShowWarn(false); setWarnDismissed(false); }
@@ -706,11 +855,11 @@ export default function CRLMPEditor() {
     setCapturedUrl(""); setCapturedBlob(null);
   };
 
-  /* ═══════════════ RENDER ═════════════════════════════════════════════════ */
+  /* ═══════════════════════════════════════════════════════════════════════
+     RENDER
+  ═══════════════════════════════════════════════════════════════════════ */
   const caseQuery  = caseNum && caseYear ? `${caseNum}/${caseYear}` : null;
   const isLoggedIn = !!token;
-
-  /* missing fields count for save button badge */
   const missingCount = result
     ? [...REQUIRED_COLS].filter(ci => !(editData[ci] || "").toString().trim()).length
     : 0;
@@ -721,12 +870,12 @@ export default function CRLMPEditor() {
       {/* ── HEADER ── */}
       <header style={S.header}>
         <div style={S.stripe} />
-        <div style={S.hInner}>
+        <div className="hInner" style={S.hInner}>
           <div>
             <h1 style={S.title}>⚖ CRLMP Case Editor</h1>
             <p style={S.sub}>Court Record &amp; Legal Management Portal{activeSheet ? ` · ${activeSheet}` : ""}</p>
           </div>
-          <div style={S.authArea}>
+          <div className="authArea" style={S.authArea}>
             {isLoggedIn ? (
               <>
                 <span style={S.signedIn}>● Signed In</span>
@@ -746,10 +895,10 @@ export default function CRLMPEditor() {
         {/* ── SHEET TABS ── */}
         <section style={S.card}>
           <p style={S.secLabel}>SELECT SHEET TAB <span style={S.persisted}>(remembered)</span></p>
-          <div style={S.tabBar}>
+          <div className="tabBar" style={S.tabBar}>
             {sheets.length === 0 && <span style={S.muted}>Loading tabs…</span>}
             {sheets.map(s => (
-              <button key={s} className="tab-btn"
+              <button key={s} className="tab-btn tab-btn"
                 style={{ ...S.tab, ...(activeSheet === s ? S.tabOn : {}) }}
                 onClick={() => selectSheet(s)}>
                 {activeSheet === s ? "✓ " : ""}{s}
@@ -762,10 +911,10 @@ export default function CRLMPEditor() {
         <section style={S.card}>
           <p style={S.secLabel}>SEARCH CASE</p>
           <div style={S.searchWrap}>
-            <div style={S.searchRow}>
+            <div className="searchRow" style={S.searchRow}>
               <div style={S.fg}>
                 <label style={S.lbl}>CRLMP No.</label>
-                <input ref={caseNumRef} style={S.inp}
+                <input ref={caseNumRef} className="inp-case" style={S.inp}
                   inputMode="numeric" pattern="[0-9]*" enterKeyHint="next"
                   placeholder="e.g. 2956" value={caseNum}
                   onChange={e => setCaseNum(e.target.value.replace(/\D/g, ""))}
@@ -780,9 +929,9 @@ export default function CRLMPEditor() {
                   onChange={e => setCaseYear(e.target.value.replace(/\D/g, ""))}
                   onKeyDown={e => { if (e.key === "Enter") search(); }} />
               </div>
-              {caseQuery && <div style={S.preview}>{caseQuery}</div>}
+              {caseQuery && <div className="preview-badge" style={S.preview}>{caseQuery}</div>}
             </div>
-            <button style={S.searchBtn} onClick={search} disabled={searching}>
+            <button className="searchBtn" style={S.searchBtn} onClick={search} disabled={searching}>
               {searching && <span style={S.spin} />}
               {searching ? "Searching…" : "🔍 Search"}
             </button>
@@ -804,7 +953,7 @@ export default function CRLMPEditor() {
         {/* ── RESULT ── */}
         {result && (
           <section style={{ ...S.card, padding:0, border:`1.5px solid #C9A84C` }}>
-            <div style={S.resHead}>
+            <div className="resHead" style={S.resHead}>
               <div style={{ display:"flex", alignItems:"center", gap:10, flexWrap:"wrap" }}>
                 <span style={S.foundBadge}>CASE FOUND</span>
                 <span style={S.foundCase}>{editData[COL.CASE]}</span>
@@ -818,7 +967,7 @@ export default function CRLMPEditor() {
               <span style={S.resMeta}>Sheet: <b>{activeSheet}</b> · Row <b>{result.rowIndex}</b></span>
             </div>
 
-            <div style={S.grid}>
+            <div className="grid" style={S.grid}>
               {HEADERS.map((hdr, ci) => {
                 const isMod  = modCols.has(ci);
                 const isDate = DATE_COLS.has(ci);
@@ -865,7 +1014,7 @@ export default function CRLMPEditor() {
               })}
             </div>
 
-            <div style={S.saveBar}>
+            <div className="saveBar" style={S.saveBar}>
               {modCols.size > 0 && (
                 <span style={S.pending}>{modCols.size} field{modCols.size > 1 ? "s" : ""} pending</span>
               )}
@@ -944,7 +1093,7 @@ export default function CRLMPEditor() {
                   {focusRing.show && (
                     <div style={{ position:"absolute", left: focusRing.x-22, top: focusRing.y-22,
                                   width:44, height:44, border:`2px solid ${G}`, borderRadius:"50%",
-                                  pointerEvents:"none", animation:"fadeUp .2s ease" }} />
+                                  pointerEvents:"none" }} />
                   )}
                   <p style={{ position:"absolute", bottom:6, left:0, right:0, textAlign:"center", fontSize:10, color:"#fff9", letterSpacing:"0.1em" }}>
                     TAP TO FOCUS
@@ -1004,7 +1153,6 @@ const S = {
   errBox: { padding:"12px 18px", background:"#fff0f0", border:"1.5px solid #ffaaaa", borderRadius:8, color:"#c0392b", fontSize:13 },
   okBox:  { padding:"12px 18px", background:"#f0fff4", border:"1.5px solid #6bcf8a", borderRadius:8, color:"#1a7a3a", fontSize:13 },
 
-  /* ── WARNING BANNER ── */
   warnBanner:  { background:"#fffbf0", border:"1.5px solid #e67e22", borderRadius:10, padding:"14px 18px",
                  display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:12,
                  boxShadow:"0 2px 12px #e67e2222" },
@@ -1017,7 +1165,6 @@ const S = {
   warnClose:   { background:"transparent", border:"none", color:"#e67e22", fontSize:18, cursor:"pointer", padding:"0 4px", flexShrink:0 },
   warnSaveHint:{ fontSize:11, color:"#e67e22", fontWeight:600 },
 
-  /* ── MISSING FIELD BADGE (header) ── */
   missBadge:  { display:"inline-flex", alignItems:"center", padding:"3px 9px", background:"#fff0f0",
                 border:"1px solid #e74c3c", borderRadius:4, fontSize:10, color:"#c0392b" },
 
@@ -1038,34 +1185,43 @@ const S = {
   dispVal:    { flex:1, fontSize:14, color:"#1a1a2e", wordBreak:"break-word" },
   modBtn:     { padding:"4px 12px", background:"#faf7f2", border:"1.5px solid #e0d8cc", borderRadius:5, color:"#888", fontSize:11, cursor:"pointer", fontFamily:"inherit", transition:"all .15s", whiteSpace:"nowrap" },
 
-  /* ── QUICK CHIPS ── */
-  chipSection: { marginBottom:8 },
-  chipBar:     { display:"flex", flexWrap:"wrap", gap:5, marginBottom:4 },
-  chip:        { display:"inline-flex", flexDirection:"column", alignItems:"center", padding:"4px 10px",
-                 background:"#faf7f2", border:"1.5px solid #e0d8cc", borderRadius:16,
-                 cursor:"pointer", fontFamily:"inherit", transition:"all .15s", lineHeight:1.2 },
-  chipEn:      { fontSize:8, color:"#bbb", letterSpacing:"0.06em", marginTop:1 },
-  chipNav:     { display:"flex", gap:4, justifyContent:"center", marginTop:2 },
-  chipDot:     { width:6, height:6, borderRadius:"50%", background:"#e0d8cc", border:"none", cursor:"pointer", padding:0 },
-  chipDotOn:   { background:G },
+  /* ── TANGLISH INPUT ── */
+  tanglishHint: { display:"flex", alignItems:"center", gap:8, marginBottom:6 },
+  tanglishBadge:{ fontSize:10, padding:"2px 8px", background:"#f0f6ff", border:"1.5px solid #c0d8ff", borderRadius:10, color:"#3B6BF5", fontFamily:"inherit" },
+  tanglishTip:  { fontSize:10, color:"#bbb", letterSpacing:"0.04em" },
 
-  /* ── AUTOCOMPLETE ── */
-  acDrop:      { position:"absolute", top:"100%", left:0, right:0, zIndex:50,
-                 background:"#fff", border:`1.5px solid ${G}`, borderRadius:"0 0 10px 10px",
-                 boxShadow:"0 8px 24px #0002", maxHeight:220, overflowY:"auto" },
-  acHeader:    { padding:"6px 12px", background:"#fff8e8", borderBottom:"1px solid #f0e8d8" },
-  acHeaderTxt: { fontSize:10, color:"#8B5E0A", letterSpacing:"0.1em", textTransform:"uppercase" },
-  acItem:      { display:"flex", alignItems:"flex-start", gap:10, padding:"9px 12px",
-                 background:"none", border:"none", width:"100%", textAlign:"left",
-                 cursor:"pointer", fontFamily:"inherit", borderBottom:"1px solid #f8f4ee",
-                 transition:"background .12s" },
-  acIcon:      { fontSize:13, flexShrink:0, marginTop:1 },
-  acText:      { fontSize:12, color:"#1a1a2e", lineHeight:1.5, wordBreak:"break-word" },
+  /* ── SUGGESTION POPUP (tanglish) ── */
+  sugPop:    { background:"#fff", border:`1.5px solid ${G}`, borderRadius:"0 0 10px 10px",
+               boxShadow:"0 8px 28px rgba(0,0,0,.14)", overflow:"hidden" },
+  sugHeader: { display:"flex", alignItems:"center", justifyContent:"space-between",
+               padding:"5px 12px", background:"#fff8e8", borderBottom:"1px solid #f0e8d8" },
+  sugHeaderTxt:{ fontSize:10, color:"#8B5E0A", letterSpacing:"0.1em", textTransform:"uppercase" },
+  sugNav:    { fontSize:10, color:"#C9A84C" },
+  sugRow:    { display:"flex", flexWrap:"wrap", gap:6, padding:"8px 10px" },
+  sugItem:   { padding:"5px 14px", background:"#faf7f2", border:"1.5px solid #e0d8cc",
+               borderRadius:16, fontSize:14, cursor:"pointer", color:"#1a1a2e",
+               fontFamily:"inherit", transition:"all .12s" },
+  sugItemActive:{ background:"#fff8e8", borderColor:G, color:"#8B5E0A" },
+
+  /* ── AUTOCOMPLETE (sheet addresses) ── */
+  acDrop:    { background:"#fff", border:`1.5px solid ${G}`, borderRadius:"0 0 10px 10px",
+               boxShadow:"0 8px 24px rgba(0,0,0,.12)", maxHeight:220, overflowY:"auto" },
+  acHeader:  { padding:"6px 12px", background:"#fff8e8", borderBottom:"1px solid #f0e8d8" },
+  acHeaderTxt:{ fontSize:10, color:"#8B5E0A", letterSpacing:"0.1em", textTransform:"uppercase" },
+  acItem:    { display:"flex", alignItems:"flex-start", gap:10, padding:"9px 12px",
+               background:"none", border:"none", width:"100%", textAlign:"left",
+               cursor:"pointer", fontFamily:"inherit", borderBottom:"1px solid #f8f4ee",
+               transition:"background .12s" },
+  acIcon:    { fontSize:13, flexShrink:0, marginTop:1 },
+  acText:    { fontSize:12, color:"#1a1a2e", lineHeight:1.5, wordBreak:"break-word" },
 
   addrArea:   { width:"100%", background:"#fff", border:"1.5px solid #ddd", borderRadius:8,
                 color:"#1a1a2e", fontSize:13, padding:"9px 12px", fontFamily:"inherit",
                 resize:"vertical", lineHeight:1.6, boxSizing:"border-box" },
-  camBtn:     { padding:"6px 14px", background:"#f0f6ff", border:"1.5px solid #c0d8ff", borderRadius:6, color:"#3B6BF5", fontSize:11, cursor:"pointer", fontFamily:"inherit", transition:"all .15s" },
+  camRow:     { display:"flex", gap:8, marginTop:7 },
+  camBtn:     { flex:1, padding:"8px 14px", background:"#f0f6ff", border:"1.5px solid #c0d8ff",
+                borderRadius:6, color:"#3B6BF5", fontSize:12, cursor:"pointer", fontFamily:"inherit",
+                transition:"all .15s", textAlign:"center" },
 
   inpInline: { flex:1, padding:"7px 10px", background:"#fff", border:"1.5px solid #ddd", borderRadius:6, color:"#1a1a2e", fontSize:14, fontFamily:"inherit" },
   okBtn:     { padding:"6px 10px", background:"#e8f8ec", border:"1.5px solid #6bcf8a", color:"#1a7a3a", borderRadius:5, cursor:"pointer", fontSize:14 },
