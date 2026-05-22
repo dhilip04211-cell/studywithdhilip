@@ -20,7 +20,10 @@ const READONLY  = new Set([COL.SR, COL.CASE]);
 
 /* ─── HELPERS ────────────────────────────────────────────────────────────── */
 const toA1    = (row, col) => `${String.fromCharCode(65 + col)}${row}`;
+
+/* FIX 1: digits-only normStr — handles any prefix/separator in Case No. */
 const normStr = (s = "") => s.toString().replace(/\D/g, "");
+
 const ls      = { get: k => { try { return localStorage.getItem(k); } catch { return null; } },
                   set: (k,v) => { try { localStorage.setItem(k,v); } catch {} },
                   del: k => { try { localStorage.removeItem(k); } catch {} } };
@@ -78,7 +81,7 @@ export default function CRLMPEditor() {
   const [error,       setError]       = useState("");
 
   /* ── auth ── */
-  const [token,       setToken]       = useState("");   // live access token
+  const [token,       setToken]       = useState("");
   const [gisReady,    setGisReady]    = useState(false);
   const [userEmail,   setUserEmail]   = useState("");
   const tokenRef      = useRef("");
@@ -99,8 +102,6 @@ export default function CRLMPEditor() {
 
   /* ══════════════════════════════════════════════════════════════
      RESTORE TOKEN FROM LOCALSTORAGE ON MOUNT
-     If a valid (non-expired) token is stored, use it immediately
-     so the user stays logged in after page refresh.
   ══════════════════════════════════════════════════════════════ */
   const restoreToken = useCallback(() => {
     const saved    = ls.get(LS_TOKEN);
@@ -110,7 +111,6 @@ export default function CRLMPEditor() {
       setToken(saved);
       return true;
     }
-    // expired — clear
     ls.del(LS_TOKEN); ls.del(LS_TOKEN_EXP);
     return false;
   }, []);
@@ -130,7 +130,6 @@ export default function CRLMPEditor() {
       tokenClient.current = window.google.accounts.oauth2.initTokenClient({
         client_id: CLIENT_ID,
         scope: SCOPES,
-        /* prompt:'': skip consent screen if already granted → silent re-login */
         prompt: "",
         callback: (resp) => {
           if (resp.error) { setError("Sign-in failed: " + resp.error); return; }
@@ -140,14 +139,10 @@ export default function CRLMPEditor() {
           setToken(t);
           ls.set(LS_TOKEN, t);
           ls.set(LS_TOKEN_EXP, expMs.toString());
-
-          /* schedule silent refresh 1 min before expiry */
           setTimeout(() => silentRefresh(), (resp.expires_in - 70) * 1000);
         },
       });
       setGisReady(true);
-
-      /* If no stored token, try silent sign-in automatically */
       if (!restoreToken()) {
         silentSignIn();
       }
@@ -155,25 +150,14 @@ export default function CRLMPEditor() {
     document.head.appendChild(gis);
   }, []);
 
-  /* Silent sign-in — tries without showing UI */
-  const silentSignIn = () => {
-    if (!tokenClient.current) return;
-    tokenClient.current.requestAccessToken({ prompt: "" });
-  };
+  const silentSignIn  = () => { if (!tokenClient.current) return; tokenClient.current.requestAccessToken({ prompt: "" }); };
+  const silentRefresh = () => { if (!tokenClient.current) return; tokenClient.current.requestAccessToken({ prompt: "" }); };
 
-  /* Silent refresh before expiry */
-  const silentRefresh = () => {
-    if (!tokenClient.current) return;
-    tokenClient.current.requestAccessToken({ prompt: "" });
-  };
-
-  /* Manual sign-in (shows Google account picker) */
   const signIn = () => {
     if (!gisReady) { setError("Google Sign-In loading… try again."); return; }
     tokenClient.current.requestAccessToken({ prompt: "select_account" });
   };
 
-  /* Sign-out */
   const signOut = () => {
     if (token) window.google?.accounts?.oauth2?.revoke(token, () => {});
     tokenRef.current = "";
@@ -192,7 +176,6 @@ export default function CRLMPEditor() {
       if (j.error) { setError("Sheets API: " + j.error.message); return; }
       const names = j.sheets?.map(s => s.properties.title) || [];
       setSheets(names);
-      /* Restore last selected sheet — never reset unless user manually changes */
       const saved = ls.get(LS_SHEET);
       if (saved && names.includes(saved)) {
         setActiveSheet(saved);
@@ -209,7 +192,6 @@ export default function CRLMPEditor() {
   const selectSheet = (name) => {
     setActiveSheet(name);
     ls.set(LS_SHEET, name);
-    /* clear search result but keep year */
     setResult(null); setEditData({}); setModCols(new Set());
     setError(""); setSaveMsg("");
   };
@@ -231,7 +213,11 @@ export default function CRLMPEditor() {
       const rows  = json.values || [];
       let found   = null;
       for (let i = 1; i < rows.length; i++) {
-        if (normStr(rows[i][COL.CASE] || "") === normStr(q)) {
+        const cellNorm  = normStr(rows[i][COL.CASE] || "");
+        const queryNorm = normStr(q);
+        /* FIX 2: use .includes() so "CRLMP 5944/2023" → digits "59442023"
+           still matches query "5944/2023" → digits "59442023"            */
+        if (cellNorm.includes(queryNorm) && queryNorm.length > 0) {
           found = { rowIndex: i + 1, data: rows[i] }; break;
         }
       }
@@ -275,7 +261,6 @@ export default function CRLMPEditor() {
       );
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        /* Token may have expired mid-session — trigger silent refresh then retry */
         if (res.status === 401) {
           silentRefresh();
           setError("Session refreshed. Please save again.");
@@ -298,7 +283,6 @@ export default function CRLMPEditor() {
     setModCols(p => new Set([...p, ci]));
   };
 
-  /* persist year on change */
   useEffect(() => { if (caseYear) ls.set(LS_YEAR, caseYear); }, [caseYear]);
 
   /* ── Camera / OCR ── */
@@ -374,7 +358,7 @@ export default function CRLMPEditor() {
   const closeOcr = () => { stopStream(); setOcrOpen(false); setOcrError(""); setOcrProcessing(false); };
 
   /* ═══════════════ RENDER ═════════════════════════════════════════════════ */
-  const caseQuery = caseNum && caseYear ? `${caseNum}/${caseYear}` : null;
+  const caseQuery  = caseNum && caseYear ? `${caseNum}/${caseYear}` : null;
   const isLoggedIn = !!token;
 
   return (
@@ -392,7 +376,6 @@ export default function CRLMPEditor() {
             </p>
           </div>
 
-          {/* Auth status */}
           <div style={S.authArea}>
             {isLoggedIn ? (
               <>
