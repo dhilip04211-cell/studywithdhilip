@@ -55,6 +55,16 @@ const sections = [
     external: false,
     num: "05",
   },
+  {
+    title: "COurt Portal",
+    route: "/mc/mc",
+    icon: "📰",
+    color: "#4CAF89",
+    accent: "#80D4B1",
+    subtitle: "Court",
+    external: false,
+    num: "06",
+  },
 ];
 
 function ParticleCanvas() {
