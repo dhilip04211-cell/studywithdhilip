@@ -1,230 +1,279 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 
-  const classes = [
-  { label: "Crlmp Editor",    file: "/mc/crlmpeditor",       color: "#FF6B35" },
-  { label: "Class VII",   file: "/gk/seven/seven",   color: "#F7C59F" },
+const BASE = import.meta.env.BASE_URL;
 
+const sections = [
+  {
+    title: "Power Plant",
+    route: `${BASE}MC/Fir_Management.html`,
+    icon: "⚡",
+    color: "#C9A84C",
+    accent: "#F5D07A",
+    subtitle: "FIR",
+    num: "01",
+    isExternal: true,
+  },
+  {
+    title: "Circuit Theory",
+    route: "/mc/crlmpeditor",
+    icon: "🔌",
+    color: "#C9A84C",
+    accent: "#F5D07A",
+    subtitle: "Crlmp",
+    isExternal: false,
+    num: "02",
+  },
 ];
-  
 
+function ParticleCanvas() {
+  const canvasRef = useRef(null);
 
-export default function MC() {
-  const [hovered, setHovered] = useState(null);
-  const navigate = useNavigate();
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    let animId;
+
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+
+    resize();
+    window.addEventListener("resize", resize);
+
+    const dots = Array.from({ length: 55 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.4 + 0.3,
+      dx: (Math.random() - 0.5) * 0.25,
+      dy: (Math.random() - 0.5) * 0.25,
+      o: Math.random() * 0.4 + 0.1,
+    }));
+
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      dots.forEach((d) => {
+        d.x += d.dx;
+        d.y += d.dy;
+
+        if (d.x < 0 || d.x > canvas.width) d.dx *= -1;
+        if (d.y < 0 || d.y > canvas.height) d.dy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(201,168,76,${d.o})`;
+        ctx.fill();
+      });
+
+      for (let i = 0; i < dots.length; i++) {
+        for (let j = i + 1; j < dots.length; j++) {
+          const dist = Math.hypot(
+            dots[i].x - dots[j].x,
+            dots[i].y - dots[j].y
+          );
+
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(dots[i].x, dots[i].y);
+            ctx.lineTo(dots[j].x, dots[j].y);
+            ctx.strokeStyle = `rgba(201,168,76,${
+              0.07 * (1 - dist / 120)
+            })`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+
+      animId = requestAnimationFrame(draw);
+    };
+
+    draw();
+
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener("resize", resize);
+    };
+  }, []);
 
   return (
-    <div style={styles.page}>
-      {/* Background pattern */}
-      <div style={styles.bgPattern} />
-
-      <div style={styles.container}>
-        <div style={styles.headerBlock}>
-          <div style={styles.badge}>Magistrate Clerk</div>
-          <h1 style={styles.title}>
-            <span style={styles.titleAccent}>Court</span>
-            <br />
-            Magistrate Clerk
-          </h1>
-          <p style={styles.subtitle}>Select your class to begin your journey</p>
-        </div>
-
-        <div style={styles.grid}>
-          {classes.map((cls, i) => (
-            <button
-              key={cls.file}
-              style={{
-                ...styles.card,
-                animationDelay: `${i * 0.08}s`,
-                borderColor: hovered === i ? cls.color : "rgba(255,255,255,0.08)",
-                boxShadow:
-                  hovered === i
-                    ? `0 0 32px ${cls.color}55, 0 8px 32px rgba(0,0,0,0.4)`
-                    : "0 4px 20px rgba(0,0,0,0.3)",
-                transform: hovered === i ? "translateY(-6px) scale(1.03)" : "translateY(0) scale(1)",
-              }}
-              onMouseEnter={() => setHovered(i)}
-              onMouseLeave={() => setHovered(null)}
-                       onClick={() => navigate(cls.file)}
-            >
-              <div
-                style={{
-                  ...styles.cardAccent,
-                  background: `linear-gradient(135deg, ${cls.color}, ${cls.color}88)`,
-                }}
-              />
-              <div style={styles.classNumber}>{cls.label.split(" ")[1]}</div>
-              <div style={styles.cardLabel}>{cls.label}</div>
-              <div style={styles.cardSub}>8 Subjects Available</div>
-              <div
-                style={{
-                  ...styles.arrow,
-                  color: cls.color,
-                  opacity: hovered === i ? 1 : 0,
-                  transform: hovered === i ? "translateX(4px)" : "translateX(0)",
-                }}
-              >
-                Explore →
-              </div>
-            </button>
-          ))}
-        </div>
-
-        <div style={styles.footer}>
-          <span style={styles.footerDot} />
-          Tamil Nadu State Board Curriculum
-          <span style={styles.footerDot} />
-        </div>
-      </div>
-
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Noto+Serif+Tamil:wght@400;700&display=swap');
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(24px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes pulse {
-          0%,100% { opacity:0.5; } 50% { opacity:1; }
-        }
-      `}</style>
-    </div>
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 0,
+        pointerEvents: "none",
+      }}
+    />
   );
 }
 
-const styles = {
-  page: {
-    minHeight: "100vh",
-    background: "#0a0e1a",
-    fontFamily: "'Sora', sans-serif",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    position: "relative",
-    overflow: "hidden",
-    padding: "40px 20px",
-  },
-  bgPattern: {
-    position: "absolute",
-    inset: 0,
-    backgroundImage: `
-      radial-gradient(circle at 20% 20%, #FF6B3522 0%, transparent 50%),
-      radial-gradient(circle at 80% 80%, #7B2D8B22 0%, transparent 50%),
-      radial-gradient(circle at 50% 50%, #004E8911 0%, transparent 70%)
-    `,
-    pointerEvents: "none",
-  },
-  container: {
-    width: "100%",
-    maxWidth: "900px",
-    position: "relative",
-    zIndex: 1,
-  },
-  headerBlock: {
-    textAlign: "center",
-    marginBottom: "48px",
-    animation: "fadeUp 0.6s ease both",
-  },
-  badge: {
-    display: "inline-block",
-    background: "rgba(255,107,53,0.15)",
-    border: "1px solid rgba(255,107,53,0.4)",
-    color: "#FF6B35",
-    fontSize: "11px",
-    fontWeight: 700,
-    letterSpacing: "3px",
-    padding: "6px 20px",
-    borderRadius: "100px",
-    marginBottom: "20px",
-  },
-  title: {
-    fontSize: "clamp(32px, 6vw, 56px)",
-    fontWeight: 800,
-    color: "#ffffff",
-    lineHeight: 1.15,
-    margin: "0 0 16px",
-  },
-  titleAccent: {
-    fontFamily: "'Noto Serif Tamil', serif",
-    color: "#FF6B35",
-    fontSize: "0.85em",
-  },
-  subtitle: {
-    color: "rgba(255,255,255,0.45)",
-    fontSize: "15px",
-    fontWeight: 300,
-    letterSpacing: "0.5px",
-    margin: 0,
-  },
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
-    gap: "16px",
-  },
-  card: {
-    position: "relative",
-    background: "rgba(255,255,255,0.04)",
-    border: "1px solid rgba(255,255,255,0.08)",
-    borderRadius: "16px",
-    padding: "28px 24px 24px",
-    cursor: "pointer",
-    textAlign: "left",
-    overflow: "hidden",
-    transition: "all 0.3s cubic-bezier(0.34,1.56,0.64,1)",
-    animation: "fadeUp 0.5s ease both",
-  },
-  cardAccent: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    height: "3px",
-    borderRadius: "16px 16px 0 0",
-  },
-  classNumber: {
-    fontSize: "42px",
-    fontWeight: 800,
-    color: "rgba(255,255,255,0.08)",
-    lineHeight: 1,
-    marginBottom: "12px",
-    letterSpacing: "-2px",
-  },
-  cardLabel: {
-    fontSize: "18px",
-    fontWeight: 700,
-    color: "#ffffff",
-    marginBottom: "6px",
-  },
-  cardSub: {
-    fontSize: "12px",
-    color: "rgba(255,255,255,0.35)",
-    fontWeight: 400,
-    letterSpacing: "0.3px",
-    marginBottom: "12px",
-  },
-  arrow: {
-    fontSize: "13px",
-    fontWeight: 600,
-    transition: "all 0.25s ease",
-    letterSpacing: "0.5px",
-  },
-  footer: {
-    textAlign: "center",
-    marginTop: "48px",
-    color: "rgba(255,255,255,0.2)",
-    fontSize: "12px",
-    fontWeight: 400,
-    letterSpacing: "2px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "16px",
-    animation: "fadeUp 0.8s ease both",
-  },
-  footerDot: {
-    width: "4px",
-    height: "4px",
-    borderRadius: "50%",
-    background: "rgba(255,255,255,0.2)",
-    display: "inline-block",
-  },
-};
+function CardItem({ item, index }) {
+  const delay = `${index * 0.08 + 0.1}s`;
+
+  const cardContent = (
+    <>
+      <span className="card-num">{item.num}</span>
+
+      <div
+        className="card-glow"
+        style={{
+          background: `radial-gradient(circle at 50% 0%, ${item.color}22 0%, transparent 70%)`,
+        }}
+      />
+
+      <div
+        className="card-top-line"
+        style={{
+          background: `linear-gradient(90deg, transparent, ${item.color}, transparent)`,
+        }}
+      />
+
+      <div className="card-icon" style={{ color: item.accent }}>
+        {item.icon}
+      </div>
+
+      <div className="card-body">
+        <p className="card-sub">{item.subtitle}</p>
+        <h3 className="card-title">{item.title}</h3>
+      </div>
+
+      <div className="card-arrow" style={{ color: item.color }}>
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <path d="M5 12h14M12 5l7 7-7 7" />
+        </svg>
+      </div>
+    </>
+  );
+
+  return item.isExternal ? (
+    <a
+      href={item.route}
+      style={{ textDecoration: "none", animationDelay: delay }}
+      className="premium-card"
+    >
+      {cardContent}
+    </a>
+  ) : (
+    <Link
+      to={item.route}
+      style={{ textDecoration: "none", animationDelay: delay }}
+      className="premium-card"
+    >
+      {cardContent}
+    </Link>
+  );
+}
+
+export default function Home() {
+  return (
+    <>
+      <style>{`
+        body {
+          background: #06080f;
+          color: #e8dfc8;
+          font-family: sans-serif;
+        }
+
+        .page-root {
+          min-height: 100vh;
+          padding: 60px 40px;
+        }
+
+        .header {
+          text-align: center;
+          margin-bottom: 70px;
+        }
+
+        .main-title {
+          font-size: 64px;
+          color: #f5d07a;
+        }
+
+        .tagline {
+          font-size: 14px;
+          opacity: 0.7;
+        }
+
+        .grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+          gap: 20px;
+          max-width: 1100px;
+          margin: 0 auto;
+        }
+
+        .premium-card {
+          position: relative;
+          display: block;
+          background: rgba(255,255,255,0.025);
+          border: 1px solid rgba(201,168,76,0.1);
+          border-radius: 16px;
+          padding: 30px;
+          min-height: 200px;
+          text-decoration: none;
+          color: inherit;
+          transition: 0.3s;
+        }
+
+        .premium-card:hover {
+          transform: translateY(-6px);
+          border-color: rgba(201,168,76,0.28);
+        }
+
+        .card-num {
+          position: absolute;
+          top: 18px;
+          right: 22px;
+          opacity: 0.4;
+        }
+
+        .card-icon {
+          font-size: 28px;
+          margin-bottom: 20px;
+        }
+
+        .card-sub {
+          font-size: 10px;
+          opacity: 0.7;
+          margin-bottom: 8px;
+        }
+
+        .card-title {
+          font-size: 26px;
+        }
+      `}</style>
+
+      <ParticleCanvas />
+
+      <div className="page-root">
+        <Link to="/" className="back-btn">
+          ← Back to Home
+        </Link>
+
+        <header className="header">
+          <h1 className="main-title">AE–1</h1>
+          <p className="tagline">Electrical · YCT Series · Paper II</p>
+        </header>
+
+        <div className="grid">
+          {sections.map((item, i) => (
+            <CardItem key={item.num} item={item} index={i} />
+          ))}
+        </div>
+      </div>
+    </>
+  );
+}
