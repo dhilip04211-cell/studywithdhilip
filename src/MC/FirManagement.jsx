@@ -685,104 +685,138 @@ function NumPad({ label, value, onChange, maxLen=6, withDot=false }) {
 /* ═══════════════════════════════════════════════
    FIR VIEWER TAB  — FIXED
    Flow:
-   1. Enter FIR number + optional year → Search
-   2. Results grouped into station pills:
-      a) FIR-sheet stations (from SMAP tabs) — shown with "(FIR)" label
-      b) Pending/Disposal/NV/CaseNum stations — grouped by actual PS Name value
-   3. Tap a station pill → shows that station's panel
-   4. Panel shows:
-      - FIR Pending rows (if FIR-sheet station)
-      - Pending case pills → tap to expand full details
-      - Disposal case pills → tap to expand full details
-      - NV property pills → tap to expand
-      - CaseNum pills → tap to expand
+   1. Enter FIR number → search
+   2. Show FIR sheet station pills (from SMAP tabs)
+   3. Show police station pills from Pending/Disposal/NV/CaseNum
+      — stations come from the "Police Station Name" column (col I / r.sta)
+      — if blank, show as "(Blank Station)"
+   4. Tap a station pill:
+      a) Filter rows where PS column matches selected station
+      b) ALSO include rows where Petitioner VS Respondent contains the station name
+      c) If PS column is blank ("(Blank Station)"), show rows with empty sta
+   5. Show matched case numbers as inline pills (grouped by source: Pending / Disposed / NV / Case#)
+   6. Tap a case number pill → show ALL details of that case
 ═══════════════════════════════════════════════ */
 function ViewerTab({ db }) {
-  const [fn, setFn] = useState("");
-  const [yr, setYr] = useState("");
+  const [fn, setFn]             = useState("");
+  const [yr, setYr]             = useState("");
   const [searched, setSearched] = useState(false);
 
-  /* Results state */
-  const [firHits, setFirHits]   = useState([]); // [{s, rows}]
-  const [pendHits, setPendHits] = useState([]); // all pend rows matching FIR
-  const [dispHits, setDispHits] = useState([]); // all disp rows matching FIR
+  const [pendHits, setPendHits] = useState([]);
+  const [dispHits, setDispHits] = useState([]);
   const [nvHits,   setNvHits]   = useState([]);
   const [cnHits,   setCnHits]   = useState([]);
+  const [firHits,  setFirHits]  = useState([]);
 
-  /* Selected station key: "fir::JKM" or "ps::Jayankondam" etc. */
-  const [activeSt, setActiveSt]   = useState(null);
+  // activeSt: either "fir::JKM" for FIR-sheet pills, or a raw PS name string
+  const [activeSt,     setActiveSt]     = useState(null);
   const [activeCaseId, setActiveCaseId] = useState(null);
 
   function doSearch() {
-    if (!fn.trim()) return;
-    const sNum = String(parseInt(fn.trim(), 10) || fn.trim());
+    const trimmed = fn.trim();
+    if (!trimmed) return;
+    const sNum = String(parseInt(trimmed, 10) || trimmed);
     const sYr  = yr.trim();
 
-    /* FIR sheet — per SMAP tab */
+    // FIR sheet hits
     const fh = [];
     for (const s of SMAP) {
       const rows = (db.fir[s.sh] || []).filter(r => firMatch(r.cr, sNum, sYr));
       if (rows.length) fh.push({ s, rows });
     }
 
-    /* Pending / Disposal / NV / CaseNum — match FIR only, NO stMatch */
+    // Pending / Disposal / NV / CaseNum — match by FIR number only
     const ph = db.pend.filter(r => firMatch(r.fn, sNum, sYr));
     const dh = db.disp.filter(r => firMatch(r.fn, sNum, sYr));
     const nh = db.nv.filter(r   => firMatch(r.fn, sNum, sYr));
     const ch = db.cnum.filter(r => firMatch(r.fn, sNum, sYr));
 
-    setFirHits(fh); setPendHits(ph); setDispHits(dh); setNvHits(nh); setCnHits(ch);
+    setFirHits(fh);
+    setPendHits(ph);
+    setDispHits(dh);
+    setNvHits(nh);
+    setCnHits(ch);
     setSearched(true);
-    setActiveSt(null); setActiveCaseId(null);
+    setActiveSt(null);
+    setActiveCaseId(null);
   }
 
   function doClear() {
     setFn(""); setYr(""); setSearched(false);
-    setFirHits([]); setPendHits([]); setDispHits([]); setNvHits([]); setCnHits([]);
+    setFirHits([]); setPendHits([]); setDispHits([]);
+    setNvHits([]); setCnHits([]);
     setActiveSt(null); setActiveCaseId(null);
   }
 
-  const totalHits = firHits.reduce((a,b)=>a+b.rows.length,0)
-    + pendHits.length + dispHits.length + nvHits.length + cnHits.length;
-
-  /* Build PS-name pills from pend+disp+nv+cn results */
-  const psMap = {}; // psName -> {pend:[], disp:[], nv:[], cn:[]}
-  const addPs = (arr, key) => arr.forEach(r => {
-    const ps = (r.sta || "").trim() || "(Blank Station)";
-    if (!psMap[ps]) psMap[ps] = {pend:[],disp:[],nv:[],cn:[]};
-    psMap[ps][key].push(r);
-  });
-  addPs(pendHits,"pend"); addPs(dispHits,"disp"); addPs(nvHits,"nv"); addPs(cnHits,"cn");
-
   const displayFIR = yr ? `${fn}/${yr}` : fn;
+
+  // Combine all case rows with source tag
+  const allCaseRows = [
+    ...pendHits.map(r => ({ ...r, _src: "pend" })),
+    ...dispHits.map(r => ({ ...r, _src: "disp" })),
+    ...nvHits.map(r   => ({ ...r, _src: "nv"   })),
+    ...cnHits.map(r   => ({ ...r, _src: "cnum" })),
+  ];
+
+  // Build unique station list from PS column (col I / r.sta)
+  const stationNames = [];
+  const seenSt = new Set();
+  for (const r of allCaseRows) {
+    const ps = (r.sta || "").trim() || "(Blank Station)";
+    if (!seenSt.has(ps)) { seenSt.add(ps); stationNames.push(ps); }
+  }
+
+  // Get rows for a selected station:
+  // Match if PS column equals/contains the station name OR petitioner column contains it
+  function getRowsForStation(stName) {
+    if (!stName) return [];
+    const isBlank = stName === "(Blank Station)";
+    const stL = stName.toLowerCase();
+    return allCaseRows.filter(r => {
+      const ps = (r.sta || "").trim();
+      const pt = (r.pt  || "").toLowerCase();
+      if (isBlank) return !ps;
+      return ps.toLowerCase() === stL
+          || ps.toLowerCase().includes(stL)
+          || stL.includes(ps.toLowerCase()) && ps.length > 3
+          || pt.includes(stL);
+    });
+  }
+
+  const stationRows = (activeSt && !activeSt.startsWith("fir::"))
+    ? getRowsForStation(activeSt)
+    : [];
+
+  const totalHits = firHits.reduce((a, b) => a + b.rows.length, 0) + allCaseRows.length;
 
   return (
     <div>
+      {/* Search Box */}
       <div className="v-search-box">
         <div className="ctitle">🔍 FIR Search</div>
         <div className="v-inputs">
-          <div className="fg" style={{flex:"1 1 100px"}}>
+          <div className="fg" style={{ flex: "1 1 100px" }}>
             <label className="lbl">FIR Number</label>
             <input className="inp mono" type="tel" inputMode="numeric"
-              value={fn} onChange={e=>setFn(e.target.value)}
-              onKeyDown={e=>e.key==="Enter"&&doSearch()}
-              placeholder="e.g. 12"/>
+              value={fn} onChange={e => setFn(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && doSearch()}
+              placeholder="e.g. 12" />
           </div>
-          <div className="fg" style={{flex:"1 1 80px"}}>
+          <div className="fg" style={{ flex: "1 1 80px" }}>
             <label className="lbl">Year (optional)</label>
             <input className="inp mono" type="tel" inputMode="numeric"
-              value={yr} onChange={e=>setYr(e.target.value)}
-              onKeyDown={e=>e.key==="Enter"&&doSearch()}
-              placeholder="2026"/>
+              value={yr} onChange={e => setYr(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && doSearch()}
+              placeholder="2025" />
           </div>
-          <div style={{display:"flex",gap:6,flexShrink:0}}>
-            <button className="btn btn-g" style={{height:36}} onClick={doSearch}>Search</button>
-            <button className="btn btn-o btn-sm" style={{height:36}} onClick={doClear}>✕</button>
+          <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+            <button className="btn btn-g" style={{ height: 36 }} onClick={doSearch}>Search</button>
+            <button className="btn btn-o btn-sm" style={{ height: 36 }} onClick={doClear}>✕</button>
           </div>
         </div>
         {fn && (
-          <div style={{fontSize:11,color:"var(--txt3)",marginTop:8}}>
-            Searching: <b style={{color:"var(--gold)"}}>{yr?`${fn}/${yr}`:fn}</b>
+          <div style={{ fontSize: 11, color: "var(--txt3)", marginTop: 8 }}>
+            Searching: <b style={{ color: "var(--gold)" }}>{yr ? `${fn}/${yr}` : fn}</b>
             {!yr && <span> (all years)</span>}
           </div>
         )}
@@ -790,128 +824,156 @@ function ViewerTab({ db }) {
 
       {/* No results */}
       {searched && totalHits === 0 && (
-        <div style={{textAlign:"center",padding:"28px 20px"}}>
-          <div style={{fontSize:22,marginBottom:8}}>🔍</div>
-          <div style={{fontSize:13,fontWeight:600,color:"var(--txt2)",marginBottom:4}}>
-            No records found for <span style={{color:"var(--gold)"}}>{displayFIR}</span>
+        <div style={{ textAlign: "center", padding: "28px 20px" }}>
+          <div style={{ fontSize: 22, marginBottom: 8 }}>🔍</div>
+          <div style={{ fontSize: 13, fontWeight: 600, color: "var(--txt2)", marginBottom: 4 }}>
+            No records found for <span style={{ color: "var(--gold)" }}>{displayFIR}</span>
           </div>
-          <div style={{fontSize:11,color:"var(--txt3)"}}>
+          <div style={{ fontSize: 11, color: "var(--txt3)" }}>
             Searched FIR sheet · Pending · Disposal · NV · Case Numbered
           </div>
         </div>
       )}
 
-      {/* Station pills */}
       {searched && totalHits > 0 && (
         <>
-          <div style={{marginBottom:12}}>
-            <div className="lbl" style={{marginBottom:8}}>
-              {totalHits} record{totalHits>1?"s":""} found — tap a station to view
-            </div>
-            <div className="v-station-pills">
-              {/* FIR-sheet station pills */}
-              {firHits.map(({s, rows}) => {
-                const key = "fir::"+s.sh;
-                return (
-                  <div key={key}
-                    className={`st-pill ${activeSt===key?"active":""}`}
-                    onClick={()=>{setActiveSt(activeSt===key?null:key);setActiveCaseId(null);}}>
-                    {s.lb}
-                    <span style={{fontSize:9,opacity:.6,fontWeight:400,marginLeft:1}}>FIR</span>
-                    <span className="st-count">{rows.length}</span>
-                  </div>
-                );
-              })}
-
-              {/* PS-name pills from pend/disp/nv/cn */}
-              {Object.entries(psMap).map(([ps, grp]) => {
-                const key = "ps::"+ps;
-                const cnt = grp.pend.length + grp.disp.length + grp.nv.length + grp.cn.length;
-                return (
-                  <div key={key}
-                    className={`st-pill ${activeSt===key?"active":""}`}
-                    onClick={()=>{setActiveSt(activeSt===key?null:key);setActiveCaseId(null);}}>
-                    {ps}
-                    <span className="st-count">{cnt}</span>
-                  </div>
-                );
-              })}
-            </div>
+          <div style={{ fontSize: 11, color: "var(--txt3)", marginBottom: 10 }}>
+            <b style={{ color: "var(--gold)" }}>{totalHits}</b> record{totalHits > 1 ? "s" : ""} found for{" "}
+            <b style={{ color: "var(--gold)" }}>{displayFIR}</b>
           </div>
 
-          {/* Active station detail panel */}
-          {activeSt && (
-            <>
-              {/* FIR sheet panel */}
-              {activeSt.startsWith("fir::") && (() => {
-                const shKey = activeSt.replace("fir::","");
-                const sObj  = SMAP.find(s=>s.sh===shKey);
-                const rows  = (firHits.find(x=>x.s.sh===shKey)||{}).rows||[];
+          {/* ── FIR Pending Register pills ── */}
+          {firHits.length > 0 && (
+            <div style={{ marginBottom: 14 }}>
+              <div className="lbl" style={{ marginBottom: 6 }}>📋 FIR Pending Register</div>
+              <div className="v-station-pills">
+                {firHits.map(({ s, rows }) => {
+                  const key = "fir::" + s.sh;
+                  return (
+                    <div key={key}
+                      className={`st-pill ${activeSt === key ? "active" : ""}`}
+                      onClick={() => { setActiveSt(activeSt === key ? null : key); setActiveCaseId(null); }}>
+                      {s.lb}
+                      <span style={{ fontSize: 9, opacity: .6, fontWeight: 400, marginLeft: 1 }}>FIR</span>
+                      <span className="st-count">{rows.length}</span>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* FIR sheet detail panel */}
+              {activeSt && activeSt.startsWith("fir::") && (() => {
+                const shKey = activeSt.replace("fir::", "");
+                const sObj  = SMAP.find(s => s.sh === shKey);
+                const rows  = (firHits.find(x => x.s.sh === shKey) || {}).rows || [];
                 return (
                   <div className="v-panel">
-                    <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12,flexWrap:"wrap"}}>
-                      <span style={{fontSize:14,fontWeight:700,color:"var(--gold)"}}>{sObj?.lb}</span>
+                    <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:12, flexWrap:"wrap" }}>
+                      <span style={{ fontSize:14, fontWeight:700, color:"var(--gold)" }}>{sObj?.lb}</span>
                       <span className="bdg bdg-r">📋 FIR Pending Register</span>
-                      <span style={{fontSize:12,color:"var(--txt2)"}}>
-                        FIR <b style={{color:"var(--gold)"}}>{displayFIR}</b>
-                      </span>
                     </div>
-                    {rows.map((r,i)=>(
+                    {rows.map((r, i) => (
                       <div key={i} className="v-fir-row">
                         <div className="det-grid">
                           <div><div className="df-lbl">CR Number</div><div className="df-val hi mono">{r.cr}</div></div>
-                          <div><div className="df-lbl">Section U/s</div><div className="df-val">{r.sec||"—"}</div></div>
-                          <div><div className="df-lbl">Date Received</div><div className="df-val mono">{r.dr||"—"}</div></div>
-                          <div><div className="df-lbl">Year</div><div className="df-val mono">{r.yr||"—"}</div></div>
+                          <div><div className="df-lbl">Section U/s</div><div className="df-val">{r.sec || "—"}</div></div>
+                          <div><div className="df-lbl">Date Received</div><div className="df-val mono">{r.dr || "—"}</div></div>
+                          <div><div className="df-lbl">Year</div><div className="df-val mono">{r.yr || "—"}</div></div>
                         </div>
                       </div>
                     ))}
                   </div>
                 );
               })()}
+            </div>
+          )}
 
-              {/* PS-name panel (pending / disposal / nv / cnum) */}
-              {activeSt.startsWith("ps::") && (() => {
-                const ps  = activeSt.replace("ps::","");
-                const grp = psMap[ps] || {pend:[],disp:[],nv:[],cn:[]};
-                return (
-                  <div className="v-panel">
-                    <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12,flexWrap:"wrap"}}>
-                      <span style={{fontSize:14,fontWeight:700,color:"var(--gold)"}}>{ps}</span>
-                      <span style={{fontSize:11,color:"var(--txt3)"}}>·</span>
-                      <span style={{fontSize:12,color:"var(--txt2)"}}>
-                        FIR <b style={{color:"var(--gold)"}}>{displayFIR}</b>
-                      </span>
-                      {grp.pend.length>0 && <span className="bdg bdg-b">⚖ {grp.pend.length} Pending</span>}
-                      {grp.disp.length>0 && <span className="bdg bdg-g">✓ {grp.disp.length} Disposed</span>}
-                      {grp.nv.length>0   && <span className="bdg bdg-a">🏷 {grp.nv.length} NV</span>}
-                      {grp.cn.length>0   && <span className="bdg bdg-p">📁 {grp.cn.length} Case#</span>}
+          {/* ── Police Station pills from Pending / Disposal / NV / CaseNum ── */}
+          {stationNames.length > 0 && (
+            <div style={{ marginBottom: 14 }}>
+              <div className="lbl" style={{ marginBottom: 6 }}>
+                ⚖ Cases — tap a station to view case numbers
+              </div>
+
+              {/* Station pills inline */}
+              <div className="v-station-pills">
+                {stationNames.map(ps => {
+                  const cnt = getRowsForStation(ps).length;
+                  return (
+                    <div key={ps}
+                      className={`st-pill ${activeSt === ps ? "active" : ""}`}
+                      onClick={() => { setActiveSt(activeSt === ps ? null : ps); setActiveCaseId(null); }}>
+                      {ps}
+                      <span className="st-count">{cnt}</span>
                     </div>
+                  );
+                })}
+              </div>
 
-                    {grp.pend.length>0 && (
-                      <CaseSection rows={grp.pend} prefix="pend"
-                        title="⚖ Case Pending" bdg="bdg-b"
-                        activeCaseId={activeCaseId} setActiveCaseId={setActiveCaseId}/>
-                    )}
-                    {grp.disp.length>0 && (
-                      <CaseSection rows={grp.disp} prefix="disp"
-                        title="✅ Disposed Cases" bdg="bdg-g"
-                        activeCaseId={activeCaseId} setActiveCaseId={setActiveCaseId}/>
-                    )}
-                    {grp.nv.length>0 && (
-                      <CaseSection rows={grp.nv} prefix="nv"
-                        title="🏷 Non-Valuable Property" bdg="bdg-a"
-                        activeCaseId={activeCaseId} setActiveCaseId={setActiveCaseId}/>
-                    )}
-                    {grp.cn.length>0 && (
-                      <CaseSection rows={grp.cn} prefix="cnum"
-                        title="📁 Case Numbered" bdg="bdg-p"
-                        activeCaseId={activeCaseId} setActiveCaseId={setActiveCaseId}/>
-                    )}
+              {/* Selected station panel */}
+              {activeSt && !activeSt.startsWith("fir::") && (
+                <div className="v-panel">
+                  {/* Station header with counts */}
+                  <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:12, flexWrap:"wrap" }}>
+                    <span style={{ fontSize:14, fontWeight:700, color:"var(--gold)" }}>{activeSt}</span>
+                    <span style={{ fontSize:11, color:"var(--txt3)" }}>·</span>
+                    <span style={{ fontSize:12, color:"var(--txt2)" }}>
+                      FIR <b style={{ color:"var(--gold)" }}>{displayFIR}</b>
+                    </span>
+                    {stationRows.filter(r => r._src==="pend").length > 0 &&
+                      <span className="bdg bdg-b">⚖ {stationRows.filter(r=>r._src==="pend").length} Pending</span>}
+                    {stationRows.filter(r => r._src==="disp").length > 0 &&
+                      <span className="bdg bdg-g">✓ {stationRows.filter(r=>r._src==="disp").length} Disposed</span>}
+                    {stationRows.filter(r => r._src==="nv").length > 0 &&
+                      <span className="bdg bdg-a">🏷 {stationRows.filter(r=>r._src==="nv").length} NV</span>}
+                    {stationRows.filter(r => r._src==="cnum").length > 0 &&
+                      <span className="bdg bdg-p">📁 {stationRows.filter(r=>r._src==="cnum").length} Case#</span>}
                   </div>
-                );
-              })()}
-            </>
+
+                  {/* Per-source: case number pills + expanded detail */}
+                  {[
+                    { src:"pend", title:"⚖ Case Pending",           bdg:"bdg-b" },
+                    { src:"disp", title:"✅ Disposed Cases",         bdg:"bdg-g" },
+                    { src:"nv",   title:"🏷 Non-Valuable Property",  bdg:"bdg-a" },
+                    { src:"cnum", title:"📁 Case Numbered",          bdg:"bdg-p" },
+                  ].map(({ src, title, bdg }) => {
+                    const srcRows = stationRows.filter(r => r._src === src);
+                    if (!srcRows.length) return null;
+                    return (
+                      <div key={src} className="v-sheet-sec">
+                        {/* Section label + count */}
+                        <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:10 }}>
+                          <span className="lbl">{title}</span>
+                          <span className={`bdg ${bdg}`}>{srcRows.length}</span>
+                        </div>
+
+                        {/* Case number pills — inline */}
+                        <div style={{ display:"flex", flexWrap:"wrap", gap:5, marginBottom:6 }}>
+                          {srcRows.map((r, i) => {
+                            const caseId = `${src}::${r.ri}::${i}`;
+                            const label  = (r.cn || "").trim() || (r.rp || "").trim() || `#${r.sl || r.sno || r.ri}`;
+                            return (
+                              <div key={caseId}
+                                className={`cn-pill ${activeCaseId === caseId ? "active" : ""}`}
+                                onClick={() => setActiveCaseId(activeCaseId === caseId ? null : caseId)}>
+                                {label}
+                              </div>
+                            );
+                          })}
+                        </div>
+
+                        {/* Expanded case detail */}
+                        {srcRows.map((r, i) => {
+                          const caseId = `${src}::${r.ri}::${i}`;
+                          if (activeCaseId !== caseId) return null;
+                          return <CaseDetail key={caseId} r={r} srcKey={src} />;
+                        })}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           )}
         </>
       )}
@@ -919,91 +981,75 @@ function ViewerTab({ db }) {
   );
 }
 
-/* ── Case Section: shows case-number pills, expands on tap ── */
-function CaseSection({ rows, prefix, title, bdg, activeCaseId, setActiveCaseId }) {
-  const makeId = (r, i) => `${prefix}::${r.ri}::${i}`;
-
-  const dispName = r => {
-    if (r.cn && r.cn.trim()) return r.cn.trim();
-    if (r.rp && r.rp.trim()) return "RP:"+r.rp.trim();
-    return "#"+(r.sl||r.sno||r.ri);
-  };
-
-  return (
-    <div className="v-sheet-sec">
-      <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}>
-        <span className="lbl">{title}</span>
-        <span className={`bdg ${bdg}`}>{rows.length}</span>
-      </div>
-      <div style={{display:"flex",flexWrap:"wrap",gap:5,marginBottom:6}}>
-        {rows.map((r,i) => {
-          const id = makeId(r,i);
-          return (
-            <div key={id}
-              className={`cn-pill ${activeCaseId===id?"active":""}`}
-              onClick={()=>setActiveCaseId(activeCaseId===id?null:id)}>
-              {dispName(r)}
-            </div>
-          );
-        })}
-      </div>
-      {rows.map((r,i) => {
-        const id = makeId(r,i);
-        if (activeCaseId !== id) return null;
-        return <CaseDetail key={id} r={r} srcKey={prefix}/>;
-      })}
-    </div>
-  );
-}
-
-/* ── Case Detail ── */
+/* ── Case Detail — shows ALL fields of a selected case ── */
 function CaseDetail({ r, srcKey }) {
   const fields = {
     pend: [
-      ["Case Number",r.cn,"hi mono"],["FIR Number",r.fn,"mono"],
-      ["Petitioner VS Respondent",r.pt,null,true],["Advocate",r.adv],
-      ["Date of Registration",r.dreg,"mono"],["Next Hearing",r.nxt,"mono"],
-      ["Purpose",r.pur],["Act Section",r.sec],
-      ["Police Station",r.sta],["Nature",r.nat],["Designation",r.des],
+      ["Case Number",                r.cn,   "hi mono"],
+      ["FIR Number",                 r.fn,   "mono"],
+      ["Petitioner VS Respondent",   r.pt,   null, true],
+      ["Advocate",                   r.adv],
+      ["Date of Registration",       r.dreg, "mono"],
+      ["Next Hearing Date",          r.nxt,  "mono"],
+      ["Purpose",                    r.pur],
+      ["Act / Section",              r.sec],
+      ["Police Station",             r.sta],
+      ["Nature",                     r.nat],
+      ["Designation",                r.des],
     ],
     disp: [
-      ["Case Number",r.cn,"hi mono"],["FIR Number",r.fn,"mono"],
-      ["Petitioner VS Respondent",r.pt,null,true],["Advocate",r.adv],
-      ["Date of Registration",r.dreg,"mono"],["Date of Decision",r.ddec,"mono"],
-      ["Nature of Disposal",r.dnat],["Act Section",r.sec],
-      ["Police Station",r.sta],["Nature",r.nat],["Designation",r.des],
+      ["Case Number",                r.cn,   "hi mono"],
+      ["FIR Number",                 r.fn,   "mono"],
+      ["Petitioner VS Respondent",   r.pt,   null, true],
+      ["Advocate",                   r.adv],
+      ["Date of Registration",       r.dreg, "mono"],
+      ["Date of Decision",           r.ddec, "mono"],
+      ["Nature of Disposal",         r.dnat],
+      ["Act / Section",              r.sec],
+      ["Police Station",             r.sta],
+      ["Nature",                     r.nat],
+      ["Designation",                r.des],
     ],
     nv: [
-      ["RP Number",r.rp,"hi mono"],["Case Number",r.cn,"mono"],
-      ["FIR Number",r.fn,"mono"],["Police Station",r.sta],
-      ["Description",r.desc,null,true],["Remarks",r.rem,null,true],
+      ["RP Number",                  r.rp,   "hi mono"],
+      ["Case Number",                r.cn,   "mono"],
+      ["FIR Number",                 r.fn,   "mono"],
+      ["Police Station",             r.sta],
+      ["Description",                r.desc, null, true],
+      ["Remarks",                    r.rem,  null, true],
     ],
     cnum: [
-      ["Case Number",r.cn,"hi mono"],["FIR Number",r.fn,"mono"],
-      ["Parties",r.pt],["Police Station",r.sta],
-      ["Advocate",r.adv],["Date of Registration",r.dreg,"mono"],
-      ["Next Date",r.nxt,"mono"],["Case Type",r.type],
-      ["Section U/s (FIR)",r.sec],["Section (Case)",r.sec2],
-      ["Nature",r.nat],["Designation",r.des],
+      ["Case Number",                r.cn,   "hi mono"],
+      ["FIR Number",                 r.fn,   "mono"],
+      ["Parties",                    r.pt,   null, true],
+      ["Police Station",             r.sta],
+      ["Advocate",                   r.adv],
+      ["Date of Registration",       r.dreg, "mono"],
+      ["Next Date",                  r.nxt,  "mono"],
+      ["Case Type",                  r.type],
+      ["Section U/s (FIR)",          r.sec],
+      ["Section (Case)",             r.sec2],
+      ["Nature",                     r.nat],
+      ["Designation",                r.des],
     ],
-  }[srcKey]||[];
+  }[srcKey] || [];
 
-  const bdgMap={pend:"bdg-b",disp:"bdg-g",nv:"bdg-a",cnum:"bdg-p"};
-  const lbMap ={pend:"Case Pending",disp:"Disposed",nv:"Non-Valuable Property",cnum:"Case Numbered"};
+  const bdgMap = { pend:"bdg-b", disp:"bdg-g", nv:"bdg-a", cnum:"bdg-p" };
+  const lbMap  = { pend:"Case Pending", disp:"Disposed", nv:"Non-Valuable Property", cnum:"Case Numbered" };
 
   return (
     <div className="v-det">
-      <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:12}}>
-        <span style={{fontSize:15,fontWeight:700,color:"var(--gold)",fontFamily:"JetBrains Mono,monospace"}}>
-          {r.cn||r.rp||"—"}
+      <div style={{ display:"flex", alignItems:"center", gap:8, flexWrap:"wrap", marginBottom:12 }}>
+        <span style={{ fontSize:15, fontWeight:700, color:"var(--gold)", fontFamily:"JetBrains Mono,monospace" }}>
+          {r.cn || r.rp || "—"}
         </span>
         <span className={`bdg ${bdgMap[srcKey]}`}>{lbMap[srcKey]}</span>
       </div>
       <div className="det-grid">
-        {fields.map(([lbl,val,cls,full],i)=>(
-          <div key={i} style={full?{gridColumn:"1/-1"}:{}}>
+        {fields.map(([lbl, val, cls, full], i) => (
+          <div key={i} style={full ? { gridColumn:"1/-1" } : {}}>
             <div className="df-lbl">{lbl}</div>
-            <div className={`df-val ${cls||""}`}>{val||"—"}</div>
+            <div className={`df-val ${cls || ""}`}>{val || "—"}</div>
           </div>
         ))}
       </div>
@@ -1012,9 +1058,7 @@ function CaseDetail({ r, srcKey }) {
 }
 
 /* ═══════════════════════════════════════════════
-   FIR → CASE NUMBERED TAB  — FIXED
-   buildCases: match pend/disp by FIR only (no stMatch)
-   Show ALL matching cases from both sheets
+   FIR → CASE NUMBERED TAB
 ═══════════════════════════════════════════════ */
 function FTCTab({ db, setDb, tok }) {
   const curYr = String(new Date().getFullYear());
@@ -1042,7 +1086,6 @@ function FTCTab({ db, setDb, tok }) {
     setFirRow(rows[0]); setStep(2); setMsg(null);
   }
 
-  /* FIXED: match pend/disp by FIR only — no stMatch filter */
   function buildCases() {
     const sNum = String(parseInt(fn,10)||fn);
     const pendMatches = db.pend
@@ -1097,7 +1140,6 @@ function FTCTab({ db, setDb, tok }) {
         ))}
       </div>
 
-      {/* Step 1 */}
       {step===1 && (
         <div>
           <div style={{fontSize:11,color:"var(--txt3)",marginBottom:12}}>Step 1 — Enter FIR details</div>
@@ -1123,7 +1165,6 @@ function FTCTab({ db, setDb, tok }) {
         </div>
       )}
 
-      {/* Step 2 */}
       {step===2 && (
         <div>
           <div style={{fontSize:11,color:"var(--txt3)",marginBottom:12}}>Step 2 — Select linked case</div>
@@ -1159,7 +1200,6 @@ function FTCTab({ db, setDb, tok }) {
         </div>
       )}
 
-      {/* Step 3 */}
       {step===3 && (
         <div>
           <div style={{fontSize:11,color:"var(--txt3)",marginBottom:12}}>Step 3 — Confirm &amp; Execute</div>
@@ -1179,8 +1219,9 @@ function FTCTab({ db, setDb, tok }) {
                 <div className="df-val mono" style={{color:"var(--pur)"}}>{selCase?.cn||"—"}</div>
               </div>
               <div><div className="df-lbl">Police Station (Case)</div><div className="df-val">{selCase?.sta||"—"}</div></div>
-              <div><div className="df-lbl">Petitioner VS Respondent</div>
-                <div className="df-val" style={{gridColumn:"1/-1"}}>{selCase?.pt||"—"}</div>
+              <div style={{gridColumn:"1/-1"}}>
+                <div className="df-lbl">Petitioner VS Respondent</div>
+                <div className="df-val">{selCase?.pt||"—"}</div>
               </div>
               <div><div className="df-lbl">Advocate</div><div className="df-val">{selCase?.adv||"—"}</div></div>
               <div><div className="df-lbl">Date of Reg</div><div className="df-val mono">{selCase?.dreg||"—"}</div></div>
@@ -1214,7 +1255,7 @@ function FTCTab({ db, setDb, tok }) {
 }
 
 /* ═══════════════════════════════════════════════
-   ABSTRACT TAB  — unchanged from original
+   ABSTRACT TAB
 ═══════════════════════════════════════════════ */
 function AbstractTab({ db }) {
   const [filterSt,  setFilterSt]  = useState("ALL");
