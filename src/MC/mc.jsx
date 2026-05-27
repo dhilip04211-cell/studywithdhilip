@@ -22,7 +22,7 @@ const sections = [
     accent: "#F5D07A",
     subtitle: "Crlmp",
     isExternal: false,
-    num: "03",
+    num: "02",
   },
 {
     title: "Fir Management",
@@ -32,7 +32,7 @@ const sections = [
     accent: "#F5D07A",
     subtitle: "fir management",
     isExternal: false,
-    num: "02",
+    num: "03",
   },
 ];
 
