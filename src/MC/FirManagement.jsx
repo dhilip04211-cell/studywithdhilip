@@ -14,9 +14,16 @@ const SID = {
   casenum: "1eeQA75iuqNcsNwXygcx3JLJRamxuRI_1UrpetByr5nA",
 };
 
+/*
+  SMAP — now includes Sheet7 as a real police station entry.
+  Sheet7 = additional VKM records (no Date column).
+  The FIR sheet has tabs: JKM, VKM, Sheet7, T.PALUR, PEW, AWPS, DCB
+  For abstract purposes each tab name IS the station key.
+*/
 const SMAP = [
   { sh:"JKM",     lb:"Jayankondam",      al:["jayankondam","jkm","jayankondam police station"] },
   { sh:"VKM",     lb:"Vikkiramangalam",  al:["vikkiramangalam","vikramangalam","vkm","venganam"] },
+  { sh:"Sheet7",  lb:"VKM (Extra)",      al:["sheet7","vkm extra","vkm ps record"] },
   { sh:"T.PALUR", lb:"T.Palur",          al:["t.palur","tpalur","palur","t palur","t. palur","t.palur police"] },
   { sh:"PEW",     lb:"PEW Ariyalur",     al:["pew","pew ariyalur","nb cid","nb cid trichy"] },
   { sh:"AWPS",    lb:"AWPS Jayankondam", al:["awps","awps jayankondam","all women"] },
@@ -26,6 +33,12 @@ const SMAP = [
 /* ═══════════════════════════════════════════════
    HELPERS
 ═══════════════════════════════════════════════ */
+/* Returns true only if the cell contains a valid FIR like "12/2026" */
+function isValidFIRCell(raw) {
+  if (!raw && raw !== 0) return false;
+  return /^\d+\/\d{4}$/.test(String(raw).trim());
+}
+
 function parseFIR(raw) {
   if (!raw && raw !== 0) return { num: "", yr: "" };
   const s = String(raw).trim();
@@ -37,6 +50,7 @@ function parseFIR(raw) {
 
 function firMatch(raw, searchNum, searchYr) {
   if (!raw) return false;
+  if (!isValidFIRCell(raw)) return false;
   const p = parseFIR(raw);
   if (p.num !== searchNum) return false;
   if (!searchYr) return true;
@@ -111,6 +125,10 @@ async function sheetsDeleteRow(tok, sid, tabName, oneBasedRow) {
 
 /* ═══════════════════════════════════════════════
    LOAD DATA
+   KEY FIX: Only rows whose CR column matches
+   the pattern \d+/\d{4} are counted as FIRs.
+   This prevents year-group rows / header rows
+   from inflating counts.
 ═══════════════════════════════════════════════ */
 async function loadFIRSheet(tok, tabName) {
   const rows = await sheetsGet(tok, SID.fir, `${tabName}!A:D`);
@@ -123,10 +141,13 @@ async function loadFIRSheet(tok, tabName) {
     const c = (r[2] || "").toString().trim();
     const d = (r[3] || "").toString().trim();
 
+    /* Skip obvious header / title rows */
     if (a.toLowerCase().includes("sl") || c.toLowerCase().includes("section of law")) continue;
     if (b.toLowerCase().includes("cr.no")) continue;
     if (c.toLowerCase().includes("police station")) continue;
+    if (a.toLowerCase().includes("fir pending")) continue;
 
+    /* Year group rows: col B is empty AND col C is a 4-digit year */
     const isYearRow =
       (!a && !b && /^\d{4}$/.test(c) && !d) ||
       (!a && /^\d{4}$/.test(b) && !c && !d) ||
@@ -137,11 +158,15 @@ async function loadFIRSheet(tok, tabName) {
       continue;
     }
 
-    const slNum = parseInt(a, 10);
-    if (!isNaN(slNum) && b && c) {
-      const crYr = parseFIR(b).yr || yg;
-      data.push({ sl: a, cr: b, sec: c, dr: d, yr: crYr, ri: i + 1 });
-    }
+    /*
+      CRITICAL FIX: Only accept rows where column B (CR No.)
+      strictly matches the pattern NUM/YEAR (e.g. 12/2026).
+      This is the only reliable way to count actual FIR records.
+    */
+    if (!isValidFIRCell(b)) continue;
+
+    const crYr = parseFIR(b).yr || yg;
+    data.push({ sl: a, cr: b, sec: c, dr: d, yr: crYr, ri: i + 1 });
   }
   return data;
 }
@@ -195,8 +220,7 @@ async function loadAllData(tok) {
 }
 
 /* ═══════════════════════════════════════════════
-   CSS — fixed: removed CSS var references from
-   inline style objects, added mobile breakpoints
+   CSS
 ═══════════════════════════════════════════════ */
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Crimson+Pro:wght@400;600;700&display=swap');
@@ -212,14 +236,12 @@ html{-webkit-text-size-adjust:100%}
 body{background:var(--bg);color:var(--txt);font-family:'Crimson Pro',Georgia,serif;font-size:14px;min-height:100vh}
 .mono{font-family:'JetBrains Mono',monospace}
 
-/* layout */
 .app{display:flex;flex-direction:column;min-height:100vh}
 .hdr{background:var(--bg2);border-bottom:2px solid var(--gold-d);padding:10px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:200}
 .hdr-logo{font-size:15px;font-weight:700;color:var(--gold);letter-spacing:.5px;font-family:'Crimson Pro',serif;white-space:nowrap}
 .hdr-sub{font-size:9px;color:var(--txt3);margin-top:1px;font-family:'JetBrains Mono',monospace;white-space:nowrap}
 .auth-area{margin-left:auto;display:flex;align-items:center;gap:6px;flex-shrink:0}
 
-/* tabs */
 .tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--bdr);padding:0 8px;overflow-x:auto;gap:2px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
 .tab{padding:9px 12px;font-size:11px;cursor:pointer;border-bottom:2px solid transparent;color:var(--txt2);white-space:nowrap;transition:color .15s;font-family:'JetBrains Mono',monospace;flex-shrink:0}
@@ -227,11 +249,9 @@ body{background:var(--bg);color:var(--txt);font-family:'Crimson Pro',Georgia,ser
 .tab.act{color:var(--gold);border-bottom-color:var(--gold)}
 .pane{padding:12px;max-width:1200px;margin:0 auto;width:100%}
 
-/* card */
 .card{background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--rl);padding:14px;margin-bottom:12px}
 .ctitle{font-size:10px;font-weight:700;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:.7px;font-family:'JetBrains Mono',monospace;flex-wrap:wrap}
 
-/* form */
 .fg{display:flex;flex-direction:column;gap:3px;min-width:0}
 .lbl{font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:.5px;font-family:'JetBrains Mono',monospace}
 .inp{background:var(--bg3);border:1px solid var(--bdr);border-radius:6px;color:var(--txt);padding:7px 10px;font-size:13px;outline:none;width:100%;transition:border-color .15s;font-family:'Crimson Pro',serif;-webkit-appearance:none;appearance:none}
@@ -239,7 +259,6 @@ body{background:var(--bg);color:var(--txt);font-family:'Crimson Pro',Georgia,ser
 select.inp{cursor:pointer}
 .frow{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:10px}
 
-/* buttons */
 .btn{padding:8px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:all .15s;font-family:'JetBrains Mono',monospace;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .btn-g{background:var(--gold);color:#000}.btn-g:hover{background:var(--gold-l)}
 .btn-g:disabled{opacity:.4;cursor:not-allowed}
@@ -247,12 +266,10 @@ select.inp{cursor:pointer}
 .btn-r{background:transparent;border:1px solid var(--red);color:var(--red)}.btn-r:hover{background:var(--red);color:#fff}
 .btn-sm{padding:5px 10px;font-size:11px}
 
-/* yr ctrl */
 .yr-ctrl{display:inline-flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--gold-d);border-radius:6px;padding:6px 10px}
 .yr-val{font-size:13px;font-weight:700;color:var(--gold);min-width:36px;text-align:center;font-family:'JetBrains Mono',monospace}
 .rst{font-size:10px;color:var(--txt3);cursor:pointer;text-decoration:underline;margin-left:4px}
 
-/* messages */
 .msg-ok{background:rgba(63,185,80,.1);border:1px solid var(--grn);color:var(--grn);padding:8px 10px;border-radius:6px;font-size:12px;margin-top:8px}
 .msg-err{background:rgba(248,81,73,.1);border:1px solid var(--red);color:var(--red);padding:8px 10px;border-radius:6px;font-size:12px;margin-top:8px}
 .msg-info{background:rgba(88,166,255,.1);border:1px solid var(--blu);color:var(--blu);padding:8px 10px;border-radius:6px;font-size:12px;margin-top:8px}
@@ -260,14 +277,12 @@ select.inp{cursor:pointer}
 @keyframes sp{to{transform:rotate(360deg)}}
 .spin{width:16px;height:16px;border:2px solid var(--bdr);border-top-color:var(--gold);border-radius:50%;animation:sp .7s linear infinite;flex-shrink:0}
 
-/* tables */
 .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 table{width:100%;border-collapse:collapse;font-size:12px}
 th{background:var(--bg3);color:var(--gold);padding:7px 8px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--bdr);white-space:nowrap;font-family:'JetBrains Mono',monospace}
 td{padding:6px 8px;border-bottom:1px solid rgba(48,54,61,.5);color:var(--txt);vertical-align:top}
 tr:hover td{background:rgba(201,168,76,.04)}
 
-/* badges */
 .bdg{padding:2px 7px;border-radius:10px;font-size:10px;font-weight:700;white-space:nowrap;display:inline-block;font-family:'JetBrains Mono',monospace}
 .bdg-g{background:rgba(63,185,80,.15);color:var(--grn)}
 .bdg-a{background:rgba(201,168,76,.15);color:var(--gold)}
@@ -275,11 +290,9 @@ tr:hover td{background:rgba(201,168,76,.04)}
 .bdg-r{background:rgba(248,81,73,.15);color:var(--red)}
 .bdg-p{background:rgba(188,140,255,.15);color:var(--pur)}
 
-/* dot */
 .dot{width:7px;height:7px;border-radius:50%;background:var(--red);flex-shrink:0}
 .dot.on{background:var(--grn)}
 
-/* stat grid */
 .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:12px}
 .stat{background:var(--bg3);border:1px solid var(--bdr);border-radius:var(--r);padding:12px;cursor:pointer;transition:border-color .15s}
 .stat:hover{border-color:var(--gold-d)}
@@ -288,7 +301,6 @@ tr:hover td{background:rgba(201,168,76,.04)}
 .stat-val{font-size:20px;font-weight:700;color:var(--gold);font-family:'JetBrains Mono',monospace}
 .stat-sub{font-size:10px;color:var(--txt3);margin-top:2px}
 
-/* viewer */
 .v-search-box{background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--rl);padding:14px;margin-bottom:12px}
 .v-inputs{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap}
 .v-station-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
@@ -310,14 +322,12 @@ tr:hover td{background:rgba(201,168,76,.04)}
 .df-val{font-size:13px;color:var(--txt);word-break:break-word}
 .df-val.hi{color:var(--gold);font-weight:700}
 
-/* numpad */
 .numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;width:100%;max-width:180px}
 .np{background:var(--bg3);border:1px solid var(--bdr);border-radius:6px;padding:12px 8px;font-size:15px;cursor:pointer;text-align:center;color:var(--txt);transition:all .15s;font-family:'JetBrains Mono',monospace;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none}
 .np:hover,.np:active{border-color:var(--gold);color:var(--gold)}
 .np.w2{grid-column:span 2}
 .numpad-row{display:flex;gap:20px;flex-wrap:wrap}
 
-/* ftc steps */
 .step-row{display:flex;align-items:center;gap:4px;margin-bottom:14px}
 .step-dot{width:24px;height:24px;border-radius:50%;border:2px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--txt3);flex-shrink:0;font-family:'JetBrains Mono',monospace}
 .step-dot.act{border-color:var(--gold);color:var(--gold)}
@@ -326,11 +336,9 @@ tr:hover td{background:rgba(201,168,76,.04)}
 .case-sel{background:var(--bg3);border:1px solid var(--bdr);border-radius:6px;padding:10px 12px;cursor:pointer;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px;transition:all .15s;touch-action:manipulation}
 .case-sel:hover,.case-sel.sel{border-color:var(--gold);background:rgba(201,168,76,.07)}
 .warn-box{background:rgba(248,81,73,.07);border:1px solid rgba(248,81,73,.3);border-radius:6px;padding:10px;font-size:12px;color:var(--red);margin-bottom:10px}
-
-/* confirm box in FTCTab step 3 — uses class instead of inline var() */
 .confirm-box{background:var(--bg3);border:1px solid var(--bdr);border-radius:var(--r);padding:14px;margin-bottom:10px}
 
-/* abstract */
+/* ── Abstract specific ── */
 .abs-tbl{width:100%;border-collapse:collapse;font-size:12px}
 .abs-tbl th{background:var(--bg3);color:var(--gold);padding:7px 8px;text-align:left;font-size:10px;border:1px solid var(--bdr);font-family:'JetBrains Mono',monospace}
 .abs-tbl td{padding:7px 8px;border:1px solid var(--bdr);color:var(--txt)}
@@ -339,6 +347,16 @@ tr:hover td{background:rgba(201,168,76,.04)}
 .no-data{text-align:center;padding:28px;color:var(--txt3);font-size:13px}
 .yr-badge{display:inline-block;background:rgba(201,168,76,.15);color:var(--gold);padding:1px 6px;border-radius:4px;font-size:10px;font-family:'JetBrains Mono',monospace;margin-left:4px}
 .abs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+
+/* Search input with clear btn */
+.search-wrap{position:relative;display:flex;align-items:center}
+.search-wrap .inp{padding-right:30px}
+.search-clear{position:absolute;right:8px;background:none;border:none;color:var(--txt3);cursor:pointer;font-size:14px;padding:0;line-height:1}
+.search-clear:hover{color:var(--txt)}
+
+/* Clickable sort th */
+th.sortable{cursor:pointer;user-select:none}
+th.sortable:hover{color:var(--gold-l)}
 
 /* ── Mobile breakpoints ── */
 @media(max-width:600px){
@@ -368,7 +386,7 @@ tr:hover td{background:rgba(201,168,76,.04)}
 `;
 
 /* ═══════════════════════════════════════════════
-   MAIN APP COMPONENT
+   MAIN APP
 ═══════════════════════════════════════════════ */
 export default function App() {
   const [tok, setTok] = useState(() => {
@@ -381,14 +399,12 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("entry");
 
-  /* inject CSS once */
   useEffect(() => {
     if (!document.getElementById("fir-css")) {
       const s = document.createElement("style");
       s.id = "fir-css"; s.textContent = CSS;
       document.head.appendChild(s);
     }
-    // Ensure viewport meta exists
     if (!document.querySelector('meta[name="viewport"]')) {
       const m = document.createElement("meta");
       m.name = "viewport";
@@ -479,7 +495,6 @@ export default function App() {
 
   return (
     <div className="app">
-      {/* Header */}
       <div className="hdr">
         <div>
           <div className="hdr-logo">⚖ FIR Management</div>
@@ -497,7 +512,6 @@ export default function App() {
         </div>
       </div>
 
-      {/* Tabs */}
       <div className="tabs">
         {tabs.map(t => (
           <div key={t.id} className={`tab ${activeTab===t.id?"act":""}`}
@@ -505,7 +519,6 @@ export default function App() {
         ))}
       </div>
 
-      {/* Content */}
       <div className="pane">
         {!tok ? (
           <AuthPrompt onSignIn={signIn}/>
@@ -526,16 +539,14 @@ export default function App() {
   );
 }
 
-/* ═══════════════════════════════════════════════
-   AUTH PROMPT
-═══════════════════════════════════════════════ */
+/* ── Auth Prompt ── */
 function AuthPrompt({ onSignIn }) {
   return (
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:14,padding:"50px 20px",textAlign:"center"}}>
       <div style={{fontSize:32}}>🔐</div>
       <div style={{fontSize:16,fontWeight:700,color:"var(--gold)"}}>Authentication Required</div>
       <div style={{fontSize:13,color:"var(--txt2)",maxWidth:360}}>
-        Sign in with Google to access FIR records. Your session will be remembered across refreshes.
+        Sign in with Google to access FIR records.
       </div>
       <button className="btn btn-g" onClick={onSignIn}>Sign in with Google</button>
     </div>
@@ -563,6 +574,10 @@ function EntryTab({ db, setDb, tok }) {
       return;
     }
     const cr = `${fn}/${yr}`;
+    if (!isValidFIRCell(cr)) {
+      setMsg({ type:"err", text:"Invalid FIR format. Use a plain number for FIR No." });
+      return;
+    }
     const rows = db.fir[st] || [];
     const nextSl = rows.length ? Math.max(...rows.map(r => parseInt(r.sl, 10) || 0)) + 1 : 1;
     setMsg({ type:"loading", text:"Saving…" });
@@ -629,7 +644,6 @@ function EntryTab({ db, setDb, tok }) {
         )}
       </div>
 
-      {/* Numpads */}
       <div className="card">
         <div className="ctitle">🔢 Numeric Input Pads</div>
         <div className="numpad-row">
@@ -638,16 +652,13 @@ function EntryTab({ db, setDb, tok }) {
         </div>
       </div>
 
-      {/* Recent */}
       {recent.length > 0 && (
         <div className="card">
           <div className="ctitle">🕐 Recent FIRs — {stObj?.lb}</div>
           <div className="tbl-wrap">
             <table>
               <thead>
-                <tr>
-                  <th>Sl</th><th>CR No.</th><th>Section U/s</th><th>Date Received</th>
-                </tr>
+                <tr><th>Sl</th><th>CR No.</th><th>Section U/s</th><th>Date Received</th></tr>
               </thead>
               <tbody>
                 {recent.map((r,i)=>(
@@ -668,24 +679,16 @@ function EntryTab({ db, setDb, tok }) {
 }
 
 function NumPad({ label, value, onChange, maxLen=6, withDot=false }) {
-  function tap(ch) {
-    if (value.length >= maxLen) return;
-    onChange(value + ch);
-  }
+  function tap(ch) { if (value.length >= maxLen) return; onChange(value + ch); }
   function bs() { onChange(value.slice(0,-1)); }
-  function dot() {
-    if (value.endsWith(".") || !value.length) return;
-    onChange(value + ".");
-  }
+  function dot() { if (value.endsWith(".") || !value.length) return; onChange(value + "."); }
   const nums = [1,2,3,4,5,6,7,8,9];
   return (
     <div style={{flex:"1 1 140px",minWidth:0}}>
       <div className="lbl" style={{marginBottom:6}}>{label}</div>
-      <div style={{
-        background:"var(--bg3)",border:"1px solid var(--bdr)",borderRadius:6,
+      <div style={{background:"var(--bg3)",border:"1px solid var(--bdr)",borderRadius:6,
         padding:"6px 8px",marginBottom:6,fontFamily:"JetBrains Mono,monospace",
-        fontSize:14,color:"var(--gold)",minHeight:32,letterSpacing:1
-      }}>
+        fontSize:14,color:"var(--gold)",minHeight:32,letterSpacing:1}}>
         {value || <span style={{color:"var(--txt3)"}}>—</span>}
       </div>
       <div className="numpad">
@@ -804,7 +807,7 @@ function ViewerTab({ db }) {
             No records found for <span style={{color:"var(--gold)"}}>{displayFIR}</span>
           </div>
           <div style={{fontSize:11,color:"var(--txt3)",marginBottom:12}}>
-            Searched across all 6 stations and 4 registers
+            Searched across all stations and registers
           </div>
           <button className="btn btn-o btn-sm" onClick={()=>setShowDebug(d=>!d)}>
             🔧 {showDebug?"Hide":"Show"} debug log
@@ -834,7 +837,6 @@ function ViewerTab({ db }) {
               ))}
             </div>
           </div>
-
           {activeStation!==null && results[activeStation] && (
             <StationPanel
               sr={results[activeStation]}
@@ -884,7 +886,6 @@ function StationPanel({ sr, displayFIR, activeCaseId, setActiveCaseId }) {
           ))}
         </div>
       )}
-
       {pendRows.length>0 && (
         <CaseSection rows={pendRows} prefix="pend" title="⚖ Case Pending" bdg="bdg-b"
           activeCaseId={activeCaseId} setActiveCaseId={setActiveCaseId}/>
@@ -916,7 +917,6 @@ function CaseSection({ rows, prefix, title, bdg, activeCaseId, setActiveCaseId }
   const srcLabel = prefix==="pend"?"P":prefix==="disp"?"D":prefix==="nv"?"NV":"CN";
   const activeIdx = ids.indexOf(activeCaseId);
   const activeRow = activeIdx>=0 ? rows[activeIdx] : null;
-
   return (
     <div className="v-sheet-sec">
       <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}>
@@ -970,10 +970,8 @@ function CaseDetail({ r, srcKey }) {
       ["Nature",r.nat],["Designation",r.des],
     ],
   }[srcKey]||[];
-
   const bdgMap={pend:"bdg-b",disp:"bdg-g",nv:"bdg-a",cnum:"bdg-p"};
   const lbMap={pend:"Case Pending",disp:"Disposed",nv:"Non-Valuable Property",cnum:"Case Numbered"};
-
   return (
     <div className="v-det">
       <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:12}}>
@@ -996,8 +994,6 @@ function CaseDetail({ r, srcKey }) {
 
 /* ═══════════════════════════════════════════════
    FIR → CASE NUMBERED TAB
-   FIX: replaced inline style `border-radius:var(--r)`
-        with className="confirm-box" (defined in CSS)
 ═══════════════════════════════════════════════ */
 function FTCTab({ db, setDb, tok }) {
   const curYr = String(new Date().getFullYear());
@@ -1068,7 +1064,6 @@ function FTCTab({ db, setDb, tok }) {
   return (
     <div className="card">
       <div className="ctitle">📁 FIR → Case Numbered</div>
-      {/* Steps indicator */}
       <div className="step-row">
         {[1,2,3].map((n,i)=>(
           <div key={n} style={{display:"flex",alignItems:"center",flex:i<2?"1":"initial",gap:4}}>
@@ -1140,7 +1135,6 @@ function FTCTab({ db, setDb, tok }) {
       {step===3 && (
         <div>
           <div style={{fontSize:11,color:"var(--txt3)",marginBottom:12}}>Step 3 — Confirm &amp; Execute</div>
-          {/* FIX: was using border-radius:var(--r) inside inline style={{}}, now uses className */}
           <div className="confirm-box">
             <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:10}}>
               <span style={{fontSize:14,fontWeight:700,color:"var(--gold)",fontFamily:"JetBrains Mono,monospace"}}>
@@ -1182,196 +1176,363 @@ function FTCTab({ db, setDb, tok }) {
 }
 
 /* ═══════════════════════════════════════════════
-   ABSTRACT TAB
-   FIX: removed border:var(--bdr) / borderRadius:var(--r)
-        from inline style objects — moved to className
+   ABSTRACT TAB  — fully reworked
+   ─────────────────────────────────────────────
+   Features:
+   • FIR count = only rows with CR# matching \d+/\d{4}
+   • Station = sheet tab name (JKM, VKM, Sheet7…)
+   • Year extracted from CR number (e.g. 12/2026 → 2026)
+   • Year-wise abstract (from CR year, NOT Date Received)
+   • Date-wise abstract (from Date Received dd.mm.yyyy)
+   • Section U/s-wise abstract with search
+   • Search panel: filter by station + year + date range + section keyword
+   • Full FIR list with live search
 ═══════════════════════════════════════════════ */
 function AbstractTab({ db }) {
-  const [filterSt, setFilterSt] = useState("ALL");
-  const [filterYr, setFilterYr] = useState("ALL");
+  /* ── Filters ── */
+  const [filterSt,  setFilterSt]  = useState("ALL");
+  const [filterYr,  setFilterYr]  = useState("ALL");
+  const [filterDate,setFilterDate]= useState("");   // DD.MM.YYYY partial
+  const [filterSec, setFilterSec] = useState("");   // section keyword
+  const [listSearch,setListSearch]= useState("");   // search in full FIR list
 
+  /* ── Build master list: only valid FIR cells ── */
   const allFirs = [];
   for (const s of SMAP) {
     for (const r of (db.fir[s.sh]||[])) {
-      allFirs.push({ ...r, stSh: s.sh, stLb: s.lb });
+      /* double-check: only rows with valid CR pattern */
+      if (!isValidFIRCell(r.cr)) continue;
+      const yr = parseFIR(r.cr).yr || "";
+      allFirs.push({ ...r, yr, stSh: s.sh, stLb: s.lb });
     }
   }
 
-  const allYears = [...new Set(allFirs.map(r=>r.yr||parseFIR(r.cr).yr||"?"))].sort();
+  /* ── Available years from actual CR numbers ── */
+  const allYears = [...new Set(allFirs.map(r=>r.yr).filter(Boolean))].sort();
 
-  const filtered = allFirs.filter(r=>{
-    const rYr = r.yr||parseFIR(r.cr).yr||"?";
-    const stOk = filterSt==="ALL" || r.stSh===filterSt;
-    const yrOk = filterYr==="ALL" || rYr===filterYr;
-    return stOk && yrOk;
+  /* ── Apply station + year filters ── */
+  const filtered = allFirs.filter(r => {
+    if (filterSt !== "ALL" && r.stSh !== filterSt) return false;
+    if (filterYr !== "ALL" && r.yr  !== filterYr)  return false;
+    if (filterDate && !((r.dr||"").includes(filterDate))) return false;
+    if (filterSec  && !(r.sec||"").toLowerCase().includes(filterSec.toLowerCase())) return false;
+    return true;
   });
 
+  const grand = filtered.length;
+
+  /* ── Station totals ── */
   const stTot = SMAP.map(s=>({
     sh:s.sh, lb:s.lb,
     cnt: filtered.filter(r=>r.stSh===s.sh).length
   }));
-  const grand = filtered.length;
 
+  /* ── Year-wise (from CR number year) ── */
   const byYr={};
   for (const r of filtered) {
-    const k=r.yr||parseFIR(r.cr).yr||"?";
+    const k = r.yr||"?";
     byYr[k]=(byYr[k]||0)+1;
   }
-  const yrSort=Object.entries(byYr).sort((a,b)=>a[0].localeCompare(b[0]));
+  const yrSort = Object.entries(byYr).sort((a,b)=>a[0].localeCompare(b[0]));
 
+  /* ── Month-wise (from Date Received dd.mm.yyyy) ── */
   const byMon={};
   for (const r of filtered) {
-    if(r.dr){
-      const pts=r.dr.split(".");
-      if(pts.length>=3){const k=`${pts[2]}-${pts[1].padStart(2,"0")}`;byMon[k]=(byMon[k]||0)+1;}
+    if (r.dr) {
+      const pts = r.dr.trim().split(".");
+      if (pts.length>=3) {
+        const k=`${pts[2].trim()}-${pts[1].trim().padStart(2,"0")}`;
+        byMon[k]=(byMon[k]||0)+1;
+      }
     }
   }
   const monNames=["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-  const monSort=Object.entries(byMon).sort((a,b)=>a[0].localeCompare(b[0]));
+  const monSort = Object.entries(byMon).sort((a,b)=>a[0].localeCompare(b[0]));
 
-  const bySec={};
-  for (const r of filtered) {const k=r.sec||"Unknown";bySec[k]=(bySec[k]||0)+1;}
-  const secSort=Object.entries(bySec).sort((a,b)=>b[1]-a[1]);
-
+  /* ── Date-wise (full dd.mm.yyyy, recent 30) ── */
   const byDay={};
-  for(const r of filtered){if(r.dr){const k=r.dr;byDay[k]=(byDay[k]||0)+1;}}
-  const daySort=Object.entries(byDay).sort((a,b)=>a[0].localeCompare(b[0])).slice(-20).reverse();
+  for (const r of filtered) {
+    if (r.dr && r.dr.trim()) {
+      const k=r.dr.trim();
+      byDay[k]=(byDay[k]||0)+1;
+    }
+  }
+  /* Sort dates as dd.mm.yyyy */
+  function parseDDMMYYYY(s) {
+    const p=s.split(".");
+    if (p.length<3) return 0;
+    return new Date(p[2],p[1]-1,p[0]).getTime()||0;
+  }
+  const daySort = Object.entries(byDay)
+    .sort((a,b)=>parseDDMMYYYY(a[0])-parseDDMMYYYY(b[0]))
+    .slice(-30).reverse();
+
+  /* ── Section-wise with search ── */
+  const [secSearch, setSecSearch] = useState("");
+  const bySec={};
+  for (const r of filtered) {
+    const k=(r.sec||"Unknown").trim();
+    bySec[k]=(bySec[k]||0)+1;
+  }
+  const secAll  = Object.entries(bySec).sort((a,b)=>b[1]-a[1]);
+  const secShow = secSearch
+    ? secAll.filter(([k])=>k.toLowerCase().includes(secSearch.toLowerCase()))
+    : secAll.slice(0,40);
+
+  /* ── Full list with search ── */
+  const listFiltered = filtered.filter(r => {
+    if (!listSearch) return true;
+    const q=listSearch.toLowerCase();
+    return (r.cr||"").toLowerCase().includes(q)
+      || (r.sec||"").toLowerCase().includes(q)
+      || (r.dr||"").toLowerCase().includes(q)
+      || (r.stLb||"").toLowerCase().includes(q);
+  });
+
+  function resetAll() {
+    setFilterSt("ALL");setFilterYr("ALL");
+    setFilterDate("");setFilterSec("");setListSearch("");
+  }
+
+  const hasFilters = filterSt!=="ALL"||filterYr!=="ALL"||filterDate||filterSec;
 
   return (
     <div>
-      {/* Filters */}
-      <div className="card" style={{marginBottom:12}}>
-        <div className="ctitle">🔦 Filter Abstract Data</div>
-        <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
-          <div className="fg" style={{flex:"1 1 140px"}}>
-            <label className="lbl">Station</label>
+      {/* ─── Filter Panel ─── */}
+      <div className="card">
+        <div className="ctitle">
+          🔦 Filters
+          {hasFilters && (
+            <button className="btn btn-o btn-sm" style={{marginLeft:"auto"}} onClick={resetAll}>
+              ✕ Reset All
+            </button>
+          )}
+        </div>
+        <div className="frow">
+          <div className="fg">
+            <label className="lbl">Station (Sheet Tab)</label>
             <select className="inp" value={filterSt} onChange={e=>setFilterSt(e.target.value)}>
               <option value="ALL">All Stations</option>
-              {SMAP.map(s=><option key={s.sh} value={s.sh}>{s.lb}</option>)}
+              {SMAP.map(s=><option key={s.sh} value={s.sh}>{s.lb} ({s.sh})</option>)}
             </select>
           </div>
-          <div className="fg" style={{flex:"1 1 90px"}}>
-            <label className="lbl">Year</label>
+          <div className="fg">
+            <label className="lbl">Year (CR Year)</label>
             <select className="inp" value={filterYr} onChange={e=>setFilterYr(e.target.value)}>
               <option value="ALL">All Years</option>
               {allYears.map(y=><option key={y} value={y}>{y}</option>)}
             </select>
           </div>
-          <div style={{alignSelf:"flex-end"}}>
-            <button className="btn btn-o btn-sm"
-              onClick={()=>{setFilterSt("ALL");setFilterYr("ALL");}}>
-              Reset
-            </button>
+          <div className="fg">
+            <label className="lbl">Date Received (partial)</label>
+            <input className="inp mono" type="text" value={filterDate}
+              onChange={e=>setFilterDate(e.target.value)} placeholder="e.g. 2026 or 05.2026"/>
+          </div>
+          <div className="fg">
+            <label className="lbl">Section U/s (keyword)</label>
+            <div className="search-wrap">
+              <input className="inp" type="text" value={filterSec}
+                onChange={e=>setFilterSec(e.target.value)} placeholder="e.g. 307 or IPC"/>
+              {filterSec && (
+                <button className="search-clear" onClick={()=>setFilterSec("")}>✕</button>
+              )}
+            </div>
           </div>
         </div>
+        {hasFilters && (
+          <div style={{fontSize:11,color:"var(--gold)",marginTop:4}}>
+            Showing <b>{grand}</b> of <b>{allFirs.length}</b> FIRs
+          </div>
+        )}
       </div>
 
-      {/* Stat cards */}
+      {/* ─── Summary Stat Cards ─── */}
       <div className="stat-grid">
         <div className="stat">
           <div className="stat-lbl">Total Pending FIRs</div>
           <div className="stat-val">{grand}</div>
           <div className="stat-sub">
-            {filterSt!=="ALL"||filterYr!=="ALL" ? "Filtered" : "All stations · All years"}
+            {hasFilters ? "Filtered result" : `All ${SMAP.length} stations`}
           </div>
         </div>
-        {/* FIX: replaced inline border with borderColor JS property instead of CSS var string */}
         {stTot.filter(s=>s.cnt>0).map(s=>(
           <div key={s.sh}
                className={`stat ${filterSt===s.sh?"active-st":""}`}
                onClick={()=>setFilterSt(filterSt===s.sh?"ALL":s.sh)}>
             <div className="stat-lbl">{s.lb}</div>
             <div className="stat-val">{s.cnt}</div>
-            <div className="stat-sub">pending FIRs</div>
+            <div className="stat-sub mono" style={{fontSize:9}}>{s.sh}</div>
           </div>
         ))}
       </div>
 
       <div className="abs-grid">
-        {/* Station-wise table */}
+        {/* ─ Station-wise ─ */}
         <div className="card">
           <div className="ctitle">📍 Station-wise Pending FIRs</div>
           <table className="abs-tbl">
-            <thead><tr><th>Station</th><th>FIRs</th><th>%</th></tr></thead>
+            <thead>
+              <tr>
+                <th>Sheet Tab</th>
+                <th>Station</th>
+                <th>FIRs</th>
+                <th>%</th>
+              </tr>
+            </thead>
             <tbody>
               {stTot.map(s=>(
-                <tr key={s.sh}>
+                <tr key={s.sh} style={{cursor:"pointer"}}
+                    onClick={()=>setFilterSt(filterSt===s.sh?"ALL":s.sh)}>
+                  <td className="mono" style={{color:"var(--txt3)"}}>{s.sh}</td>
                   <td>{s.lb}</td>
-                  <td><b className="mono">{s.cnt}</b></td>
+                  <td><b className="mono" style={{color:s.cnt>0?"var(--gold)":"var(--txt3)"}}>{s.cnt}</b></td>
                   <td className="mono">{grand?((s.cnt/grand)*100).toFixed(1):0}%</td>
                 </tr>
               ))}
               <tr className="tot-row">
-                <td>Total</td><td><b className="mono">{grand}</b></td><td>100%</td>
+                <td colSpan={2}>Total</td>
+                <td><b className="mono">{grand}</b></td>
+                <td>100%</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        {/* Year-wise */}
+        {/* ─ Year-wise (from CR number) ─ */}
         <div className="card">
-          <div className="ctitle">📅 Year-wise Pending FIRs</div>
+          <div className="ctitle">📅 Year-wise (from CR No.)</div>
           <div className="tbl-wrap">
             <table className="abs-tbl">
-              <thead><tr><th>Year</th><th>Count</th><th>%</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>Year</th>
+                  <th>FIRs</th>
+                  <th>%</th>
+                </tr>
+              </thead>
               <tbody>
                 {yrSort.map(([k,v])=>(
                   <tr key={k} style={{cursor:"pointer"}}
                       onClick={()=>setFilterYr(filterYr===k?"ALL":k)}>
-                    <td><span className="yr-badge">{k}</span></td>
+                    <td>
+                      <span className="yr-badge">{k}</span>
+                      {filterYr===k && <span style={{marginLeft:4,color:"var(--gold)",fontSize:9}}>▶</span>}
+                    </td>
                     <td className="mono"><b>{v}</b></td>
                     <td className="mono">{grand?((v/grand)*100).toFixed(1):0}%</td>
                   </tr>
                 ))}
                 <tr className="tot-row">
-                  <td>Total</td><td className="mono"><b>{grand}</b></td><td>100%</td>
+                  <td>Total</td>
+                  <td className="mono"><b>{grand}</b></td>
+                  <td>100%</td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
 
-        {/* Month-wise */}
+        {/* ─ Month-wise (from Date Received) ─ */}
         <div className="card">
           <div className="ctitle">📆 Month-wise (Date Received)</div>
           <div className="tbl-wrap">
             <table className="abs-tbl">
-              <thead><tr><th>Month</th><th>Count</th></tr></thead>
-              <tbody>
-                {monSort.map(([k,v])=>{
-                  const [my,mn]=k.split("-");
-                  return(
-                    <tr key={k}>
-                      <td>{monNames[parseInt(mn)]||mn} {my}</td>
-                      <td className="mono"><b>{v}</b></td>
-                    </tr>
-                  );
-                })}
-                <tr className="tot-row">
-                  <td>Total</td>
-                  <td className="mono"><b>{monSort.reduce((a,b)=>a+b[1],0)}</b></td>
+              <thead>
+                <tr>
+                  <th>Month</th>
+                  <th>FIRs</th>
                 </tr>
+              </thead>
+              <tbody>
+                {monSort.length===0
+                  ? <tr><td colSpan={2} className="no-data">No date data available</td></tr>
+                  : monSort.map(([k,v])=>{
+                    const [my,mn]=k.split("-");
+                    return (
+                      <tr key={k}>
+                        <td>{monNames[parseInt(mn,10)]||mn} {my}</td>
+                        <td className="mono"><b>{v}</b></td>
+                      </tr>
+                    );
+                  })
+                }
+                {monSort.length>0 && (
+                  <tr className="tot-row">
+                    <td>Total</td>
+                    <td className="mono"><b>{monSort.reduce((a,b)=>a+b[1],0)}</b></td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
         </div>
 
-        {/* Section-wise */}
+        {/* ─ Date-wise (recent 30 dates) ─ */}
         <div className="card">
-          <div className="ctitle">⚖ Section U/s — Top {Math.min(secSort.length,30)}</div>
+          <div className="ctitle">📋 Date-wise (Recent 30 dates)</div>
           <div className="tbl-wrap">
             <table className="abs-tbl">
-              <thead><tr><th>#</th><th>Section</th><th>Count</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>Date Received</th>
+                  <th>FIRs</th>
+                </tr>
+              </thead>
               <tbody>
-                {secSort.slice(0,30).map(([k,v],i)=>(
-                  <tr key={k}>
-                    <td className="mono" style={{color:"var(--txt3)"}}>{i+1}</td>
-                    <td>{k}</td>
-                    <td className="mono"><b>{v}</b></td>
-                  </tr>
-                ))}
+                {daySort.length===0
+                  ? <tr><td colSpan={2} className="no-data">No date data available</td></tr>
+                  : daySort.map(([k,v])=>(
+                    <tr key={k} style={{cursor:"pointer"}}
+                        onClick={()=>setFilterDate(filterDate===k?"":k)}>
+                      <td className="mono"
+                          style={filterDate===k?{color:"var(--gold)",fontWeight:700}:{}}>{k}</td>
+                      <td className="mono"><b>{v}</b></td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* ─ Section U/s-wise with search ─ */}
+        <div className="card">
+          <div className="ctitle">
+            ⚖ Section U/s-wise
+            <span style={{marginLeft:"auto",fontWeight:400,color:"var(--txt3)",fontSize:9}}>
+              {secShow.length} of {secAll.length} sections
+            </span>
+          </div>
+          <div className="search-wrap" style={{marginBottom:10}}>
+            <input className="inp" type="text" value={secSearch}
+              onChange={e=>setSecSearch(e.target.value)}
+              placeholder="Search section e.g. 307 IPC…"/>
+            {secSearch && <button className="search-clear" onClick={()=>setSecSearch("")}>✕</button>}
+          </div>
+          <div className="tbl-wrap">
+            <table className="abs-tbl">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Section U/s</th>
+                  <th>FIRs</th>
+                </tr>
+              </thead>
+              <tbody>
+                {secShow.length===0
+                  ? <tr><td colSpan={3} className="no-data">No sections match</td></tr>
+                  : secShow.map(([k,v],i)=>(
+                    <tr key={k} style={{cursor:"pointer"}}
+                        onClick={()=>setFilterSec(filterSec===k?"":k)}>
+                      <td className="mono" style={{color:"var(--txt3)"}}>{i+1}</td>
+                      <td style={filterSec&&k.toLowerCase().includes(filterSec.toLowerCase())
+                          ?{color:"var(--gold)"}:{}}>{k}</td>
+                      <td className="mono"><b>{v}</b></td>
+                    </tr>
+                  ))
+                }
                 <tr className="tot-row">
-                  <td colSpan={2}>Total</td>
+                  <td colSpan={2}>Total (filtered)</td>
                   <td className="mono"><b>{grand}</b></td>
                 </tr>
               </tbody>
@@ -1379,25 +1540,14 @@ function AbstractTab({ db }) {
           </div>
         </div>
 
-        {/* Recent by date */}
-        <div className="card">
-          <div className="ctitle">📋 Date-wise (Recent 20 dates)</div>
-          <div className="tbl-wrap">
-            <table className="abs-tbl">
-              <thead><tr><th>Date</th><th>Count</th></tr></thead>
-              <tbody>
-                {daySort.map(([k,v])=>(
-                  <tr key={k}>
-                    <td className="mono">{k}</td>
-                    <td className="mono"><b>{v}</b></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        {/* ─ Station × Year cross-table ─ */}
+        <div className="card" style={{gridColumn:"1/-1"}}>
+          <div className="ctitle">📊 Station × Year Cross-Abstract</div>
+          <StationYearMatrix allFirs={filtered} years={allYears} stTot={stTot}
+            setFilterSt={setFilterSt} setFilterYr={setFilterYr}/>
         </div>
 
-        {/* Full FIR list */}
+        {/* ─ Full FIR List ─ */}
         <div className="card" style={{gridColumn:"1/-1"}}>
           <div className="ctitle">
             📋 FIR Pending List
@@ -1406,10 +1556,17 @@ function AbstractTab({ db }) {
                 {SMAP.find(s=>s.sh===filterSt)?.lb}
               </span>
             )}
-            {filterYr!=="ALL" && <span className="yr-badge">{filterYr}</span>}
+            {filterYr!=="ALL" && <span className="yr-badge" style={{marginLeft:4}}>{filterYr}</span>}
             <span style={{marginLeft:"auto",fontWeight:400,color:"var(--txt3)",fontSize:10}}>
-              {grand} records
+              {listFiltered.length} records
             </span>
+          </div>
+          {/* list search */}
+          <div className="search-wrap" style={{marginBottom:10}}>
+            <input className="inp" type="text" value={listSearch}
+              onChange={e=>setListSearch(e.target.value)}
+              placeholder="Search CR No., section, date, station…"/>
+            {listSearch && <button className="search-clear" onClick={()=>setListSearch("")}>✕</button>}
           </div>
           <div className="tbl-wrap">
             <table>
@@ -1418,30 +1575,113 @@ function AbstractTab({ db }) {
                   <th>Sl</th>
                   <th>CR No.</th>
                   <th>Year</th>
-                  <th>Station</th>
+                  <th>Station (Tab)</th>
                   <th>Section U/s</th>
                   <th>Date Received</th>
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((r,i)=>(
+                {listFiltered.slice(0, 300).map((r,i)=>(
                   <tr key={i}>
                     <td className="mono" style={{color:"var(--txt3)"}}>{r.sl}</td>
                     <td className="mono" style={{color:"var(--gold)",fontWeight:700}}>{r.cr}</td>
                     <td><span className="yr-badge">{r.yr||"?"}</span></td>
-                    <td style={{color:"var(--txt2)"}}>{r.stLb}</td>
-                    <td>{r.sec}</td>
+                    <td>
+                      <span style={{color:"var(--txt2)",fontSize:11}}>{r.stLb}</span>
+                      <span style={{color:"var(--txt3)",fontSize:9,marginLeft:4}}>({r.stSh})</span>
+                    </td>
+                    <td style={{maxWidth:220,wordBreak:"break-word"}}>{r.sec}</td>
                     <td className="mono">{r.dr||"—"}</td>
                   </tr>
                 ))}
-                {filtered.length===0 && (
-                  <tr><td colSpan={6} className="no-data">No FIRs match the current filter.</td></tr>
+                {listFiltered.length===0 && (
+                  <tr><td colSpan={6} className="no-data">No FIRs match current filters.</td></tr>
+                )}
+                {listFiltered.length>300 && (
+                  <tr>
+                    <td colSpan={6} style={{textAlign:"center",padding:10,color:"var(--txt3)",fontSize:11}}>
+                      Showing first 300 of {listFiltered.length} — apply filters to narrow down.
+                    </td>
+                  </tr>
                 )}
               </tbody>
             </table>
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+/* ─── Station × Year Matrix ─── */
+function StationYearMatrix({ allFirs, years, stTot, setFilterSt, setFilterYr }) {
+  /* Show only years with data; limit to last 15 years for readability */
+  const yrList = years.slice(-15);
+  if (!yrList.length || !allFirs.length) {
+    return <div className="no-data">No data to display.</div>;
+  }
+  /* Build counts */
+  const matrix = {};
+  for (const r of allFirs) {
+    const key = `${r.stSh}::${r.yr}`;
+    matrix[key] = (matrix[key]||0)+1;
+  }
+  const yrTotals = {};
+  for (const y of yrList) {
+    yrTotals[y] = allFirs.filter(r=>r.yr===y).length;
+  }
+
+  return (
+    <div className="tbl-wrap">
+      <table className="abs-tbl" style={{fontSize:11}}>
+        <thead>
+          <tr>
+            <th>Station</th>
+            {yrList.map(y=>(
+              <th key={y} style={{cursor:"pointer",textAlign:"center"}}
+                  onClick={()=>setFilterYr(y)}>
+                <span className="yr-badge" style={{display:"inline-block"}}>{y}</span>
+              </th>
+            ))}
+            <th style={{color:"var(--gold-l)"}}>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {stTot.map(s=>{
+            const rowTotal = yrList.reduce((a,y)=>a+(matrix[`${s.sh}::${y}`]||0),0);
+            if (!rowTotal) return null;
+            return (
+              <tr key={s.sh} style={{cursor:"pointer"}}
+                  onClick={()=>setFilterSt(s.sh)}>
+                <td style={{fontWeight:600}}>{s.lb}
+                  <span style={{color:"var(--txt3)",fontSize:9,marginLeft:4}}>({s.sh})</span>
+                </td>
+                {yrList.map(y=>{
+                  const v = matrix[`${s.sh}::${y}`]||0;
+                  return (
+                    <td key={y} className="mono"
+                        style={{textAlign:"center",color:v>0?"var(--txt)":"var(--txt3)"}}>
+                      {v||"—"}
+                    </td>
+                  );
+                })}
+                <td className="mono" style={{color:"var(--gold)",fontWeight:700,textAlign:"center"}}>
+                  {rowTotal}
+                </td>
+              </tr>
+            );
+          })}
+          <tr className="tot-row">
+            <td>Year Total</td>
+            {yrList.map(y=>(
+              <td key={y} className="mono" style={{textAlign:"center"}}>{yrTotals[y]||0}</td>
+            ))}
+            <td className="mono" style={{textAlign:"center"}}>
+              {yrList.reduce((a,y)=>a+(yrTotals[y]||0),0)}
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 }
