@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback, useRef } from "react";
 
 /* ═══════════════════════════════════════════════
@@ -15,7 +14,6 @@ const SID = {
   casenum: "1eeQA75iuqNcsNwXygcx3JLJRamxuRI_1UrpetByr5nA",
 };
 
-/* Sheet tab names must EXACTLY match Google Sheets tab names */
 const SMAP = [
   { sh:"JKM",     lb:"Jayankondam",      al:["jayankondam","jkm","jayankondam police station"] },
   { sh:"VKM",     lb:"Vikkiramangalam",  al:["vikkiramangalam","vikramangalam","vkm","venganam"] },
@@ -28,12 +26,6 @@ const SMAP = [
 /* ═══════════════════════════════════════════════
    HELPERS
 ═══════════════════════════════════════════════ */
-
-/** Normalise FIR number: strips leading zeros, splits on slash
- *  "0012/2026" → {num:"12", yr:"2026"}
- *  "561/1999"  → {num:"561", yr:"1999"}
- *  "12"        → {num:"12", yr:""}
- */
 function parseFIR(raw) {
   if (!raw && raw !== 0) return { num: "", yr: "" };
   const s = String(raw).trim();
@@ -119,11 +111,6 @@ async function sheetsDeleteRow(tok, sid, tabName, oneBasedRow) {
 
 /* ═══════════════════════════════════════════════
    LOAD DATA
-   Sheet structure (from screenshot):
-   Row 1-3: title/header rows (skip)
-   Row 4: "Sl. No. | Cr.No. | Section of Law U/s | Date of Received"
-   Then: year-group rows (only col C has 4-digit year, others empty)
-         data rows: col A=sl, col B=cr, col C=section, col D=date
 ═══════════════════════════════════════════════ */
 async function loadFIRSheet(tok, tabName) {
   const rows = await sheetsGet(tok, SID.fir, `${tabName}!A:D`);
@@ -136,12 +123,10 @@ async function loadFIRSheet(tok, tabName) {
     const c = (r[2] || "").toString().trim();
     const d = (r[3] || "").toString().trim();
 
-    /* Skip header/title rows (non-numeric col A, or known header text) */
     if (a.toLowerCase().includes("sl") || c.toLowerCase().includes("section of law")) continue;
     if (b.toLowerCase().includes("cr.no")) continue;
     if (c.toLowerCase().includes("police station")) continue;
 
-    /* Year-group row: col A & B empty, col C is 4-digit year */
     const isYearRow =
       (!a && !b && /^\d{4}$/.test(c) && !d) ||
       (!a && /^\d{4}$/.test(b) && !c && !d) ||
@@ -152,7 +137,6 @@ async function loadFIRSheet(tok, tabName) {
       continue;
     }
 
-    /* Data row */
     const slNum = parseInt(a, 10);
     if (!isNaN(slNum) && b && c) {
       const crYr = parseFIR(b).yr || yg;
@@ -211,7 +195,8 @@ async function loadAllData(tok) {
 }
 
 /* ═══════════════════════════════════════════════
-   CSS-IN-JS STYLES (injected once)
+   CSS — fixed: removed CSS var references from
+   inline style objects, added mobile breakpoints
 ═══════════════════════════════════════════════ */
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Crimson+Pro:wght@400;600;700&display=swap');
@@ -223,41 +208,44 @@ const CSS = `
   --grn:#3fb950;--red:#f85149;--blu:#58a6ff;--pur:#bc8cff;
   --r:8px;--rl:12px;
 }
+html{-webkit-text-size-adjust:100%}
 body{background:var(--bg);color:var(--txt);font-family:'Crimson Pro',Georgia,serif;font-size:14px;min-height:100vh}
 .mono{font-family:'JetBrains Mono',monospace}
 
 /* layout */
 .app{display:flex;flex-direction:column;min-height:100vh}
-.hdr{background:var(--bg2);border-bottom:2px solid var(--gold-d);padding:10px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:200}
-.hdr-logo{font-size:17px;font-weight:700;color:var(--gold);letter-spacing:.5px;font-family:'Crimson Pro',serif}
-.hdr-sub{font-size:10px;color:var(--txt3);margin-top:1px;font-family:'JetBrains Mono',monospace}
-.auth-area{margin-left:auto;display:flex;align-items:center;gap:8px}
+.hdr{background:var(--bg2);border-bottom:2px solid var(--gold-d);padding:10px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:200}
+.hdr-logo{font-size:15px;font-weight:700;color:var(--gold);letter-spacing:.5px;font-family:'Crimson Pro',serif;white-space:nowrap}
+.hdr-sub{font-size:9px;color:var(--txt3);margin-top:1px;font-family:'JetBrains Mono',monospace;white-space:nowrap}
+.auth-area{margin-left:auto;display:flex;align-items:center;gap:6px;flex-shrink:0}
 
 /* tabs */
-.tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--bdr);padding:0 16px;overflow-x:auto;gap:2px}
-.tab{padding:9px 16px;font-size:12px;cursor:pointer;border-bottom:2px solid transparent;color:var(--txt2);white-space:nowrap;transition:color .15s;font-family:'JetBrains Mono',monospace}
+.tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--bdr);padding:0 8px;overflow-x:auto;gap:2px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:9px 12px;font-size:11px;cursor:pointer;border-bottom:2px solid transparent;color:var(--txt2);white-space:nowrap;transition:color .15s;font-family:'JetBrains Mono',monospace;flex-shrink:0}
 .tab:hover{color:var(--txt)}
 .tab.act{color:var(--gold);border-bottom-color:var(--gold)}
-.pane{padding:16px}
+.pane{padding:12px;max-width:1200px;margin:0 auto;width:100%}
 
 /* card */
-.card{background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--rl);padding:16px;margin-bottom:14px}
-.ctitle{font-size:11px;font-weight:700;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:.7px;font-family:'JetBrains Mono',monospace}
+.card{background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--rl);padding:14px;margin-bottom:12px}
+.ctitle{font-size:10px;font-weight:700;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:.7px;font-family:'JetBrains Mono',monospace;flex-wrap:wrap}
 
 /* form */
-.fg{display:flex;flex-direction:column;gap:3px}
+.fg{display:flex;flex-direction:column;gap:3px;min-width:0}
 .lbl{font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:.5px;font-family:'JetBrains Mono',monospace}
-.inp{background:var(--bg3);border:1px solid var(--bdr);border-radius:6px;color:var(--txt);padding:7px 10px;font-size:13px;outline:none;width:100%;transition:border-color .15s;font-family:'Crimson Pro',serif}
+.inp{background:var(--bg3);border:1px solid var(--bdr);border-radius:6px;color:var(--txt);padding:7px 10px;font-size:13px;outline:none;width:100%;transition:border-color .15s;font-family:'Crimson Pro',serif;-webkit-appearance:none;appearance:none}
 .inp:focus{border-color:var(--gold)}
-.frow{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:10px}
+select.inp{cursor:pointer}
+.frow{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:10px}
 
 /* buttons */
-.btn{padding:7px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:all .15s;font-family:'JetBrains Mono',monospace}
+.btn{padding:8px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:all .15s;font-family:'JetBrains Mono',monospace;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .btn-g{background:var(--gold);color:#000}.btn-g:hover{background:var(--gold-l)}
 .btn-g:disabled{opacity:.4;cursor:not-allowed}
 .btn-o{background:transparent;border:1px solid var(--bdr);color:var(--txt2)}.btn-o:hover{border-color:var(--gold);color:var(--gold)}
 .btn-r{background:transparent;border:1px solid var(--red);color:var(--red)}.btn-r:hover{background:var(--red);color:#fff}
-.btn-sm{padding:3px 9px;font-size:11px}
+.btn-sm{padding:5px 10px;font-size:11px}
 
 /* yr ctrl */
 .yr-ctrl{display:inline-flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--gold-d);border-radius:6px;padding:6px 10px}
@@ -265,15 +253,15 @@ body{background:var(--bg);color:var(--txt);font-family:'Crimson Pro',Georgia,ser
 .rst{font-size:10px;color:var(--txt3);cursor:pointer;text-decoration:underline;margin-left:4px}
 
 /* messages */
-.msg-ok{background:rgba(63,185,80,.1);border:1px solid var(--grn);color:var(--grn);padding:7px 10px;border-radius:6px;font-size:12px;margin-top:8px}
-.msg-err{background:rgba(248,81,73,.1);border:1px solid var(--red);color:var(--red);padding:7px 10px;border-radius:6px;font-size:12px;margin-top:8px}
-.msg-info{background:rgba(88,166,255,.1);border:1px solid var(--blu);color:var(--blu);padding:7px 10px;border-radius:6px;font-size:12px;margin-top:8px}
+.msg-ok{background:rgba(63,185,80,.1);border:1px solid var(--grn);color:var(--grn);padding:8px 10px;border-radius:6px;font-size:12px;margin-top:8px}
+.msg-err{background:rgba(248,81,73,.1);border:1px solid var(--red);color:var(--red);padding:8px 10px;border-radius:6px;font-size:12px;margin-top:8px}
+.msg-info{background:rgba(88,166,255,.1);border:1px solid var(--blu);color:var(--blu);padding:8px 10px;border-radius:6px;font-size:12px;margin-top:8px}
 .spin-wrap{display:flex;align-items:center;gap:8px;color:var(--txt2);font-size:12px;padding:20px 0;justify-content:center}
 @keyframes sp{to{transform:rotate(360deg)}}
 .spin{width:16px;height:16px;border:2px solid var(--bdr);border-top-color:var(--gold);border-radius:50%;animation:sp .7s linear infinite;flex-shrink:0}
 
 /* tables */
-.tbl-wrap{overflow-x:auto}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 table{width:100%;border-collapse:collapse;font-size:12px}
 th{background:var(--bg3);color:var(--gold);padding:7px 8px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--bdr);white-space:nowrap;font-family:'JetBrains Mono',monospace}
 td{padding:6px 8px;border-bottom:1px solid rgba(48,54,61,.5);color:var(--txt);vertical-align:top}
@@ -292,49 +280,55 @@ tr:hover td{background:rgba(201,168,76,.04)}
 .dot.on{background:var(--grn)}
 
 /* stat grid */
-.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px}
-.stat{background:var(--bg3);border:1px solid var(--bdr);border-radius:var(--r);padding:12px}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:12px}
+.stat{background:var(--bg3);border:1px solid var(--bdr);border-radius:var(--r);padding:12px;cursor:pointer;transition:border-color .15s}
+.stat:hover{border-color:var(--gold-d)}
+.stat.active-st{border-color:var(--gold)}
 .stat-lbl{font-size:9px;color:var(--txt3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;font-family:'JetBrains Mono',monospace}
-.stat-val{font-size:22px;font-weight:700;color:var(--gold);font-family:'JetBrains Mono',monospace}
+.stat-val{font-size:20px;font-weight:700;color:var(--gold);font-family:'JetBrains Mono',monospace}
 .stat-sub{font-size:10px;color:var(--txt3);margin-top:2px}
 
 /* viewer */
-.v-search-box{background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--rl);padding:20px;margin-bottom:14px}
-.v-inputs{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
-.v-station-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
-.st-pill{display:inline-flex;align-items:center;gap:7px;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid var(--bdr);background:var(--bg3);color:var(--txt2);transition:all .18s;user-select:none;font-family:'JetBrains Mono',monospace}
+.v-search-box{background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--rl);padding:14px;margin-bottom:12px}
+.v-inputs{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap}
+.v-station-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.st-pill{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;border:1.5px solid var(--bdr);background:var(--bg3);color:var(--txt2);transition:all .18s;user-select:none;font-family:'JetBrains Mono',monospace;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .st-pill:hover{border-color:var(--gold-d);color:var(--txt)}
 .st-pill.active{border-color:var(--gold);background:rgba(201,168,76,.1);color:var(--gold)}
 .st-count{background:rgba(201,168,76,.25);color:var(--gold);border-radius:8px;padding:1px 7px;font-size:10px;font-weight:700}
 .st-pill.active .st-count{background:var(--gold);color:#000}
-.v-panel{background:var(--bg3);border:1px solid var(--gold-d);border-radius:var(--rl);padding:14px;margin-bottom:10px}
-.v-sheet-sec{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--bdr)}
+.v-panel{background:var(--bg3);border:1px solid var(--gold-d);border-radius:var(--rl);padding:12px;margin-bottom:10px}
+.v-sheet-sec{margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--bdr)}
 .v-sheet-sec:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
 .v-fir-row{background:rgba(248,81,73,.06);border:1px solid rgba(248,81,73,.25);border-radius:6px;padding:10px;margin-bottom:6px}
-.cn-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;border:1.5px solid var(--bdr);background:var(--bg2);color:var(--txt2);transition:all .15s;user-select:none;font-family:'JetBrains Mono',monospace}
+.cn-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;border:1.5px solid var(--bdr);background:var(--bg2);color:var(--txt2);transition:all .15s;user-select:none;font-family:'JetBrains Mono',monospace;touch-action:manipulation}
 .cn-pill:hover{border-color:var(--blu);color:var(--blu)}
 .cn-pill.active{border-color:var(--gold);background:rgba(201,168,76,.08);color:var(--gold)}
-.v-det{background:var(--bg);border:1px solid var(--gold-d);border-radius:var(--r);padding:14px;margin-top:10px}
-.det-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.v-det{background:var(--bg);border:1px solid var(--gold-d);border-radius:var(--r);padding:12px;margin-top:10px}
+.det-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
 .df-lbl{font-size:9px;color:var(--txt3);margin-bottom:2px;text-transform:uppercase;letter-spacing:.4px;font-family:'JetBrains Mono',monospace}
 .df-val{font-size:13px;color:var(--txt);word-break:break-word}
 .df-val.hi{color:var(--gold);font-weight:700}
 
 /* numpad */
-.numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;width:150px}
-.np{background:var(--bg3);border:1px solid var(--bdr);border-radius:6px;padding:10px;font-size:14px;cursor:pointer;text-align:center;color:var(--txt);transition:all .15s;font-family:'JetBrains Mono',monospace}
-.np:hover{border-color:var(--gold);color:var(--gold)}
+.numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;width:100%;max-width:180px}
+.np{background:var(--bg3);border:1px solid var(--bdr);border-radius:6px;padding:12px 8px;font-size:15px;cursor:pointer;text-align:center;color:var(--txt);transition:all .15s;font-family:'JetBrains Mono',monospace;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none}
+.np:hover,.np:active{border-color:var(--gold);color:var(--gold)}
 .np.w2{grid-column:span 2}
+.numpad-row{display:flex;gap:20px;flex-wrap:wrap}
 
 /* ftc steps */
-.step-row{display:flex;align-items:center;gap:6px;margin-bottom:14px}
+.step-row{display:flex;align-items:center;gap:4px;margin-bottom:14px}
 .step-dot{width:24px;height:24px;border-radius:50%;border:2px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--txt3);flex-shrink:0;font-family:'JetBrains Mono',monospace}
 .step-dot.act{border-color:var(--gold);color:var(--gold)}
 .step-dot.done{background:var(--gold);border-color:var(--gold);color:#000;font-weight:700}
 .step-line{flex:1;height:1px;background:var(--bdr)}
-.case-sel{background:var(--bg3);border:1px solid var(--bdr);border-radius:6px;padding:10px 12px;cursor:pointer;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px;transition:all .15s}
+.case-sel{background:var(--bg3);border:1px solid var(--bdr);border-radius:6px;padding:10px 12px;cursor:pointer;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px;transition:all .15s;touch-action:manipulation}
 .case-sel:hover,.case-sel.sel{border-color:var(--gold);background:rgba(201,168,76,.07)}
 .warn-box{background:rgba(248,81,73,.07);border:1px solid rgba(248,81,73,.3);border-radius:6px;padding:10px;font-size:12px;color:var(--red);margin-bottom:10px}
+
+/* confirm box in FTCTab step 3 — uses class instead of inline var() */
+.confirm-box{background:var(--bg3);border:1px solid var(--bdr);border-radius:var(--r);padding:14px;margin-bottom:10px}
 
 /* abstract */
 .abs-tbl{width:100%;border-collapse:collapse;font-size:12px}
@@ -344,15 +338,45 @@ tr:hover td{background:rgba(201,168,76,.04)}
 .tot-row td{background:rgba(201,168,76,.09)!important;color:var(--gold);font-weight:700}
 .no-data{text-align:center;padding:28px;color:var(--txt3);font-size:13px}
 .yr-badge{display:inline-block;background:rgba(201,168,76,.15);color:var(--gold);padding:1px 6px;border-radius:4px;font-size:10px;font-family:'JetBrains Mono',monospace;margin-left:4px}
-.abs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px}
+.abs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+
+/* ── Mobile breakpoints ── */
+@media(max-width:600px){
+  .hdr{padding:8px 10px;gap:8px}
+  .hdr-logo{font-size:13px}
+  .hdr-sub{display:none}
+  .pane{padding:8px}
+  .card{padding:10px;margin-bottom:10px}
+  .frow{grid-template-columns:1fr 1fr;gap:8px}
+  .v-inputs{flex-direction:column;align-items:stretch}
+  .v-inputs .btn{width:100%}
+  .det-grid{grid-template-columns:1fr 1fr}
+  .stat-grid{grid-template-columns:repeat(2,1fr)}
+  .abs-grid{grid-template-columns:1fr}
+  .numpad-row{flex-direction:column;gap:12px}
+  .numpad{max-width:100%}
+  .np{padding:14px 8px;font-size:16px}
+  .btn{padding:10px 14px;font-size:12px}
+  table{font-size:11px}
+  th,td{padding:5px 6px}
+}
+@media(max-width:380px){
+  .frow{grid-template-columns:1fr}
+  .det-grid{grid-template-columns:1fr}
+  .stat-grid{grid-template-columns:1fr 1fr}
+}
 `;
 
 /* ═══════════════════════════════════════════════
    MAIN APP COMPONENT
 ═══════════════════════════════════════════════ */
 export default function App() {
-  const [tok, setTok] = useState(() => localStorage.getItem("goog_tok") || null);
-  const [tokExpiry, setTokExpiry] = useState(() => Number(localStorage.getItem("goog_tok_exp")) || 0);
+  const [tok, setTok] = useState(() => {
+    try { return localStorage.getItem("goog_tok") || null; } catch { return null; }
+  });
+  const [tokExpiry, setTokExpiry] = useState(() => {
+    try { return Number(localStorage.getItem("goog_tok_exp")) || 0; } catch { return 0; }
+  });
   const [db, setDb] = useState(null);
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("entry");
@@ -364,14 +388,19 @@ export default function App() {
       s.id = "fir-css"; s.textContent = CSS;
       document.head.appendChild(s);
     }
+    // Ensure viewport meta exists
+    if (!document.querySelector('meta[name="viewport"]')) {
+      const m = document.createElement("meta");
+      m.name = "viewport";
+      m.content = "width=device-width, initial-scale=1, maximum-scale=1";
+      document.head.appendChild(m);
+    }
   }, []);
 
-  /* ── Auto-load data when token exists ── */
   useEffect(() => {
     if (tok && !db && !loading) fetchAll(tok);
   }, [tok]);
 
-  /* ── Token expiry check: refresh 5 min before expiry ── */
   useEffect(() => {
     if (!tokExpiry) return;
     const msLeft = tokExpiry - Date.now() - 5 * 60 * 1000;
@@ -387,12 +416,14 @@ export default function App() {
       callback: (r) => {
         if (r.access_token) {
           const exp = Date.now() + (r.expires_in || 3600) * 1000;
-          localStorage.setItem("goog_tok", r.access_token);
-          localStorage.setItem("goog_tok_exp", String(exp));
+          try {
+            localStorage.setItem("goog_tok", r.access_token);
+            localStorage.setItem("goog_tok_exp", String(exp));
+          } catch {}
           setTok(r.access_token); setTokExpiry(exp);
         }
       },
-      prompt: "",  // silent refresh — no popup
+      prompt: "",
     }).requestAccessToken();
   }
 
@@ -403,8 +434,10 @@ export default function App() {
         callback: (r) => {
           if (r.access_token) {
             const exp = Date.now() + (r.expires_in || 3600) * 1000;
-            localStorage.setItem("goog_tok", r.access_token);
-            localStorage.setItem("goog_tok_exp", String(exp));
+            try {
+              localStorage.setItem("goog_tok", r.access_token);
+              localStorage.setItem("goog_tok_exp", String(exp));
+            } catch {}
             setTok(r.access_token); setTokExpiry(exp);
           }
         },
@@ -419,8 +452,10 @@ export default function App() {
   }
 
   function signOut() {
-    localStorage.removeItem("goog_tok");
-    localStorage.removeItem("goog_tok_exp");
+    try {
+      localStorage.removeItem("goog_tok");
+      localStorage.removeItem("goog_tok_exp");
+    } catch {}
     setTok(null); setTokExpiry(0); setDb(null);
   }
 
@@ -437,8 +472,8 @@ export default function App() {
 
   const tabs = [
     { id:"entry",    label:"📝 FIR Entry" },
-    { id:"viewer",   label:"🔍 FIR Viewer" },
-    { id:"ftc",      label:"📁 FIR→Case No." },
+    { id:"viewer",   label:"🔍 Viewer" },
+    { id:"ftc",      label:"📁 FIR→Case" },
     { id:"abstract", label:"📊 Abstract" },
   ];
 
@@ -447,17 +482,17 @@ export default function App() {
       {/* Header */}
       <div className="hdr">
         <div>
-          <div className="hdr-logo">⚖ FIR Management System</div>
+          <div className="hdr-logo">⚖ FIR Management</div>
           <div className="hdr-sub">Jayankondam Sub-Division · Police Records</div>
         </div>
         <div className="auth-area">
           <div className={`dot ${tok ? "on" : ""}`}/>
-          <span style={{fontSize:11,color:"var(--txt3)"}}>
-            {tok ? "Connected" : "Not signed in"}
+          <span style={{fontSize:10,color:"var(--txt3)"}}>
+            {tok ? "Connected" : "Offline"}
           </span>
           {tok
             ? <button className="btn btn-o btn-sm" onClick={signOut}>Sign Out</button>
-            : <button className="btn btn-g btn-sm" onClick={signIn}>Sign In with Google</button>
+            : <button className="btn btn-g btn-sm" onClick={signIn}>Sign In</button>
           }
         </div>
       </div>
@@ -523,7 +558,10 @@ function EntryTab({ db, setDb, tok }) {
   const recent = (db.fir[st] || []).slice(-3).reverse();
 
   async function save() {
-    if (!fn || !uns || !dt) { setMsg({ type:"err", text:"FIR Number, Section U/s, and Date are required." }); return; }
+    if (!fn || !uns || !dt) {
+      setMsg({ type:"err", text:"FIR Number, Section U/s, and Date are required." });
+      return;
+    }
     const cr = `${fn}/${yr}`;
     const rows = db.fir[st] || [];
     const nextSl = rows.length ? Math.max(...rows.map(r => parseInt(r.sl, 10) || 0)) + 1 : 1;
@@ -594,7 +632,7 @@ function EntryTab({ db, setDb, tok }) {
       {/* Numpads */}
       <div className="card">
         <div className="ctitle">🔢 Numeric Input Pads</div>
-        <div style={{display:"flex",gap:24,flexWrap:"wrap"}}>
+        <div className="numpad-row">
           <NumPad label="FIR Number" value={fn} onChange={setFn} maxLen={6}/>
           <NumPad label="Date (DD.MM.YYYY)" value={dt} onChange={setDt} maxLen={10} withDot/>
         </div>
@@ -606,7 +644,11 @@ function EntryTab({ db, setDb, tok }) {
           <div className="ctitle">🕐 Recent FIRs — {stObj?.lb}</div>
           <div className="tbl-wrap">
             <table>
-              <thead><tr><th>Sl</th><th>CR No.</th><th>Section U/s</th><th>Date Received</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>Sl</th><th>CR No.</th><th>Section U/s</th><th>Date Received</th>
+                </tr>
+              </thead>
               <tbody>
                 {recent.map((r,i)=>(
                   <tr key={i}>
@@ -637,8 +679,15 @@ function NumPad({ label, value, onChange, maxLen=6, withDot=false }) {
   }
   const nums = [1,2,3,4,5,6,7,8,9];
   return (
-    <div>
-      <div className="lbl" style={{marginBottom:5}}>{label}</div>
+    <div style={{flex:"1 1 140px",minWidth:0}}>
+      <div className="lbl" style={{marginBottom:6}}>{label}</div>
+      <div style={{
+        background:"var(--bg3)",border:"1px solid var(--bdr)",borderRadius:6,
+        padding:"6px 8px",marginBottom:6,fontFamily:"JetBrains Mono,monospace",
+        fontSize:14,color:"var(--gold)",minHeight:32,letterSpacing:1
+      }}>
+        {value || <span style={{color:"var(--txt3)"}}>—</span>}
+      </div>
       <div className="numpad">
         {nums.map(n=><div key={n} className="np" onClick={()=>tap(String(n))}>{n}</div>)}
         <div className="np" onClick={()=>tap("0")}>0</div>
@@ -720,23 +769,25 @@ function ViewerTab({ db }) {
       <div className="v-search-box">
         <div className="ctitle">🔍 FIR Search</div>
         <div className="v-inputs">
-          <div className="fg">
+          <div className="fg" style={{flex:"1 1 100px"}}>
             <label className="lbl">FIR Number</label>
             <input className="inp mono" type="tel" inputMode="numeric"
               value={fn} onChange={e=>setFn(e.target.value)}
               onKeyDown={e=>e.key==="Enter"&&search()}
-              placeholder="e.g. 12" style={{width:110}}/>
+              placeholder="e.g. 12"/>
           </div>
-          <div className="fg">
+          <div className="fg" style={{flex:"1 1 80px"}}>
             <label className="lbl">Year (optional)</label>
             <input className="inp mono" type="tel" inputMode="numeric"
               value={yr} onChange={e=>setYr(e.target.value)}
               onKeyDown={e=>e.key==="Enter"&&search()}
-              placeholder="e.g. 2026" style={{width:90}}/>
+              placeholder="2026"/>
           </div>
-          <button className="btn btn-g" style={{height:34,alignSelf:"flex-end"}} onClick={search}>Search</button>
-          <button className="btn btn-o btn-sm" style={{height:34,alignSelf:"flex-end"}}
-            onClick={()=>{setFn("");setYr("");setResults([]);setSearched(false);}}>✕ Clear</button>
+          <div style={{display:"flex",gap:6,flexShrink:0}}>
+            <button className="btn btn-g" style={{height:36}} onClick={search}>Search</button>
+            <button className="btn btn-o btn-sm" style={{height:36}}
+              onClick={()=>{setFn("");setYr("");setResults([]);setSearched(false);}}>✕</button>
+          </div>
         </div>
         {fn && (
           <div style={{fontSize:11,color:"var(--txt3)",marginTop:8}}>
@@ -746,7 +797,6 @@ function ViewerTab({ db }) {
         )}
       </div>
 
-      {/* Results */}
       {searched && results.length===0 && (
         <div style={{textAlign:"center",padding:"28px 20px"}}>
           <div style={{fontSize:22,marginBottom:8}}>🔍</div>
@@ -803,7 +853,7 @@ function StationPanel({ sr, displayFIR, activeCaseId, setActiveCaseId }) {
   const {s,firRows,pendRows,dispRows,nvRows,cnRows}=sr;
   return (
     <div className="v-panel">
-      <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14,flexWrap:"wrap"}}>
+      <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12,flexWrap:"wrap"}}>
         <span style={{fontSize:14,fontWeight:700,color:"var(--gold)"}}>{s.lb}</span>
         <span style={{fontSize:11,color:"var(--txt3)"}}>·</span>
         <span style={{fontSize:12,color:"var(--txt2)"}}>
@@ -946,6 +996,8 @@ function CaseDetail({ r, srcKey }) {
 
 /* ═══════════════════════════════════════════════
    FIR → CASE NUMBERED TAB
+   FIX: replaced inline style `border-radius:var(--r)`
+        with className="confirm-box" (defined in CSS)
 ═══════════════════════════════════════════════ */
 function FTCTab({ db, setDb, tok }) {
   const curYr = String(new Date().getFullYear());
@@ -957,7 +1009,10 @@ function FTCTab({ db, setDb, tok }) {
   const [selCase, setSelCase] = useState(null);
   const [msg, setMsg] = useState(null);
 
-  function reset() { setStep(1);setFn("");setYr(curYr);setSt("JKM");setFirRow(null);setSelCase(null);setMsg(null); }
+  function reset() {
+    setStep(1);setFn("");setYr(curYr);setSt("JKM");
+    setFirRow(null);setSelCase(null);setMsg(null);
+  }
 
   function search() {
     if (!fn) { setMsg({type:"err",text:"Enter FIR Number."}); return; }
@@ -997,7 +1052,11 @@ function FTCTab({ db, setDb, tok }) {
     if (idx>=0) {
       const newFir=[...(db.fir[st]||[])];
       newFir.splice(idx,1);
-      setDb(prev=>({...prev,fir:{...prev.fir,[st]:newFir},cnum:[...prev.cnum,{fn:`${fn}/${yr}`,sta:stLb,...sc}]}));
+      setDb(prev=>({
+        ...prev,
+        fir:{...prev.fir,[st]:newFir},
+        cnum:[...prev.cnum,{fn:`${fn}/${yr}`,sta:stLb,...sc}]
+      }));
     }
     setMsg({type:"ok",text:`✓ FIR ${fn}/${yr} moved to Case Numbered.`});
     setTimeout(reset,1600);
@@ -1009,10 +1068,10 @@ function FTCTab({ db, setDb, tok }) {
   return (
     <div className="card">
       <div className="ctitle">📁 FIR → Case Numbered</div>
-      {/* Steps */}
+      {/* Steps indicator */}
       <div className="step-row">
         {[1,2,3].map((n,i)=>(
-          <div key={n} style={{display:"flex",alignItems:"center",flex:i<2?"1":"initial",gap:6}}>
+          <div key={n} style={{display:"flex",alignItems:"center",flex:i<2?"1":"initial",gap:4}}>
             <div className={`step-dot ${step>n?"done":step===n?"act":""}`}>{step>n?"✓":n}</div>
             {i<2 && <div className="step-line"/>}
           </div>
@@ -1052,11 +1111,14 @@ function FTCTab({ db, setDb, tok }) {
               ✓ FIR {firRow.cr} — {firRow.sec} | Received: {firRow.dr}
             </div>
           )}
-          <div style={{fontSize:11,color:"var(--txt2)",marginBottom:6}}>Matched cases ({allCases.length})</div>
+          <div style={{fontSize:11,color:"var(--txt2)",marginBottom:6}}>
+            Matched cases ({allCases.length})
+          </div>
           {allCases.length===0
             ? <div className="no-data">No pending/disposal cases found for this FIR.</div>
             : allCases.map((c,i)=>(
-              <div key={i} className={`case-sel ${selCase?.cn===c.cn?"sel":""}`} onClick={()=>setSelCase(c)}>
+              <div key={i} className={`case-sel ${selCase?.cn===c.cn?"sel":""}`}
+                   onClick={()=>setSelCase(c)}>
                 <div>
                   <div style={{fontWeight:700,fontSize:13,fontFamily:"JetBrains Mono,monospace"}}>{c.cn}</div>
                   <div style={{color:"var(--txt2)",fontSize:12,marginTop:2}}>{c.pt}</div>
@@ -1077,8 +1139,9 @@ function FTCTab({ db, setDb, tok }) {
 
       {step===3 && (
         <div>
-          <div style={{fontSize:11,color:"var(--txt3)",marginBottom:12}}>Step 3 — Confirm & Execute</div>
-          <div style={{background:"var(--bg3)",border:"1px solid var(--bdr)",borderRadius:var(--r),padding:14,marginBottom:10}}>
+          <div style={{fontSize:11,color:"var(--txt3)",marginBottom:12}}>Step 3 — Confirm &amp; Execute</div>
+          {/* FIX: was using border-radius:var(--r) inside inline style={{}}, now uses className */}
+          <div className="confirm-box">
             <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:10}}>
               <span style={{fontSize:14,fontWeight:700,color:"var(--gold)",fontFamily:"JetBrains Mono,monospace"}}>
                 FIR: {fn}/{yr}
@@ -1090,7 +1153,9 @@ function FTCTab({ db, setDb, tok }) {
             <div className="det-grid">
               <div><div className="df-lbl">Section U/s</div><div className="df-val">{firRow?.sec||"—"}</div></div>
               <div><div className="df-lbl">Date Received</div><div className="df-val mono">{firRow?.dr||"—"}</div></div>
-              <div><div className="df-lbl">Case Number</div><div className="df-val mono" style={{color:"var(--pur)"}}>{selCase?.cn||"—"}</div></div>
+              <div><div className="df-lbl">Case Number</div>
+                <div className="df-val mono" style={{color:"var(--pur)"}}>{selCase?.cn||"—"}</div>
+              </div>
               <div><div className="df-lbl">Parties</div><div className="df-val">{selCase?.pt||"—"}</div></div>
               <div><div className="df-lbl">Advocate</div><div className="df-val">{selCase?.adv||"—"}</div></div>
               <div><div className="df-lbl">Date of Reg</div><div className="df-val mono">{selCase?.dreg||"—"}</div></div>
@@ -1099,7 +1164,7 @@ function FTCTab({ db, setDb, tok }) {
           <div className="warn-box">
             ⚠ This will delete FIR {fn}/{yr} from the "{st}" FIR sheet tab and save to Case Numbered sheet.
           </div>
-          <div style={{display:"flex",gap:8}}>
+          <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
             <button className="btn btn-o" onClick={()=>setStep(2)}>← Back</button>
             <button className="btn btn-r" onClick={execute}>🗂 Move to Case Numbered</button>
           </div>
@@ -1118,14 +1183,13 @@ function FTCTab({ db, setDb, tok }) {
 
 /* ═══════════════════════════════════════════════
    ABSTRACT TAB
-   All data sourced from FIR Pending Register (DB.fir)
-   as seen in the actual Google Sheet screenshot
+   FIX: removed border:var(--bdr) / borderRadius:var(--r)
+        from inline style objects — moved to className
 ═══════════════════════════════════════════════ */
 function AbstractTab({ db }) {
   const [filterSt, setFilterSt] = useState("ALL");
   const [filterYr, setFilterYr] = useState("ALL");
 
-  /* Collect all FIRs from the pending register */
   const allFirs = [];
   for (const s of SMAP) {
     for (const r of (db.fir[s.sh]||[])) {
@@ -1133,10 +1197,8 @@ function AbstractTab({ db }) {
     }
   }
 
-  /* All unique years */
   const allYears = [...new Set(allFirs.map(r=>r.yr||parseFIR(r.cr).yr||"?"))].sort();
 
-  /* Filtered set */
   const filtered = allFirs.filter(r=>{
     const rYr = r.yr||parseFIR(r.cr).yr||"?";
     const stOk = filterSt==="ALL" || r.stSh===filterSt;
@@ -1144,14 +1206,12 @@ function AbstractTab({ db }) {
     return stOk && yrOk;
   });
 
-  /* Station totals from filtered */
   const stTot = SMAP.map(s=>({
     sh:s.sh, lb:s.lb,
     cnt: filtered.filter(r=>r.stSh===s.sh).length
   }));
   const grand = filtered.length;
 
-  /* Year-wise from filtered */
   const byYr={};
   for (const r of filtered) {
     const k=r.yr||parseFIR(r.cr).yr||"?";
@@ -1159,7 +1219,6 @@ function AbstractTab({ db }) {
   }
   const yrSort=Object.entries(byYr).sort((a,b)=>a[0].localeCompare(b[0]));
 
-  /* Month-wise */
   const byMon={};
   for (const r of filtered) {
     if(r.dr){
@@ -1170,12 +1229,10 @@ function AbstractTab({ db }) {
   const monNames=["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   const monSort=Object.entries(byMon).sort((a,b)=>a[0].localeCompare(b[0]));
 
-  /* Section-wise */
   const bySec={};
   for (const r of filtered) {const k=r.sec||"Unknown";bySec[k]=(bySec[k]||0)+1;}
   const secSort=Object.entries(bySec).sort((a,b)=>b[1]-a[1]);
 
-  /* Date-wise (recent 20) */
   const byDay={};
   for(const r of filtered){if(r.dr){const k=r.dr;byDay[k]=(byDay[k]||0)+1;}}
   const daySort=Object.entries(byDay).sort((a,b)=>a[0].localeCompare(b[0])).slice(-20).reverse();
@@ -1186,25 +1243,24 @@ function AbstractTab({ db }) {
       <div className="card" style={{marginBottom:12}}>
         <div className="ctitle">🔦 Filter Abstract Data</div>
         <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
-          <div className="fg">
+          <div className="fg" style={{flex:"1 1 140px"}}>
             <label className="lbl">Station</label>
-            <select className="inp" value={filterSt} onChange={e=>setFilterSt(e.target.value)}
-                    style={{minWidth:160}}>
+            <select className="inp" value={filterSt} onChange={e=>setFilterSt(e.target.value)}>
               <option value="ALL">All Stations</option>
               {SMAP.map(s=><option key={s.sh} value={s.sh}>{s.lb}</option>)}
             </select>
           </div>
-          <div className="fg">
+          <div className="fg" style={{flex:"1 1 90px"}}>
             <label className="lbl">Year</label>
-            <select className="inp" value={filterYr} onChange={e=>setFilterYr(e.target.value)}
-                    style={{minWidth:100}}>
+            <select className="inp" value={filterYr} onChange={e=>setFilterYr(e.target.value)}>
               <option value="ALL">All Years</option>
               {allYears.map(y=><option key={y} value={y}>{y}</option>)}
             </select>
           </div>
           <div style={{alignSelf:"flex-end"}}>
-            <button className="btn btn-o btn-sm" onClick={()=>{setFilterSt("ALL");setFilterYr("ALL");}}>
-              Reset Filters
+            <button className="btn btn-o btn-sm"
+              onClick={()=>{setFilterSt("ALL");setFilterYr("ALL");}}>
+              Reset
             </button>
           </div>
         </div>
@@ -1219,9 +1275,10 @@ function AbstractTab({ db }) {
             {filterSt!=="ALL"||filterYr!=="ALL" ? "Filtered" : "All stations · All years"}
           </div>
         </div>
+        {/* FIX: replaced inline border with borderColor JS property instead of CSS var string */}
         {stTot.filter(s=>s.cnt>0).map(s=>(
-          <div key={s.sh} className="stat" style={{cursor:"pointer",transition:"border-color .15s",
-            border:`1px solid ${filterSt===s.sh?"var(--gold)":"var(--bdr)"}`}}
+          <div key={s.sh}
+               className={`stat ${filterSt===s.sh?"active-st":""}`}
                onClick={()=>setFilterSt(filterSt===s.sh?"ALL":s.sh)}>
             <div className="stat-lbl">{s.lb}</div>
             <div className="stat-val">{s.cnt}</div>
@@ -1261,9 +1318,7 @@ function AbstractTab({ db }) {
                 {yrSort.map(([k,v])=>(
                   <tr key={k} style={{cursor:"pointer"}}
                       onClick={()=>setFilterYr(filterYr===k?"ALL":k)}>
-                    <td>
-                      <span className="yr-badge">{k}</span>
-                    </td>
+                    <td><span className="yr-badge">{k}</span></td>
                     <td className="mono"><b>{v}</b></td>
                     <td className="mono">{grand?((v/grand)*100).toFixed(1):0}%</td>
                   </tr>
@@ -1342,13 +1397,19 @@ function AbstractTab({ db }) {
           </div>
         </div>
 
-        {/* Full FIR list for current filter */}
+        {/* Full FIR list */}
         <div className="card" style={{gridColumn:"1/-1"}}>
           <div className="ctitle">
             📋 FIR Pending List
-            {filterSt!=="ALL" && <span className="bdg bdg-a" style={{marginLeft:6}}>{SMAP.find(s=>s.sh===filterSt)?.lb}</span>}
+            {filterSt!=="ALL" && (
+              <span className="bdg bdg-a" style={{marginLeft:6}}>
+                {SMAP.find(s=>s.sh===filterSt)?.lb}
+              </span>
+            )}
             {filterYr!=="ALL" && <span className="yr-badge">{filterYr}</span>}
-            <span style={{marginLeft:"auto",fontWeight:400,color:"var(--txt3)",fontSize:10}}>{grand} records</span>
+            <span style={{marginLeft:"auto",fontWeight:400,color:"var(--txt3)",fontSize:10}}>
+              {grand} records
+            </span>
           </div>
           <div className="tbl-wrap">
             <table>
