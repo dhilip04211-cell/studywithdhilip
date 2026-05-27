@@ -14,12 +14,6 @@ const SID = {
   casenum: "1eeQA75iuqNcsNwXygcx3JLJRamxuRI_1UrpetByr5nA",
 };
 
-/*
-  SMAP — now includes Sheet7 as a real police station entry.
-  Sheet7 = additional VKM records (no Date column).
-  The FIR sheet has tabs: JKM, VKM, Sheet7, T.PALUR, PEW, AWPS, DCB
-  For abstract purposes each tab name IS the station key.
-*/
 const SMAP = [
   { sh:"JKM",     lb:"Jayankondam",      al:["jayankondam","jkm","jayankondam police station"] },
   { sh:"VKM",     lb:"Vikkiramangalam",  al:["vikkiramangalam","vikramangalam","vkm","venganam"] },
@@ -33,7 +27,6 @@ const SMAP = [
 /* ═══════════════════════════════════════════════
    HELPERS
 ═══════════════════════════════════════════════ */
-/* Returns true only if the cell contains a valid FIR like "12/2026" */
 function isValidFIRCell(raw) {
   if (!raw && raw !== 0) return false;
   return /^\d+\/\d{4}$/.test(String(raw).trim());
@@ -69,6 +62,36 @@ function stMatch(name, obj) {
     if (n.includes(a)) return true;
   }
   return false;
+}
+
+/* ── Viewer-specific helpers ── */
+function normFIRNum(raw) {
+  if (!raw && raw !== 0) return null;
+  const s = String(raw).trim();
+  const m = s.match(/^0*(\d+)\/(\d{4})$/);
+  if (!m) return null;
+  return { num: String(parseInt(m[1], 10)), yr: m[2] };
+}
+
+function firMatchViewer(raw, searchNum, searchYr) {
+  const p = normFIRNum(raw);
+  if (!p) return false;
+  if (p.num !== searchNum) return false;
+  if (searchYr && p.yr !== searchYr) return false;
+  return true;
+}
+
+/* Does petitioner/respondent text contain meaningful keywords from stationName? */
+function ptContainsStation(ptText, stationName) {
+  if (!ptText || !stationName) return false;
+  const pt = ptText.toLowerCase();
+  const st = stationName.toLowerCase();
+  const keywords = st
+    .replace(/police\s*station|ariyalur|district|branch|prohibition|enforcement|wing|criminal/gi, "")
+    .split(/[\s,()]+/)
+    .map(k => k.trim())
+    .filter(k => k.length > 3);
+  return keywords.some(k => pt.includes(k));
 }
 
 /* ═══════════════════════════════════════════════
@@ -125,10 +148,6 @@ async function sheetsDeleteRow(tok, sid, tabName, oneBasedRow) {
 
 /* ═══════════════════════════════════════════════
    LOAD DATA
-   KEY FIX: Only rows whose CR column matches
-   the pattern \d+/\d{4} are counted as FIRs.
-   This prevents year-group rows / header rows
-   from inflating counts.
 ═══════════════════════════════════════════════ */
 async function loadFIRSheet(tok, tabName) {
   const rows = await sheetsGet(tok, SID.fir, `${tabName}!A:D`);
@@ -141,13 +160,11 @@ async function loadFIRSheet(tok, tabName) {
     const c = (r[2] || "").toString().trim();
     const d = (r[3] || "").toString().trim();
 
-    /* Skip obvious header / title rows */
     if (a.toLowerCase().includes("sl") || c.toLowerCase().includes("section of law")) continue;
     if (b.toLowerCase().includes("cr.no")) continue;
     if (c.toLowerCase().includes("police station")) continue;
     if (a.toLowerCase().includes("fir pending")) continue;
 
-    /* Year group rows: col B is empty AND col C is a 4-digit year */
     const isYearRow =
       (!a && !b && /^\d{4}$/.test(c) && !d) ||
       (!a && /^\d{4}$/.test(b) && !c && !d) ||
@@ -158,11 +175,6 @@ async function loadFIRSheet(tok, tabName) {
       continue;
     }
 
-    /*
-      CRITICAL FIX: Only accept rows where column B (CR No.)
-      strictly matches the pattern NUM/YEAR (e.g. 12/2026).
-      This is the only reliable way to count actual FIR records.
-    */
     if (!isValidFIRCell(b)) continue;
 
     const crYr = parseFIR(b).yr || yg;
@@ -180,9 +192,9 @@ async function loadAllData(tok) {
   const pr = await sheetsGet(tok, SID.pending, "Sheet1!A:L");
   const pend = pr.slice(1)
     .map((r, i) => ({
-      sl:r[0]||"",cn:r[1]||"",pt:r[2]||"",adv:r[3]||"",
-      dreg:r[4]||"",nxt:r[5]||"",pur:r[6]||"",sec:r[7]||"",
-      sta:r[8]||"",fn:r[9]||"",nat:r[10]||"",des:r[11]||"",
+      sl:r[0]||"", cn:r[1]||"", pt:r[2]||"", adv:r[3]||"",
+      dreg:r[4]||"", nxt:r[5]||"", pur:r[6]||"", sec:r[7]||"",
+      sta:r[8]||"", fn:r[9]||"", nat:r[10]||"", des:r[11]||"",
       ri:i+2,
     }))
     .filter(r => r.fn || r.cn);
@@ -190,9 +202,9 @@ async function loadAllData(tok) {
   const dr2 = await sheetsGet(tok, SID.disposal, "Sheet1!A:L");
   const disp = dr2.slice(1)
     .map((r, i) => ({
-      sl:r[0]||"",cn:r[1]||"",pt:r[2]||"",adv:r[3]||"",
-      dreg:r[4]||"",ddec:r[5]||"",dnat:r[6]||"",sec:r[7]||"",
-      sta:r[8]||"",fn:r[9]||"",nat:r[10]||"",des:r[11]||"",
+      sl:r[0]||"", cn:r[1]||"", pt:r[2]||"", adv:r[3]||"",
+      dreg:r[4]||"", ddec:r[5]||"", dnat:r[6]||"", sec:r[7]||"",
+      sta:r[8]||"", fn:r[9]||"", nat:r[10]||"", des:r[11]||"",
       ri:i+2,
     }))
     .filter(r => r.fn || r.cn);
@@ -200,8 +212,8 @@ async function loadAllData(tok) {
   const nr = await sheetsGet(tok, SID.nonval, "Sheet1!A:G");
   const nv = nr.slice(1)
     .map((r, i) => ({
-      sno:r[0]||"",cn:r[1]||"",fn:r[2]||"",rp:r[3]||"",
-      sta:r[4]||"",desc:r[5]||"",rem:r[6]||"",
+      sno:r[0]||"", cn:r[1]||"", fn:r[2]||"", rp:r[3]||"",
+      sta:r[4]||"", desc:r[5]||"", rem:r[6]||"",
       ri:i+2,
     }))
     .filter(r => r.fn || r.cn);
@@ -209,9 +221,9 @@ async function loadAllData(tok) {
   const cnr = await sheetsGet(tok, SID.casenum, "Sheet1!A:M");
   const cnum = cnr.slice(1)
     .map((r, i) => ({
-      fn:r[0]||"",sta:r[1]||"",sec:r[2]||"",dr:r[3]||"",
-      cn:r[4]||"",pt:r[5]||"",adv:r[6]||"",dreg:r[7]||"",
-      nxt:r[8]||"",type:r[9]||"",sec2:r[10]||"",nat:r[11]||"",des:r[12]||"",
+      fn:r[0]||"", sta:r[1]||"", sec:r[2]||"", dr:r[3]||"",
+      cn:r[4]||"", pt:r[5]||"", adv:r[6]||"", dreg:r[7]||"",
+      nxt:r[8]||"", type:r[9]||"", sec2:r[10]||"", nat:r[11]||"", des:r[12]||"",
       ri:i+2,
     }))
     .filter(r => r.fn || r.cn);
@@ -338,7 +350,6 @@ tr:hover td{background:rgba(201,168,76,.04)}
 .warn-box{background:rgba(248,81,73,.07);border:1px solid rgba(248,81,73,.3);border-radius:6px;padding:10px;font-size:12px;color:var(--red);margin-bottom:10px}
 .confirm-box{background:var(--bg3);border:1px solid var(--bdr);border-radius:var(--r);padding:14px;margin-bottom:10px}
 
-/* ── Abstract specific ── */
 .abs-tbl{width:100%;border-collapse:collapse;font-size:12px}
 .abs-tbl th{background:var(--bg3);color:var(--gold);padding:7px 8px;text-align:left;font-size:10px;border:1px solid var(--bdr);font-family:'JetBrains Mono',monospace}
 .abs-tbl td{padding:7px 8px;border:1px solid var(--bdr);color:var(--txt)}
@@ -348,17 +359,14 @@ tr:hover td{background:rgba(201,168,76,.04)}
 .yr-badge{display:inline-block;background:rgba(201,168,76,.15);color:var(--gold);padding:1px 6px;border-radius:4px;font-size:10px;font-family:'JetBrains Mono',monospace;margin-left:4px}
 .abs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
 
-/* Search input with clear btn */
 .search-wrap{position:relative;display:flex;align-items:center}
 .search-wrap .inp{padding-right:30px}
 .search-clear{position:absolute;right:8px;background:none;border:none;color:var(--txt3);cursor:pointer;font-size:14px;padding:0;line-height:1}
 .search-clear:hover{color:var(--txt)}
 
-/* Clickable sort th */
 th.sortable{cursor:pointer;user-select:none}
 th.sortable:hover{color:var(--gold-l)}
 
-/* ── Mobile breakpoints ── */
 @media(max-width:600px){
   .hdr{padding:8px 10px;gap:8px}
   .hdr-logo{font-size:13px}
@@ -397,7 +405,7 @@ export default function App() {
   });
   const [db, setDb] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState("entry");
+  const [activeTab, setActiveTab] = useState("viewer");
 
   useEffect(() => {
     if (!document.getElementById("fir-css")) {
@@ -704,145 +712,238 @@ function NumPad({ label, value, onChange, maxLen=6, withDot=false }) {
 }
 
 /* ═══════════════════════════════════════════════
-   FIR VIEWER TAB
+   FIR VIEWER TAB — REBUILT
+   ─────────────────────────────────────────────
+   Searches pending (db.pend) and disposal (db.disp)
+   by FIR No. (col J / field "fn").
+
+   Column mapping (0-indexed in sheet):
+   [0]  Sr.No.         → sl
+   [1]  Case No.       → cn
+   [2]  Petitioner VS  → pt
+   [3]  Advocate       → adv
+   [4]  Date of Reg    → dreg
+   [5]  Next/Decision  → nxt / ddec
+   [6]  Purpose/Disp   → pur / dnat
+   [7]  Act Section    → sec
+   [8]  Police Station → sta
+   [9]  FIR No.        → fn
+   [10] Nature         → nat
+   [11] Designation    → des
+
+   FLOW:
+   1. Enter FIR + optional year → search fn column
+   2. Group by Police Station (sta) — blank shown as "—"
+   3. Tap station pill → show all cases for that station
+      Also includes rows where sta is blank/different but
+      petitioner text (pt) mentions the station name
+   4. Tap case number pill → show full detail
 ═══════════════════════════════════════════════ */
 function ViewerTab({ db }) {
-  const [fn, setFn] = useState("");
-  const [yr, setYr] = useState("");
-  const [results, setResults] = useState([]);
-  const [searched, setSearched] = useState(false);
-  const [activeStation, setActiveStation] = useState(null);
-  const [activeCaseId, setActiveCaseId] = useState(null);
-  const [debugLog, setDebugLog] = useState([]);
-  const [showDebug, setShowDebug] = useState(false);
+  const [fn, setFn]           = useState("");
+  const [yr, setYr]           = useState("");
+  const [searched, setSearched]       = useState(false);
+  const [stationGroups, setStationGroups] = useState([]);
+  const [selStation, setSelStation]   = useState(null);
+  const [selCaseId, setSelCaseId]     = useState(null);
 
-  function search() {
-    if (!fn.trim()) return;
-    const searchNum = String(parseInt(fn.trim(), 10) || fn.trim());
-    const searchYr = yr.trim();
-    const log = [`Search: num="${searchNum}" yr="${searchYr}"`];
-    const res = [];
-
-    for (const s of SMAP) {
-      const firRows = (db.fir[s.sh]||[]).filter(r => {
-        const m = firMatch(r.cr, searchNum, searchYr);
-        if (m) log.push(`FIR HIT [${s.sh}] cr="${r.cr}"`);
-        return m;
-      });
-      const pendRows = db.pend.filter(r => {
-        const fm = firMatch(r.fn, searchNum, searchYr);
-        const sm = stMatch(r.sta, s);
-        if (fm) log.push(`PEND fn="${r.fn}" sta="${r.sta}" stMatch=${sm}`);
-        return fm && sm;
-      });
-      const dispRows = db.disp.filter(r => {
-        const fm = firMatch(r.fn, searchNum, searchYr);
-        const sm = stMatch(r.sta, s);
-        if (fm) log.push(`DISP fn="${r.fn}" sta="${r.sta}" stMatch=${sm}`);
-        return fm && sm;
-      });
-      const nvRows = db.nv.filter(r => {
-        const fm = firMatch(r.fn, searchNum, searchYr);
-        const sm = stMatch(r.sta, s);
-        if (fm) log.push(`NV fn="${r.fn}" sta="${r.sta}" stMatch=${sm}`);
-        return fm && sm;
-      });
-      const cnRows = db.cnum.filter(r => {
-        const fm = firMatch(r.fn, searchNum, searchYr);
-        const sm = stMatch(r.sta, s);
-        if (fm) log.push(`CNUM fn="${r.fn}" sta="${r.sta}" stMatch=${sm}`);
-        return fm && sm;
-      });
-      const total = firRows.length+pendRows.length+dispRows.length+nvRows.length+cnRows.length;
-      if (total) res.push({s,firRows,pendRows,dispRows,nvRows,cnRows,total});
-    }
-
-    log.push(`Stations with hits: ${res.length}`);
-    setDebugLog(log);
-    setResults(res);
-    setSearched(true);
-    setActiveStation(res.length === 1 ? 0 : null);
-    setActiveCaseId(null);
+  /* ── normalise "483/2025" or "0026/2026" → {num, yr} ── */
+  function normFIR(raw) {
+    if (!raw) return null;
+    const m = String(raw).trim().match(/^0*(\d+)\/(\d{4})$/);
+    return m ? { num: String(parseInt(m[1], 10)), yr: m[2] } : null;
   }
 
+  function firMatchV(raw, sNum, sYr) {
+    const p = normFIR(raw);
+    if (!p) return false;
+    if (p.num !== sNum) return false;
+    if (sYr && p.yr !== sYr) return false;
+    return true;
+  }
+
+  /* Petitioner text contains meaningful keywords from station name */
+  function ptHasStation(ptText, stName) {
+    if (!ptText || !stName) return false;
+    const pt = ptText.toLowerCase();
+    const keywords = stName.toLowerCase()
+      .replace(/police\s*station|ariyalur|district|branch|prohibition|enforcement|wing|criminal|tamilnadu|tamil\s*nadu/gi, "")
+      .split(/[\s,()\/]+/)
+      .map(k => k.trim())
+      .filter(k => k.length > 3);
+    return keywords.some(k => pt.includes(k));
+  }
+
+  function doSearch() {
+    const raw = fn.trim();
+    if (!raw) return;
+    const sNum = String(parseInt(raw, 10) || raw);
+    const sYr  = yr.trim();
+
+    const pendHits = db.pend.filter(r => firMatchV(r.fn, sNum, sYr));
+    const dispHits = db.disp.filter(r => firMatchV(r.fn, sNum, sYr));
+
+    /* Group by station name (blank = "") */
+    const stSet = new Set([...pendHits, ...dispHits].map(r => r.sta || ""));
+
+    const groups = [...stSet].map(sta => ({
+      station: sta,
+      pendRows: pendHits.filter(r => (r.sta || "") === sta),
+      dispRows: dispHits.filter(r => (r.sta || "") === sta),
+    })).sort((a, b) => {
+      if (!a.station && b.station) return 1;
+      if (a.station && !b.station) return -1;
+      return a.station.localeCompare(b.station);
+    });
+
+    setStationGroups(groups);
+    setSearched(true);
+    setSelStation(null);
+    setSelCaseId(null);
+  }
+
+  /* When station selected: get direct matches + petitioner-text matches */
+  function getCasesForStation(stName) {
+    const raw = fn.trim();
+    if (!raw) return { pend: [], disp: [] };
+    const sNum = String(parseInt(raw, 10) || raw);
+    const sYr  = yr.trim();
+
+    const grp = stationGroups.find(g => g.station === stName);
+    const directPend = grp?.pendRows || [];
+    const directDisp = grp?.dispRows || [];
+
+    /* Extra: same FIR, different/blank station, but pt mentions station */
+    const extraPend = stName
+      ? db.pend.filter(r =>
+          firMatchV(r.fn, sNum, sYr) &&
+          (r.sta || "") !== stName &&
+          ptHasStation(r.pt || "", stName)
+        )
+      : [];
+    const extraDisp = stName
+      ? db.disp.filter(r =>
+          firMatchV(r.fn, sNum, sYr) &&
+          (r.sta || "") !== stName &&
+          ptHasStation(r.pt || "", stName)
+        )
+      : [];
+
+    return {
+      pend: [...directPend, ...extraPend],
+      disp: [...directDisp, ...extraDisp],
+    };
+  }
+
+  const totalHits  = stationGroups.reduce((a, g) => a + g.pendRows.length + g.dispRows.length, 0);
   const displayFIR = yr ? `${fn}/${yr}` : fn;
+  const stCases    = selStation !== null ? getCasesForStation(selStation) : null;
 
   return (
     <div>
+      {/* ── Search Panel ── */}
       <div className="v-search-box">
-        <div className="ctitle">🔍 FIR Search</div>
+        <div className="ctitle">🔍 Search Pending &amp; Disposal by FIR No.</div>
         <div className="v-inputs">
           <div className="fg" style={{flex:"1 1 100px"}}>
             <label className="lbl">FIR Number</label>
-            <input className="inp mono" type="tel" inputMode="numeric"
-              value={fn} onChange={e=>setFn(e.target.value)}
-              onKeyDown={e=>e.key==="Enter"&&search()}
-              placeholder="e.g. 12"/>
+            <input
+              className="inp mono" type="tel" inputMode="numeric"
+              value={fn} onChange={e => setFn(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && doSearch()}
+              placeholder="e.g. 483"
+            />
           </div>
           <div className="fg" style={{flex:"1 1 80px"}}>
             <label className="lbl">Year (optional)</label>
-            <input className="inp mono" type="tel" inputMode="numeric"
-              value={yr} onChange={e=>setYr(e.target.value)}
-              onKeyDown={e=>e.key==="Enter"&&search()}
-              placeholder="2026"/>
+            <input
+              className="inp mono" type="tel" inputMode="numeric"
+              value={yr} onChange={e => setYr(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && doSearch()}
+              placeholder="2025"
+            />
           </div>
-          <div style={{display:"flex",gap:6,flexShrink:0}}>
-            <button className="btn btn-g" style={{height:36}} onClick={search}>Search</button>
-            <button className="btn btn-o btn-sm" style={{height:36}}
-              onClick={()=>{setFn("");setYr("");setResults([]);setSearched(false);}}>✕</button>
+          <div style={{display:"flex", gap:6, flexShrink:0, alignItems:"flex-end"}}>
+            <button className="btn btn-g" style={{height:36}} onClick={doSearch}>Search</button>
+            <button className="btn btn-o btn-sm" style={{height:36}} onClick={() => {
+              setFn(""); setYr(""); setSearched(false);
+              setStationGroups([]); setSelStation(null); setSelCaseId(null);
+            }}>✕</button>
           </div>
         </div>
         {fn && (
-          <div style={{fontSize:11,color:"var(--txt3)",marginTop:8}}>
-            Searching: <b style={{color:"var(--gold)"}}>{yr?`${fn}/${yr}`:fn}</b>
-            {!yr && <span> (all years)</span>}
+          <div style={{fontSize:11, color:"var(--txt3)", marginTop:8}}>
+            Searching: <b style={{color:"var(--gold)"}}>{displayFIR}</b>
+            {!yr && " (all years)"}
           </div>
         )}
       </div>
 
-      {searched && results.length===0 && (
-        <div style={{textAlign:"center",padding:"28px 20px"}}>
-          <div style={{fontSize:22,marginBottom:8}}>🔍</div>
-          <div style={{fontSize:13,fontWeight:600,color:"var(--txt2)",marginBottom:4}}>
+      {/* ── No Results ── */}
+      {searched && totalHits === 0 && (
+        <div style={{textAlign:"center", padding:"32px 20px"}}>
+          <div style={{fontSize:24, marginBottom:8}}>🔍</div>
+          <div style={{fontSize:13, fontWeight:600, color:"var(--txt2)", marginBottom:4}}>
             No records found for <span style={{color:"var(--gold)"}}>{displayFIR}</span>
           </div>
-          <div style={{fontSize:11,color:"var(--txt3)",marginBottom:12}}>
-            Searched across all stations and registers
+          <div style={{fontSize:11, color:"var(--txt3)"}}>
+            Searched across Pending and Disposal registers
           </div>
-          <button className="btn btn-o btn-sm" onClick={()=>setShowDebug(d=>!d)}>
-            🔧 {showDebug?"Hide":"Show"} debug log
-          </button>
-          {showDebug && (
-            <pre style={{marginTop:10,fontSize:10,color:"var(--txt3)",textAlign:"left",
-              background:"var(--bg3)",padding:10,borderRadius:6,overflowX:"auto"}}>
-              {debugLog.join("\n")}
-            </pre>
-          )}
         </div>
       )}
 
-      {results.length > 0 && (
+      {/* ── Station Pills ── */}
+      {totalHits > 0 && (
         <>
-          <div style={{marginBottom:12}}>
+          <div style={{marginBottom:10}}>
             <div className="lbl" style={{marginBottom:8}}>
-              Found in {results.length} station{results.length>1?"s":""} — tap to view
+              Found <b style={{color:"var(--gold)"}}>{totalHits}</b> record(s) in{" "}
+              <b style={{color:"var(--gold)"}}>{stationGroups.length}</b> station(s) — tap to view
             </div>
             <div className="v-station-pills">
-              {results.map((sr,i)=>(
-                <div key={i} className={`st-pill ${activeStation===i?"active":""}`}
-                     onClick={()=>{setActiveStation(activeStation===i?null:i);setActiveCaseId(null);}}>
-                  {sr.s.lb}
-                  <span className="st-count">{sr.total}</span>
-                </div>
-              ))}
+              {stationGroups.map((grp, i) => {
+                const isActive = selStation === grp.station;
+                return (
+                  <div
+                    key={i}
+                    className={`st-pill ${isActive ? "active" : ""}`}
+                    onClick={() => {
+                      setSelStation(isActive ? null : grp.station);
+                      setSelCaseId(null);
+                    }}
+                  >
+                    {grp.station
+                      ? grp.station
+                      : <span style={{fontStyle:"italic", opacity:.7}}>—</span>
+                    }
+                    <span className="st-count">
+                      {grp.pendRows.length > 0 && (
+                        <span style={{color:"var(--blu)"}}>{grp.pendRows.length}P</span>
+                      )}
+                      {grp.pendRows.length > 0 && grp.dispRows.length > 0 && " "}
+                      {grp.dispRows.length > 0 && (
+                        <span style={{color:"var(--grn)"}}>{grp.dispRows.length}D</span>
+                      )}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+            <div style={{fontSize:10, color:"var(--txt3)", marginTop:4}}>
+              <span style={{color:"var(--blu)"}}>■</span> P = Pending &nbsp;
+              <span style={{color:"var(--grn)"}}>■</span> D = Disposed
             </div>
           </div>
-          {activeStation!==null && results[activeStation] && (
-            <StationPanel
-              sr={results[activeStation]}
+
+          {/* ── Cases for selected station ── */}
+          {selStation !== null && stCases && (
+            <StationCasesPanel
+              station={selStation}
               displayFIR={displayFIR}
-              activeCaseId={activeCaseId}
-              setActiveCaseId={setActiveCaseId}
+              pend={stCases.pend}
+              disp={stCases.disp}
+              selCaseId={selCaseId}
+              setSelCaseId={setSelCaseId}
             />
           )}
         </>
@@ -851,140 +952,117 @@ function ViewerTab({ db }) {
   );
 }
 
-function StationPanel({ sr, displayFIR, activeCaseId, setActiveCaseId }) {
-  const {s,firRows,pendRows,dispRows,nvRows,cnRows}=sr;
+/* ── Station Cases Panel ── */
+function StationCasesPanel({ station, displayFIR, pend, disp, selCaseId, setSelCaseId }) {
+  /* Merge pend + disp into a flat list with unique IDs */
+  const allCases = [
+    ...pend.map((r, i) => ({ ...r, _src:"pend", _uid:`pend::${r.ri}::${i}` })),
+    ...disp.map((r, i) => ({ ...r, _src:"disp", _uid:`disp::${r.ri}::${i}` })),
+  ];
+
+  const selRow = allCases.find(c => c._uid === selCaseId) || null;
+
   return (
     <div className="v-panel">
-      <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12,flexWrap:"wrap"}}>
-        <span style={{fontSize:14,fontWeight:700,color:"var(--gold)"}}>{s.lb}</span>
-        <span style={{fontSize:11,color:"var(--txt3)"}}>·</span>
-        <span style={{fontSize:12,color:"var(--txt2)"}}>
+      {/* Header */}
+      <div style={{display:"flex", alignItems:"center", gap:8, marginBottom:14, flexWrap:"wrap"}}>
+        <span style={{fontSize:14, fontWeight:700, color:"var(--gold)"}}>
+          {station || <span style={{fontStyle:"italic", color:"var(--txt3)"}}>Blank Station</span>}
+        </span>
+        <span style={{fontSize:11, color:"var(--txt3)"}}>·</span>
+        <span style={{fontSize:12, color:"var(--txt2)"}}>
           FIR <b style={{color:"var(--gold)"}}>{displayFIR}</b>
         </span>
-        {firRows.length>0 && <span className="bdg bdg-r">📋 FIR Pending</span>}
-        {pendRows.length>0 && <span className="bdg bdg-b">⚖ {pendRows.length} Pending</span>}
-        {dispRows.length>0 && <span className="bdg bdg-g">✓ {dispRows.length} Disposed</span>}
-        {nvRows.length>0   && <span className="bdg bdg-a">🏷 NV Property</span>}
-        {cnRows.length>0   && <span className="bdg bdg-p">📁 Case Numbered</span>}
+        {pend.length > 0 && <span className="bdg bdg-b">⚖ {pend.length} Pending</span>}
+        {disp.length > 0 && <span className="bdg bdg-g">✓ {disp.length} Disposed</span>}
       </div>
 
-      {firRows.length>0 && (
-        <div className="v-sheet-sec">
-          <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}>
-            <span className="lbl">📋 FIR Pending Register</span>
-            <span className="bdg bdg-r">{firRows.length}</span>
+      {/* Case Number Pills */}
+      {allCases.length === 0 ? (
+        <div className="no-data">No case numbers found for this station and FIR.</div>
+      ) : (
+        <>
+          <div className="lbl" style={{marginBottom:8}}>
+            Case Numbers — tap a case to view full details
           </div>
-          {firRows.map((r,i)=>(
-            <div key={i} className="v-fir-row">
-              <div className="det-grid">
-                <div><div className="df-lbl">CR Number</div><div className="df-val hi mono">{r.cr}</div></div>
-                <div><div className="df-lbl">Section U/s</div><div className="df-val">{r.sec}</div></div>
-                <div><div className="df-lbl">Date Received</div><div className="df-val mono">{r.dr||"—"}</div></div>
-                <div><div className="df-lbl">Year</div><div className="df-val mono">{r.yr||"—"}</div></div>
+          <div style={{display:"flex", flexWrap:"wrap", gap:6, marginBottom:12}}>
+            {allCases.map(c => (
+              <div
+                key={c._uid}
+                className={`cn-pill ${selCaseId === c._uid ? "active" : ""}`}
+                onClick={() => setSelCaseId(selCaseId === c._uid ? null : c._uid)}
+              >
+                <span className="mono">{c.cn || "—"}</span>
+                <span
+                  className={`bdg ${c._src === "pend" ? "bdg-b" : "bdg-g"}`}
+                  style={{fontSize:9, padding:"1px 4px"}}
+                >
+                  {c._src === "pend" ? "P" : "D"}
+                </span>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
-      {pendRows.length>0 && (
-        <CaseSection rows={pendRows} prefix="pend" title="⚖ Case Pending" bdg="bdg-b"
-          activeCaseId={activeCaseId} setActiveCaseId={setActiveCaseId}/>
-      )}
-      {dispRows.length>0 && (
-        <CaseSection rows={dispRows} prefix="disp" title="✅ Disposed Cases" bdg="bdg-g"
-          activeCaseId={activeCaseId} setActiveCaseId={setActiveCaseId}/>
-      )}
-      {nvRows.length>0 && (
-        <CaseSection rows={nvRows} prefix="nv" title="🏷 Non-Valuable Property" bdg="bdg-a"
-          activeCaseId={activeCaseId} setActiveCaseId={setActiveCaseId}/>
-      )}
-      {cnRows.length>0 && (
-        <CaseSection rows={cnRows} prefix="cnum" title="📁 Case Numbered" bdg="bdg-p"
-          activeCaseId={activeCaseId} setActiveCaseId={setActiveCaseId}/>
+            ))}
+          </div>
+
+          {/* Full detail card */}
+          {selRow && (
+            <CaseDetailFull row={selRow} srcKey={selRow._src} />
+          )}
+        </>
       )}
     </div>
   );
 }
 
-function CaseSection({ rows, prefix, title, bdg, activeCaseId, setActiveCaseId }) {
-  const makeId = (r,i) => `${prefix}::${r.ri}::${i}`;
-  const ids = rows.map((r,i)=>makeId(r,i));
-  const dispName = r => {
-    if (r.cn&&r.cn.trim()) return r.cn.trim();
-    if (r.rp&&r.rp.trim()) return "RP:"+r.rp.trim();
-    return "#"+(r.sl||r.sno||r.ri);
-  };
-  const srcLabel = prefix==="pend"?"P":prefix==="disp"?"D":prefix==="nv"?"NV":"CN";
-  const activeIdx = ids.indexOf(activeCaseId);
-  const activeRow = activeIdx>=0 ? rows[activeIdx] : null;
-  return (
-    <div className="v-sheet-sec">
-      <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}>
-        <span className="lbl">{title}</span>
-        <span className={`bdg ${bdg}`}>{rows.length}</span>
-      </div>
-      <div style={{display:"flex",flexWrap:"wrap",gap:5,marginBottom:6}}>
-        {rows.map((r,i)=>{
-          const id=ids[i];
-          return (
-            <div key={id} className={`cn-pill ${activeCaseId===id?"active":""}`}
-                 onClick={()=>setActiveCaseId(activeCaseId===id?null:id)}>
-              {dispName(r)}
-              <span className={`bdg ${bdg}`} style={{fontSize:9,padding:"1px 4px"}}>{srcLabel}</span>
-            </div>
-          );
-        })}
-      </div>
-      {activeRow && <CaseDetail r={activeRow} srcKey={prefix}/>}
-    </div>
-  );
-}
+/* ── Full Case Detail Card ── */
+function CaseDetailFull({ row, srcKey }) {
+  const isPend = srcKey === "pend";
 
-function CaseDetail({ r, srcKey }) {
-  const fields = {
-    pend: [
-      ["Case Number",r.cn,"hi mono"],["FIR Number",r.fn,"mono"],
-      ["Parties",r.pt],["Advocate",r.adv],
-      ["Date of Registration",r.dreg,"mono"],["Next Hearing",r.nxt,"mono"],
-      ["Purpose",r.pur],["Section U/s",r.sec],
-      ["Police Station",r.sta],["Nature",r.nat],["Designation",r.des],
-    ],
-    disp: [
-      ["Case Number",r.cn,"hi mono"],["FIR Number",r.fn,"mono"],
-      ["Parties",r.pt],["Advocate",r.adv],
-      ["Date of Registration",r.dreg,"mono"],["Date of Decision",r.ddec,"mono"],
-      ["Disposal Nature",r.dnat],["Section U/s",r.sec],
-      ["Police Station",r.sta],["Nature",r.nat],
-    ],
-    nv: [
-      ["RP Number",r.rp,"hi mono"],["Case Number",r.cn,"mono"],
-      ["FIR Number",r.fn,"mono"],["Police Station",r.sta],
-      ["Description",r.desc,null,true],["Remarks",r.rem,null,true],
-    ],
-    cnum: [
-      ["Case Number",r.cn,"hi mono"],["FIR Number",r.fn,"mono"],
-      ["Parties",r.pt],["Police Station",r.sta],
-      ["Advocate",r.adv],["Date of Registration",r.dreg,"mono"],
-      ["Next Date",r.nxt,"mono"],["Case Type",r.type],
-      ["Section U/s (FIR)",r.sec],["Section (Case)",r.sec2],
-      ["Nature",r.nat],["Designation",r.des],
-    ],
-  }[srcKey]||[];
-  const bdgMap={pend:"bdg-b",disp:"bdg-g",nv:"bdg-a",cnum:"bdg-p"};
-  const lbMap={pend:"Case Pending",disp:"Disposed",nv:"Non-Valuable Property",cnum:"Case Numbered"};
+  const fields = isPend
+    ? [
+        ["Case No.",                    row.cn,   "hi mono", false],
+        ["FIR No.",                     row.fn,   "mono",    false],
+        ["Petitioner VS Respondent",    row.pt,   null,      true],
+        ["Advocate",                    row.adv,  null,      false],
+        ["Date of Registration",        row.dreg, "mono",    false],
+        ["Next Date",                   row.nxt,  "mono",    false],
+        ["Purpose",                     row.pur,  null,      false],
+        ["Act / Section",               row.sec,  null,      true],
+        ["Police Station",              row.sta,  null,      false],
+        ["Nature",                      row.nat,  null,      false],
+        ["Designation",                 row.des,  null,      true],
+      ]
+    : [
+        ["Case No.",                    row.cn,   "hi mono", false],
+        ["FIR No.",                     row.fn,   "mono",    false],
+        ["Petitioner VS Respondent",    row.pt,   null,      true],
+        ["Advocate",                    row.adv,  null,      false],
+        ["Date of Registration",        row.dreg, "mono",    false],
+        ["Date of Decision",            row.ddec, "mono",    false],
+        ["Nature of Disposal",          row.dnat, null,      false],
+        ["Act / Section",               row.sec,  null,      true],
+        ["Police Station",              row.sta,  null,      false],
+        ["Nature",                      row.nat,  null,      false],
+        ["Designation",                 row.des,  null,      true],
+      ];
+
   return (
     <div className="v-det">
-      <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:12}}>
-        <span style={{fontSize:15,fontWeight:700,color:"var(--gold)",fontFamily:"JetBrains Mono,monospace"}}>
-          {r.cn||r.rp||"—"}
+      <div style={{display:"flex", alignItems:"center", gap:8, flexWrap:"wrap", marginBottom:12}}>
+        <span style={{fontSize:15, fontWeight:700, color:"var(--gold)", fontFamily:"JetBrains Mono,monospace"}}>
+          {row.cn || "—"}
         </span>
-        <span className={`bdg ${bdgMap[srcKey]}`}>{lbMap[srcKey]}</span>
+        <span className={`bdg ${isPend ? "bdg-b" : "bdg-g"}`}>
+          {isPend ? "Pending" : "Disposed"}
+        </span>
+        {row.sta && (
+          <span style={{fontSize:11, color:"var(--txt3)"}}>{row.sta}</span>
+        )}
       </div>
       <div className="det-grid">
-        {fields.map(([lbl,val,cls,full],i)=>(
-          <div key={i} style={full?{gridColumn:"1/-1"}:{}}>
+        {fields.map(([lbl, val, cls, full], i) => (
+          <div key={i} style={full ? {gridColumn:"1/-1"} : {}}>
             <div className="df-lbl">{lbl}</div>
-            <div className={`df-val ${cls||""}`}>{val||"—"}</div>
+            <div className={`df-val ${cls || ""}`}>{val || "—"}</div>
           </div>
         ))}
       </div>
@@ -1176,41 +1254,26 @@ function FTCTab({ db, setDb, tok }) {
 }
 
 /* ═══════════════════════════════════════════════
-   ABSTRACT TAB  — fully reworked
-   ─────────────────────────────────────────────
-   Features:
-   • FIR count = only rows with CR# matching \d+/\d{4}
-   • Station = sheet tab name (JKM, VKM, Sheet7…)
-   • Year extracted from CR number (e.g. 12/2026 → 2026)
-   • Year-wise abstract (from CR year, NOT Date Received)
-   • Date-wise abstract (from Date Received dd.mm.yyyy)
-   • Section U/s-wise abstract with search
-   • Search panel: filter by station + year + date range + section keyword
-   • Full FIR list with live search
+   ABSTRACT TAB
 ═══════════════════════════════════════════════ */
 function AbstractTab({ db }) {
-  /* ── Filters ── */
   const [filterSt,  setFilterSt]  = useState("ALL");
   const [filterYr,  setFilterYr]  = useState("ALL");
-  const [filterDate,setFilterDate]= useState("");   // DD.MM.YYYY partial
-  const [filterSec, setFilterSec] = useState("");   // section keyword
-  const [listSearch,setListSearch]= useState("");   // search in full FIR list
+  const [filterDate,setFilterDate]= useState("");
+  const [filterSec, setFilterSec] = useState("");
+  const [listSearch,setListSearch]= useState("");
 
-  /* ── Build master list: only valid FIR cells ── */
   const allFirs = [];
   for (const s of SMAP) {
     for (const r of (db.fir[s.sh]||[])) {
-      /* double-check: only rows with valid CR pattern */
       if (!isValidFIRCell(r.cr)) continue;
       const yr = parseFIR(r.cr).yr || "";
       allFirs.push({ ...r, yr, stSh: s.sh, stLb: s.lb });
     }
   }
 
-  /* ── Available years from actual CR numbers ── */
   const allYears = [...new Set(allFirs.map(r=>r.yr).filter(Boolean))].sort();
 
-  /* ── Apply station + year filters ── */
   const filtered = allFirs.filter(r => {
     if (filterSt !== "ALL" && r.stSh !== filterSt) return false;
     if (filterYr !== "ALL" && r.yr  !== filterYr)  return false;
@@ -1221,13 +1284,11 @@ function AbstractTab({ db }) {
 
   const grand = filtered.length;
 
-  /* ── Station totals ── */
   const stTot = SMAP.map(s=>({
     sh:s.sh, lb:s.lb,
     cnt: filtered.filter(r=>r.stSh===s.sh).length
   }));
 
-  /* ── Year-wise (from CR number year) ── */
   const byYr={};
   for (const r of filtered) {
     const k = r.yr||"?";
@@ -1235,7 +1296,6 @@ function AbstractTab({ db }) {
   }
   const yrSort = Object.entries(byYr).sort((a,b)=>a[0].localeCompare(b[0]));
 
-  /* ── Month-wise (from Date Received dd.mm.yyyy) ── */
   const byMon={};
   for (const r of filtered) {
     if (r.dr) {
@@ -1249,7 +1309,6 @@ function AbstractTab({ db }) {
   const monNames=["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   const monSort = Object.entries(byMon).sort((a,b)=>a[0].localeCompare(b[0]));
 
-  /* ── Date-wise (full dd.mm.yyyy, recent 30) ── */
   const byDay={};
   for (const r of filtered) {
     if (r.dr && r.dr.trim()) {
@@ -1257,7 +1316,6 @@ function AbstractTab({ db }) {
       byDay[k]=(byDay[k]||0)+1;
     }
   }
-  /* Sort dates as dd.mm.yyyy */
   function parseDDMMYYYY(s) {
     const p=s.split(".");
     if (p.length<3) return 0;
@@ -1267,7 +1325,6 @@ function AbstractTab({ db }) {
     .sort((a,b)=>parseDDMMYYYY(a[0])-parseDDMMYYYY(b[0]))
     .slice(-30).reverse();
 
-  /* ── Section-wise with search ── */
   const [secSearch, setSecSearch] = useState("");
   const bySec={};
   for (const r of filtered) {
@@ -1279,7 +1336,6 @@ function AbstractTab({ db }) {
     ? secAll.filter(([k])=>k.toLowerCase().includes(secSearch.toLowerCase()))
     : secAll.slice(0,40);
 
-  /* ── Full list with search ── */
   const listFiltered = filtered.filter(r => {
     if (!listSearch) return true;
     const q=listSearch.toLowerCase();
@@ -1298,7 +1354,6 @@ function AbstractTab({ db }) {
 
   return (
     <div>
-      {/* ─── Filter Panel ─── */}
       <div className="card">
         <div className="ctitle">
           🔦 Filters
@@ -1346,7 +1401,6 @@ function AbstractTab({ db }) {
         )}
       </div>
 
-      {/* ─── Summary Stat Cards ─── */}
       <div className="stat-grid">
         <div className="stat">
           <div className="stat-lbl">Total Pending FIRs</div>
@@ -1367,17 +1421,11 @@ function AbstractTab({ db }) {
       </div>
 
       <div className="abs-grid">
-        {/* ─ Station-wise ─ */}
         <div className="card">
           <div className="ctitle">📍 Station-wise Pending FIRs</div>
           <table className="abs-tbl">
             <thead>
-              <tr>
-                <th>Sheet Tab</th>
-                <th>Station</th>
-                <th>FIRs</th>
-                <th>%</th>
-              </tr>
+              <tr><th>Sheet Tab</th><th>Station</th><th>FIRs</th><th>%</th></tr>
             </thead>
             <tbody>
               {stTot.map(s=>(
@@ -1398,18 +1446,11 @@ function AbstractTab({ db }) {
           </table>
         </div>
 
-        {/* ─ Year-wise (from CR number) ─ */}
         <div className="card">
           <div className="ctitle">📅 Year-wise (from CR No.)</div>
           <div className="tbl-wrap">
             <table className="abs-tbl">
-              <thead>
-                <tr>
-                  <th>Year</th>
-                  <th>FIRs</th>
-                  <th>%</th>
-                </tr>
-              </thead>
+              <thead><tr><th>Year</th><th>FIRs</th><th>%</th></tr></thead>
               <tbody>
                 {yrSort.map(([k,v])=>(
                   <tr key={k} style={{cursor:"pointer"}}
@@ -1423,26 +1464,18 @@ function AbstractTab({ db }) {
                   </tr>
                 ))}
                 <tr className="tot-row">
-                  <td>Total</td>
-                  <td className="mono"><b>{grand}</b></td>
-                  <td>100%</td>
+                  <td>Total</td><td className="mono"><b>{grand}</b></td><td>100%</td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
 
-        {/* ─ Month-wise (from Date Received) ─ */}
         <div className="card">
           <div className="ctitle">📆 Month-wise (Date Received)</div>
           <div className="tbl-wrap">
             <table className="abs-tbl">
-              <thead>
-                <tr>
-                  <th>Month</th>
-                  <th>FIRs</th>
-                </tr>
-              </thead>
+              <thead><tr><th>Month</th><th>FIRs</th></tr></thead>
               <tbody>
                 {monSort.length===0
                   ? <tr><td colSpan={2} className="no-data">No date data available</td></tr>
@@ -1467,17 +1500,11 @@ function AbstractTab({ db }) {
           </div>
         </div>
 
-        {/* ─ Date-wise (recent 30 dates) ─ */}
         <div className="card">
           <div className="ctitle">📋 Date-wise (Recent 30 dates)</div>
           <div className="tbl-wrap">
             <table className="abs-tbl">
-              <thead>
-                <tr>
-                  <th>Date Received</th>
-                  <th>FIRs</th>
-                </tr>
-              </thead>
+              <thead><tr><th>Date Received</th><th>FIRs</th></tr></thead>
               <tbody>
                 {daySort.length===0
                   ? <tr><td colSpan={2} className="no-data">No date data available</td></tr>
@@ -1495,7 +1522,6 @@ function AbstractTab({ db }) {
           </div>
         </div>
 
-        {/* ─ Section U/s-wise with search ─ */}
         <div className="card">
           <div className="ctitle">
             ⚖ Section U/s-wise
@@ -1511,13 +1537,7 @@ function AbstractTab({ db }) {
           </div>
           <div className="tbl-wrap">
             <table className="abs-tbl">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Section U/s</th>
-                  <th>FIRs</th>
-                </tr>
-              </thead>
+              <thead><tr><th>#</th><th>Section U/s</th><th>FIRs</th></tr></thead>
               <tbody>
                 {secShow.length===0
                   ? <tr><td colSpan={3} className="no-data">No sections match</td></tr>
@@ -1540,14 +1560,12 @@ function AbstractTab({ db }) {
           </div>
         </div>
 
-        {/* ─ Station × Year cross-table ─ */}
         <div className="card" style={{gridColumn:"1/-1"}}>
           <div className="ctitle">📊 Station × Year Cross-Abstract</div>
           <StationYearMatrix allFirs={filtered} years={allYears} stTot={stTot}
             setFilterSt={setFilterSt} setFilterYr={setFilterYr}/>
         </div>
 
-        {/* ─ Full FIR List ─ */}
         <div className="card" style={{gridColumn:"1/-1"}}>
           <div className="ctitle">
             📋 FIR Pending List
@@ -1561,7 +1579,6 @@ function AbstractTab({ db }) {
               {listFiltered.length} records
             </span>
           </div>
-          {/* list search */}
           <div className="search-wrap" style={{marginBottom:10}}>
             <input className="inp" type="text" value={listSearch}
               onChange={e=>setListSearch(e.target.value)}
@@ -1572,12 +1589,8 @@ function AbstractTab({ db }) {
             <table>
               <thead>
                 <tr>
-                  <th>Sl</th>
-                  <th>CR No.</th>
-                  <th>Year</th>
-                  <th>Station (Tab)</th>
-                  <th>Section U/s</th>
-                  <th>Date Received</th>
+                  <th>Sl</th><th>CR No.</th><th>Year</th>
+                  <th>Station (Tab)</th><th>Section U/s</th><th>Date Received</th>
                 </tr>
               </thead>
               <tbody>
@@ -1613,14 +1626,11 @@ function AbstractTab({ db }) {
   );
 }
 
-/* ─── Station × Year Matrix ─── */
 function StationYearMatrix({ allFirs, years, stTot, setFilterSt, setFilterYr }) {
-  /* Show only years with data; limit to last 15 years for readability */
   const yrList = years.slice(-15);
   if (!yrList.length || !allFirs.length) {
     return <div className="no-data">No data to display.</div>;
   }
-  /* Build counts */
   const matrix = {};
   for (const r of allFirs) {
     const key = `${r.stSh}::${r.yr}`;
