@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,26 +16,36 @@ body{font-family:'Segoe UI',sans-serif;background:#0d1117;color:#e6edf3;min-heig
   --r:8px;--rl:12px;
 }
 .app{display:flex;flex-direction:column;min-height:100vh}
+
+/* ── header ── */
 .hdr{background:var(--bg2);border-bottom:2px solid var(--gold-d);padding:10px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:200}
 .hdr-logo{font-size:16px;font-weight:700;color:var(--gold);letter-spacing:.5px}
 .hdr-sub{font-size:10px;color:var(--txt3);margin-top:1px}
 .auth-area{margin-left:auto;display:flex;align-items:center;gap:8px}
 .dot{width:7px;height:7px;border-radius:50%;background:var(--red);flex-shrink:0}
 .dot.on{background:var(--grn)}
+
+/* ── tabs ── */
 .tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--bdr);padding:0 16px;overflow-x:auto;gap:2px}
 .tab{padding:9px 16px;font-size:12px;cursor:pointer;border-bottom:2px solid transparent;color:var(--txt2);white-space:nowrap;transition:color .15s}
 .tab:hover{color:var(--txt)}
 .tab.act{color:var(--gold);border-bottom-color:var(--gold)}
 .pane{display:none;padding:16px}
 .pane.act{display:block}
+
+/* ── card ── */
 .card{background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--rl);padding:16px;margin-bottom:14px}
 .ctitle{font-size:12px;font-weight:700;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:.5px}
+
+/* ── form ── */
 .fg{display:flex;flex-direction:column;gap:3px}
 label.lbl{font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:.5px}
 input,select{background:var(--bg3);border:1px solid var(--bdr);border-radius:6px;color:var(--txt);padding:7px 10px;font-size:12px;outline:none;width:100%;transition:border-color .15s;font-family:inherit}
 input:focus,select:focus{border-color:var(--gold)}
 select option{background:var(--bg3)}
 .frow{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:10px}
+
+/* ── buttons ── */
 .btn{padding:7px 16px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .15s;font-family:inherit}
 .btn-g{background:var(--gold);color:#000}
 .btn-g:hover{background:var(--gold-l)}
@@ -44,57 +55,119 @@ select option{background:var(--bg3)}
 .btn-r{background:transparent;border:1px solid var(--red);color:var(--red)}
 .btn-r:hover{background:var(--red);color:#fff}
 .btn-sm{padding:3px 9px;font-size:11px}
+
+/* ── year ctrl ── */
 .yr-ctrl{display:inline-flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--gold-d);border-radius:6px;padding:6px 10px}
 .yr-val{font-size:13px;font-weight:700;color:var(--gold);min-width:36px;text-align:center}
 .rst{font-size:10px;color:var(--txt3);cursor:pointer;text-decoration:underline;margin-left:4px}
 .rst:hover{color:var(--gold)}
+
+/* ── messages ── */
 .msg-ok{background:rgba(63,185,80,.1);border:1px solid var(--grn);color:var(--grn);padding:7px 10px;border-radius:6px;font-size:11px;margin-top:8px}
 .msg-err{background:rgba(248,81,73,.1);border:1px solid var(--red);color:var(--red);padding:7px 10px;border-radius:6px;font-size:11px;margin-top:8px}
 .msg-info{background:rgba(88,166,255,.1);border:1px solid var(--blu);color:var(--blu);padding:7px 10px;border-radius:6px;font-size:11px;margin-top:8px}
-.loading{display:flex;align-items:center;gap:8px;color:var(--txt2);font-size:12px;padding:16px}
+.loading{display:flex;align-items:center;gap:8px;color:var(--txt2);font-size:12px;padding:12px 0}
 .spin{width:14px;height:14px;border:2px solid var(--bdr);border-top-color:var(--gold);border-radius:50%;animation:sp .7s linear infinite;flex-shrink:0}
 @keyframes sp{to{transform:rotate(360deg)}}
+
+/* ── tables ── */
 .tbl-wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:11px}
 th{background:var(--bg3);color:var(--gold);padding:7px 8px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--bdr);white-space:nowrap}
 td{padding:6px 8px;border-bottom:1px solid rgba(48,54,61,.5);color:var(--txt);vertical-align:top}
 tr:hover td{background:rgba(201,168,76,.04)}
-.bdg{padding:2px 7px;border-radius:10px;font-size:10px;font-weight:600;white-space:nowrap}
+
+/* ── badges ── */
+.bdg{padding:2px 7px;border-radius:10px;font-size:10px;font-weight:600;white-space:nowrap;display:inline-block}
 .bdg-g{background:rgba(63,185,80,.15);color:var(--grn)}
 .bdg-a{background:rgba(201,168,76,.15);color:var(--gold)}
 .bdg-b{background:rgba(88,166,255,.15);color:var(--blu)}
 .bdg-r{background:rgba(248,81,73,.15);color:var(--red)}
 .bdg-p{background:rgba(188,140,255,.15);color:var(--pur)}
+
+/* ── stat grid ── */
 .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:14px}
 .stat{background:var(--bg3);border:1px solid var(--bdr);border-radius:var(--r);padding:12px}
 .stat-lbl{font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
 .stat-val{font-size:20px;font-weight:700;color:var(--gold)}
 .stat-sub{font-size:10px;color:var(--txt3);margin-top:2px}
-.res-card{background:var(--bg3);border:1px solid var(--bdr);border-radius:var(--r);padding:14px;margin-bottom:10px}
-.res-hdr{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
-.fnum{font-size:14px;font-weight:700;color:var(--gold)}
-.sub-sec{margin-top:10px;padding-top:10px;border-top:1px solid var(--bdr)}
-.sub-ttl{font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:var(--txt3);margin-bottom:7px}
-.det-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:7px}
-.df-lbl{font-size:10px;color:var(--txt3)}
-.df-val{font-size:11px;color:var(--txt);word-break:break-word}
-.inline-box{background:var(--bg);border:1px solid var(--bdr);border-radius:6px;padding:10px;margin-top:7px}
-.case-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600;cursor:pointer;margin:2px;border:1px solid var(--bdr);background:var(--bg2);color:var(--txt2);transition:all .15s}
-.case-pill:hover,.case-pill.open{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.07)}
-.case-detail{display:none;background:var(--bg);border:1px solid var(--bdr);border-radius:6px;padding:10px;margin:6px 0}
-.case-detail.show{display:block}
+
+/* ── FIR Viewer specific ── */
+
+/* search box */
+.v-search-box{background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--rl);padding:20px;margin-bottom:14px}
+.v-search-title{font-size:13px;font-weight:700;color:var(--gold);margin-bottom:14px;text-transform:uppercase;letter-spacing:.5px}
+.v-inputs{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.v-inputs .fg{min-width:110px;max-width:150px}
+.v-preview{font-size:11px;color:var(--txt3);margin-top:8px;min-height:16px}
+.v-preview b{color:var(--gold)}
+
+/* station pills row */
+.v-station-row{margin-bottom:12px}
+.v-station-label{font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.v-station-pills{display:flex;flex-wrap:wrap;gap:6px}
+.st-pill{display:inline-flex;align-items:center;gap:7px;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bdr);background:var(--bg3);color:var(--txt2);transition:all .18s;user-select:none}
+.st-pill:hover{border-color:var(--gold-d);color:var(--txt)}
+.st-pill.active{border-color:var(--gold);background:rgba(201,168,76,.1);color:var(--gold)}
+.st-pill .st-count{background:rgba(201,168,76,.25);color:var(--gold);border-radius:8px;padding:1px 7px;font-size:10px;font-weight:700}
+.st-pill.active .st-count{background:var(--gold);color:#000}
+
+/* station detail panel */
+.v-station-panel{background:var(--bg3);border:1px solid var(--gold-d);border-radius:var(--rl);padding:14px;margin-bottom:10px;animation:slideIn .15s ease}
+@keyframes slideIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+
+/* sheet section inside panel */
+.v-sheet-sec{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--bdr)}
+.v-sheet-sec:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.v-sheet-hdr{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.v-sheet-name{font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.4px}
+
+/* case number pills (≤5) */
+.v-case-pills{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px}
+.cn-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;border:1.5px solid var(--bdr);background:var(--bg2);color:var(--txt2);transition:all .15s;user-select:none}
+.cn-pill:hover{border-color:var(--blu);color:var(--blu)}
+.cn-pill.active{border-color:var(--gold);background:rgba(201,168,76,.08);color:var(--gold)}
+.cn-pill .cn-src{font-size:9px;padding:1px 4px;border-radius:3px;font-weight:600}
+.cn-pill .cn-src.pend{background:rgba(88,166,255,.2);color:var(--blu)}
+.cn-pill .cn-src.disp{background:rgba(63,185,80,.2);color:var(--grn)}
+.cn-pill .cn-src.nv{background:rgba(201,168,76,.2);color:var(--gold)}
+.cn-pill .cn-src.cnum{background:rgba(188,140,255,.2);color:var(--pur)}
+.cn-pill .cn-src.fir{background:rgba(248,81,73,.2);color:var(--red)}
+
+/* case number dropdown (>5) */
+.v-cn-select{background:var(--bg2);border:1.5px solid var(--bdr);border-radius:6px;color:var(--txt);padding:7px 10px;font-size:12px;outline:none;font-family:inherit;cursor:pointer;transition:border-color .15s;width:100%;max-width:360px}
+.v-cn-select:focus{border-color:var(--gold)}
+
+/* case detail card */
+.v-case-detail{background:var(--bg);border:1px solid var(--gold-d);border-radius:var(--r);padding:14px;margin-top:10px;animation:fadeUp .15s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+.v-det-hdr{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.v-det-cn{font-size:15px;font-weight:700;color:var(--gold)}
+.v-det-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.df-lbl{font-size:10px;color:var(--txt3);margin-bottom:2px}
+.df-val{font-size:12px;color:var(--txt);word-break:break-word}
+.df-val.hi{color:var(--gold);font-weight:600}
+
+/* FIR pending special card */
+.v-fir-row{background:rgba(248,81,73,.06);border:1px solid rgba(248,81,73,.25);border-radius:6px;padding:10px;margin-bottom:6px}
+
+/* numpad */
+.numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;width:140px}
+.np{background:var(--bg3);border:1px solid var(--bdr);border-radius:6px;padding:9px;font-size:13px;cursor:pointer;text-align:center;color:var(--txt);transition:all .15s}
+.np:hover{border-color:var(--gold);color:var(--gold)}
+.np.w2{grid-column:span 2}
+
+/* step flow */
 .step-row{display:flex;align-items:center;gap:6px;margin-bottom:14px}
 .step-dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--txt3);flex-shrink:0}
 .step-dot.act{border-color:var(--gold);color:var(--gold)}
 .step-dot.done{background:var(--gold);border-color:var(--gold);color:#000;font-weight:700}
 .step-line{flex:1;height:1px;background:var(--bdr)}
-.numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;width:140px}
-.np{background:var(--bg3);border:1px solid var(--bdr);border-radius:6px;padding:9px;font-size:13px;cursor:pointer;text-align:center;color:var(--txt);transition:all .15s}
-.np:hover{border-color:var(--gold);color:var(--gold)}
-.np.w2{grid-column:span 2}
 .case-sel{background:var(--bg3);border:1px solid var(--bdr);border-radius:6px;padding:9px 12px;cursor:pointer;font-size:12px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px;transition:all .15s}
 .case-sel:hover,.case-sel.sel{border-color:var(--gold);background:rgba(201,168,76,.07)}
 .warn-box{background:rgba(248,81,73,.07);border:1px solid rgba(248,81,73,.3);border-radius:6px;padding:10px;font-size:11px;color:var(--red);margin-bottom:10px}
+
+/* abstract */
 .abs-tbl{width:100%;border-collapse:collapse;font-size:11px}
 .abs-tbl th{background:var(--bg3);color:var(--gold);padding:6px 8px;text-align:left;font-size:10px;border:1px solid var(--bdr)}
 .abs-tbl td{padding:6px 8px;border:1px solid var(--bdr);color:var(--txt)}
@@ -103,10 +176,12 @@ tr:hover td{background:rgba(201,168,76,.04)}
 .no-data{text-align:center;padding:24px;color:var(--txt3);font-size:12px}
 .srch-row{display:flex;gap:8px;margin-bottom:12px;align-items:flex-end;flex-wrap:wrap}
 .srch-row .fg{flex:1;min-width:100px}
-.divider{height:1px;background:var(--bdr);margin:12px 0}
-/* station pill transition */
-#vRes .res-card{animation:fadeIn .2s ease}
-@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.res-card{background:var(--bg3);border:1px solid var(--bdr);border-radius:var(--r);padding:14px;margin-bottom:10px}
+.res-hdr{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.fnum{font-size:14px;font-weight:700;color:var(--gold)}
+.sub-sec{margin-top:10px;padding-top:10px;border-top:1px solid var(--bdr)}
+.sub-ttl{font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:var(--txt3);margin-bottom:7px}
+.det-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:7px}
 </style>
 </head>
 <body>
@@ -130,71 +205,60 @@ tr:hover td{background:rgba(201,168,76,.04)}
   <div class="tab" onclick="goTab('abstract',this)">📊 Abstract</div>
 </div>
 
-<div id="p-entry" class="pane act"></div>
-<div id="p-viewer" class="pane"></div>
-<div id="p-ftc" class="pane"></div>
+<div id="p-entry"    class="pane act"></div>
+<div id="p-viewer"   class="pane"></div>
+<div id="p-ftc"      class="pane"></div>
 <div id="p-abstract" class="pane"></div>
 </div>
 
 <script>
-/* ═══════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════
    SHEET IDs
-═══════════════════════════════════════════════════ */
+══════════════════════════════════════════════════════ */
 const SID={
-  fir:'1sKmU8eXXz5iPG7qNvu-exKQOW_qxu3BbPQngqzVvF0k',
+  fir    :'1sKmU8eXXz5iPG7qNvu-exKQOW_qxu3BbPQngqzVvF0k',
   disposal:'1OWoLwzLVANiAk8T2AthO_wy9hEhyLuFLcXVgJsCyhHY',
-  pending:'1PWTUdw85POCan-aaqvZq8Z-ewq3pIuAGosSo-xiCC9I',
-  nonval:'1tUDCMzd_q3TbmiboJl7yYI9S7hFcrMb3K4vhIaP6dVk',
-  casenum:'1eeQA75iuqNcsNwXygcx3JLJRamxuRI_1UrpetByr5nA'
+  pending :'1PWTUdw85POCan-aaqvZq8Z-ewq3pIuAGosSo-xiCC9I',
+  nonval  :'1tUDCMzd_q3TbmiboJl7yYI9S7hFcrMb3K4vhIaP6dVk',
+  casenum :'1eeQA75iuqNcsNwXygcx3JLJRamxuRI_1UrpetByr5nA'
 };
 
-/* ═══════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════
    STATION MAP
-═══════════════════════════════════════════════════ */
+══════════════════════════════════════════════════════ */
 const SMAP=[
-  {sh:'JKM',lb:'Jayankondam',al:['jayankondam','jkm','police station 1','ps jayankondam']},
-  {sh:'VKM',lb:'Vikkiramangalam',al:['vikkiramangalam','vikramangalam','vkm','venganam','police station venganam']},
-  {sh:'T.Palur',lb:'T.Palur',al:['t.palur','tpalur','palur','keelapalur','police station keelap','t palur']},
-  {sh:'PEW',lb:'PEW Ariyalur',al:['pew','pew ariyalur','nb cid trichy','pew ariyalur ( pr','nb cid']},
-  {sh:'AWPS',lb:'AWPS Jayankondam',al:['awps','awps jayankondam','all women']},
-  {sh:'DCB',lb:'DCB Ariyalur',al:['dcb','dcb ariyalur','police station ariyalur','ariyalur dcb']},
+  {sh:'JKM',  lb:'Jayankondam',       al:['jayankondam','jkm','police station 1','ps jayankondam']},
+  {sh:'VKM',  lb:'Vikkiramangalam',   al:['vikkiramangalam','vikramangalam','vkm','venganam','police station venganam']},
+  {sh:'T.Palur',lb:'T.Palur',         al:['t.palur','tpalur','palur','keelapalur','police station keelap','t palur']},
+  {sh:'PEW',  lb:'PEW Ariyalur',      al:['pew','pew ariyalur','nb cid trichy','pew ariyalur ( pr','nb cid']},
+  {sh:'AWPS', lb:'AWPS Jayankondam',  al:['awps','awps jayankondam','all women']},
+  {sh:'DCB',  lb:'DCB Ariyalur',      al:['dcb','dcb ariyalur','police station ariyalur','ariyalur dcb']},
 ];
 
-let tok=null,loaded=false;
-let DB={fir:{},pend:[],disp:[],nv:[],cnum:[]};
-let ES={yr:String(new Date().getFullYear()),st:'JKM',fn:'',uns:'',dt:''};
-let FTC={step:1,fn:'',yr:String(new Date().getFullYear()),st:'JKM',firRow:null,selCase:null};
-let VS={fn:'',yr:String(new Date().getFullYear()),st:''};
+let tok=null, loaded=false;
+let DB={fir:{}, pend:[], disp:[], nv:[], cnum:[]};
 
-/* ═══════════════════════════════════════════════════
+/* entry state */
+let ES={yr:String(new Date().getFullYear()), st:'JKM', fn:'', uns:'', dt:''};
+/* ftc state */
+let FTC={step:1, fn:'', yr:String(new Date().getFullYear()), st:'JKM', firRow:null, selCase:null};
+/* viewer state */
+let VS={fn:'', yr:String(new Date().getFullYear()), results:[], activeStation:null, activeCaseId:null};
+
+/* ══════════════════════════════════════════════════════
    STATION HELPERS
-═══════════════════════════════════════════════════ */
-function normSt(n){
-  if(!n)return null;
-  const l=n.toLowerCase().trim();
-  for(const s of SMAP){
-    if(s.sh.toLowerCase()===l||s.lb.toLowerCase()===l)return s;
-    for(const a of s.al)if(l.includes(a)||a.includes(l))return s;
-  }
-  return null;
-}
-function stMatch(a,b){
-  if(!a||!b)return false;
-  const sa=normSt(a),sb=normSt(b);
-  if(sa&&sb)return sa.sh===sb.sh;
-  return a.toLowerCase().includes(b.toLowerCase())||b.toLowerCase().includes(a.toLowerCase());
-}
-function stMatchObj(name,obj){
-  if(!name||!obj)return false;
+══════════════════════════════════════════════════════ */
+function stMatchObj(name, obj){
+  if(!name||!obj) return false;
   const n=name.toLowerCase().trim();
-  if(obj.sh.toLowerCase()===n||obj.lb.toLowerCase()===n)return true;
-  for(const a of obj.al)if(n.includes(a)||a.includes(n))return true;
+  if(obj.sh.toLowerCase()===n||obj.lb.toLowerCase()===n) return true;
+  for(const a of obj.al) if(n.includes(a)||a.includes(n)) return true;
   return false;
 }
 
-/* ═══════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════
    AUTH
-═══════════════════════════════════════════════════ */
+══════════════════════════════════════════════════════ */
 function doAuth(){
   if(tok){tok=null;loaded=false;setAuthUI(false);goTab('entry');return;}
   if(!window.google){
@@ -218,13 +282,13 @@ function setAuthUI(ok){
   document.getElementById('aBtn').textContent=ok?'Sign Out':'Sign In';
 }
 
-/* ═══════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════
    SHEETS API
-═══════════════════════════════════════════════════ */
+══════════════════════════════════════════════════════ */
 async function apiFetch(url){
-  if(!tok)return null;
+  if(!tok) return null;
   const r=await fetch(url,{headers:{Authorization:`Bearer ${tok}`}});
-  if(!r.ok)return null;
+  if(!r.ok) return null;
   return r.json();
 }
 async function sheetsGet(sid,range){
@@ -232,7 +296,7 @@ async function sheetsGet(sid,range){
   return d?.values||[];
 }
 async function sheetsAppend(sid,range,vals){
-  if(!tok)return false;
+  if(!tok) return false;
   const r=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sid}/values/${encodeURIComponent(range)}:append?valueInputOption=USER_ENTERED`,{
     method:'POST',headers:{Authorization:`Bearer ${tok}`,'Content-Type':'application/json'},
     body:JSON.stringify({values:vals})
@@ -240,10 +304,10 @@ async function sheetsAppend(sid,range,vals){
   return r.ok;
 }
 async function sheetsDeleteRow(sid,sheetName,rowIdx){
-  if(!tok)return false;
+  if(!tok) return false;
   const m=await apiFetch(`https://sheets.googleapis.com/v4/spreadsheets/${sid}?fields=sheets.properties`);
   const sh=(m?.sheets||[]).find(s=>s.properties.title===sheetName);
-  if(!sh)return false;
+  if(!sh) return false;
   const r=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sid}:batchUpdate`,{
     method:'POST',headers:{Authorization:`Bearer ${tok}`,'Content-Type':'application/json'},
     body:JSON.stringify({requests:[{deleteDimension:{range:{sheetId:sh.properties.sheetId,dimension:'ROWS',startIndex:rowIdx,endIndex:rowIdx+1}}}]})
@@ -251,12 +315,12 @@ async function sheetsDeleteRow(sid,sheetName,rowIdx){
   return r.ok;
 }
 
-/* ═══════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════
    LOAD ALL DATA
-═══════════════════════════════════════════════════ */
+══════════════════════════════════════════════════════ */
 async function loadAll(){
-  const activePane=document.querySelector('.pane.act');
-  activePane.innerHTML='<div class="loading"><div class="spin"></div>Loading data from all Google Sheets…</div>';
+  const ap=document.querySelector('.pane.act');
+  ap.innerHTML='<div class="loading"><div class="spin"></div>Loading data from Google Sheets…</div>';
   try{
     DB.fir={};
     for(const s of SMAP){
@@ -267,7 +331,7 @@ async function loadAll(){
         if(!r[0]&&!r[1]&&r[2]&&!r[3]){yg=(r[2]||'').trim();continue;}
         if(r[0]&&r[1]&&r[2]){
           const sl=(r[0]||'').trim(),cr=(r[1]||'').trim(),sec=(r[2]||'').trim(),dr=(r[3]||'').trim();
-          if(cr&&sec&&sl&&!isNaN(sl))data.push({sl,cr,sec,dr,yr:yg,ri:i});
+          if(cr&&sec&&sl&&!isNaN(sl)) data.push({sl,cr,sec,dr,yr:yg,ri:i});
         }
       }
       DB.fir[s.sh]=data;
@@ -281,20 +345,20 @@ async function loadAll(){
     const cnr=await sheetsGet(SID.casenum,'Sheet1!A:M');
     DB.cnum=cnr.slice(1).map((r,i)=>({fn:r[0]||'',sta:r[1]||'',sec:r[2]||'',dr:r[3]||'',cn:r[4]||'',pt:r[5]||'',adv:r[6]||'',dreg:r[7]||'',nxt:r[8]||'',type:r[9]||'',sec2:r[10]||'',nat:r[11]||'',des:r[12]||'',ri:i+1}));
     loaded=true;
-    const curTab=document.querySelector('.tab.act');
-    const tabName=['entry','viewer','ftc','abstract'][Array.from(document.querySelectorAll('.tab')).indexOf(curTab)];
-    renderTab(tabName||'entry');
+    const cur=document.querySelector('.tab.act');
+    const tName=['entry','viewer','ftc','abstract'][Array.from(document.querySelectorAll('.tab')).indexOf(cur)];
+    renderTab(tName||'entry');
   }catch(e){
-    activePane.innerHTML=`<div class="msg-err">Error loading: ${e.message}</div>`;
+    ap.innerHTML=`<div class="msg-err">Error loading: ${e.message}</div>`;
   }
 }
 
-/* ═══════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════
    TAB ROUTING
-═══════════════════════════════════════════════════ */
+══════════════════════════════════════════════════════ */
 function goTab(name,el){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('act'));
-  if(el)el.classList.add('act');
+  if(el) el.classList.add('act');
   document.querySelectorAll('.pane').forEach(p=>p.classList.remove('act'));
   document.getElementById('p-'+name).classList.add('act');
   if(!tok){renderAuth(name);return;}
@@ -302,23 +366,23 @@ function goTab(name,el){
   renderTab(name);
 }
 function renderTab(n){
-  if(n==='entry')renderEntry();
-  else if(n==='viewer')renderViewer();
-  else if(n==='ftc')renderFTC();
+  if(n==='entry')    renderEntry();
+  else if(n==='viewer')  renderViewer();
+  else if(n==='ftc')     renderFTC();
   else if(n==='abstract')renderAbstract();
 }
 function renderAuth(t){
   document.getElementById('p-'+t).innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;gap:14px;padding:40px 20px;text-align:center">
     <div style="font-size:28px">🔐</div>
     <div style="font-size:15px;font-weight:600;color:var(--gold)">Authentication Required</div>
-    <div style="font-size:12px;color:var(--txt2);max-width:360px">Sign in with your Google account to access all FIR records across Jayankondam Sub-Division stations.</div>
+    <div style="font-size:12px;color:var(--txt2);max-width:360px">Sign in with Google to access FIR records.</div>
     <button class="btn btn-g" onclick="doAuth()">Sign in with Google</button>
   </div>`;
 }
 
-/* ═══════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════
    FIR ENTRY TAB
-═══════════════════════════════════════════════════ */
+══════════════════════════════════════════════════════ */
 function renderEntry(){
   const p=document.getElementById('p-entry');
   const sOpts=SMAP.map(s=>`<option value="${s.sh}" ${s.sh===ES.st?'selected':''}>${s.lb}</option>`).join('');
@@ -350,7 +414,7 @@ function renderEntry(){
     </div>
     <div class="frow">
       <div class="fg">
-        <label class="lbl">Date of Received (DD.MM.YYYY)</label>
+        <label class="lbl">Date Received (DD.MM.YYYY)</label>
         <input type="tel" id="eDt" inputmode="numeric" value="${ES.dt}" placeholder="27.05.2026" oninput="ES.dt=this.value"/>
       </div>
     </div>
@@ -386,7 +450,7 @@ function renderEntry(){
     const recent=(DB.fir[ES.st]||[]).slice(-3).reverse();
     if(recent.length){
       document.getElementById('p-entry').innerHTML+=`<div class="card">
-        <div class="ctitle">🕐 Recent Entries — ${SMAP.find(s=>s.sh===ES.st)?.lb}</div>
+        <div class="ctitle">🕐 Recent — ${SMAP.find(s=>s.sh===ES.st)?.lb}</div>
         <div class="tbl-wrap"><table><tr><th>Sl</th><th>CR No.</th><th>Section U/s</th><th>Date Received</th></tr>
         ${recent.map(r=>`<tr><td>${r.sl}</td><td style="color:var(--gold)">${r.cr}</td><td>${r.sec}</td><td>${r.dr}</td></tr>`).join('')}
         </table></div>
@@ -395,7 +459,7 @@ function renderEntry(){
   }
 }
 function npFn(n){const e=document.getElementById('eFn');if(!e)return;e.value+=n;ES.fn=e.value;}
-function npBs(id,k){const e=document.getElementById(id);if(!e)return;e.value=e.value.slice(0,-1);if(k==='fn')ES.fn=e.value;else ES.dt=e.value;}
+function npBs(id,k){const e=document.getElementById(id);if(!e)return;e.value=e.value.slice(0,-1);ES[k]=e.value;}
 function npDt(n){const e=document.getElementById('eDt');if(!e||e.value.length>=10)return;e.value+=n;ES.dt=e.value;}
 function npDtDot(){const e=document.getElementById('eDt');if(!e||e.value.endsWith('.')||!e.value.length)return;e.value+='.';ES.dt=e.value;}
 async function saveEntry(){
@@ -404,256 +468,330 @@ async function saveEntry(){
   const cr=`${ES.fn}/${ES.yr}`;
   const rows=DB.fir[ES.st]||[];
   const nextSl=rows.length?Math.max(...rows.map(r=>parseInt(r.sl)||0))+1:1;
-  m.innerHTML='<div class="loading"><div class="spin"></div>Saving to Google Sheets…</div>';
+  m.innerHTML='<div class="loading"><div class="spin"></div>Saving…</div>';
   const ok=await sheetsAppend(SID.fir,`${ES.st}!A:D`,[[nextSl,cr,ES.uns,ES.dt]]);
   if(ok){
     DB.fir[ES.st]=DB.fir[ES.st]||[];
     DB.fir[ES.st].push({sl:String(nextSl),cr,sec:ES.uns,dr:ES.dt,yr:ES.yr,ri:9999});
-    const stLb=SMAP.find(s=>s.sh===ES.st)?.lb||ES.st;
-    m.innerHTML=`<div class="msg-ok">✓ FIR ${cr} saved to ${stLb} sheet successfully.</div>`;
+    m.innerHTML=`<div class="msg-ok">✓ FIR ${cr} saved to ${SMAP.find(s=>s.sh===ES.st)?.lb}.</div>`;
     ES.fn='';ES.uns='';ES.dt='';
     setTimeout(()=>{renderEntry();document.getElementById('eFn')?.focus();},900);
   } else {
-    m.innerHTML='<div class="msg-err">Save failed. Check Google Sheets permissions.</div>';
+    m.innerHTML='<div class="msg-err">Save failed. Check permissions.</div>';
   }
 }
 
-/* ═══════════════════════════════════════════════════
-   FIR VIEWER TAB  (REDESIGNED)
-═══════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════
+   FIR VIEWER TAB
+   Flow:
+     1. Enter FIR No + Year → Search
+     2. Stations that have any match → station pills
+     3. Click station → show case-number pills/dropdown per sheet
+     4. Click case number → show full detail
+══════════════════════════════════════════════════════ */
 function renderViewer(){
   const p=document.getElementById('p-viewer');
-  const stOpts=`<option value="">All Stations</option>`+
-    SMAP.map(s=>`<option value="${s.sh}" ${s.sh===VS.st?'selected':''}>${s.lb}</option>`).join('');
-
   p.innerHTML=`
-  <div class="card">
-    <div class="ctitle">🔍 FIR Search</div>
-    <div class="srch-row">
-      <div class="fg" style="max-width:110px">
+  <div class="v-search-box">
+    <div class="v-search-title">🔍 FIR Search</div>
+    <div class="v-inputs">
+      <div class="fg">
         <label class="lbl">FIR Number</label>
-        <input type="tel" id="vFn" inputmode="numeric"
-               value="${VS.fn}" placeholder="e.g. 12"
-               oninput="VS.fn=this.value;updatePreview()"
-               onkeydown="if(event.key==='Enter')doSearch()"/>
+        <input type="tel" id="vFn" inputmode="numeric" value="${VS.fn}"
+               placeholder="e.g. 12" style="width:110px"
+               oninput="VS.fn=this.value;vPreview()"
+               onkeydown="if(event.key==='Enter')vSearch()"/>
       </div>
-      <div class="fg" style="max-width:90px">
+      <div class="fg">
         <label class="lbl">Year</label>
-        <input type="tel" id="vYr" inputmode="numeric"
-               value="${VS.yr}" placeholder="${new Date().getFullYear()}"
-               oninput="VS.yr=this.value;updatePreview()"
-               onkeydown="if(event.key==='Enter')doSearch()"/>
+        <input type="tel" id="vYr" inputmode="numeric" value="${VS.yr}"
+               placeholder="2026" style="width:80px"
+               oninput="VS.yr=this.value;vPreview()"
+               onkeydown="if(event.key==='Enter')vSearch()"/>
       </div>
-      <div class="fg" style="max-width:210px">
-        <label class="lbl">Police Station <span style="color:var(--txt3);font-weight:400">(optional)</span></label>
-        <select id="vSt" onchange="VS.st=this.value">${stOpts}</select>
-      </div>
-      <div style="display:flex;align-items:flex-end">
-        <button class="btn btn-g" onclick="doSearch()">Search</button>
-      </div>
+      <button class="btn btn-g" style="height:34px;align-self:flex-end" onclick="vSearch()">Search</button>
     </div>
-    <div id="vPreview" style="font-size:11px;color:var(--txt3);margin-top:-6px;margin-bottom:10px;min-height:16px"></div>
-    <div id="vRes"></div>
-  </div>`;
-
-  /* init preview */
-  updatePreview();
+    <div class="v-preview" id="vPrev"></div>
+  </div>
+  <div id="vOut"></div>`;
+  vPreview();
+  /* re-render previous results if state is intact */
+  if(VS.results && VS.results.length) vRenderResults();
 }
 
-function updatePreview(){
+function vPreview(){
   const fn=(document.getElementById('vFn')?.value||'').trim();
   const yr=(document.getElementById('vYr')?.value||'').trim();
-  const prev=document.getElementById('vPreview');
-  if(!prev)return;
-  prev.innerHTML=(fn&&yr)
-    ? `Searching for: <span style="color:var(--gold);font-weight:700">${fn}/${yr}</span>`
-    : (fn?`Searching for: <span style="color:var(--gold);font-weight:700">${fn}</span> (all years)`:'');
+  const el=document.getElementById('vPrev');
+  if(!el) return;
+  el.innerHTML=(fn&&yr)?`Searching for: <b>${fn}/${yr}</b>`:
+               fn?`Searching for: <b>${fn}</b> (all years)`:'';
 }
 
-function doSearch(){
-  const fn  =(document.getElementById('vFn')?.value||'').trim();
-  const yr  =(document.getElementById('vYr')?.value||'').trim();
-  const stSel=document.getElementById('vSt')?.value||'';
-  VS.fn=fn; VS.yr=yr; VS.st=stSel;
+/* ─── main search ─── */
+function vSearch(){
+  const fn=(document.getElementById('vFn')?.value||VS.fn||'').trim();
+  const yr=(document.getElementById('vYr')?.value||VS.yr||'').trim();
+  VS.fn=fn; VS.yr=yr;
+  VS.activeStation=null; VS.activeCaseId=null;
 
-  const el=document.getElementById('vRes');
-  if(!fn){el.innerHTML='<div class="msg-info">Enter a FIR number to search.</div>';return;}
+  const out=document.getElementById('vOut');
+  if(!fn){out.innerHTML='<div class="msg-info">Enter a FIR number to search.</div>';return;}
 
-  /* ── canonical form ── */
   const fullFIR=yr?`${fn}/${yr}`:fn;
 
-  /* ── FIR number matcher ── */
+  /* FIR number match */
   function firMatch(val){
-    if(!val)return false;
+    if(!val) return false;
     const v=val.trim();
-    if(v===fullFIR)return true;
-    const numPart=v.split('/')[0].trim();
-    if(numPart===fn&&!yr)return true;
-    if(numPart===fn&&yr&&(v.includes('/'+yr)||v.endsWith(yr)))return true;
+    if(v===fullFIR) return true;
+    const np=v.split('/')[0].trim();
+    if(np===fn && !yr) return true;
+    if(np===fn && yr && (v.includes('/'+yr)||v.endsWith(yr))) return true;
     return false;
   }
 
-  /* ── petitioner / respondent text match ── */
-  function ptMatch(val){
-    if(!val)return false;
-    const lo=val.toLowerCase();
-    return lo.includes(fn.toLowerCase())||lo.includes(fullFIR.toLowerCase());
+  /* build results per station */
+  VS.results=[];
+  for(const s of SMAP){
+    const firRows =(DB.fir[s.sh]||[]).filter(r=>firMatch(r.cr));
+    const pendRows=DB.pend.filter(c=>firMatch(c.fn)&&stMatchObj(c.sta,s));
+    const dispRows=DB.disp.filter(c=>firMatch(c.fn)&&stMatchObj(c.sta,s));
+    const nvRows  =DB.nv.filter(c=>firMatch(c.fn)&&stMatchObj(c.sta,s));
+    const cnRows  =DB.cnum.filter(c=>firMatch(c.fn)&&stMatchObj(c.sta,s));
+    const total=firRows.length+pendRows.length+dispRows.length+nvRows.length+cnRows.length;
+    if(total) VS.results.push({s,firRows,pendRows,dispRows,nvRows,cnRows,total});
   }
 
-  /* ── which stations? ── */
-  const stationsToSearch=stSel
-    ?[SMAP.find(s=>s.sh===stSel)].filter(Boolean)
-    :SMAP;
+  vRenderResults();
+}
 
-  /* ── collect per station ── */
-  const results=[];
-  for(const s of stationsToSearch){
-    const firRows=(DB.fir[s.sh]||[]).filter(r=>firMatch(r.cr));
+/* ─── render station pills + panel ─── */
+function vRenderResults(){
+  const out=document.getElementById('vOut');
+  if(!out) return;
+  const fn=VS.fn, yr=VS.yr;
+  const fullFIR=yr?`${fn}/${yr}`:fn;
 
-    const pendByFir =DB.pend.filter(c=>firMatch(c.fn)&&stMatchObj(c.sta,s));
-    /* petitioner check only when a specific station is selected (avoids cross-station noise) */
-    const usePtSearch=!!(stSel||stationsToSearch.length===1);
-    const pendByPt  =usePtSearch
-      ?DB.pend.filter(c=>!firMatch(c.fn)&&stMatchObj(c.sta,s)&&ptMatch(c.pt))
-      :[];
-
-    const dispByFir =DB.disp.filter(c=>firMatch(c.fn)&&stMatchObj(c.sta,s));
-    const dispByPt  =usePtSearch
-      ?DB.disp.filter(c=>!firMatch(c.fn)&&stMatchObj(c.sta,s)&&ptMatch(c.pt))
-      :[];
-
-    const nvRows    =DB.nv.filter(c=>firMatch(c.fn)&&stMatchObj(c.sta,s));
-    const cnRows    =DB.cnum.filter(c=>firMatch(c.fn)&&stMatchObj(c.sta,s));
-
-    const hasAny=firRows.length||pendByFir.length||pendByPt.length||
-                 dispByFir.length||dispByPt.length||nvRows.length||cnRows.length;
-    if(hasAny)results.push({s,firRows,pendByFir,pendByPt,dispByFir,dispByPt,nvRows,cnRows});
-  }
-
-  if(!results.length){
-    el.innerHTML=`<div class="no-data">No records found for <b>${fullFIR}</b>${stSel?' in '+SMAP.find(x=>x.sh===stSel)?.lb:' across all stations'}.</div>`;
+  if(!VS.results||!VS.results.length){
+    out.innerHTML=`<div class="no-data">No records found for <b>${fullFIR}</b> across all stations.</div>`;
     return;
   }
 
-  /* ── render ── */
-  const multi=results.length>1;
-  let html='';
+  /* ── station pills ── */
+  let html=`<div class="v-station-row">
+    <div class="v-station-label">Found in ${VS.results.length} station${VS.results.length>1?'s':''} — select a station</div>
+    <div class="v-station-pills">
+      ${VS.results.map((sr,i)=>`
+        <div class="st-pill ${VS.activeStation===i?'active':''}" onclick="vSelectStation(${i})">
+          ${sr.s.lb}
+          <span class="st-count">${sr.total}</span>
+        </div>`).join('')}
+    </div>
+  </div>`;
 
-  if(multi){
-    /* station pill bar */
-    html+=`<div style="margin-bottom:12px">
-      <div style="font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">
-        Found in ${results.length} stations — tap to expand
-      </div>
-      <div style="display:flex;flex-wrap:wrap;gap:6px">
-        ${results.map((sr,i)=>{
-          const tot=sr.firRows.length+sr.pendByFir.length+sr.pendByPt.length+
-                    sr.dispByFir.length+sr.dispByPt.length+sr.nvRows.length+sr.cnRows.length;
-          return `<div class="case-pill" id="stpill-${i}" onclick="toggleStation(${i})" style="font-size:12px;padding:5px 14px">
-            ${sr.s.lb}
-            <span style="background:rgba(201,168,76,.2);border-radius:8px;padding:1px 6px;margin-left:4px;font-size:10px;color:var(--gold)">${tot}</span>
-          </div>`;
-        }).join('')}
-      </div>
+  /* ── station panel (if one selected) ── */
+  if(VS.activeStation!==null){
+    const sr=VS.results[VS.activeStation];
+    html+=vBuildPanel(sr, fullFIR);
+  }
+
+  out.innerHTML=html;
+}
+
+function vSelectStation(i){
+  VS.activeStation=i;
+  VS.activeCaseId=null;
+  vRenderResults();
+}
+
+/* ─── panel for one station ─── */
+function vBuildPanel(sr, fullFIR){
+  const {s,firRows,pendRows,dispRows,nvRows,cnRows}=sr;
+  let h=`<div class="v-station-panel">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+      <span style="font-size:13px;font-weight:700;color:var(--gold)">${s.lb}</span>
+      <span style="font-size:11px;color:var(--txt3)">·</span>
+      <span style="font-size:12px;color:var(--txt2)">FIR <b style="color:var(--gold)">${fullFIR}</b></span>
+      ${firRows.length?'<span class="bdg bdg-r">📋 FIR Pending</span>':''}
+      ${pendRows.length?`<span class="bdg bdg-b">⚖ ${pendRows.length} Pending</span>`:''}
+      ${dispRows.length?`<span class="bdg bdg-g">✓ ${dispRows.length} Disposed</span>`:''}
+      ${nvRows.length?`<span class="bdg bdg-a">🏷 NV Property</span>`:''}
+      ${cnRows.length?`<span class="bdg bdg-p">📁 Case Numbered</span>`:''}
     </div>`;
 
-    results.forEach((sr,i)=>{
-      html+=`<div id="stblock-${i}" style="display:${i===0?'block':'none'}">
-        ${buildStationBlock(sr,fullFIR,true)}
+  /* 1 ── FIR Pending — show details directly (no case number needed) */
+  if(firRows.length){
+    h+=`<div class="v-sheet-sec">
+      <div class="v-sheet-hdr">
+        <span class="v-sheet-name">📋 FIR Pending Register</span>
+      </div>
+      ${firRows.map(r=>`<div class="v-fir-row">
+        <div class="v-det-grid">
+          <div><div class="df-lbl">CR Number</div><div class="df-val hi">${r.cr}</div></div>
+          <div><div class="df-lbl">Section U/s</div><div class="df-val">${r.sec}</div></div>
+          <div><div class="df-lbl">Date Received</div><div class="df-val">${r.dr||'—'}</div></div>
+          <div><div class="df-lbl">Year Group</div><div class="df-val">${r.yr||'—'}</div></div>
+        </div>
+      </div>`).join('')}
+    </div>`;
+  }
+
+  /* 2 ── Case Pending */
+  if(pendRows.length){
+    h+=vBuildCaseSection(pendRows,'pend','⚖ Case Pending','bdg-b','pend');
+  }
+
+  /* 3 ── Disposed */
+  if(dispRows.length){
+    h+=vBuildCaseSection(dispRows,'disp','✅ Disposed Cases','bdg-g','disp');
+  }
+
+  /* 4 ── Non-Valuable Property */
+  if(nvRows.length){
+    h+=vBuildCaseSection(nvRows,'nv','🏷 Non-Valuable Property','bdg-a','nv');
+  }
+
+  /* 5 ── Case Numbered */
+  if(cnRows.length){
+    h+=vBuildCaseSection(cnRows,'cnum','📁 Case Numbered','bdg-p','cnum');
+  }
+
+  h+=`</div>`; /* close panel */
+  return h;
+}
+
+/* ─── case section: pills (≤5) or dropdown (>5) + detail ─── */
+function vBuildCaseSection(rows, prefix, title, bdgClass, srcKey){
+  /* unique key per case row */
+  const makeId=(r,src)=>`${src}::${r.ri}`;
+
+  /* extract display name for each row */
+  function dispName(r){
+    if(r.cn && r.cn.trim()) return r.cn.trim();
+    if(r.rp && r.rp.trim()) return 'RP: '+r.rp.trim(); /* non-valuable */
+    return '#'+r.ri;
+  }
+
+  const ids=rows.map(r=>makeId(r,srcKey));
+
+  let h=`<div class="v-sheet-sec">
+    <div class="v-sheet-hdr">
+      <span class="v-sheet-name">${title}</span>
+      <span class="bdg ${bdgClass}">${rows.length}</span>
+    </div>`;
+
+  /* ── pills if ≤5, else dropdown ── */
+  if(rows.length<=5){
+    h+=`<div class="v-case-pills">`;
+    rows.forEach((r,i)=>{
+      const id=ids[i];
+      const active=VS.activeCaseId===id;
+      h+=`<div class="cn-pill ${active?'active':''}" onclick="vSelectCase('${id}')">
+        ${dispName(r)}
+        <span class="cn-src ${srcKey}">${srcKey==='pend'?'P':srcKey==='disp'?'D':srcKey==='nv'?'NV':'CN'}</span>
       </div>`;
     });
-    /* mark first pill open */
-    html+=`<script>(function(){var p=document.getElementById('stpill-0');if(p)p.classList.add('open');}());<\/script>`;
+    h+=`</div>`;
   } else {
-    html+=buildStationBlock(results[0],fullFIR,false);
+    /* dropdown */
+    const selVal=ids.includes(VS.activeCaseId)?VS.activeCaseId:'';
+    h+=`<select class="v-cn-select" onchange="vSelectCase(this.value)">
+      <option value="">— Select case number (${rows.length} cases) —</option>
+      ${rows.map((r,i)=>`<option value="${ids[i]}" ${VS.activeCaseId===ids[i]?'selected':''}>
+        ${dispName(r)}${r.pt?' · '+r.pt.substring(0,40):''}
+      </option>`).join('')}
+    </select>`;
   }
 
-  el.innerHTML=html;
+  /* ── detail for active case in this section ── */
+  const activeRow=rows.find((r,i)=>ids[i]===VS.activeCaseId);
+  if(activeRow){
+    h+=vBuildDetail(activeRow, srcKey);
+  }
+
+  h+=`</div>`;
+  return h;
 }
 
-function toggleStation(idx){
-  const block=document.getElementById('stblock-'+idx);
-  const pill =document.getElementById('stpill-' +idx);
-  if(!block)return;
-  const open=block.style.display==='block';
-  block.style.display=open?'none':'block';
-  if(pill)pill.classList.toggle('open',!open);
+function vSelectCase(id){
+  VS.activeCaseId=(VS.activeCaseId===id)?null:id; /* toggle */
+  vRenderResults();
 }
 
-function buildStationBlock(sr,fullFIR,showHdr){
-  const {s,firRows,pendByFir,pendByPt,dispByFir,dispByPt,nvRows,cnRows}=sr;
-  const badges=[
-    firRows.length?'<span class="bdg bdg-r">📋 FIR Pending</span>':'',
-    (pendByFir.length+pendByPt.length)?`<span class="bdg bdg-b">⚖ ${pendByFir.length+pendByPt.length} Case Pending</span>`:'',
-    (dispByFir.length+dispByPt.length)?`<span class="bdg bdg-g">✓ ${dispByFir.length+dispByPt.length} Disposed</span>`:'',
-    nvRows.length?'<span class="bdg bdg-a">🏷 Non-Valuable</span>':'',
-    cnRows.length?'<span class="bdg bdg-p">📁 Case Numbered</span>':'',
-  ].filter(Boolean).join(' ');
+/* ─── full detail card ─── */
+function vBuildDetail(r, srcKey){
+  let h=`<div class="v-case-detail">`;
 
-  let h=`<div class="res-card" ${showHdr?'style="border-color:rgba(201,168,76,.3)"':''}>
-    <div class="res-hdr">
-      <span class="fnum">${fullFIR}</span>
-      <span class="bdg bdg-a">${s.lb}</span>
-      ${badges}
-    </div>`;
-
-  /* 1. FIR Pending */
-  if(firRows.length){
-    h+=`<div class="sub-sec"><div class="sub-ttl">📋 FIR Pending Details</div>
-      ${firRows.map(r=>`<div class="det-grid" style="margin-bottom:6px">
-        <div><div class="df-lbl">CR Number</div><div class="df-val" style="color:var(--gold);font-weight:700">${r.cr}</div></div>
-        <div><div class="df-lbl">Section U/s</div><div class="df-val">${r.sec}</div></div>
-        <div><div class="df-lbl">Date Received</div><div class="df-val">${r.dr}</div></div>
-        <div><div class="df-lbl">Year Group</div><div class="df-val">${r.yr||'—'}</div></div>
-      </div>`).join('')}
+  if(srcKey==='pend'){
+    h+=`<div class="v-det-hdr">
+      <span class="v-det-cn">${r.cn||'—'}</span>
+      <span class="bdg bdg-b">Case Pending</span>
+    </div>
+    <div class="v-det-grid">
+      <div><div class="df-lbl">Case Number</div><div class="df-val hi">${r.cn||'—'}</div></div>
+      <div><div class="df-lbl">FIR Number</div><div class="df-val">${r.fn||'—'}</div></div>
+      <div><div class="df-lbl">Parties</div><div class="df-val">${r.pt||'—'}</div></div>
+      <div><div class="df-lbl">Advocate</div><div class="df-val">${r.adv||'—'}</div></div>
+      <div><div class="df-lbl">Date of Registration</div><div class="df-val">${r.dreg||'—'}</div></div>
+      <div><div class="df-lbl">Next Hearing Date</div><div class="df-val" style="color:var(--blu)">${r.nxt||'—'}</div></div>
+      <div><div class="df-lbl">Purpose</div><div class="df-val">${r.pur||'—'}</div></div>
+      <div><div class="df-lbl">Section U/s</div><div class="df-val">${r.sec||'—'}</div></div>
+      <div><div class="df-lbl">Police Station</div><div class="df-val">${r.sta||'—'}</div></div>
+      <div><div class="df-lbl">Nature</div><div class="df-val">${r.nat||'—'}</div></div>
+      <div><div class="df-lbl">Designation</div><div class="df-val">${r.des||'—'}</div></div>
     </div>`;
   }
-
-  /* 2. Pending (by FIR no.) */
-  if(pendByFir.length) h+=buildCaseSection(pendByFir,'pending','⚖ Case Pending','pd','');
-
-  /* 3. Pending (by petitioner) */
-  if(pendByPt.length)  h+=buildCaseSection(pendByPt,'pending',
-    '⚖ Case Pending <span style="color:var(--txt3);font-weight:400;font-size:9px">(matched via Petitioner / Respondent)</span>',
-    'pdpt','rgba(88,166,255,.05)');
-
-  /* 4. Disposed (by FIR no.) */
-  if(dispByFir.length) h+=buildCaseSection(dispByFir,'disposal','✅ Disposed Cases','dd','');
-
-  /* 5. Disposed (by petitioner) */
-  if(dispByPt.length)  h+=buildCaseSection(dispByPt,'disposal',
-    '✅ Disposed Cases <span style="color:var(--txt3);font-weight:400;font-size:9px">(matched via Petitioner / Respondent)</span>',
-    'ddpt','rgba(88,166,255,.05)');
-
-  /* 6. Non-Valuable */
-  if(nvRows.length){
-    h+=`<div class="sub-sec"><div class="sub-ttl">🏷 Non-Valuable Property</div>
-      ${nvRows.map(n=>`<div style="background:var(--bg);border:1px solid var(--bdr);border-radius:6px;padding:9px;margin-bottom:6px">
-        <div class="det-grid">
-          <div><div class="df-lbl">RP Number</div><div class="df-val" style="color:var(--gold);font-weight:700">${n.rp||'—'}</div></div>
-          <div><div class="df-lbl">Case Number</div><div class="df-val">${n.cn||'—'}</div></div>
-          <div style="grid-column:1/-1"><div class="df-lbl">Description</div><div class="df-val">${n.desc||'—'}</div></div>
-          <div style="grid-column:1/-1"><div class="df-lbl">Remarks</div><div class="df-val">${n.rem||'—'}</div></div>
-        </div>
-      </div>`).join('')}
+  else if(srcKey==='disp'){
+    h+=`<div class="v-det-hdr">
+      <span class="v-det-cn">${r.cn||'—'}</span>
+      <span class="bdg bdg-g">Disposed</span>
+    </div>
+    <div class="v-det-grid">
+      <div><div class="df-lbl">Case Number</div><div class="df-val hi">${r.cn||'—'}</div></div>
+      <div><div class="df-lbl">FIR Number</div><div class="df-val">${r.fn||'—'}</div></div>
+      <div><div class="df-lbl">Parties</div><div class="df-val">${r.pt||'—'}</div></div>
+      <div><div class="df-lbl">Advocate</div><div class="df-val">${r.adv||'—'}</div></div>
+      <div><div class="df-lbl">Date of Registration</div><div class="df-val">${r.dreg||'—'}</div></div>
+      <div><div class="df-lbl">Date of Decision</div><div class="df-val" style="color:var(--grn)">${r.ddec||'—'}</div></div>
+      <div><div class="df-lbl">Disposal Nature</div><div class="df-val">${r.dnat||'—'}</div></div>
+      <div><div class="df-lbl">Section U/s</div><div class="df-val">${r.sec||'—'}</div></div>
+      <div><div class="df-lbl">Police Station</div><div class="df-val">${r.sta||'—'}</div></div>
+      <div><div class="df-lbl">Nature</div><div class="df-val">${r.nat||'—'}</div></div>
     </div>`;
   }
-
-  /* 7. Case Numbered */
-  if(cnRows.length){
-    h+=`<div class="sub-sec"><div class="sub-ttl">📁 Case Numbered Records (${cnRows.length})</div>
-      ${cnRows.map(c=>`<div style="background:rgba(188,140,255,.07);border:1px solid rgba(188,140,255,.2);border-radius:6px;padding:9px;margin-bottom:6px">
-        <div class="det-grid">
-          <div><div class="df-lbl">Case Number</div><div class="df-val" style="color:var(--pur);font-weight:700">${c.cn||'—'}</div></div>
-          <div><div class="df-lbl">Parties</div><div class="df-val">${c.pt||'—'}</div></div>
-          <div><div class="df-lbl">Date of Reg</div><div class="df-val">${c.dreg||'—'}</div></div>
-          <div><div class="df-lbl">Advocate</div><div class="df-val">${c.adv||'—'}</div></div>
-          <div><div class="df-lbl">Type</div><div class="df-val">${c.type||'—'}</div></div>
-          <div><div class="df-lbl">Section</div><div class="df-val">${c.sec2||c.sec||'—'}</div></div>
-          <div><div class="df-lbl">Next Date</div><div class="df-val">${c.nxt||'—'}</div></div>
-          <div><div class="df-lbl">Nature</div><div class="df-val">${c.nat||'—'}</div></div>
-        </div>
-      </div>`).join('')}
+  else if(srcKey==='nv'){
+    h+=`<div class="v-det-hdr">
+      <span class="v-det-cn">${r.rp||r.cn||'—'}</span>
+      <span class="bdg bdg-a">Non-Valuable Property</span>
+    </div>
+    <div class="v-det-grid">
+      <div><div class="df-lbl">RP Number</div><div class="df-val hi">${r.rp||'—'}</div></div>
+      <div><div class="df-lbl">Case Number</div><div class="df-val">${r.cn||'—'}</div></div>
+      <div><div class="df-lbl">FIR Number</div><div class="df-val">${r.fn||'—'}</div></div>
+      <div><div class="df-lbl">Police Station</div><div class="df-val">${r.sta||'—'}</div></div>
+      <div style="grid-column:1/-1"><div class="df-lbl">Description</div><div class="df-val">${r.desc||'—'}</div></div>
+      <div style="grid-column:1/-1"><div class="df-lbl">Remarks</div><div class="df-val">${r.rem||'—'}</div></div>
+    </div>`;
+  }
+  else if(srcKey==='cnum'){
+    h+=`<div class="v-det-hdr">
+      <span class="v-det-cn" style="color:var(--pur)">${r.cn||'—'}</span>
+      <span class="bdg bdg-p">Case Numbered</span>
+    </div>
+    <div class="v-det-grid">
+      <div><div class="df-lbl">Case Number</div><div class="df-val" style="color:var(--pur);font-weight:600">${r.cn||'—'}</div></div>
+      <div><div class="df-lbl">FIR Number</div><div class="df-val">${r.fn||'—'}</div></div>
+      <div><div class="df-lbl">Parties</div><div class="df-val">${r.pt||'—'}</div></div>
+      <div><div class="df-lbl">Police Station</div><div class="df-val">${r.sta||'—'}</div></div>
+      <div><div class="df-lbl">Advocate</div><div class="df-val">${r.adv||'—'}</div></div>
+      <div><div class="df-lbl">Date of Registration</div><div class="df-val">${r.dreg||'—'}</div></div>
+      <div><div class="df-lbl">Next Date</div><div class="df-val" style="color:var(--blu)">${r.nxt||'—'}</div></div>
+      <div><div class="df-lbl">Case Type</div><div class="df-val">${r.type||'—'}</div></div>
+      <div><div class="df-lbl">Section U/s (FIR)</div><div class="df-val">${r.sec||'—'}</div></div>
+      <div><div class="df-lbl">Section (Case)</div><div class="df-val">${r.sec2||'—'}</div></div>
+      <div><div class="df-lbl">Nature</div><div class="df-val">${r.nat||'—'}</div></div>
+      <div><div class="df-lbl">Designation</div><div class="df-val">${r.des||'—'}</div></div>
     </div>`;
   }
 
@@ -661,60 +799,9 @@ function buildStationBlock(sr,fullFIR,showHdr){
   return h;
 }
 
-function buildCaseSection(rows,type,titleHtml,idPfx,bg){
-  const isPending=type==='pending';
-  return `<div class="sub-sec" ${bg?`style="background:${bg};border-radius:6px;padding:6px 8px"`:''}>
-    <div class="sub-ttl">${titleHtml} (${rows.length})</div>
-    <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px">
-      ${rows.map(c=>`<span class="case-pill" onclick="toggleDetail('${idPfx}${c.ri}')">${c.cn||'Case'}</span>`).join('')}
-    </div>
-    ${rows.map(c=>{
-      const id=`${idPfx}${c.ri}`;
-      if(isPending){
-        return `<div class="case-detail" id="${id}">
-          <div class="det-grid">
-            <div><div class="df-lbl">Case No</div><div class="df-val" style="color:var(--gold)">${c.cn}</div></div>
-            <div><div class="df-lbl">FIR Number</div><div class="df-val">${c.fn||'—'}</div></div>
-            <div><div class="df-lbl">Parties</div><div class="df-val">${c.pt}</div></div>
-            <div><div class="df-lbl">Advocate</div><div class="df-val">${c.adv||'—'}</div></div>
-            <div><div class="df-lbl">Date of Reg</div><div class="df-val">${c.dreg||'—'}</div></div>
-            <div><div class="df-lbl">Next Date</div><div class="df-val">${c.nxt||'—'}</div></div>
-            <div><div class="df-lbl">Purpose</div><div class="df-val">${c.pur||'—'}</div></div>
-            <div><div class="df-lbl">Section</div><div class="df-val">${c.sec||'—'}</div></div>
-            <div><div class="df-lbl">Nature</div><div class="df-val">${c.nat||'—'}</div></div>
-            <div><div class="df-lbl">Designation</div><div class="df-val">${c.des||'—'}</div></div>
-          </div>
-        </div>`;
-      } else {
-        return `<div class="case-detail" id="${id}">
-          <div class="det-grid">
-            <div><div class="df-lbl">Case No</div><div class="df-val" style="color:var(--gold)">${c.cn}</div></div>
-            <div><div class="df-lbl">FIR Number</div><div class="df-val">${c.fn||'—'}</div></div>
-            <div><div class="df-lbl">Parties</div><div class="df-val">${c.pt}</div></div>
-            <div><div class="df-lbl">Advocate</div><div class="df-val">${c.adv||'—'}</div></div>
-            <div><div class="df-lbl">Date of Reg</div><div class="df-val">${c.dreg||'—'}</div></div>
-            <div><div class="df-lbl">Date of Decision</div><div class="df-val">${c.ddec||'—'}</div></div>
-            <div><div class="df-lbl">Disposal Nature</div><div class="df-val">${c.dnat||'—'}</div></div>
-            <div><div class="df-lbl">Section</div><div class="df-val">${c.sec||'—'}</div></div>
-            <div><div class="df-lbl">Nature</div><div class="df-val">${c.nat||'—'}</div></div>
-          </div>
-        </div>`;
-      }
-    }).join('')}
-  </div>`;
-}
-
-function toggleDetail(id){
-  const el=document.getElementById(id);
-  if(!el)return;
-  el.classList.toggle('show');
-  const pill=document.querySelector(`[onclick="toggleDetail('${id}')"]`);
-  if(pill)pill.classList.toggle('open',el.classList.contains('show'));
-}
-
-/* ═══════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════
    FIR → CASE NUMBERED TAB
-═══════════════════════════════════════════════════ */
+══════════════════════════════════════════════════════ */
 function renderFTC(){
   const p=document.getElementById('p-ftc');
   const s=FTC;
@@ -724,7 +811,7 @@ function renderFTC(){
   </div>`;
   let body='';
   if(s.step===1){
-    body=`<div style="font-size:11px;color:var(--txt3);margin-bottom:12px">Step 1 — Enter FIR details to locate in pending list</div>
+    body=`<div style="font-size:11px;color:var(--txt3);margin-bottom:12px">Step 1 — Enter FIR details</div>
       <div class="frow">
         <div class="fg"><label class="lbl">FIR Number</label><input type="tel" id="tFn" inputmode="numeric" value="${s.fn}" oninput="FTC.fn=this.value" placeholder="e.g. 561"/></div>
         <div class="fg"><label class="lbl">Year</label><input type="tel" id="tYr" inputmode="numeric" value="${s.yr}" oninput="FTC.yr=this.value" placeholder="${new Date().getFullYear()}"/></div>
@@ -739,12 +826,12 @@ function renderFTC(){
       ...DB.disp.filter(c=>{const cf=(c.fn||'').split('/')[0].trim();return cf===s.fn&&stMatchObj(c.sta,stObj);}).map(c=>({...c,type:'disposal'}))
     ];
     body=`<div style="font-size:11px;color:var(--txt3);margin-bottom:12px">Step 2 — Select the linked case</div>
-      ${s.firRow?`<div class="msg-info" style="margin-bottom:10px">✓ FIR ${s.firRow.cr} found — ${s.firRow.sec} | Received: ${s.firRow.dr}</div>`:''}
-      <div style="font-size:11px;color:var(--txt2);margin-bottom:6px">Matched cases from Pending & Disposal (${allC.length})</div>
-      ${allC.length===0?'<div class="no-data">No cases found for this FIR in Pending or Disposal sheets.</div>':
+      ${s.firRow?`<div class="msg-info" style="margin-bottom:10px">✓ FIR ${s.firRow.cr} — ${s.firRow.sec} | Received: ${s.firRow.dr}</div>`:''}
+      <div style="font-size:11px;color:var(--txt2);margin-bottom:6px">Matched cases (${allC.length})</div>
+      ${allC.length===0?'<div class="no-data">No cases found for this FIR.</div>':
         allC.map(c=>`<div class="case-sel ${s.selCase?.cn===c.cn?'sel':''}" onclick='FTC.selCase=${JSON.stringify(c).replace(/'/g,"&#39;")};renderFTC()'>
           <div>
-            <div style="font-weight:700;color:var(--txt);font-size:12px">${c.cn}</div>
+            <div style="font-weight:700;font-size:12px">${c.cn}</div>
             <div style="color:var(--txt2);font-size:11px;margin-top:2px">${c.pt}</div>
             <div style="color:var(--txt3);font-size:10px">${c.dreg||''}</div>
           </div>
@@ -757,12 +844,12 @@ function renderFTC(){
   } else if(s.step===3){
     const sc=s.selCase||{};
     const stLb=SMAP.find(x=>x.sh===s.st)?.lb||s.st;
-    body=`<div style="font-size:11px;color:var(--txt3);margin-bottom:12px">Step 3 — Confirm move to Case Numbered sheet</div>
+    body=`<div style="font-size:11px;color:var(--txt3);margin-bottom:12px">Step 3 — Confirm</div>
       <div class="res-card" style="margin-bottom:10px">
         <div class="res-hdr">
           <span class="fnum">FIR: ${s.fn}/${s.yr}</span>
           <span class="bdg bdg-a">${stLb}</span>
-          <span style="color:var(--txt2);font-size:13px">→</span>
+          <span style="color:var(--txt2)">→</span>
           <span class="bdg bdg-p">${sc.cn||'N/A'}</span>
         </div>
         <div class="det-grid">
@@ -774,7 +861,7 @@ function renderFTC(){
           <div><div class="df-lbl">Date of Reg</div><div class="df-val">${sc.dreg||'—'}</div></div>
         </div>
       </div>
-      <div class="warn-box">⚠ This will permanently delete FIR ${s.fn}/${s.yr} from the "${s.st}" tab in FIR Pending sheet and save it to the Case Numbered sheet.</div>
+      <div class="warn-box">⚠ This will delete FIR ${s.fn}/${s.yr} from "${s.st}" tab and save to Case Numbered sheet.</div>
       <div style="display:flex;gap:8px">
         <button class="btn btn-o" onclick="FTC.step=2;renderFTC()">← Back</button>
         <button class="btn btn-r" onclick="ftcExecute()">🗂 Move to Case Numbered</button>
@@ -787,7 +874,7 @@ function ftcSearch(){
   const msg=document.getElementById('ftcMsg');
   if(!FTC.fn){msg.innerHTML='<div class="msg-err">Enter FIR Number.</div>';return;}
   const rows=(DB.fir[FTC.st]||[]).filter(r=>r.cr.split('/')[0].trim()===FTC.fn);
-  if(!rows.length){msg.innerHTML=`<div class="msg-err">FIR ${FTC.fn}/${FTC.yr} not found in ${SMAP.find(s=>s.sh===FTC.st)?.lb} pending list.</div>`;return;}
+  if(!rows.length){msg.innerHTML=`<div class="msg-err">FIR ${FTC.fn}/${FTC.yr} not found in ${SMAP.find(s=>s.sh===FTC.st)?.lb}.</div>`;return;}
   FTC.firRow=rows[0];FTC.step=2;renderFTC();
 }
 function ftcStep3(){if(!FTC.selCase)return;FTC.step=3;renderFTC();}
@@ -798,22 +885,22 @@ async function ftcExecute(){
   const stLb=SMAP.find(x=>x.sh===FTC.st)?.lb||FTC.st;
   const row=[`${FTC.fn}/${FTC.yr}`,stLb,FTC.firRow?.sec||'',FTC.firRow?.dr||'',sc.cn||'',sc.pt||'',sc.adv||'',sc.dreg||'',sc.nxt||sc.ddec||'',sc.type||'',sc.sec||'',sc.nat||'',sc.des||''];
   const saved=await sheetsAppend(SID.casenum,'Sheet1!A:M',[row]);
-  if(!saved){msg.innerHTML='<div class="msg-err">Failed to save to Case Numbered sheet.</div>';return;}
-  if(FTC.firRow?.ri!==undefined&&FTC.firRow.ri!==9999)await sheetsDeleteRow(SID.fir,FTC.st,FTC.firRow.ri);
+  if(!saved){msg.innerHTML='<div class="msg-err">Failed to save.</div>';return;}
+  if(FTC.firRow?.ri!==undefined&&FTC.firRow.ri!==9999) await sheetsDeleteRow(SID.fir,FTC.st,FTC.firRow.ri);
   const idx=(DB.fir[FTC.st]||[]).findIndex(r=>r.cr===FTC.firRow?.cr);
-  if(idx>=0)DB.fir[FTC.st].splice(idx,1);
+  if(idx>=0) DB.fir[FTC.st].splice(idx,1);
   DB.cnum.push({fn:`${FTC.fn}/${FTC.yr}`,sta:stLb,...sc});
-  msg.innerHTML=`<div class="msg-ok">✓ FIR ${FTC.fn}/${FTC.yr} moved to Case Numbered sheet.</div>`;
+  msg.innerHTML=`<div class="msg-ok">✓ FIR ${FTC.fn}/${FTC.yr} moved to Case Numbered.</div>`;
   setTimeout(()=>{FTC={step:1,fn:'',yr:String(new Date().getFullYear()),st:'JKM',firRow:null,selCase:null};renderFTC();},1400);
 }
 
-/* ═══════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════
    ABSTRACT TAB
-═══════════════════════════════════════════════════ */
+══════════════════════════════════════════════════════ */
 function renderAbstract(){
   const p=document.getElementById('p-abstract');
   const allFirs=[];
-  const stTot=SMAP.map(s=>{const rows=DB.fir[s.sh]||[];allFirs.push(...rows.map(r=>({...r,stLb:s.lb,sh:s.sh})));return{lb:s.lb,cnt:rows.length};});
+  const stTot=SMAP.map(s=>{const rows=DB.fir[s.sh]||[];allFirs.push(...rows.map(r=>({...r,stLb:s.lb})));return{lb:s.lb,cnt:rows.length};});
   const grand=stTot.reduce((a,b)=>a+b.cnt,0);
   const bySec={};
   for(const r of allFirs){const k=r.sec||'Unknown';bySec[k]=(bySec[k]||0)+1;}
@@ -831,11 +918,11 @@ function renderAbstract(){
   p.innerHTML=`
   <div class="stat-grid">
     <div class="stat"><div class="stat-lbl">Total Pending FIRs</div><div class="stat-val">${grand}</div><div class="stat-sub">All stations</div></div>
-    ${stTot.map(s=>`<div class="stat"><div class="stat-lbl">${s.lb}</div><div class="stat-val">${s.cnt}</div><div class="stat-sub">FIRs pending</div></div>`).join('')}
+    ${stTot.map(s=>`<div class="stat"><div class="stat-lbl">${s.lb}</div><div class="stat-val">${s.cnt}</div><div class="stat-sub">pending</div></div>`).join('')}
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px">
-    <div class="card"><div class="ctitle">📍 Station-wise Summary</div>
-      <table class="abs-tbl"><tr><th>Police Station</th><th>Pending FIRs</th></tr>
+    <div class="card"><div class="ctitle">📍 Station-wise</div>
+      <table class="abs-tbl"><tr><th>Station</th><th>FIRs</th></tr>
       ${stTot.map(s=>`<tr><td>${s.lb}</td><td><b>${s.cnt}</b></td></tr>`).join('')}
       <tr class="tot-row"><td>Total</td><td><b>${grand}</b></td></tr></table>
     </div>
@@ -844,20 +931,19 @@ function renderAbstract(){
       ${yrSort.map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('')}
       <tr class="tot-row"><td>Total</td><td><b>${allFirs.length}</b></td></tr></table></div>
     </div>
-    <div class="card"><div class="ctitle">📆 Month-wise Receipt</div>
-      <div class="tbl-wrap"><table class="abs-tbl"><tr><th>Month / Year</th><th>Count</th></tr>
+    <div class="card"><div class="ctitle">📆 Month-wise</div>
+      <div class="tbl-wrap"><table class="abs-tbl"><tr><th>Month</th><th>Count</th></tr>
       ${monSort.map(([k,v])=>{const[yr,mn]=k.split('-');return`<tr><td>${monNames[parseInt(mn)]||mn} ${yr}</td><td>${v}</td></tr>`;}).join('')}
       <tr class="tot-row"><td>Total</td><td><b>${monSort.reduce((a,b)=>a+b[1],0)}</b></td></tr></table></div>
     </div>
-    <div class="card"><div class="ctitle">⚖ Section U/s Wise (Top ${Math.min(secSort.length,30)})</div>
+    <div class="card"><div class="ctitle">⚖ Section U/s (Top ${Math.min(secSort.length,30)})</div>
       <div class="tbl-wrap"><table class="abs-tbl"><tr><th>Section</th><th>Count</th></tr>
       ${secSort.slice(0,30).map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('')}
       <tr class="tot-row"><td>Total</td><td><b>${allFirs.length}</b></td></tr></table></div>
     </div>
-    <div class="card"><div class="ctitle">📋 Date-wise Receipt (Recent)</div>
-      <div class="tbl-wrap"><table class="abs-tbl"><tr><th>Date Received</th><th>Count</th></tr>
-      ${daySort.map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('')}
-      </table></div>
+    <div class="card"><div class="ctitle">📋 Date-wise (Recent)</div>
+      <div class="tbl-wrap"><table class="abs-tbl"><tr><th>Date</th><th>Count</th></tr>
+      ${daySort.map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('')}</table></div>
     </div>
   </div>`;
 }
