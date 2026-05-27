@@ -24,6 +24,16 @@ const sections = [
     isExternal: false,
     num: "02",
   },
+{
+    title: "Fir Management",
+    route: "/mc/firmanagement",
+    icon: "🔌",
+    color: "#C9A84C",
+    accent: "#F5D07A",
+    subtitle: "fir management",
+    isExternal: false,
+    num: "02",
+  },
 ];
 
 function ParticleCanvas() {
