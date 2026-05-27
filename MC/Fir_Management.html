@@ -1,4 +1,9 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>FIR Management System — Jayankondam Sub-Division</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',sans-serif;background:#0d1117;color:#e6edf3;min-height:100vh;font-size:13px}
@@ -97,10 +102,14 @@ tr:hover td{background:rgba(201,168,76,.04)}
 .tot-row td{background:rgba(201,168,76,.09)!important;color:var(--gold);font-weight:700}
 .no-data{text-align:center;padding:24px;color:var(--txt3);font-size:12px}
 .srch-row{display:flex;gap:8px;margin-bottom:12px;align-items:flex-end;flex-wrap:wrap}
-.srch-row .fg{flex:1;min-width:140px}
+.srch-row .fg{flex:1;min-width:100px}
 .divider{height:1px;background:var(--bdr);margin:12px 0}
+/* station pill transition */
+#vRes .res-card{animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 </style>
-
+</head>
+<body>
 <div class="app">
 <div class="hdr">
   <div>
@@ -128,6 +137,9 @@ tr:hover td{background:rgba(201,168,76,.04)}
 </div>
 
 <script>
+/* ═══════════════════════════════════════════════════
+   SHEET IDs
+═══════════════════════════════════════════════════ */
 const SID={
   fir:'1sKmU8eXXz5iPG7qNvu-exKQOW_qxu3BbPQngqzVvF0k',
   disposal:'1OWoLwzLVANiAk8T2AthO_wy9hEhyLuFLcXVgJsCyhHY',
@@ -136,6 +148,9 @@ const SID={
   casenum:'1eeQA75iuqNcsNwXygcx3JLJRamxuRI_1UrpetByr5nA'
 };
 
+/* ═══════════════════════════════════════════════════
+   STATION MAP
+═══════════════════════════════════════════════════ */
 const SMAP=[
   {sh:'JKM',lb:'Jayankondam',al:['jayankondam','jkm','police station 1','ps jayankondam']},
   {sh:'VKM',lb:'Vikkiramangalam',al:['vikkiramangalam','vikramangalam','vkm','venganam','police station venganam']},
@@ -149,7 +164,11 @@ let tok=null,loaded=false;
 let DB={fir:{},pend:[],disp:[],nv:[],cnum:[]};
 let ES={yr:String(new Date().getFullYear()),st:'JKM',fn:'',uns:'',dt:''};
 let FTC={step:1,fn:'',yr:String(new Date().getFullYear()),st:'JKM',firRow:null,selCase:null};
+let VS={fn:'',yr:String(new Date().getFullYear()),st:''};
 
+/* ═══════════════════════════════════════════════════
+   STATION HELPERS
+═══════════════════════════════════════════════════ */
 function normSt(n){
   if(!n)return null;
   const l=n.toLowerCase().trim();
@@ -173,6 +192,9 @@ function stMatchObj(name,obj){
   return false;
 }
 
+/* ═══════════════════════════════════════════════════
+   AUTH
+═══════════════════════════════════════════════════ */
 function doAuth(){
   if(tok){tok=null;loaded=false;setAuthUI(false);goTab('entry');return;}
   if(!window.google){
@@ -196,6 +218,9 @@ function setAuthUI(ok){
   document.getElementById('aBtn').textContent=ok?'Sign Out':'Sign In';
 }
 
+/* ═══════════════════════════════════════════════════
+   SHEETS API
+═══════════════════════════════════════════════════ */
 async function apiFetch(url){
   if(!tok)return null;
   const r=await fetch(url,{headers:{Authorization:`Bearer ${tok}`}});
@@ -226,6 +251,9 @@ async function sheetsDeleteRow(sid,sheetName,rowIdx){
   return r.ok;
 }
 
+/* ═══════════════════════════════════════════════════
+   LOAD ALL DATA
+═══════════════════════════════════════════════════ */
 async function loadAll(){
   const activePane=document.querySelector('.pane.act');
   activePane.innerHTML='<div class="loading"><div class="spin"></div>Loading data from all Google Sheets…</div>';
@@ -261,6 +289,9 @@ async function loadAll(){
   }
 }
 
+/* ═══════════════════════════════════════════════════
+   TAB ROUTING
+═══════════════════════════════════════════════════ */
 function goTab(name,el){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('act'));
   if(el)el.classList.add('act');
@@ -282,10 +313,12 @@ function renderAuth(t){
     <div style="font-size:15px;font-weight:600;color:var(--gold)">Authentication Required</div>
     <div style="font-size:12px;color:var(--txt2);max-width:360px">Sign in with your Google account to access all FIR records across Jayankondam Sub-Division stations.</div>
     <button class="btn btn-g" onclick="doAuth()">Sign in with Google</button>
-    <div style="font-size:10px;color:var(--txt3)">Replace YOUR_GOOGLE_CLIENT_ID with your actual OAuth Client ID in the script</div>
   </div>`;
 }
 
+/* ═══════════════════════════════════════════════════
+   FIR ENTRY TAB
+═══════════════════════════════════════════════════ */
 function renderEntry(){
   const p=document.getElementById('p-entry');
   const sOpts=SMAP.map(s=>`<option value="${s.sh}" ${s.sh===ES.st?'selected':''}>${s.lb}</option>`).join('');
@@ -350,7 +383,6 @@ function renderEntry(){
     </div>
   </div>`;
   if(loaded){
-    const tot=Object.values(DB.fir).reduce((a,b)=>a+b.length,0);
     const recent=(DB.fir[ES.st]||[]).slice(-3).reverse();
     if(recent.length){
       document.getElementById('p-entry').innerHTML+=`<div class="card">
@@ -362,12 +394,10 @@ function renderEntry(){
     }
   }
 }
-
 function npFn(n){const e=document.getElementById('eFn');if(!e)return;e.value+=n;ES.fn=e.value;}
-function npBs(id,k){const e=document.getElementById(id);if(!e)return;e.value=e.value.slice(0,-1);ES[k]=e.value;}
+function npBs(id,k){const e=document.getElementById(id);if(!e)return;e.value=e.value.slice(0,-1);if(k==='fn')ES.fn=e.value;else ES.dt=e.value;}
 function npDt(n){const e=document.getElementById('eDt');if(!e||e.value.length>=10)return;e.value+=n;ES.dt=e.value;}
 function npDtDot(){const e=document.getElementById('eDt');if(!e||e.value.endsWith('.')||!e.value.length)return;e.value+='.';ES.dt=e.value;}
-
 async function saveEntry(){
   const m=document.getElementById('eMsg');
   if(!ES.fn||!ES.uns||!ES.dt){m.innerHTML='<div class="msg-err">FIR Number, Section U/s, and Date are required.</div>';return;}
@@ -388,87 +418,263 @@ async function saveEntry(){
   }
 }
 
+/* ═══════════════════════════════════════════════════
+   FIR VIEWER TAB  (REDESIGNED)
+═══════════════════════════════════════════════════ */
 function renderViewer(){
   const p=document.getElementById('p-viewer');
-  const sOpts=`<option value="">All Stations</option>`+SMAP.map(s=>`<option value="${s.sh}">${s.lb}</option>`).join('');
-  p.innerHTML=`<div class="card">
-    <div class="ctitle">🔍 Search FIR Records</div>
+  const stOpts=`<option value="">All Stations</option>`+
+    SMAP.map(s=>`<option value="${s.sh}" ${s.sh===VS.st?'selected':''}>${s.lb}</option>`).join('');
+
+  p.innerHTML=`
+  <div class="card">
+    <div class="ctitle">🔍 FIR Search</div>
     <div class="srch-row">
-      <div class="fg"><label class="lbl">FIR / CR Number</label><input type="text" id="vFn" placeholder="e.g. 561 or 561/1999"/></div>
-      <div class="fg"><label class="lbl">Police Station</label><select id="vSt">${sOpts}</select></div>
-      <button class="btn btn-g" onclick="doSearch()">Search</button>
+      <div class="fg" style="max-width:110px">
+        <label class="lbl">FIR Number</label>
+        <input type="tel" id="vFn" inputmode="numeric"
+               value="${VS.fn}" placeholder="e.g. 12"
+               oninput="VS.fn=this.value;updatePreview()"
+               onkeydown="if(event.key==='Enter')doSearch()"/>
+      </div>
+      <div class="fg" style="max-width:90px">
+        <label class="lbl">Year</label>
+        <input type="tel" id="vYr" inputmode="numeric"
+               value="${VS.yr}" placeholder="${new Date().getFullYear()}"
+               oninput="VS.yr=this.value;updatePreview()"
+               onkeydown="if(event.key==='Enter')doSearch()"/>
+      </div>
+      <div class="fg" style="max-width:210px">
+        <label class="lbl">Police Station <span style="color:var(--txt3);font-weight:400">(optional)</span></label>
+        <select id="vSt" onchange="VS.st=this.value">${stOpts}</select>
+      </div>
+      <div style="display:flex;align-items:flex-end">
+        <button class="btn btn-g" onclick="doSearch()">Search</button>
+      </div>
     </div>
+    <div id="vPreview" style="font-size:11px;color:var(--txt3);margin-top:-6px;margin-bottom:10px;min-height:16px"></div>
     <div id="vRes"></div>
   </div>`;
+
+  /* init preview */
+  updatePreview();
+}
+
+function updatePreview(){
+  const fn=(document.getElementById('vFn')?.value||'').trim();
+  const yr=(document.getElementById('vYr')?.value||'').trim();
+  const prev=document.getElementById('vPreview');
+  if(!prev)return;
+  prev.innerHTML=(fn&&yr)
+    ? `Searching for: <span style="color:var(--gold);font-weight:700">${fn}/${yr}</span>`
+    : (fn?`Searching for: <span style="color:var(--gold);font-weight:700">${fn}</span> (all years)`:'');
 }
 
 function doSearch(){
-  const raw=(document.getElementById('vFn').value||'').trim();
-  const stVal=document.getElementById('vSt').value;
+  const fn  =(document.getElementById('vFn')?.value||'').trim();
+  const yr  =(document.getElementById('vYr')?.value||'').trim();
+  const stSel=document.getElementById('vSt')?.value||'';
+  VS.fn=fn; VS.yr=yr; VS.st=stSel;
+
   const el=document.getElementById('vRes');
-  if(!raw){el.innerHTML='<div class="msg-info">Enter a FIR number to search.</div>';return;}
-  const fn=raw.split('/')[0].trim();
-  const stations=stVal?[SMAP.find(s=>s.sh===stVal)]:SMAP;
+  if(!fn){el.innerHTML='<div class="msg-info">Enter a FIR number to search.</div>';return;}
+
+  /* ── canonical form ── */
+  const fullFIR=yr?`${fn}/${yr}`:fn;
+
+  /* ── FIR number matcher ── */
+  function firMatch(val){
+    if(!val)return false;
+    const v=val.trim();
+    if(v===fullFIR)return true;
+    const numPart=v.split('/')[0].trim();
+    if(numPart===fn&&!yr)return true;
+    if(numPart===fn&&yr&&(v.includes('/'+yr)||v.endsWith(yr)))return true;
+    return false;
+  }
+
+  /* ── petitioner / respondent text match ── */
+  function ptMatch(val){
+    if(!val)return false;
+    const lo=val.toLowerCase();
+    return lo.includes(fn.toLowerCase())||lo.includes(fullFIR.toLowerCase());
+  }
+
+  /* ── which stations? ── */
+  const stationsToSearch=stSel
+    ?[SMAP.find(s=>s.sh===stSel)].filter(Boolean)
+    :SMAP;
+
+  /* ── collect per station ── */
+  const results=[];
+  for(const s of stationsToSearch){
+    const firRows=(DB.fir[s.sh]||[]).filter(r=>firMatch(r.cr));
+
+    const pendByFir =DB.pend.filter(c=>firMatch(c.fn)&&stMatchObj(c.sta,s));
+    /* petitioner check only when a specific station is selected (avoids cross-station noise) */
+    const usePtSearch=!!(stSel||stationsToSearch.length===1);
+    const pendByPt  =usePtSearch
+      ?DB.pend.filter(c=>!firMatch(c.fn)&&stMatchObj(c.sta,s)&&ptMatch(c.pt))
+      :[];
+
+    const dispByFir =DB.disp.filter(c=>firMatch(c.fn)&&stMatchObj(c.sta,s));
+    const dispByPt  =usePtSearch
+      ?DB.disp.filter(c=>!firMatch(c.fn)&&stMatchObj(c.sta,s)&&ptMatch(c.pt))
+      :[];
+
+    const nvRows    =DB.nv.filter(c=>firMatch(c.fn)&&stMatchObj(c.sta,s));
+    const cnRows    =DB.cnum.filter(c=>firMatch(c.fn)&&stMatchObj(c.sta,s));
+
+    const hasAny=firRows.length||pendByFir.length||pendByPt.length||
+                 dispByFir.length||dispByPt.length||nvRows.length||cnRows.length;
+    if(hasAny)results.push({s,firRows,pendByFir,pendByPt,dispByFir,dispByPt,nvRows,cnRows});
+  }
+
+  if(!results.length){
+    el.innerHTML=`<div class="no-data">No records found for <b>${fullFIR}</b>${stSel?' in '+SMAP.find(x=>x.sh===stSel)?.lb:' across all stations'}.</div>`;
+    return;
+  }
+
+  /* ── render ── */
+  const multi=results.length>1;
   let html='';
-  for(const s of stations){
-    if(!s)continue;
-    const firRows=(DB.fir[s.sh]||[]).filter(r=>r.cr.split('/')[0].trim()===fn||r.cr===raw);
-    const pend=DB.pend.filter(c=>{
-      const cf=(c.fn||'').split('/')[0].trim();
-      return(cf===fn||c.fn===raw)&&stMatchObj(c.sta,s);
-    });
-    const pendPt=DB.pend.filter(c=>{
-      const cf=(c.fn||'').split('/')[0].trim();
-      if(cf===fn||c.fn===raw)return false;
-      return stMatchObj(c.sta,s)&&(c.pt||'').toLowerCase().includes(fn.toLowerCase());
-    });
-    const disp=DB.disp.filter(c=>{
-      const cf=(c.fn||'').split('/')[0].trim();
-      return(cf===fn||c.fn===raw)&&stMatchObj(c.sta,s);
-    });
-    const dispPt=DB.disp.filter(c=>{
-      const cf=(c.fn||'').split('/')[0].trim();
-      if(cf===fn||c.fn===raw)return false;
-      return stMatchObj(c.sta,s)&&(c.pt||'').toLowerCase().includes(fn.toLowerCase());
-    });
-    const nv=DB.nv.filter(c=>{
-      const cf=(c.fn||'').split('/')[0].trim();
-      return(cf===fn||c.fn===raw)&&stMatchObj(c.sta,s);
-    });
-    const cnum=DB.cnum.filter(c=>{
-      const cf=(c.fn||'').split('/')[0].trim();
-      return(cf===fn||c.fn===raw)&&stMatchObj(c.sta,s);
-    });
-    const total=firRows.length+pend.length+disp.length+nv.length+cnum.length;
-    if(!total&&!pendPt.length&&!dispPt.length)continue;
-    html+=`<div class="res-card">
-      <div class="res-hdr">
-        <span class="fnum">FIR: ${fn}</span>
-        <span class="bdg bdg-a">${s.lb}</span>
-        ${firRows.length?'<span class="bdg bdg-r">📋 FIR Pending</span>':''}
-        ${pend.length?`<span class="bdg bdg-b">⚖ ${pend.length} Case Pending</span>`:''}
-        ${disp.length?`<span class="bdg bdg-g">✓ ${disp.length} Disposed</span>`:''}
-        ${nv.length?`<span class="bdg bdg-a">🏷 Non-Valuable</span>`:''}
-        ${cnum.length?`<span class="bdg bdg-p">📁 Case Numbered</span>`:''}
+
+  if(multi){
+    /* station pill bar */
+    html+=`<div style="margin-bottom:12px">
+      <div style="font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">
+        Found in ${results.length} stations — tap to expand
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        ${results.map((sr,i)=>{
+          const tot=sr.firRows.length+sr.pendByFir.length+sr.pendByPt.length+
+                    sr.dispByFir.length+sr.dispByPt.length+sr.nvRows.length+sr.cnRows.length;
+          return `<div class="case-pill" id="stpill-${i}" onclick="toggleStation(${i})" style="font-size:12px;padding:5px 14px">
+            ${sr.s.lb}
+            <span style="background:rgba(201,168,76,.2);border-radius:8px;padding:1px 6px;margin-left:4px;font-size:10px;color:var(--gold)">${tot}</span>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+
+    results.forEach((sr,i)=>{
+      html+=`<div id="stblock-${i}" style="display:${i===0?'block':'none'}">
+        ${buildStationBlock(sr,fullFIR,true)}
       </div>`;
-    if(firRows.length){
-      html+=`<div class="sub-sec"><div class="sub-ttl">FIR Pending Details</div>
-        ${firRows.map(r=>`<div class="det-grid">
-          <div><div class="df-lbl">CR Number</div><div class="df-val" style="color:var(--gold)">${r.cr}</div></div>
-          <div><div class="df-lbl">Section U/s</div><div class="df-val">${r.sec}</div></div>
-          <div><div class="df-lbl">Date Received</div><div class="df-val">${r.dr}</div></div>
-          <div><div class="df-lbl">Year Group</div><div class="df-val">${r.yr}</div></div>
-        </div>`).join('')}
-      </div>`;
-    }
-    if(pend.length){
-      html+=`<div class="sub-sec"><div class="sub-ttl">Case Pending (${pend.length})</div>
-        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px">
-          ${pend.map(c=>`<span class="case-pill" onclick="toggleDetail('pd${c.ri}')">${c.cn||'Case'}</span>`).join('')}
+    });
+    /* mark first pill open */
+    html+=`<script>(function(){var p=document.getElementById('stpill-0');if(p)p.classList.add('open');}());<\/script>`;
+  } else {
+    html+=buildStationBlock(results[0],fullFIR,false);
+  }
+
+  el.innerHTML=html;
+}
+
+function toggleStation(idx){
+  const block=document.getElementById('stblock-'+idx);
+  const pill =document.getElementById('stpill-' +idx);
+  if(!block)return;
+  const open=block.style.display==='block';
+  block.style.display=open?'none':'block';
+  if(pill)pill.classList.toggle('open',!open);
+}
+
+function buildStationBlock(sr,fullFIR,showHdr){
+  const {s,firRows,pendByFir,pendByPt,dispByFir,dispByPt,nvRows,cnRows}=sr;
+  const badges=[
+    firRows.length?'<span class="bdg bdg-r">📋 FIR Pending</span>':'',
+    (pendByFir.length+pendByPt.length)?`<span class="bdg bdg-b">⚖ ${pendByFir.length+pendByPt.length} Case Pending</span>`:'',
+    (dispByFir.length+dispByPt.length)?`<span class="bdg bdg-g">✓ ${dispByFir.length+dispByPt.length} Disposed</span>`:'',
+    nvRows.length?'<span class="bdg bdg-a">🏷 Non-Valuable</span>':'',
+    cnRows.length?'<span class="bdg bdg-p">📁 Case Numbered</span>':'',
+  ].filter(Boolean).join(' ');
+
+  let h=`<div class="res-card" ${showHdr?'style="border-color:rgba(201,168,76,.3)"':''}>
+    <div class="res-hdr">
+      <span class="fnum">${fullFIR}</span>
+      <span class="bdg bdg-a">${s.lb}</span>
+      ${badges}
+    </div>`;
+
+  /* 1. FIR Pending */
+  if(firRows.length){
+    h+=`<div class="sub-sec"><div class="sub-ttl">📋 FIR Pending Details</div>
+      ${firRows.map(r=>`<div class="det-grid" style="margin-bottom:6px">
+        <div><div class="df-lbl">CR Number</div><div class="df-val" style="color:var(--gold);font-weight:700">${r.cr}</div></div>
+        <div><div class="df-lbl">Section U/s</div><div class="df-val">${r.sec}</div></div>
+        <div><div class="df-lbl">Date Received</div><div class="df-val">${r.dr}</div></div>
+        <div><div class="df-lbl">Year Group</div><div class="df-val">${r.yr||'—'}</div></div>
+      </div>`).join('')}
+    </div>`;
+  }
+
+  /* 2. Pending (by FIR no.) */
+  if(pendByFir.length) h+=buildCaseSection(pendByFir,'pending','⚖ Case Pending','pd','');
+
+  /* 3. Pending (by petitioner) */
+  if(pendByPt.length)  h+=buildCaseSection(pendByPt,'pending',
+    '⚖ Case Pending <span style="color:var(--txt3);font-weight:400;font-size:9px">(matched via Petitioner / Respondent)</span>',
+    'pdpt','rgba(88,166,255,.05)');
+
+  /* 4. Disposed (by FIR no.) */
+  if(dispByFir.length) h+=buildCaseSection(dispByFir,'disposal','✅ Disposed Cases','dd','');
+
+  /* 5. Disposed (by petitioner) */
+  if(dispByPt.length)  h+=buildCaseSection(dispByPt,'disposal',
+    '✅ Disposed Cases <span style="color:var(--txt3);font-weight:400;font-size:9px">(matched via Petitioner / Respondent)</span>',
+    'ddpt','rgba(88,166,255,.05)');
+
+  /* 6. Non-Valuable */
+  if(nvRows.length){
+    h+=`<div class="sub-sec"><div class="sub-ttl">🏷 Non-Valuable Property</div>
+      ${nvRows.map(n=>`<div style="background:var(--bg);border:1px solid var(--bdr);border-radius:6px;padding:9px;margin-bottom:6px">
+        <div class="det-grid">
+          <div><div class="df-lbl">RP Number</div><div class="df-val" style="color:var(--gold);font-weight:700">${n.rp||'—'}</div></div>
+          <div><div class="df-lbl">Case Number</div><div class="df-val">${n.cn||'—'}</div></div>
+          <div style="grid-column:1/-1"><div class="df-lbl">Description</div><div class="df-val">${n.desc||'—'}</div></div>
+          <div style="grid-column:1/-1"><div class="df-lbl">Remarks</div><div class="df-val">${n.rem||'—'}</div></div>
         </div>
-        ${pend.map(c=>`<div class="case-detail" id="pd${c.ri}">
+      </div>`).join('')}
+    </div>`;
+  }
+
+  /* 7. Case Numbered */
+  if(cnRows.length){
+    h+=`<div class="sub-sec"><div class="sub-ttl">📁 Case Numbered Records (${cnRows.length})</div>
+      ${cnRows.map(c=>`<div style="background:rgba(188,140,255,.07);border:1px solid rgba(188,140,255,.2);border-radius:6px;padding:9px;margin-bottom:6px">
+        <div class="det-grid">
+          <div><div class="df-lbl">Case Number</div><div class="df-val" style="color:var(--pur);font-weight:700">${c.cn||'—'}</div></div>
+          <div><div class="df-lbl">Parties</div><div class="df-val">${c.pt||'—'}</div></div>
+          <div><div class="df-lbl">Date of Reg</div><div class="df-val">${c.dreg||'—'}</div></div>
+          <div><div class="df-lbl">Advocate</div><div class="df-val">${c.adv||'—'}</div></div>
+          <div><div class="df-lbl">Type</div><div class="df-val">${c.type||'—'}</div></div>
+          <div><div class="df-lbl">Section</div><div class="df-val">${c.sec2||c.sec||'—'}</div></div>
+          <div><div class="df-lbl">Next Date</div><div class="df-val">${c.nxt||'—'}</div></div>
+          <div><div class="df-lbl">Nature</div><div class="df-val">${c.nat||'—'}</div></div>
+        </div>
+      </div>`).join('')}
+    </div>`;
+  }
+
+  h+=`</div>`;
+  return h;
+}
+
+function buildCaseSection(rows,type,titleHtml,idPfx,bg){
+  const isPending=type==='pending';
+  return `<div class="sub-sec" ${bg?`style="background:${bg};border-radius:6px;padding:6px 8px"`:''}>
+    <div class="sub-ttl">${titleHtml} (${rows.length})</div>
+    <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px">
+      ${rows.map(c=>`<span class="case-pill" onclick="toggleDetail('${idPfx}${c.ri}')">${c.cn||'Case'}</span>`).join('')}
+    </div>
+    ${rows.map(c=>{
+      const id=`${idPfx}${c.ri}`;
+      if(isPending){
+        return `<div class="case-detail" id="${id}">
           <div class="det-grid">
             <div><div class="df-lbl">Case No</div><div class="df-val" style="color:var(--gold)">${c.cn}</div></div>
+            <div><div class="df-lbl">FIR Number</div><div class="df-val">${c.fn||'—'}</div></div>
             <div><div class="df-lbl">Parties</div><div class="df-val">${c.pt}</div></div>
             <div><div class="df-lbl">Advocate</div><div class="df-val">${c.adv||'—'}</div></div>
             <div><div class="df-lbl">Date of Reg</div><div class="df-val">${c.dreg||'—'}</div></div>
@@ -478,17 +684,12 @@ function doSearch(){
             <div><div class="df-lbl">Nature</div><div class="df-val">${c.nat||'—'}</div></div>
             <div><div class="df-lbl">Designation</div><div class="df-val">${c.des||'—'}</div></div>
           </div>
-        </div>`).join('')}
-      </div>`;
-    }
-    if(disp.length){
-      html+=`<div class="sub-sec"><div class="sub-ttl">Disposed Cases (${disp.length})</div>
-        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px">
-          ${disp.map(c=>`<span class="case-pill" onclick="toggleDetail('dd${c.ri}')">${c.cn||'Case'}</span>`).join('')}
-        </div>
-        ${disp.map(c=>`<div class="case-detail" id="dd${c.ri}">
+        </div>`;
+      } else {
+        return `<div class="case-detail" id="${id}">
           <div class="det-grid">
             <div><div class="df-lbl">Case No</div><div class="df-val" style="color:var(--gold)">${c.cn}</div></div>
+            <div><div class="df-lbl">FIR Number</div><div class="df-val">${c.fn||'—'}</div></div>
             <div><div class="df-lbl">Parties</div><div class="df-val">${c.pt}</div></div>
             <div><div class="df-lbl">Advocate</div><div class="df-val">${c.adv||'—'}</div></div>
             <div><div class="df-lbl">Date of Reg</div><div class="df-val">${c.dreg||'—'}</div></div>
@@ -497,38 +698,10 @@ function doSearch(){
             <div><div class="df-lbl">Section</div><div class="df-val">${c.sec||'—'}</div></div>
             <div><div class="df-lbl">Nature</div><div class="df-val">${c.nat||'—'}</div></div>
           </div>
-        </div>`).join('')}
-      </div>`;
-    }
-    if(nv.length){
-      html+=`<div class="sub-sec"><div class="sub-ttl">Non-Valuable Property</div>
-        ${nv.map(n=>`<div style="background:var(--bg);border:1px solid var(--bdr);border-radius:6px;padding:9px;margin-bottom:6px">
-          <div class="det-grid">
-            <div><div class="df-lbl">RP Number</div><div class="df-val" style="color:var(--gold);font-weight:700">${n.rp||'—'}</div></div>
-            <div><div class="df-lbl">Case Number</div><div class="df-val">${n.cn||'—'}</div></div>
-            <div style="grid-column:1/-1"><div class="df-lbl">Description</div><div class="df-val">${n.desc||'—'}</div></div>
-            <div style="grid-column:1/-1"><div class="df-lbl">Remarks</div><div class="df-val">${n.rem||'—'}</div></div>
-          </div>
-        </div>`).join('')}
-      </div>`;
-    }
-    if(cnum.length){
-      html+=`<div class="sub-sec"><div class="sub-ttl">Case Numbered Records (${cnum.length})</div>
-        ${cnum.map(c=>`<div style="background:rgba(188,140,255,.07);border:1px solid rgba(188,140,255,.2);border-radius:6px;padding:9px;margin-bottom:6px">
-          <div class="det-grid">
-            <div><div class="df-lbl">Case Number</div><div class="df-val" style="color:var(--pur);font-weight:700">${c.cn||'—'}</div></div>
-            <div><div class="df-lbl">Parties</div><div class="df-val">${c.pt||'—'}</div></div>
-            <div><div class="df-lbl">Date of Reg</div><div class="df-val">${c.dreg||'—'}</div></div>
-            <div><div class="df-lbl">Advocate</div><div class="df-val">${c.adv||'—'}</div></div>
-            <div><div class="df-lbl">Type</div><div class="df-val">${c.type||'—'}</div></div>
-            <div><div class="df-lbl">Section</div><div class="df-val">${c.sec2||c.sec||'—'}</div></div>
-          </div>
-        </div>`).join('')}
-      </div>`;
-    }
-    html+=`</div>`;
-  }
-  el.innerHTML=html||`<div class="no-data">No records found for FIR ${fn}${stVal?' in '+SMAP.find(s=>s.sh===stVal)?.lb:''}.</div>`;
+        </div>`;
+      }
+    }).join('')}
+  </div>`;
 }
 
 function toggleDetail(id){
@@ -539,6 +712,9 @@ function toggleDetail(id){
   if(pill)pill.classList.toggle('open',el.classList.contains('show'));
 }
 
+/* ═══════════════════════════════════════════════════
+   FIR → CASE NUMBERED TAB
+═══════════════════════════════════════════════════ */
 function renderFTC(){
   const p=document.getElementById('p-ftc');
   const s=FTC;
@@ -546,7 +722,6 @@ function renderFTC(){
   const steps=`<div class="step-row">
     ${[1,2,3].map((n,i)=>`<div class="step-dot ${s.step>n?'done':s.step===n?'act':''}">${s.step>n?'✓':n}</div>${i<2?'<div class="step-line"></div>':''}`).join('')}
   </div>`;
-
   let body='';
   if(s.step===1){
     body=`<div style="font-size:11px;color:var(--txt3);margin-bottom:12px">Step 1 — Enter FIR details to locate in pending list</div>
@@ -597,11 +772,9 @@ function renderFTC(){
           <div><div class="df-lbl">Parties</div><div class="df-val">${sc.pt||'—'}</div></div>
           <div><div class="df-lbl">Advocate</div><div class="df-val">${sc.adv||'—'}</div></div>
           <div><div class="df-lbl">Date of Reg</div><div class="df-val">${sc.dreg||'—'}</div></div>
-          <div><div class="df-lbl">Case Type</div><div class="df-val">${sc.type||'—'}</div></div>
-          <div><div class="df-lbl">Section (Case)</div><div class="df-val">${sc.sec||'—'}</div></div>
         </div>
       </div>
-      <div class="warn-box">⚠ This will permanently delete FIR ${s.fn}/${s.yr} from the "${s.st}" tab in FIR Pending sheet and save it to the Case Numbered sheet (sorted by Date of Registration).</div>
+      <div class="warn-box">⚠ This will permanently delete FIR ${s.fn}/${s.yr} from the "${s.st}" tab in FIR Pending sheet and save it to the Case Numbered sheet.</div>
       <div style="display:flex;gap:8px">
         <button class="btn btn-o" onclick="FTC.step=2;renderFTC()">← Back</button>
         <button class="btn btn-r" onclick="ftcExecute()">🗂 Move to Case Numbered</button>
@@ -610,7 +783,6 @@ function renderFTC(){
   }
   p.innerHTML=`<div class="card"><div class="ctitle">📁 FIR → Case Numbered</div>${steps}${body}</div>`;
 }
-
 function ftcSearch(){
   const msg=document.getElementById('ftcMsg');
   if(!FTC.fn){msg.innerHTML='<div class="msg-err">Enter FIR Number.</div>';return;}
@@ -619,24 +791,15 @@ function ftcSearch(){
   FTC.firRow=rows[0];FTC.step=2;renderFTC();
 }
 function ftcStep3(){if(!FTC.selCase)return;FTC.step=3;renderFTC();}
-
 async function ftcExecute(){
   const msg=document.getElementById('ftcFinalMsg');
   msg.innerHTML='<div class="loading"><div class="spin"></div>Processing…</div>';
   const sc=FTC.selCase;
   const stLb=SMAP.find(x=>x.sh===FTC.st)?.lb||FTC.st;
-  const row=[
-    `${FTC.fn}/${FTC.yr}`,stLb,
-    FTC.firRow?.sec||'',FTC.firRow?.dr||'',
-    sc.cn||'',sc.pt||'',sc.adv||'',
-    sc.dreg||'',sc.nxt||sc.ddec||'',
-    sc.type||'',sc.sec||'',sc.nat||'',sc.des||''
-  ];
+  const row=[`${FTC.fn}/${FTC.yr}`,stLb,FTC.firRow?.sec||'',FTC.firRow?.dr||'',sc.cn||'',sc.pt||'',sc.adv||'',sc.dreg||'',sc.nxt||sc.ddec||'',sc.type||'',sc.sec||'',sc.nat||'',sc.des||''];
   const saved=await sheetsAppend(SID.casenum,'Sheet1!A:M',[row]);
   if(!saved){msg.innerHTML='<div class="msg-err">Failed to save to Case Numbered sheet.</div>';return;}
-  if(FTC.firRow?.ri!==undefined&&FTC.firRow.ri!==9999){
-    await sheetsDeleteRow(SID.fir,FTC.st,FTC.firRow.ri);
-  }
+  if(FTC.firRow?.ri!==undefined&&FTC.firRow.ri!==9999)await sheetsDeleteRow(SID.fir,FTC.st,FTC.firRow.ri);
   const idx=(DB.fir[FTC.st]||[]).findIndex(r=>r.cr===FTC.firRow?.cr);
   if(idx>=0)DB.fir[FTC.st].splice(idx,1);
   DB.cnum.push({fn:`${FTC.fn}/${FTC.yr}`,sta:stLb,...sc});
@@ -644,81 +807,60 @@ async function ftcExecute(){
   setTimeout(()=>{FTC={step:1,fn:'',yr:String(new Date().getFullYear()),st:'JKM',firRow:null,selCase:null};renderFTC();},1400);
 }
 
+/* ═══════════════════════════════════════════════════
+   ABSTRACT TAB
+═══════════════════════════════════════════════════ */
 function renderAbstract(){
   const p=document.getElementById('p-abstract');
   const allFirs=[];
   const stTot=SMAP.map(s=>{const rows=DB.fir[s.sh]||[];allFirs.push(...rows.map(r=>({...r,stLb:s.lb,sh:s.sh})));return{lb:s.lb,cnt:rows.length};});
   const grand=stTot.reduce((a,b)=>a+b.cnt,0);
-
   const bySec={};
   for(const r of allFirs){const k=r.sec||'Unknown';bySec[k]=(bySec[k]||0)+1;}
   const secSort=Object.entries(bySec).sort((a,b)=>b[1]-a[1]);
-
   const byYr={};
   for(const r of allFirs){const k=r.yr||r.cr.split('/').pop()||'?';byYr[k]=(byYr[k]||0)+1;}
   const yrSort=Object.entries(byYr).sort((a,b)=>a[0].localeCompare(b[0]));
-
   const byMon={};
-  for(const r of allFirs){
-    if(r.dr){const pts=r.dr.split('.');if(pts.length>=3){const k=`${pts[2]}-${pts[1].padStart(2,'0')}`;byMon[k]=(byMon[k]||0)+1;}}
-  }
+  for(const r of allFirs){if(r.dr){const pts=r.dr.split('.');if(pts.length>=3){const k=`${pts[2]}-${pts[1].padStart(2,'0')}`;byMon[k]=(byMon[k]||0)+1;}}}
   const monNames=['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const monSort=Object.entries(byMon).sort((a,b)=>a[0].localeCompare(b[0]));
-
   const byDay={};
   for(const r of allFirs){if(r.dr){const k=r.dr;byDay[k]=(byDay[k]||0)+1;}}
   const daySort=Object.entries(byDay).sort((a,b)=>a[0].localeCompare(b[0])).slice(0,20);
-
   p.innerHTML=`
   <div class="stat-grid">
     <div class="stat"><div class="stat-lbl">Total Pending FIRs</div><div class="stat-val">${grand}</div><div class="stat-sub">All stations</div></div>
     ${stTot.map(s=>`<div class="stat"><div class="stat-lbl">${s.lb}</div><div class="stat-val">${s.cnt}</div><div class="stat-sub">FIRs pending</div></div>`).join('')}
   </div>
-
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px">
-    <div class="card">
-      <div class="ctitle">📍 Station-wise Summary</div>
-      <table class="abs-tbl">
-        <tr><th>Police Station</th><th>Pending FIRs</th></tr>
-        ${stTot.map(s=>`<tr><td>${s.lb}</td><td><b>${s.cnt}</b></td></tr>`).join('')}
-        <tr class="tot-row"><td>Total</td><td><b>${grand}</b></td></tr>
-      </table>
+    <div class="card"><div class="ctitle">📍 Station-wise Summary</div>
+      <table class="abs-tbl"><tr><th>Police Station</th><th>Pending FIRs</th></tr>
+      ${stTot.map(s=>`<tr><td>${s.lb}</td><td><b>${s.cnt}</b></td></tr>`).join('')}
+      <tr class="tot-row"><td>Total</td><td><b>${grand}</b></td></tr></table>
     </div>
-
-    <div class="card">
-      <div class="ctitle">📅 Year-wise</div>
-      <div class="tbl-wrap"><table class="abs-tbl">
-        <tr><th>Year</th><th>Count</th></tr>
-        ${yrSort.map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('')}
-        <tr class="tot-row"><td>Total</td><td><b>${allFirs.length}</b></td></tr>
-      </table></div>
+    <div class="card"><div class="ctitle">📅 Year-wise</div>
+      <div class="tbl-wrap"><table class="abs-tbl"><tr><th>Year</th><th>Count</th></tr>
+      ${yrSort.map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('')}
+      <tr class="tot-row"><td>Total</td><td><b>${allFirs.length}</b></td></tr></table></div>
     </div>
-
-    <div class="card">
-      <div class="ctitle">📆 Month-wise Receipt</div>
-      <div class="tbl-wrap"><table class="abs-tbl">
-        <tr><th>Month / Year</th><th>Count</th></tr>
-        ${monSort.map(([k,v])=>{const[yr,mn]=k.split('-');return`<tr><td>${monNames[parseInt(mn)]||mn} ${yr}</td><td>${v}</td></tr>`;}).join('')}
-        <tr class="tot-row"><td>Total</td><td><b>${monSort.reduce((a,b)=>a+b[1],0)}</b></td></tr>
-      </table></div>
+    <div class="card"><div class="ctitle">📆 Month-wise Receipt</div>
+      <div class="tbl-wrap"><table class="abs-tbl"><tr><th>Month / Year</th><th>Count</th></tr>
+      ${monSort.map(([k,v])=>{const[yr,mn]=k.split('-');return`<tr><td>${monNames[parseInt(mn)]||mn} ${yr}</td><td>${v}</td></tr>`;}).join('')}
+      <tr class="tot-row"><td>Total</td><td><b>${monSort.reduce((a,b)=>a+b[1],0)}</b></td></tr></table></div>
     </div>
-
-    <div class="card">
-      <div class="ctitle">⚖ Section U/s Wise (Top ${Math.min(secSort.length,30)})</div>
-      <div class="tbl-wrap"><table class="abs-tbl">
-        <tr><th>Section</th><th>Count</th></tr>
-        ${secSort.slice(0,30).map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('')}
-        <tr class="tot-row"><td>Total</td><td><b>${allFirs.length}</b></td></tr>
-      </table></div>
+    <div class="card"><div class="ctitle">⚖ Section U/s Wise (Top ${Math.min(secSort.length,30)})</div>
+      <div class="tbl-wrap"><table class="abs-tbl"><tr><th>Section</th><th>Count</th></tr>
+      ${secSort.slice(0,30).map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('')}
+      <tr class="tot-row"><td>Total</td><td><b>${allFirs.length}</b></td></tr></table></div>
     </div>
-
-    <div class="card">
-      <div class="ctitle">📋 Date-wise Receipt (Recent)</div>
-      <div class="tbl-wrap"><table class="abs-tbl">
-        <tr><th>Date Received</th><th>Count</th></tr>
-        ${daySort.map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('')}
+    <div class="card"><div class="ctitle">📋 Date-wise Receipt (Recent)</div>
+      <div class="tbl-wrap"><table class="abs-tbl"><tr><th>Date Received</th><th>Count</th></tr>
+      ${daySort.map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('')}
       </table></div>
     </div>
   </div>`;
 }
 </script>
+</body>
+</html>
