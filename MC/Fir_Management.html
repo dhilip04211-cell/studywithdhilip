@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -93,8 +92,6 @@ tr:hover td{background:rgba(201,168,76,.04)}
 .stat-sub{font-size:10px;color:var(--txt3);margin-top:2px}
 
 /* ── FIR Viewer specific ── */
-
-/* search box */
 .v-search-box{background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--rl);padding:20px;margin-bottom:14px}
 .v-search-title{font-size:13px;font-weight:700;color:var(--gold);margin-bottom:14px;text-transform:uppercase;letter-spacing:.5px}
 .v-inputs{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
@@ -102,7 +99,10 @@ tr:hover td{background:rgba(201,168,76,.04)}
 .v-preview{font-size:11px;color:var(--txt3);margin-top:8px;min-height:16px}
 .v-preview b{color:var(--gold)}
 
-/* station pills row */
+/* debug panel */
+.v-debug{background:rgba(88,166,255,.05);border:1px solid rgba(88,166,255,.2);border-radius:6px;padding:10px;margin-top:8px;font-size:10px;color:var(--txt3);font-family:monospace;white-space:pre-wrap;display:none}
+.v-debug.show{display:block}
+
 .v-station-row{margin-bottom:12px}
 .v-station-label{font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
 .v-station-pills{display:flex;flex-wrap:wrap;gap:6px}
@@ -112,17 +112,14 @@ tr:hover td{background:rgba(201,168,76,.04)}
 .st-pill .st-count{background:rgba(201,168,76,.25);color:var(--gold);border-radius:8px;padding:1px 7px;font-size:10px;font-weight:700}
 .st-pill.active .st-count{background:var(--gold);color:#000}
 
-/* station detail panel */
 .v-station-panel{background:var(--bg3);border:1px solid var(--gold-d);border-radius:var(--rl);padding:14px;margin-bottom:10px;animation:slideIn .15s ease}
 @keyframes slideIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 
-/* sheet section inside panel */
 .v-sheet-sec{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--bdr)}
 .v-sheet-sec:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
 .v-sheet-hdr{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
 .v-sheet-name{font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.4px}
 
-/* case number pills (≤5) */
 .v-case-pills{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px}
 .cn-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;border:1.5px solid var(--bdr);background:var(--bg2);color:var(--txt2);transition:all .15s;user-select:none}
 .cn-pill:hover{border-color:var(--blu);color:var(--blu)}
@@ -132,13 +129,10 @@ tr:hover td{background:rgba(201,168,76,.04)}
 .cn-pill .cn-src.disp{background:rgba(63,185,80,.2);color:var(--grn)}
 .cn-pill .cn-src.nv{background:rgba(201,168,76,.2);color:var(--gold)}
 .cn-pill .cn-src.cnum{background:rgba(188,140,255,.2);color:var(--pur)}
-.cn-pill .cn-src.fir{background:rgba(248,81,73,.2);color:var(--red)}
 
-/* case number dropdown (>5) */
 .v-cn-select{background:var(--bg2);border:1.5px solid var(--bdr);border-radius:6px;color:var(--txt);padding:7px 10px;font-size:12px;outline:none;font-family:inherit;cursor:pointer;transition:border-color .15s;width:100%;max-width:360px}
 .v-cn-select:focus{border-color:var(--gold)}
 
-/* case detail card */
 .v-case-detail{background:var(--bg);border:1px solid var(--gold-d);border-radius:var(--r);padding:14px;margin-top:10px;animation:fadeUp .15s ease}
 @keyframes fadeUp{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
 .v-det-hdr{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
@@ -148,7 +142,6 @@ tr:hover td{background:rgba(201,168,76,.04)}
 .df-val{font-size:12px;color:var(--txt);word-break:break-word}
 .df-val.hi{color:var(--gold);font-weight:600}
 
-/* FIR pending special card */
 .v-fir-row{background:rgba(248,81,73,.06);border:1px solid rgba(248,81,73,.25);border-radius:6px;padding:10px;margin-bottom:6px}
 
 /* numpad */
@@ -227,32 +220,69 @@ const SID={
    STATION MAP
 ══════════════════════════════════════════════════════ */
 const SMAP=[
-  {sh:'JKM',  lb:'Jayankondam',       al:['jayankondam','jkm','police station 1','ps jayankondam']},
-  {sh:'VKM',  lb:'Vikkiramangalam',   al:['vikkiramangalam','vikramangalam','vkm','venganam','police station venganam']},
-  {sh:'T.Palur',lb:'T.Palur',         al:['t.palur','tpalur','palur','keelapalur','police station keelap','t palur']},
-  {sh:'PEW',  lb:'PEW Ariyalur',      al:['pew','pew ariyalur','nb cid trichy','pew ariyalur ( pr','nb cid']},
-  {sh:'AWPS', lb:'AWPS Jayankondam',  al:['awps','awps jayankondam','all women']},
-  {sh:'DCB',  lb:'DCB Ariyalur',      al:['dcb','dcb ariyalur','police station ariyalur','ariyalur dcb']},
+  {sh:'JKM',    lb:'Jayankondam',      al:['jayankondam','jkm','police station 1','ps jayankondam']},
+  {sh:'VKM',    lb:'Vikkiramangalam',  al:['vikkiramangalam','vikramangalam','vkm','venganam','police station venganam']},
+  {sh:'T.Palur',lb:'T.Palur',          al:['t.palur','tpalur','palur','keelapalur','police station keelap','t palur','t. palur']},
+  {sh:'PEW',    lb:'PEW Ariyalur',     al:['pew','pew ariyalur','nb cid trichy','pew ariyalur ( pr','nb cid']},
+  {sh:'AWPS',   lb:'AWPS Jayankondam', al:['awps','awps jayankondam','all women']},
+  {sh:'DCB',    lb:'DCB Ariyalur',     al:['dcb','dcb ariyalur','police station ariyalur','ariyalur dcb']},
 ];
 
 let tok=null, loaded=false;
 let DB={fir:{}, pend:[], disp:[], nv:[], cnum:[]};
+/* Raw row counts per sheet for header offset tracking */
+let SHEET_HEADER_ROWS={};
 
 /* entry state */
 let ES={yr:String(new Date().getFullYear()), st:'JKM', fn:'', uns:'', dt:''};
 /* ftc state */
 let FTC={step:1, fn:'', yr:String(new Date().getFullYear()), st:'JKM', firRow:null, selCase:null};
 /* viewer state */
-let VS={fn:'', yr:String(new Date().getFullYear()), results:[], activeStation:null, activeCaseId:null};
+let VS={fn:'', yr:'', results:[], activeStation:null, activeCaseId:null, debugLog:[]};
 
 /* ══════════════════════════════════════════════════════
-   STATION HELPERS
+   FIR NUMBER NORMALISATION  ← KEY FIX
+   Strips leading zeros, spaces, normalises slash
+   "0012/2026" → {num:"12", yr:"2026"}
+   "12/2026"   → {num:"12", yr:"2026"}
+   "12"        → {num:"12", yr:""}
+   "12 / 2026" → {num:"12", yr:"2026"}
+══════════════════════════════════════════════════════ */
+function parseFIR(raw){
+  if(!raw && raw!==0) return {num:'',yr:''};
+  const s=String(raw).trim();
+  const parts=s.split(/\s*\/\s*/);
+  const num=String(parseInt(parts[0],10)||0);   // strips leading zeros
+  const yr=parts[1]?parts[1].trim():'';
+  return {num, yr};
+}
+
+/* Returns true if a raw FIR field from a sheet matches search num+yr */
+function firMatch(raw, searchNum, searchYr){
+  if(!raw) return false;
+  const p=parseFIR(raw);
+  if(p.num!==searchNum) return false;           // number must match
+  if(!searchYr) return true;                    // no year filter → any year
+  if(!p.yr) return true;                        // sheet has no year → accept
+  return p.yr===searchYr;
+}
+
+/* ══════════════════════════════════════════════════════
+   STATION MATCH  ← IMPROVED
+   Exact word match, not substring
 ══════════════════════════════════════════════════════ */
 function stMatchObj(name, obj){
   if(!name||!obj) return false;
   const n=name.toLowerCase().trim();
-  if(obj.sh.toLowerCase()===n||obj.lb.toLowerCase()===n) return true;
-  for(const a of obj.al) if(n.includes(a)||a.includes(n)) return true;
+  if(!n) return false;
+  // exact match on shortcode or full label
+  if(obj.sh.toLowerCase()===n) return true;
+  if(obj.lb.toLowerCase()===n) return true;
+  // alias: exact equality OR n contains alias as whole word
+  for(const a of obj.al){
+    if(n===a) return true;
+    if(n.includes(a) && (n.length===a.length || /\W/.test(n[a.length]||' '))) return true;
+  }
   return false;
 }
 
@@ -303,20 +333,30 @@ async function sheetsAppend(sid,range,vals){
   });
   return r.ok;
 }
-async function sheetsDeleteRow(sid,sheetName,rowIdx){
+
+/* ── FIX: sheetsDeleteRow now takes the 1-based sheet row number directly ── */
+async function sheetsDeleteRow(sid, sheetTabName, oneBasedRow){
   if(!tok) return false;
   const m=await apiFetch(`https://sheets.googleapis.com/v4/spreadsheets/${sid}?fields=sheets.properties`);
-  const sh=(m?.sheets||[]).find(s=>s.properties.title===sheetName);
-  if(!sh) return false;
+  const sh=(m?.sheets||[]).find(s=>s.properties.title===sheetTabName);
+  if(!sh){console.warn('Tab not found:',sheetTabName);return false;}
+  const zeroIdx=oneBasedRow-1;  // API is 0-based
   const r=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sid}:batchUpdate`,{
     method:'POST',headers:{Authorization:`Bearer ${tok}`,'Content-Type':'application/json'},
-    body:JSON.stringify({requests:[{deleteDimension:{range:{sheetId:sh.properties.sheetId,dimension:'ROWS',startIndex:rowIdx,endIndex:rowIdx+1}}}]})
+    body:JSON.stringify({requests:[{deleteDimension:{range:{
+      sheetId:sh.properties.sheetId,
+      dimension:'ROWS',
+      startIndex:zeroIdx,
+      endIndex:zeroIdx+1
+    }}}]})
   });
   return r.ok;
 }
 
 /* ══════════════════════════════════════════════════════
    LOAD ALL DATA
+   FIX: ri now stores 1-based sheet row number for safe deletion
+   FIX: year group detection is more robust
 ══════════════════════════════════════════════════════ */
 async function loadAll(){
   const ap=document.querySelector('.pane.act');
@@ -325,31 +365,94 @@ async function loadAll(){
     DB.fir={};
     for(const s of SMAP){
       const rows=await sheetsGet(SID.fir,`${s.sh}!A:D`);
-      const data=[];let yg='';
+      const data=[];
+      let yg='';
       for(let i=0;i<rows.length;i++){
         const r=rows[i];
-        if(!r[0]&&!r[1]&&r[2]&&!r[3]){yg=(r[2]||'').trim();continue;}
-        if(r[0]&&r[1]&&r[2]){
-          const sl=(r[0]||'').trim(),cr=(r[1]||'').trim(),sec=(r[2]||'').trim(),dr=(r[3]||'').trim();
-          if(cr&&sec&&sl&&!isNaN(sl)) data.push({sl,cr,sec,dr,yr:yg,ri:i});
+        const a=(r[0]||'').trim();
+        const b=(r[1]||'').trim();
+        const c=(r[2]||'').trim();
+        const d=(r[3]||'').trim();
+
+        /* Year-group row detection:
+           Pattern 1 (original): col A empty, col B empty, col C=year
+           Pattern 2: col A has year-like value (4 digits), rest empty
+           Pattern 3: any cell contains a 4-digit year and row has no FIR num */
+        const isYearRow=(
+          (!a && !b && /^\d{4}$/.test(c) && !d) ||   // pattern 1
+          (/^\d{4}$/.test(a) && !b && !c && !d) ||   // pattern 2
+          (!a && /^\d{4}$/.test(b) && !c && !d)       // pattern 3
+        );
+
+        if(isYearRow){
+          yg=(/^\d{4}$/.test(a)?a:/^\d{4}$/.test(b)?b:c);
+          continue;
+        }
+
+        /* Data row: col A=sl (numeric), col B=CR no, col C=section */
+        if(a && b && c && !isNaN(parseInt(a,10))){
+          /* Extract year from CR number itself as fallback */
+          const crYr=parseFIR(b).yr || yg;
+          data.push({
+            sl:a, cr:b, sec:c, dr:d,
+            yr:crYr,
+            ri:i+1       // 1-based row index in the sheet
+          });
         }
       }
       DB.fir[s.sh]=data;
     }
+
+    /* ── Pending sheet: A=sl,B=cn,C=pt,D=adv,E=dreg,F=nxt,G=pur,H=sec,I=sta,J=fn,K=nat,L=des ── */
     const pr=await sheetsGet(SID.pending,'Sheet1!A:L');
-    DB.pend=pr.slice(1).map((r,i)=>({sl:r[0]||'',cn:r[1]||'',pt:r[2]||'',adv:r[3]||'',dreg:r[4]||'',nxt:r[5]||'',pur:r[6]||'',sec:r[7]||'',sta:r[8]||'',fn:r[9]||'',nat:r[10]||'',des:r[11]||'',ri:i+1}));
+    DB.pend=pr.slice(1)
+      .map((r,i)=>({
+        sl:r[0]||'',cn:r[1]||'',pt:r[2]||'',adv:r[3]||'',
+        dreg:r[4]||'',nxt:r[5]||'',pur:r[6]||'',sec:r[7]||'',
+        sta:r[8]||'',fn:r[9]||'',nat:r[10]||'',des:r[11]||'',
+        ri:i+2   // 1-based, +2 because slice(1) skips header row
+      }))
+      .filter(r=>r.fn||r.cn);  // skip blank rows
+
+    /* ── Disposal sheet: A=sl,B=cn,C=pt,D=adv,E=dreg,F=ddec,G=dnat,H=sec,I=sta,J=fn,K=nat,L=des ── */
     const dr2=await sheetsGet(SID.disposal,'Sheet1!A:L');
-    DB.disp=dr2.slice(1).map((r,i)=>({sl:r[0]||'',cn:r[1]||'',pt:r[2]||'',adv:r[3]||'',dreg:r[4]||'',ddec:r[5]||'',dnat:r[6]||'',sec:r[7]||'',sta:r[8]||'',fn:r[9]||'',nat:r[10]||'',des:r[11]||'',ri:i+1}));
+    DB.disp=dr2.slice(1)
+      .map((r,i)=>({
+        sl:r[0]||'',cn:r[1]||'',pt:r[2]||'',adv:r[3]||'',
+        dreg:r[4]||'',ddec:r[5]||'',dnat:r[6]||'',sec:r[7]||'',
+        sta:r[8]||'',fn:r[9]||'',nat:r[10]||'',des:r[11]||'',
+        ri:i+2
+      }))
+      .filter(r=>r.fn||r.cn);
+
+    /* ── Non-valuable: A=sno,B=cn,C=fn,D=rp,E=sta,F=desc,G=rem ── */
     const nr=await sheetsGet(SID.nonval,'Sheet1!A:G');
-    DB.nv=nr.slice(1).map((r,i)=>({sno:r[0]||'',cn:r[1]||'',fn:r[2]||'',rp:r[3]||'',sta:r[4]||'',desc:r[5]||'',rem:r[6]||'',ri:i+1}));
+    DB.nv=nr.slice(1)
+      .map((r,i)=>({
+        sno:r[0]||'',cn:r[1]||'',fn:r[2]||'',rp:r[3]||'',
+        sta:r[4]||'',desc:r[5]||'',rem:r[6]||'',
+        ri:i+2
+      }))
+      .filter(r=>r.fn||r.cn);
+
+    /* ── Case numbered: A=fn,B=sta,C=sec,D=dr,E=cn,F=pt,G=adv,H=dreg,I=nxt,J=type,K=sec2,L=nat,M=des ── */
     const cnr=await sheetsGet(SID.casenum,'Sheet1!A:M');
-    DB.cnum=cnr.slice(1).map((r,i)=>({fn:r[0]||'',sta:r[1]||'',sec:r[2]||'',dr:r[3]||'',cn:r[4]||'',pt:r[5]||'',adv:r[6]||'',dreg:r[7]||'',nxt:r[8]||'',type:r[9]||'',sec2:r[10]||'',nat:r[11]||'',des:r[12]||'',ri:i+1}));
+    DB.cnum=cnr.slice(1)
+      .map((r,i)=>({
+        fn:r[0]||'',sta:r[1]||'',sec:r[2]||'',dr:r[3]||'',
+        cn:r[4]||'',pt:r[5]||'',adv:r[6]||'',dreg:r[7]||'',
+        nxt:r[8]||'',type:r[9]||'',sec2:r[10]||'',nat:r[11]||'',des:r[12]||'',
+        ri:i+2
+      }))
+      .filter(r=>r.fn||r.cn);
+
     loaded=true;
     const cur=document.querySelector('.tab.act');
-    const tName=['entry','viewer','ftc','abstract'][Array.from(document.querySelectorAll('.tab')).indexOf(cur)];
-    renderTab(tName||'entry');
+    const tName=['entry','viewer','ftc','abstract'][Array.from(document.querySelectorAll('.tab')).indexOf(cur)]||'entry';
+    renderTab(tName);
   }catch(e){
     ap.innerHTML=`<div class="msg-err">Error loading: ${e.message}</div>`;
+    console.error(e);
   }
 }
 
@@ -366,10 +469,10 @@ function goTab(name,el){
   renderTab(name);
 }
 function renderTab(n){
-  if(n==='entry')    renderEntry();
-  else if(n==='viewer')  renderViewer();
-  else if(n==='ftc')     renderFTC();
-  else if(n==='abstract')renderAbstract();
+  if(n==='entry')         renderEntry();
+  else if(n==='viewer')   renderViewer();
+  else if(n==='ftc')      renderFTC();
+  else if(n==='abstract') renderAbstract();
 }
 function renderAuth(t){
   document.getElementById('p-'+t).innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;gap:14px;padding:40px 20px;text-align:center">
@@ -386,6 +489,7 @@ function renderAuth(t){
 function renderEntry(){
   const p=document.getElementById('p-entry');
   const sOpts=SMAP.map(s=>`<option value="${s.sh}" ${s.sh===ES.st?'selected':''}>${s.lb}</option>`).join('');
+  const recentRows=(DB.fir[ES.st]||[]).slice(-3).reverse();
   p.innerHTML=`<div class="card">
     <div class="ctitle">📝 New FIR Entry</div>
     <div class="frow">
@@ -445,21 +549,16 @@ function renderEntry(){
         </div>
       </div>
     </div>
-  </div>`;
-  if(loaded){
-    const recent=(DB.fir[ES.st]||[]).slice(-3).reverse();
-    if(recent.length){
-      document.getElementById('p-entry').innerHTML+=`<div class="card">
-        <div class="ctitle">🕐 Recent — ${SMAP.find(s=>s.sh===ES.st)?.lb}</div>
-        <div class="tbl-wrap"><table><tr><th>Sl</th><th>CR No.</th><th>Section U/s</th><th>Date Received</th></tr>
-        ${recent.map(r=>`<tr><td>${r.sl}</td><td style="color:var(--gold)">${r.cr}</td><td>${r.sec}</td><td>${r.dr}</td></tr>`).join('')}
-        </table></div>
-      </div>`;
-    }
-  }
+  </div>
+  ${recentRows.length?`<div class="card">
+    <div class="ctitle">🕐 Recent — ${SMAP.find(s=>s.sh===ES.st)?.lb}</div>
+    <div class="tbl-wrap"><table><tr><th>Sl</th><th>CR No.</th><th>Section U/s</th><th>Date Received</th></tr>
+    ${recentRows.map(r=>`<tr><td>${r.sl}</td><td style="color:var(--gold)">${r.cr}</td><td>${r.sec}</td><td>${r.dr}</td></tr>`).join('')}
+    </table></div>
+  </div>`:''}`;
 }
 function npFn(n){const e=document.getElementById('eFn');if(!e)return;e.value+=n;ES.fn=e.value;}
-function npBs(id,k){const e=document.getElementById(id);if(!e)return;e.value=e.value.slice(0,-1);ES[k]=e.value;}
+function npBs(id,k){const e=document.getElementById(id);if(!e)return;e.value=e.value.slice(0,-1);if(k)ES[k]=e.value;}
 function npDt(n){const e=document.getElementById('eDt');if(!e||e.value.length>=10)return;e.value+=n;ES.dt=e.value;}
 function npDtDot(){const e=document.getElementById('eDt');if(!e||e.value.endsWith('.')||!e.value.length)return;e.value+='.';ES.dt=e.value;}
 async function saveEntry(){
@@ -467,27 +566,22 @@ async function saveEntry(){
   if(!ES.fn||!ES.uns||!ES.dt){m.innerHTML='<div class="msg-err">FIR Number, Section U/s, and Date are required.</div>';return;}
   const cr=`${ES.fn}/${ES.yr}`;
   const rows=DB.fir[ES.st]||[];
-  const nextSl=rows.length?Math.max(...rows.map(r=>parseInt(r.sl)||0))+1:1;
+  const nextSl=rows.length?Math.max(...rows.map(r=>parseInt(r.sl,10)||0))+1:1;
   m.innerHTML='<div class="loading"><div class="spin"></div>Saving…</div>';
   const ok=await sheetsAppend(SID.fir,`${ES.st}!A:D`,[[nextSl,cr,ES.uns,ES.dt]]);
   if(ok){
-    DB.fir[ES.st]=DB.fir[ES.st]||[];
-    DB.fir[ES.st].push({sl:String(nextSl),cr,sec:ES.uns,dr:ES.dt,yr:ES.yr,ri:9999});
+    DB.fir[ES.st]=rows;
+    rows.push({sl:String(nextSl),cr,sec:ES.uns,dr:ES.dt,yr:ES.yr,ri:999999});
     m.innerHTML=`<div class="msg-ok">✓ FIR ${cr} saved to ${SMAP.find(s=>s.sh===ES.st)?.lb}.</div>`;
     ES.fn='';ES.uns='';ES.dt='';
-    setTimeout(()=>{renderEntry();document.getElementById('eFn')?.focus();},900);
+    setTimeout(()=>{renderEntry();},900);
   } else {
     m.innerHTML='<div class="msg-err">Save failed. Check permissions.</div>';
   }
 }
 
 /* ══════════════════════════════════════════════════════
-   FIR VIEWER TAB
-   Flow:
-     1. Enter FIR No + Year → Search
-     2. Stations that have any match → station pills
-     3. Click station → show case-number pills/dropdown per sheet
-     4. Click case number → show full detail
+   FIR VIEWER TAB  ← FULLY REWRITTEN SEARCH LOGIC
 ══════════════════════════════════════════════════════ */
 function renderViewer(){
   const p=document.getElementById('p-viewer');
@@ -499,24 +593,30 @@ function renderViewer(){
         <label class="lbl">FIR Number</label>
         <input type="tel" id="vFn" inputmode="numeric" value="${VS.fn}"
                placeholder="e.g. 12" style="width:110px"
-               oninput="VS.fn=this.value;vPreview()"
+               oninput="VS.fn=this.value.trim();vPreview()"
                onkeydown="if(event.key==='Enter')vSearch()"/>
       </div>
       <div class="fg">
-        <label class="lbl">Year</label>
+        <label class="lbl">Year (optional)</label>
         <input type="tel" id="vYr" inputmode="numeric" value="${VS.yr}"
                placeholder="2026" style="width:80px"
-               oninput="VS.yr=this.value;vPreview()"
+               oninput="VS.yr=this.value.trim();vPreview()"
                onkeydown="if(event.key==='Enter')vSearch()"/>
       </div>
       <button class="btn btn-g" style="height:34px;align-self:flex-end" onclick="vSearch()">Search</button>
+      <button class="btn btn-o btn-sm" style="height:34px;align-self:flex-end" onclick="vClear()" title="Clear results">✕</button>
     </div>
     <div class="v-preview" id="vPrev"></div>
+    <div class="v-debug" id="vDebug"></div>
   </div>
   <div id="vOut"></div>`;
   vPreview();
-  /* re-render previous results if state is intact */
   if(VS.results && VS.results.length) vRenderResults();
+}
+
+function vClear(){
+  VS={fn:'',yr:'',results:[],activeStation:null,activeCaseId:null,debugLog:[]};
+  renderViewer();
 }
 
 function vPreview(){
@@ -524,63 +624,114 @@ function vPreview(){
   const yr=(document.getElementById('vYr')?.value||'').trim();
   const el=document.getElementById('vPrev');
   if(!el) return;
-  el.innerHTML=(fn&&yr)?`Searching for: <b>${fn}/${yr}</b>`:
-               fn?`Searching for: <b>${fn}</b> (all years)`:'';
+  if(!fn){el.innerHTML='Enter a FIR number to search across all stations.';return;}
+  const srch=yr?`<b>${fn}/${yr}</b>`:
+    `<b>${fn}</b> <span style="color:var(--txt3)">(all years)</span>`;
+  el.innerHTML=`Will search: ${srch} across all 6 stations and 4 registers`;
 }
 
-/* ─── main search ─── */
+/* ── MAIN SEARCH (fully rewritten) ── */
 function vSearch(){
-  const fn=(document.getElementById('vFn')?.value||VS.fn||'').trim();
-  const yr=(document.getElementById('vYr')?.value||VS.yr||'').trim();
-  VS.fn=fn; VS.yr=yr;
+  const fnRaw=(document.getElementById('vFn')?.value||VS.fn||'').trim();
+  const yrRaw=(document.getElementById('vYr')?.value||VS.yr||'').trim();
+
+  VS.fn=fnRaw; VS.yr=yrRaw;
   VS.activeStation=null; VS.activeCaseId=null;
+  VS.debugLog=[];
 
   const out=document.getElementById('vOut');
-  if(!fn){out.innerHTML='<div class="msg-info">Enter a FIR number to search.</div>';return;}
+  if(!fnRaw){out.innerHTML='<div class="msg-info">Enter a FIR number to search.</div>';return;}
 
-  const fullFIR=yr?`${fn}/${yr}`:fn;
+  /* Normalise search inputs */
+  const searchNum=String(parseInt(fnRaw,10)||fnRaw);  // "012" → "12"
+  const searchYr=yrRaw;
 
-  /* FIR number match */
-  function firMatch(val){
-    if(!val) return false;
-    const v=val.trim();
-    if(v===fullFIR) return true;
-    const np=v.split('/')[0].trim();
-    if(np===fn && !yr) return true;
-    if(np===fn && yr && (v.includes('/'+yr)||v.endsWith(yr))) return true;
-    return false;
-  }
+  VS.debugLog.push(`Search: num="${searchNum}" yr="${searchYr}"`);
 
-  /* build results per station */
   VS.results=[];
+
   for(const s of SMAP){
-    const firRows =(DB.fir[s.sh]||[]).filter(r=>firMatch(r.cr));
-    const pendRows=DB.pend.filter(c=>firMatch(c.fn)&&stMatchObj(c.sta,s));
-    const dispRows=DB.disp.filter(c=>firMatch(c.fn)&&stMatchObj(c.sta,s));
-    const nvRows  =DB.nv.filter(c=>firMatch(c.fn)&&stMatchObj(c.sta,s));
-    const cnRows  =DB.cnum.filter(c=>firMatch(c.fn)&&stMatchObj(c.sta,s));
+    /* ─ 1. FIR Pending Register (DB.fir) ─ */
+    const firRows=(DB.fir[s.sh]||[]).filter(r=>{
+      const match=firMatch(r.cr, searchNum, searchYr);
+      if(match) VS.debugLog.push(`FIR HIT [${s.sh}] cr="${r.cr}"`);
+      return match;
+    });
+
+    /* ─ 2. Pending cases – fn field + station ─ */
+    const pendRows=DB.pend.filter(r=>{
+      const fnMatch=firMatch(r.fn, searchNum, searchYr);
+      const stMatch=stMatchObj(r.sta, s);
+      if(fnMatch) VS.debugLog.push(`PEND fn="${r.fn}" sta="${r.sta}" fnMatch=${fnMatch} stMatch=${stMatch}`);
+      return fnMatch && stMatch;
+    });
+
+    /* ─ 3. Disposal cases ─ */
+    const dispRows=DB.disp.filter(r=>{
+      const fnMatch=firMatch(r.fn, searchNum, searchYr);
+      const stMatch=stMatchObj(r.sta, s);
+      if(fnMatch) VS.debugLog.push(`DISP fn="${r.fn}" sta="${r.sta}" fnMatch=${fnMatch} stMatch=${stMatch}`);
+      return fnMatch && stMatch;
+    });
+
+    /* ─ 4. Non-valuable property ─ */
+    const nvRows=DB.nv.filter(r=>{
+      const fnMatch=firMatch(r.fn, searchNum, searchYr);
+      const stMatch=stMatchObj(r.sta, s);
+      if(fnMatch) VS.debugLog.push(`NV fn="${r.fn}" sta="${r.sta}" fnMatch=${fnMatch} stMatch=${stMatch}`);
+      return fnMatch && stMatch;
+    });
+
+    /* ─ 5. Case numbered ─ */
+    const cnRows=DB.cnum.filter(r=>{
+      const fnMatch=firMatch(r.fn, searchNum, searchYr);
+      const stMatch=stMatchObj(r.sta, s);
+      if(fnMatch) VS.debugLog.push(`CNUM fn="${r.fn}" sta="${r.sta}" fnMatch=${fnMatch} stMatch=${stMatch}`);
+      return fnMatch && stMatch;
+    });
+
     const total=firRows.length+pendRows.length+dispRows.length+nvRows.length+cnRows.length;
     if(total) VS.results.push({s,firRows,pendRows,dispRows,nvRows,cnRows,total});
+  }
+
+  VS.debugLog.push(`Total stations with hits: ${VS.results.length}`);
+
+  /* Show debug toggle button */
+  const dbg=document.getElementById('vDebug');
+  if(dbg){
+    dbg.textContent=VS.debugLog.join('\n');
+    dbg.className='v-debug'; // hidden by default
   }
 
   vRenderResults();
 }
 
-/* ─── render station pills + panel ─── */
+function vToggleDebug(){
+  const el=document.getElementById('vDebug');
+  if(!el) return;
+  el.classList.toggle('show');
+}
+
+/* ── render station pills + panel ── */
 function vRenderResults(){
   const out=document.getElementById('vOut');
   if(!out) return;
-  const fn=VS.fn, yr=VS.yr;
-  const fullFIR=yr?`${fn}/${yr}`:fn;
+  const displayFIR=VS.yr?`${VS.fn}/${VS.yr}`:VS.fn;
 
   if(!VS.results||!VS.results.length){
-    out.innerHTML=`<div class="no-data">No records found for <b>${fullFIR}</b> across all stations.</div>`;
+    out.innerHTML=`
+      <div style="text-align:center;padding:30px 20px">
+        <div style="font-size:24px;margin-bottom:8px">🔍</div>
+        <div style="font-size:13px;font-weight:600;color:var(--txt2);margin-bottom:4px">No records found for <span style="color:var(--gold)">${displayFIR}</span></div>
+        <div style="font-size:11px;color:var(--txt3);margin-bottom:16px">Searched across all 6 stations and 4 registers</div>
+        <button class="btn btn-o btn-sm" onclick="vToggleDebug()">🔧 Show debug log</button>
+        <div class="v-debug" id="vDebug" style="margin-top:10px;text-align:left">${VS.debugLog.join('\n')}</div>
+      </div>`;
     return;
   }
 
-  /* ── station pills ── */
   let html=`<div class="v-station-row">
-    <div class="v-station-label">Found in ${VS.results.length} station${VS.results.length>1?'s':''} — select a station</div>
+    <div class="v-station-label">Found in ${VS.results.length} station${VS.results.length>1?'s':''} — tap a station to view</div>
     <div class="v-station-pills">
       ${VS.results.map((sr,i)=>`
         <div class="st-pill ${VS.activeStation===i?'active':''}" onclick="vSelectStation(${i})">
@@ -590,29 +741,27 @@ function vRenderResults(){
     </div>
   </div>`;
 
-  /* ── station panel (if one selected) ── */
-  if(VS.activeStation!==null){
-    const sr=VS.results[VS.activeStation];
-    html+=vBuildPanel(sr, fullFIR);
+  if(VS.activeStation!==null && VS.results[VS.activeStation]){
+    html+=vBuildPanel(VS.results[VS.activeStation], displayFIR);
   }
 
   out.innerHTML=html;
 }
 
 function vSelectStation(i){
-  VS.activeStation=i;
+  VS.activeStation=(VS.activeStation===i)?null:i;
   VS.activeCaseId=null;
   vRenderResults();
 }
 
-/* ─── panel for one station ─── */
-function vBuildPanel(sr, fullFIR){
+/* ── panel for one station ── */
+function vBuildPanel(sr, displayFIR){
   const {s,firRows,pendRows,dispRows,nvRows,cnRows}=sr;
   let h=`<div class="v-station-panel">
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap">
       <span style="font-size:13px;font-weight:700;color:var(--gold)">${s.lb}</span>
       <span style="font-size:11px;color:var(--txt3)">·</span>
-      <span style="font-size:12px;color:var(--txt2)">FIR <b style="color:var(--gold)">${fullFIR}</b></span>
+      <span style="font-size:12px;color:var(--txt2)">FIR <b style="color:var(--gold)">${displayFIR}</b></span>
       ${firRows.length?'<span class="bdg bdg-r">📋 FIR Pending</span>':''}
       ${pendRows.length?`<span class="bdg bdg-b">⚖ ${pendRows.length} Pending</span>`:''}
       ${dispRows.length?`<span class="bdg bdg-g">✓ ${dispRows.length} Disposed</span>`:''}
@@ -620,60 +769,43 @@ function vBuildPanel(sr, fullFIR){
       ${cnRows.length?`<span class="bdg bdg-p">📁 Case Numbered</span>`:''}
     </div>`;
 
-  /* 1 ── FIR Pending — show details directly (no case number needed) */
   if(firRows.length){
     h+=`<div class="v-sheet-sec">
       <div class="v-sheet-hdr">
         <span class="v-sheet-name">📋 FIR Pending Register</span>
+        <span class="bdg bdg-r">${firRows.length}</span>
       </div>
       ${firRows.map(r=>`<div class="v-fir-row">
         <div class="v-det-grid">
           <div><div class="df-lbl">CR Number</div><div class="df-val hi">${r.cr}</div></div>
           <div><div class="df-lbl">Section U/s</div><div class="df-val">${r.sec}</div></div>
           <div><div class="df-lbl">Date Received</div><div class="df-val">${r.dr||'—'}</div></div>
-          <div><div class="df-lbl">Year Group</div><div class="df-val">${r.yr||'—'}</div></div>
+          <div><div class="df-lbl">Year</div><div class="df-val">${r.yr||'—'}</div></div>
         </div>
       </div>`).join('')}
     </div>`;
   }
 
-  /* 2 ── Case Pending */
-  if(pendRows.length){
-    h+=vBuildCaseSection(pendRows,'pend','⚖ Case Pending','bdg-b','pend');
-  }
+  if(pendRows.length) h+=vBuildCaseSection(pendRows,'pend','⚖ Case Pending','bdg-b');
+  if(dispRows.length) h+=vBuildCaseSection(dispRows,'disp','✅ Disposed Cases','bdg-g');
+  if(nvRows.length)   h+=vBuildCaseSection(nvRows,  'nv',  '🏷 Non-Valuable Property','bdg-a');
+  if(cnRows.length)   h+=vBuildCaseSection(cnRows,  'cnum','📁 Case Numbered','bdg-p');
 
-  /* 3 ── Disposed */
-  if(dispRows.length){
-    h+=vBuildCaseSection(dispRows,'disp','✅ Disposed Cases','bdg-g','disp');
-  }
-
-  /* 4 ── Non-Valuable Property */
-  if(nvRows.length){
-    h+=vBuildCaseSection(nvRows,'nv','🏷 Non-Valuable Property','bdg-a','nv');
-  }
-
-  /* 5 ── Case Numbered */
-  if(cnRows.length){
-    h+=vBuildCaseSection(cnRows,'cnum','📁 Case Numbered','bdg-p','cnum');
-  }
-
-  h+=`</div>`; /* close panel */
+  h+=`</div>`;
   return h;
 }
 
-/* ─── case section: pills (≤5) or dropdown (>5) + detail ─── */
-function vBuildCaseSection(rows, prefix, title, bdgClass, srcKey){
-  /* unique key per case row */
-  const makeId=(r,src)=>`${src}::${r.ri}`;
+/* ── case section ── */
+function vBuildCaseSection(rows, prefix, title, bdgClass){
+  const makeId=(r,i)=>`${prefix}::${r.ri}::${i}`;
 
-  /* extract display name for each row */
   function dispName(r){
-    if(r.cn && r.cn.trim()) return r.cn.trim();
-    if(r.rp && r.rp.trim()) return 'RP: '+r.rp.trim(); /* non-valuable */
-    return '#'+r.ri;
+    if(r.cn&&r.cn.trim()) return r.cn.trim();
+    if(r.rp&&r.rp.trim()) return 'RP:'+r.rp.trim();
+    return '#'+(r.sl||r.sno||r.ri);
   }
 
-  const ids=rows.map(r=>makeId(r,srcKey));
+  const ids=rows.map((r,i)=>makeId(r,i));
 
   let h=`<div class="v-sheet-sec">
     <div class="v-sheet-hdr">
@@ -681,33 +813,28 @@ function vBuildCaseSection(rows, prefix, title, bdgClass, srcKey){
       <span class="bdg ${bdgClass}">${rows.length}</span>
     </div>`;
 
-  /* ── pills if ≤5, else dropdown ── */
   if(rows.length<=5){
     h+=`<div class="v-case-pills">`;
     rows.forEach((r,i)=>{
       const id=ids[i];
       const active=VS.activeCaseId===id;
+      const srcLabel=prefix==='pend'?'P':prefix==='disp'?'D':prefix==='nv'?'NV':'CN';
       h+=`<div class="cn-pill ${active?'active':''}" onclick="vSelectCase('${id}')">
         ${dispName(r)}
-        <span class="cn-src ${srcKey}">${srcKey==='pend'?'P':srcKey==='disp'?'D':srcKey==='nv'?'NV':'CN'}</span>
+        <span class="cn-src ${prefix}">${srcLabel}</span>
       </div>`;
     });
     h+=`</div>`;
   } else {
-    /* dropdown */
-    const selVal=ids.includes(VS.activeCaseId)?VS.activeCaseId:'';
     h+=`<select class="v-cn-select" onchange="vSelectCase(this.value)">
-      <option value="">— Select case number (${rows.length} cases) —</option>
-      ${rows.map((r,i)=>`<option value="${ids[i]}" ${VS.activeCaseId===ids[i]?'selected':''}>
-        ${dispName(r)}${r.pt?' · '+r.pt.substring(0,40):''}
-      </option>`).join('')}
+      <option value="">— Select (${rows.length} records) —</option>
+      ${rows.map((r,i)=>`<option value="${ids[i]}" ${VS.activeCaseId===ids[i]?'selected':''}>${dispName(r)}${r.pt?' · '+r.pt.substring(0,40):''}</option>`).join('')}
     </select>`;
   }
 
-  /* ── detail for active case in this section ── */
-  const activeRow=rows.find((r,i)=>ids[i]===VS.activeCaseId);
-  if(activeRow){
-    h+=vBuildDetail(activeRow, srcKey);
+  const activeIdx=ids.indexOf(VS.activeCaseId);
+  if(activeIdx>=0){
+    h+=vBuildDetail(rows[activeIdx], prefix);
   }
 
   h+=`</div>`;
@@ -715,19 +842,15 @@ function vBuildCaseSection(rows, prefix, title, bdgClass, srcKey){
 }
 
 function vSelectCase(id){
-  VS.activeCaseId=(VS.activeCaseId===id)?null:id; /* toggle */
+  VS.activeCaseId=(VS.activeCaseId===id)?null:id;
   vRenderResults();
 }
 
-/* ─── full detail card ─── */
+/* ── full detail card ── */
 function vBuildDetail(r, srcKey){
   let h=`<div class="v-case-detail">`;
-
   if(srcKey==='pend'){
-    h+=`<div class="v-det-hdr">
-      <span class="v-det-cn">${r.cn||'—'}</span>
-      <span class="bdg bdg-b">Case Pending</span>
-    </div>
+    h+=`<div class="v-det-hdr"><span class="v-det-cn">${r.cn||'—'}</span><span class="bdg bdg-b">Case Pending</span></div>
     <div class="v-det-grid">
       <div><div class="df-lbl">Case Number</div><div class="df-val hi">${r.cn||'—'}</div></div>
       <div><div class="df-lbl">FIR Number</div><div class="df-val">${r.fn||'—'}</div></div>
@@ -741,12 +864,8 @@ function vBuildDetail(r, srcKey){
       <div><div class="df-lbl">Nature</div><div class="df-val">${r.nat||'—'}</div></div>
       <div><div class="df-lbl">Designation</div><div class="df-val">${r.des||'—'}</div></div>
     </div>`;
-  }
-  else if(srcKey==='disp'){
-    h+=`<div class="v-det-hdr">
-      <span class="v-det-cn">${r.cn||'—'}</span>
-      <span class="bdg bdg-g">Disposed</span>
-    </div>
+  } else if(srcKey==='disp'){
+    h+=`<div class="v-det-hdr"><span class="v-det-cn">${r.cn||'—'}</span><span class="bdg bdg-g">Disposed</span></div>
     <div class="v-det-grid">
       <div><div class="df-lbl">Case Number</div><div class="df-val hi">${r.cn||'—'}</div></div>
       <div><div class="df-lbl">FIR Number</div><div class="df-val">${r.fn||'—'}</div></div>
@@ -759,12 +878,8 @@ function vBuildDetail(r, srcKey){
       <div><div class="df-lbl">Police Station</div><div class="df-val">${r.sta||'—'}</div></div>
       <div><div class="df-lbl">Nature</div><div class="df-val">${r.nat||'—'}</div></div>
     </div>`;
-  }
-  else if(srcKey==='nv'){
-    h+=`<div class="v-det-hdr">
-      <span class="v-det-cn">${r.rp||r.cn||'—'}</span>
-      <span class="bdg bdg-a">Non-Valuable Property</span>
-    </div>
+  } else if(srcKey==='nv'){
+    h+=`<div class="v-det-hdr"><span class="v-det-cn">${r.rp||r.cn||'—'}</span><span class="bdg bdg-a">Non-Valuable Property</span></div>
     <div class="v-det-grid">
       <div><div class="df-lbl">RP Number</div><div class="df-val hi">${r.rp||'—'}</div></div>
       <div><div class="df-lbl">Case Number</div><div class="df-val">${r.cn||'—'}</div></div>
@@ -773,12 +888,8 @@ function vBuildDetail(r, srcKey){
       <div style="grid-column:1/-1"><div class="df-lbl">Description</div><div class="df-val">${r.desc||'—'}</div></div>
       <div style="grid-column:1/-1"><div class="df-lbl">Remarks</div><div class="df-val">${r.rem||'—'}</div></div>
     </div>`;
-  }
-  else if(srcKey==='cnum'){
-    h+=`<div class="v-det-hdr">
-      <span class="v-det-cn" style="color:var(--pur)">${r.cn||'—'}</span>
-      <span class="bdg bdg-p">Case Numbered</span>
-    </div>
+  } else if(srcKey==='cnum'){
+    h+=`<div class="v-det-hdr"><span class="v-det-cn" style="color:var(--pur)">${r.cn||'—'}</span><span class="bdg bdg-p">Case Numbered</span></div>
     <div class="v-det-grid">
       <div><div class="df-lbl">Case Number</div><div class="df-val" style="color:var(--pur);font-weight:600">${r.cn||'—'}</div></div>
       <div><div class="df-lbl">FIR Number</div><div class="df-val">${r.fn||'—'}</div></div>
@@ -794,13 +905,12 @@ function vBuildDetail(r, srcKey){
       <div><div class="df-lbl">Designation</div><div class="df-val">${r.des||'—'}</div></div>
     </div>`;
   }
-
   h+=`</div>`;
   return h;
 }
 
 /* ══════════════════════════════════════════════════════
-   FIR → CASE NUMBERED TAB
+   FIR → CASE NUMBERED TAB  (delete row fix applied)
 ══════════════════════════════════════════════════════ */
 function renderFTC(){
   const p=document.getElementById('p-ftc');
@@ -821,14 +931,15 @@ function renderFTC(){
       <div id="ftcMsg"></div>`;
   } else if(s.step===2){
     const stObj=SMAP.find(x=>x.sh===s.st);
+    const searchNum=String(parseInt(s.fn,10)||s.fn);
     const allC=[
-      ...DB.pend.filter(c=>{const cf=(c.fn||'').split('/')[0].trim();return cf===s.fn&&stMatchObj(c.sta,stObj);}).map(c=>({...c,type:'pending'})),
-      ...DB.disp.filter(c=>{const cf=(c.fn||'').split('/')[0].trim();return cf===s.fn&&stMatchObj(c.sta,stObj);}).map(c=>({...c,type:'disposal'}))
+      ...DB.pend.filter(c=>firMatch(c.fn,searchNum,s.yr)&&stMatchObj(c.sta,stObj)).map(c=>({...c,type:'pending'})),
+      ...DB.disp.filter(c=>firMatch(c.fn,searchNum,s.yr)&&stMatchObj(c.sta,stObj)).map(c=>({...c,type:'disposal'}))
     ];
     body=`<div style="font-size:11px;color:var(--txt3);margin-bottom:12px">Step 2 — Select the linked case</div>
       ${s.firRow?`<div class="msg-info" style="margin-bottom:10px">✓ FIR ${s.firRow.cr} — ${s.firRow.sec} | Received: ${s.firRow.dr}</div>`:''}
       <div style="font-size:11px;color:var(--txt2);margin-bottom:6px">Matched cases (${allC.length})</div>
-      ${allC.length===0?'<div class="no-data">No cases found for this FIR.</div>':
+      ${allC.length===0?'<div class="no-data">No cases found for this FIR in pending/disposal sheets.</div>':
         allC.map(c=>`<div class="case-sel ${s.selCase?.cn===c.cn?'sel':''}" onclick='FTC.selCase=${JSON.stringify(c).replace(/'/g,"&#39;")};renderFTC()'>
           <div>
             <div style="font-weight:700;font-size:12px">${c.cn}</div>
@@ -839,12 +950,12 @@ function renderFTC(){
         </div>`).join('')}
       <div style="display:flex;gap:8px;margin-top:10px">
         <button class="btn btn-o" onclick="FTC.step=1;FTC.selCase=null;renderFTC()">← Back</button>
-        <button class="btn btn-g" onclick="ftcStep3()" ${!s.selCase?'disabled style="opacity:.4"':''}>Next →</button>
+        <button class="btn btn-g" onclick="ftcStep3()" ${!s.selCase?'disabled':''}>Next →</button>
       </div>`;
   } else if(s.step===3){
     const sc=s.selCase||{};
     const stLb=SMAP.find(x=>x.sh===s.st)?.lb||s.st;
-    body=`<div style="font-size:11px;color:var(--txt3);margin-bottom:12px">Step 3 — Confirm</div>
+    body=`<div style="font-size:11px;color:var(--txt3);margin-bottom:12px">Step 3 — Confirm & Execute</div>
       <div class="res-card" style="margin-bottom:10px">
         <div class="res-hdr">
           <span class="fnum">FIR: ${s.fn}/${s.yr}</span>
@@ -861,7 +972,7 @@ function renderFTC(){
           <div><div class="df-lbl">Date of Reg</div><div class="df-val">${sc.dreg||'—'}</div></div>
         </div>
       </div>
-      <div class="warn-box">⚠ This will delete FIR ${s.fn}/${s.yr} from "${s.st}" tab and save to Case Numbered sheet.</div>
+      <div class="warn-box">⚠ This will remove FIR ${s.fn}/${s.yr} from the "${s.st}" FIR sheet tab and save it to the Case Numbered sheet.</div>
       <div style="display:flex;gap:8px">
         <button class="btn btn-o" onclick="FTC.step=2;renderFTC()">← Back</button>
         <button class="btn btn-r" onclick="ftcExecute()">🗂 Move to Case Numbered</button>
@@ -870,28 +981,51 @@ function renderFTC(){
   }
   p.innerHTML=`<div class="card"><div class="ctitle">📁 FIR → Case Numbered</div>${steps}${body}</div>`;
 }
+
 function ftcSearch(){
   const msg=document.getElementById('ftcMsg');
   if(!FTC.fn){msg.innerHTML='<div class="msg-err">Enter FIR Number.</div>';return;}
-  const rows=(DB.fir[FTC.st]||[]).filter(r=>r.cr.split('/')[0].trim()===FTC.fn);
-  if(!rows.length){msg.innerHTML=`<div class="msg-err">FIR ${FTC.fn}/${FTC.yr} not found in ${SMAP.find(s=>s.sh===FTC.st)?.lb}.</div>`;return;}
+  const searchNum=String(parseInt(FTC.fn,10)||FTC.fn);
+  const rows=(DB.fir[FTC.st]||[]).filter(r=>firMatch(r.cr, searchNum, FTC.yr));
+  if(!rows.length){
+    msg.innerHTML=`<div class="msg-err">FIR ${FTC.fn}/${FTC.yr} not found in ${SMAP.find(s=>s.sh===FTC.st)?.lb} FIR register.</div>`;
+    return;
+  }
   FTC.firRow=rows[0];FTC.step=2;renderFTC();
 }
 function ftcStep3(){if(!FTC.selCase)return;FTC.step=3;renderFTC();}
+
 async function ftcExecute(){
   const msg=document.getElementById('ftcFinalMsg');
   msg.innerHTML='<div class="loading"><div class="spin"></div>Processing…</div>';
   const sc=FTC.selCase;
   const stLb=SMAP.find(x=>x.sh===FTC.st)?.lb||FTC.st;
-  const row=[`${FTC.fn}/${FTC.yr}`,stLb,FTC.firRow?.sec||'',FTC.firRow?.dr||'',sc.cn||'',sc.pt||'',sc.adv||'',sc.dreg||'',sc.nxt||sc.ddec||'',sc.type||'',sc.sec||'',sc.nat||'',sc.des||''];
+  const row=[
+    `${FTC.fn}/${FTC.yr}`, stLb,
+    FTC.firRow?.sec||'', FTC.firRow?.dr||'',
+    sc.cn||'', sc.pt||'', sc.adv||'', sc.dreg||'',
+    sc.nxt||sc.ddec||'', sc.type||'',
+    sc.sec||'', sc.nat||'', sc.des||''
+  ];
   const saved=await sheetsAppend(SID.casenum,'Sheet1!A:M',[row]);
-  if(!saved){msg.innerHTML='<div class="msg-err">Failed to save.</div>';return;}
-  if(FTC.firRow?.ri!==undefined&&FTC.firRow.ri!==9999) await sheetsDeleteRow(SID.fir,FTC.st,FTC.firRow.ri);
+  if(!saved){msg.innerHTML='<div class="msg-err">Failed to save to Case Numbered sheet.</div>';return;}
+
+  /* Delete from FIR sheet using correct 1-based row index */
+  if(FTC.firRow?.ri && FTC.firRow.ri!==999999){
+    const deleted=await sheetsDeleteRow(SID.fir, FTC.st, FTC.firRow.ri);
+    if(!deleted) console.warn('Row delete failed — sheet tab name may not match shortcode');
+  }
+
+  /* Update local DB */
   const idx=(DB.fir[FTC.st]||[]).findIndex(r=>r.cr===FTC.firRow?.cr);
   if(idx>=0) DB.fir[FTC.st].splice(idx,1);
   DB.cnum.push({fn:`${FTC.fn}/${FTC.yr}`,sta:stLb,...sc});
-  msg.innerHTML=`<div class="msg-ok">✓ FIR ${FTC.fn}/${FTC.yr} moved to Case Numbered.</div>`;
-  setTimeout(()=>{FTC={step:1,fn:'',yr:String(new Date().getFullYear()),st:'JKM',firRow:null,selCase:null};renderFTC();},1400);
+
+  msg.innerHTML=`<div class="msg-ok">✓ FIR ${FTC.fn}/${FTC.yr} successfully moved to Case Numbered.</div>`;
+  setTimeout(()=>{
+    FTC={step:1,fn:'',yr:String(new Date().getFullYear()),st:'JKM',firRow:null,selCase:null};
+    renderFTC();
+  },1600);
 }
 
 /* ══════════════════════════════════════════════════════
@@ -900,21 +1034,38 @@ async function ftcExecute(){
 function renderAbstract(){
   const p=document.getElementById('p-abstract');
   const allFirs=[];
-  const stTot=SMAP.map(s=>{const rows=DB.fir[s.sh]||[];allFirs.push(...rows.map(r=>({...r,stLb:s.lb})));return{lb:s.lb,cnt:rows.length};});
+  const stTot=SMAP.map(s=>{
+    const rows=DB.fir[s.sh]||[];
+    allFirs.push(...rows.map(r=>({...r,stLb:s.lb})));
+    return{lb:s.lb,cnt:rows.length};
+  });
   const grand=stTot.reduce((a,b)=>a+b.cnt,0);
+
   const bySec={};
   for(const r of allFirs){const k=r.sec||'Unknown';bySec[k]=(bySec[k]||0)+1;}
   const secSort=Object.entries(bySec).sort((a,b)=>b[1]-a[1]);
+
   const byYr={};
-  for(const r of allFirs){const k=r.yr||r.cr.split('/').pop()||'?';byYr[k]=(byYr[k]||0)+1;}
+  for(const r of allFirs){
+    const k=r.yr||parseFIR(r.cr).yr||'?';
+    byYr[k]=(byYr[k]||0)+1;
+  }
   const yrSort=Object.entries(byYr).sort((a,b)=>a[0].localeCompare(b[0]));
+
   const byMon={};
-  for(const r of allFirs){if(r.dr){const pts=r.dr.split('.');if(pts.length>=3){const k=`${pts[2]}-${pts[1].padStart(2,'0')}`;byMon[k]=(byMon[k]||0)+1;}}}
+  for(const r of allFirs){
+    if(r.dr){
+      const pts=r.dr.split('.');
+      if(pts.length>=3){const k=`${pts[2]}-${pts[1].padStart(2,'0')}`;byMon[k]=(byMon[k]||0)+1;}
+    }
+  }
   const monNames=['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const monSort=Object.entries(byMon).sort((a,b)=>a[0].localeCompare(b[0]));
+
   const byDay={};
   for(const r of allFirs){if(r.dr){const k=r.dr;byDay[k]=(byDay[k]||0)+1;}}
   const daySort=Object.entries(byDay).sort((a,b)=>a[0].localeCompare(b[0])).slice(0,20);
+
   p.innerHTML=`
   <div class="stat-grid">
     <div class="stat"><div class="stat-lbl">Total Pending FIRs</div><div class="stat-val">${grand}</div><div class="stat-sub">All stations</div></div>
@@ -941,7 +1092,7 @@ function renderAbstract(){
       ${secSort.slice(0,30).map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('')}
       <tr class="tot-row"><td>Total</td><td><b>${allFirs.length}</b></td></tr></table></div>
     </div>
-    <div class="card"><div class="ctitle">📋 Date-wise (Recent)</div>
+    <div class="card"><div class="ctitle">📋 Date-wise (Recent 20)</div>
       <div class="tbl-wrap"><table class="abs-tbl"><tr><th>Date</th><th>Count</th></tr>
       ${daySort.map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('')}</table></div>
     </div>
