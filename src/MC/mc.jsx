@@ -5,34 +5,24 @@ const BASE = import.meta.env.BASE_URL;
 
 const sections = [
   {
-    title: "Power Plant",
+    title: "Fir Management(HTML)",
     route: `${BASE}MC/Fir_Management.html`,
     icon: "⚡",
     color: "#C9A84C",
     accent: "#F5D07A",
-    subtitle: "FIR",
+    subtitle: "Thermal · Hydro · Nuclear",
     num: "01",
     isExternal: true,
   },
   {
-    title: "Circuit Theory",
-    route: "/mc/crlmpeditor",
+    title: "Fir Management",
+    route: "/MC/firmanagement",
     icon: "🔌",
     color: "#C9A84C",
     accent: "#F5D07A",
-    subtitle: "Crlmp",
+    subtitle: "Basic Circuits · Analysis · Series",
     isExternal: false,
     num: "02",
-  },
-{
-    title: "Fir Management",
-    route: "/mc/firmanagement",
-    icon: "🔌",
-    color: "#C9A84C",
-    accent: "#F5D07A",
-    subtitle: "fir management",
-    isExternal: false,
-    num: "03",
   },
 ];
 
