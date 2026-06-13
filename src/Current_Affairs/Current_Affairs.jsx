@@ -9,6 +9,12 @@ const months = [
     color: "#27AE60",
     icon: "📰",
   },
+{title: "May 2026",
+    subtitle: "Monthly CA Updates",
+    route: "/current_affairs/may_2026",
+    color: "#27AE60",
+    icon: "📰",
+  },
 ];
 
 export default function CurrentAffairs() {
