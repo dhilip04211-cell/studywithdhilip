@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-
+const BASE = import.meta.env.BASE_URL;
 const months = [
   {
     title: "January 2026",
@@ -10,8 +10,8 @@ const months = [
     icon: "📰",
   },
 {title: "May 2026",
-    subtitle: "Monthly CA Updates",
-    route: "/current_affairs/may_2026",
+    subtitle: "Monthly CA ",
+    href: "/studywithdhilip/CA/May_2026.html",
     color: "#27AE60",
     icon: "📰",
   },
