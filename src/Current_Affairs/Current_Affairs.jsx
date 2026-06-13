@@ -9,7 +9,8 @@ const months = [
     color: "#27AE60",
     icon: "📰",
   },
-{title: "May 2026",
+  {
+    title: "May 2026",
     subtitle: "Monthly CA ",
     href: "/studywithdhilip/CA/May_2026.html",
     color: "#27AE60",
@@ -34,33 +35,53 @@ export default function CurrentAffairs() {
         </div>
 
         <div style={styles.grid}>
-          {months.map((item, i) => (
-            <Link
-              key={item.route}
-              to={item.route}
-              style={{
-                ...styles.card,
-                boxShadow:
-                  hovered === i
-                    ? `0 0 30px ${item.color}44`
-                    : "0 8px 24px rgba(0,0,0,0.25)",
-                transform:
-                  hovered === i
-                    ? "translateY(-5px) scale(1.02)"
-                    : "scale(1)",
-              }}
-              onMouseEnter={() => setHovered(i)}
-              onMouseLeave={() => setHovered(null)}
-            >
-              <div style={{ ...styles.topBar, background: item.color }} />
-              <div style={styles.icon}>{item.icon}</div>
-              <div style={styles.cardTitle}>{item.title}</div>
-              <div style={styles.cardSub}>{item.subtitle}</div>
-              <div style={{ ...styles.openBtn, color: item.color }}>
-                Open →
-              </div>
-            </Link>
-          ))}
+          {months.map((item, i) => {
+            const cardStyle = {
+              ...styles.card,
+              boxShadow:
+                hovered === i
+                  ? `0 0 30px ${item.color}44`
+                  : "0 8px 24px rgba(0,0,0,0.25)",
+              transform:
+                hovered === i
+                  ? "translateY(-5px) scale(1.02)"
+                  : "scale(1)",
+            };
+
+            const content = (
+              <>
+                <div style={{ ...styles.topBar, background: item.color }} />
+                <div style={styles.icon}>{item.icon}</div>
+                <div style={styles.cardTitle}>{item.title}</div>
+                <div style={styles.cardSub}>{item.subtitle}</div>
+                <div style={{ ...styles.openBtn, color: item.color }}>
+                  Open →
+                </div>
+              </>
+            );
+
+            return item.href ? (
+              <a
+                key={item.title}
+                href={item.href}
+                style={cardStyle}
+                onMouseEnter={() => setHovered(i)}
+                onMouseLeave={() => setHovered(null)}
+              >
+                {content}
+              </a>
+            ) : (
+              <Link
+                key={item.title}
+                to={item.route}
+                style={cardStyle}
+                onMouseEnter={() => setHovered(i)}
+                onMouseLeave={() => setHovered(null)}
+              >
+                {content}
+              </Link>
+            );
+          })}
         </div>
       </div>
     </div>
