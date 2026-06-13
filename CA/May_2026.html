@@ -1,958 +1,467 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ta">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>May Month CA Quiz 2026</title>
+<title>மே மாத நடப்பு நிகழ்வுகள் - 2026</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; margin:0; padding:0; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-    background: #0f172a;
-    color: #e2e8f0;
+    font-family: 'Noto Sans Tamil', 'Latha', sans-serif;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
     min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     padding: 16px;
+    color: #222;
   }
-  .card {
-    background: #1e293b;
-    border: 1px solid #334155;
-    border-radius: 16px;
-    padding: 24px;
-    max-width: 640px;
-    width: 100%;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-  }
-  .top-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  .container { max-width: 700px; margin: 0 auto; }
+  .header {
+    text-align: center;
+    color: #fff;
     margin-bottom: 16px;
-    font-size: 14px;
   }
-  .qcount { color: #94a3b8; font-weight: 500; }
-  .score { color: #34d399; font-weight: 600; }
-  .progress-bg {
-    width: 100%;
-    background: #334155;
-    border-radius: 999px;
-    height: 8px;
-    margin-bottom: 24px;
+  .header h1 { font-size: 22px; margin-bottom: 4px; }
+  .header p { font-size: 14px; opacity: 0.85; }
+  .progress {
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+    height: 10px;
+    margin: 10px 0 20px;
     overflow: hidden;
   }
   .progress-bar {
-    background: #10b981;
-    height: 8px;
-    border-radius: 999px;
-    transition: width 0.3s ease;
+    height: 100%;
+    background: #ffd54f;
+    width: 0%;
+    transition: width 0.3s;
   }
-  .question {
-    font-size: 18px;
-    font-weight: 600;
-    color: #ffffff;
-    margin-bottom: 24px;
+  .score-box {
+    background: #fff;
+    border-radius: 12px;
+    padding: 10px 16px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    font-weight: bold;
+    font-size: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .question-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  }
+  .q-num {
+    display: inline-block;
+    background: #2a5298;
+    color: #fff;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    font-size: 14px;
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
+  .q-text {
+    font-size: 16px;
     line-height: 1.6;
+    margin-bottom: 12px;
+    font-weight: 600;
     white-space: pre-line;
   }
-  .options { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
   .option {
-    text-align: left;
-    padding: 14px 16px;
-    border-radius: 12px;
-    border: 2px solid #475569;
-    background: #334155;
-    color: #e2e8f0;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    padding: 10px 14px;
     font-size: 15px;
     cursor: pointer;
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    transition: all 0.15s ease;
-    width: 100%;
+    transition: all 0.15s;
+    line-height: 1.5;
   }
-  .option:hover:not(.disabled) { border-color: #94a3b8; }
-  .option .letter { font-weight: 700; flex-shrink: 0; }
-  .option .text { flex: 1; }
-  .option .mark { font-weight: 700; flex-shrink: 0; }
+  .option:hover { border-color: #2a5298; background:#f0f4ff; }
+  .option.selected { border-color: #2a5298; background:#e3eaff; }
   .option.correct {
-    border-color: #10b981;
-    background: rgba(16,185,129,0.15);
-    color: #6ee7b7;
+    background: #c8f7c5;
+    border-color: #2e7d32;
+    font-weight: bold;
   }
   .option.incorrect {
-    border-color: #ef4444;
-    background: rgba(239,68,68,0.15);
-    color: #fca5a5;
-  }
-  .option.dimmed {
-    border-color: #334155;
-    background: #1e293b;
-    color: #64748b;
+    background: #ffcdd2;
+    border-color: #c62828;
+    font-weight: bold;
   }
   .option.disabled { cursor: default; }
-  .mark.green { color: #34d399; }
-  .mark.red { color: #f87171; }
-
-  .feedback {
-    margin-bottom: 24px;
-    padding: 12px 14px;
-    border-radius: 10px;
+  .explain {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    background: #fff8e1;
     font-size: 14px;
-    font-weight: 500;
+    border-left: 4px solid #ffb300;
+    display: none;
   }
-  .feedback.correct {
-    background: rgba(16,185,129,0.1);
-    color: #6ee7b7;
-    border: 1px solid rgba(16,185,129,0.3);
+  .explain.show { display: block; }
+  .nav-buttons {
+    display:flex;
+    justify-content: space-between;
+    margin: 20px 0 40px;
+    gap: 10px;
   }
-  .feedback.incorrect {
-    background: rgba(239,68,68,0.1);
-    color: #fca5a5;
-    border: 1px solid rgba(239,68,68,0.3);
-  }
-  .nav-row { display: flex; gap: 12px; }
   .nav-btn {
-    flex: 1;
+    flex:1;
     padding: 14px;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 15px;
-    cursor: pointer;
-    border: 2px solid #475569;
-    background: transparent;
-    color: #cbd5e1;
-    transition: all 0.15s ease;
-  }
-  .nav-btn:hover:not(:disabled) { border-color: #94a3b8; }
-  .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-  .nav-btn.primary {
-    background: #10b981;
-    border-color: #10b981;
-    color: #ffffff;
-  }
-  .nav-btn.primary:hover:not(:disabled) { background: #059669; }
-
-  .result-title { font-size: 28px; font-weight: 800; color: #ffffff; margin-bottom: 4px; text-align: center; }
-  .result-sub { color: #94a3b8; text-align: center; margin-bottom: 24px; }
-  .result-score { font-size: 56px; font-weight: 800; color: #34d399; text-align: center; margin-bottom: 4px; }
-  .result-pct { color: #94a3b8; text-align: center; margin-bottom: 24px; }
-  .restart-btn {
-    width: 100%;
-    padding: 14px;
-    border-radius: 12px;
-    font-weight: 700;
-    font-size: 15px;
-    cursor: pointer;
     border: none;
-    background: #10b981;
-    color: #ffffff;
+    border-radius: 10px;
+    background: #ffd54f;
+    color: #1e3c72;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
   }
-  .restart-btn:hover { background: #059669; }
+  .nav-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .final-screen {
+    background: #fff;
+    border-radius: 14px;
+    padding: 30px 20px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  }
+  .final-screen h2 { color:#2a5298; margin-bottom: 12px; }
+  .final-screen .big-score { font-size: 42px; font-weight:bold; color:#1e3c72; margin: 14px 0; }
+  .restart-btn {
+    margin-top: 16px;
+    padding: 12px 28px;
+    background: #2a5298;
+    color: #fff;
+    border:none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  .hidden { display: none; }
+  .unanswered-note {
+    text-align:center;
+    color:#fff;
+    font-size: 13px;
+    margin-bottom: 10px;
+    opacity: 0.85;
+  }
 </style>
 </head>
 <body>
-<div class="card" id="app"></div>
+<div class="container">
+  <div class="header">
+    <h1>மே மாத நடப்பு நிகழ்வுகள் வினாடி வினா 2026</h1>
+    <p>TAF IAS ACADEMY - தென்காசி | TNPSC சிறப்பு பயிற்சி</p>
+  </div>
+
+  <div id="quizScreen">
+    <div class="score-box">
+      <span>கேள்வி: <span id="qNum">1</span> / <span id="totalQ"></span></span>
+      <span>மதிப்பெண்: <span id="score">0</span></span>
+    </div>
+    <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+    <div id="questionContainer"></div>
+    <div class="nav-buttons">
+      <button class="nav-btn" id="prevBtn">முந்தைய</button>
+      <button class="nav-btn" id="nextBtn">அடுத்தது</button>
+    </div>
+  </div>
+
+  <div id="finalScreen" class="final-screen hidden">
+    <h2>வினாடி வினா முடிந்தது!</h2>
+    <div class="big-score"><span id="finalScore"></span> / <span id="finalTotal"></span></div>
+    <p id="finalPercent"></p>
+    <button class="restart-btn" onclick="restartQuiz()">மீண்டும் தொடங்கு</button>
+  </div>
+</div>
 
 <script>
-const LETTERS = ["A", "B", "C", "D"];
-const QUESTIONS = [
-  {
-    q: "When is International Labour Day observed?",
-    options: ["April 01", "August 01", "May 01", "June 01"],
-    answer: 2,
-  },
-  {
-    q: "Examine the following statements:\n1) In the 2025-26 financial year, Tamil Nadu recorded an economic growth of 10.83%.\n2) The per capita income of Tamil Nadu has currently risen to ₹5.08 lakhs.\n3) The Gross State Domestic Product (GSDP) of Tamil Nadu has increased to ₹35.29 lakh crore.",
-    options: ["All are correct", "1, 3 are correct; 2 is wrong", "2, 3 are correct; 1 is wrong", "1, 2 are correct; 3 is wrong"],
-    answer: 1,
-  },
-  {
-    q: "In which year was the Ayushman Bharat health insurance scheme launched?",
-    options: ["2018", "2016", "2014", "2020"],
-    answer: 0,
-  },
-  {
-    q: "Examine the following statements:\n1) In 2025, marine fish production in India increased to 35.7 lakh tonnes.\n2) Tamil Nadu has secured the first position by surpassing Kerala with a fish production of 6.85 lakh tonnes.\n3) Gujarat holds the 3rd position with a fish production of 6.24 lakh tonnes.",
-    options: ["3 is correct; 1 and 2 are wrong", "All are correct", "1 is correct; 2 and 3 are wrong", "2 is correct; 1 and 3 are wrong"],
-    answer: 2,
-  },
-  {
-    q: "When is International Jazz Day observed?",
-    options: ["April 28", "April 27", "April 30", "April 29"],
-    answer: 3,
-  },
-  {
-    q: "Which country has returned 657 ancient artifacts stolen from India, valued at ₹133 crore?",
-    options: ["France", "Russia", "Britain", "USA"],
-    answer: 3,
-  },
-  {
-    q: "When is Ayushman Bharat Diwas observed?",
-    options: ["April 30", "April 28", "April 26", "April 24"],
-    answer: 0,
-  },
-  {
-    q: "Statement 1: Prime Minister Narendra Modi flagged off a Vande Bharat train service with 20 coaches between Jammu and Srinagar.\nStatement 2: This is the first direct train service connecting the twin capitals of Jammu and Kashmir, Jammu and Srinagar.",
-    options: ["Only 1 is wrong", "Only 2 is wrong", "Both are correct", "Both are wrong"],
-    answer: 2,
-  },
-  {
-    q: "Where will the 23rd Commonwealth Games be held in 2026?",
-    options: ["Dhaka", "Glasgow", "Tokyo", "Ahmedabad"],
-    answer: 1,
-  },
-  {
-    q: "Who won the title at the 2026 IBSF World Billiards Championship?",
-    options: ["Johann Chua", "Carlo Biado", "Sourav Kothari", "Pankaj Advani"],
-    answer: 3,
-  },
-  {
-    q: "When is Maharashtra State Formation Day observed?",
-    options: ["May 04", "May 01", "May 02", "May 03"],
-    answer: 1,
-  },
-  {
-    q: "Statement 1: Multilingual Artificial Intelligence-based police services have been introduced for the first time in the country in Bengaluru.\nStatement 2: This project is called the \"Namma 112\" project.",
-    options: ["Only 2 is correct", "Both are wrong", "Only 1 is correct", "Both are correct"],
-    answer: 3,
-  },
-  {
-    q: "When is Gujarat State Formation Day observed?",
-    options: ["May 02", "April 28", "April 30", "May 01"],
-    answer: 3,
-  },
-  {
-    q: "Which country has provided full tax exemption until April 30, 2028, for import goods from 20 African countries with which it has smooth diplomatic relations?",
-    options: ["Australia", "China", "India", "USA"],
-    answer: 2,
-  },
-  {
-    q: "In which year was the states of Maharashtra and Gujarat created?",
-    options: ["1960", "1956", "1949", "1953"],
-    answer: 0,
-  },
-  {
-    q: "Who is the author of the book 'The Curious and the Classified'?",
-    options: ["M.M. Naravane", "Upendra Dwivedi", "Anil Chauhan", "K. Vijay Kumar"],
-    answer: 3,
-  },
-  {
-    q: "What is the free helpline number introduced for the 2027 Population Census?",
-    options: ["1558", "1855", "1955", "1585"],
-    answer: 2,
-  },
-  {
-    q: "Examine the following statements:\nStatement 1: Shekha Lake has been selected as India's 99th Ramsar site.\nStatement 2: This lake is located in Rajasthan.",
-    options: ["Both are correct", "Both are incorrect", "Only 2 is incorrect", "Only 1 is incorrect"],
-    answer: 0,
-  },
-  {
-    q: "When is World Tuna Day observed?",
-    options: ["April 02", "July 02", "May 02", "June 02"],
-    answer: 2,
-  },
-  {
-    q: "Examine the following statements:\n1) In April 2026, GST collection reached ₹2.43 lakh crore.\n2) This is the highest GST amount collected in a single month.\n3) GST was introduced in India on April 1, 2017.",
-    options: ["1 is incorrect; 2 and 3 are correct", "2 is incorrect; 1 and 3 are correct", "All are correct", "3 is incorrect; 1 and 2 are correct"],
-    answer: 2,
-  },
-  {
-    q: "Examine the following statements:\nStatement 1: India's first multi-lane free-flow toll system has been launched in Gujarat.\nStatement 2: This Choryasi toll plaza is located on the Surat-Bharuch National Highway 48 route.",
-    options: ["Only 2 is correct", "Both are correct", "Both are incorrect", "Only 1 is correct"],
-    answer: 1,
-  },
-  {
-    q: "When is International Scurvy Awareness Day observed?",
-    options: ["May 03", "April 04", "March 02", "May 02"],
-    answer: 3,
-  },
-  {
-    q: "Which state has the highest number of Ramsar sites in India?",
-    options: ["Rajasthan", "Kerala", "Tamil Nadu", "Uttar Pradesh"],
-    answer: 3,
-  },
-  {
-    q: "In which state is the Shekha Lake Bird Sanctuary located?",
-    options: ["Madhya Pradesh", "Uttarakhand", "Sikkim", "Uttar Pradesh"],
-    answer: 0,
-  },
-  {
-    q: "When was International Drone Day 2026 observed?",
-    options: ["May 02", "May 03", "May 04", "April 05"],
-    answer: 0,
-  },
-  {
-    q: "What was India's position in the badminton Thomas Cup 2026?",
-    options: ["4th place", "3rd place", "2nd place", "1st place"],
-    answer: 1,
-  },
-  {
-    q: "Who won the 2026 Miami Open Men's Singles title?",
-    options: ["Jannik Sinner", "Carlos Alcaraz", "Novak Djokovic", "Alexander Zverev"],
-    answer: 1,
-  },
-  {
-    q: "Consider the statements:\n1. The world's first \"OptoSAR\" satellite launched by ISRO\n2. The world's first \"OptoSAR\" satellite name is Vikram.\n3. This satellite was launched to know about the origin of the Earth.",
-    options: ["1, 2 correct, 3 incorrect", "2, 3 correct, 1 incorrect", "1, 3 correct, 2 incorrect", "All are correct"],
-    answer: 2,
-  },
-  {
-    q: "World Press Freedom Day is observed annually on?",
-    options: ["May 05", "May 06", "May 03", "May 04"],
-    answer: 2,
-  },
-  {
-    q: "Statement 1: The world's first \"OptoSAR\" satellite name is Drishti.\nStatement 2: Developed by Indian space-tech startup Galax Eye, Bengaluru.",
-    options: ["1 only correct", "2 only correct", "Both are correct", "Both are incorrect"],
-    answer: 2,
-  },
-  {
-    q: "Statement 1: Rohit Jain has been appointed as a new Deputy Governor of the Reserve Bank of India.\nStatement 2: According to the Reserve Bank of India Act, 1944, RBI should have five Deputy Governors.",
-    options: ["2 only incorrect", "1 only incorrect", "Both are incorrect", "Both are correct"],
-    answer: 3,
-  },
-  {
-    q: "Who is appointed as the new Chairman of Prasar Bharati?",
-    options: ["J. Swaminathan", "S.C. Murmu", "Prasoon Joshi", "Poonam Gupta"],
-    answer: 0,
-  },
-  {
-    q: "Statement 1: Sea shells, beads, Pit-dwellings were founded in Coimbatore district Molampalayam.\nStatement 2: They are previous to Keezhadi.",
-    options: ["2 only correct", "Both are correct", "Both are incorrect", "1 only correct"],
-    answer: 1,
-  },
-  {
-    q: "International Cheetah Day is celebrated annually on?",
-    options: ["May 02", "May 06", "May 05", "May 03"],
-    answer: 0,
-  },
-  {
-    q: "Statement 1: The Indian government launched an indigenous Cell Broadcast Alert System to send real-time, geo-targeted disaster alerts directly to mobile phones.\nStatement 2: People will get alerts without internet.",
-    options: ["Both are incorrect", "1 only correct", "2 only correct", "Both are correct"],
-    answer: 3,
-  },
-  {
-    q: "Who won the women's category at the 2026 Madrid Open tennis tournament?",
-    options: ["Naomi Osaka", "Marta Kostyuk", "Mirra Andreeva", "Iga Świątek"],
-    answer: 2,
-  },
-  {
-    q: "When was World Asthma Day observed in 2026?",
-    options: ["May 04", "May 03", "May 06", "May 05"],
-    answer: 3,
-  },
-  {
-    q: "Examine the following statements:\n1) The Pulitzer Prize is awarded annually by Columbia University in the United States.\n2) An awareness cartoon series titled \"trapped\" was released in a leading media outlet regarding Digital Arrest scams.\n3) Anand RK, Suparna Sharma, and Natalie Obiko Pearson from Japan have been announced as Pulitzer Prize winners for this work.",
-    options: ["All are correct", "1, 2 correct, 3 incorrect", "2, 3 correct, 1 incorrect", "3, 1 correct, 2 incorrect"],
-    answer: 1,
-  },
-  {
-    q: "DIVEX 2026 is a joint naval exercise between which two countries?",
-    options: ["India & France", "India & Australia", "India & Japan", "India & Sri Lanka"],
-    answer: 3,
-  },
-  {
-    q: "When was World Laughter Day observed in 2026?",
-    options: ["May 03", "May 04", "May 05", "May 02"],
-    answer: 2,
-  },
-  {
-    q: "Where was the DIVEX 2026 joint naval exercise held?",
-    options: ["Tokyo", "Paris", "Colombo", "Andaman"],
-    answer: 2,
-  },
-  {
-    q: "Examine the statements:\nStatement 1: In the full financial year 2025-26, a net direct tax of ₹23.40 lakh crore has been collected in the country.\nStatement 2: Net direct tax collection has currently increased by 6.12% compared to the previous financial year (2024-25).",
-    options: ["1 only is incorrect", "2 only is incorrect", "Both are incorrect", "Both are correct"],
-    answer: 3,
-  },
-  {
-    q: "When is International Firefighters' Day observed?",
-    options: ["May 04", "May 02", "May 06", "May 05"],
-    answer: 0,
-  },
-  {
-    q: "Who has been awarded the 2026 Sukumar Azhikode National Award?",
-    options: ["Romila Thapar & Medha Patkar", "Perumal Murugan & Aravind Adiga", "Ramachandra Guha & Aravind Adiga", "Medha Patkar & Perumal Murugan"],
-    answer: 3,
-  },
-  {
-    q: "When is Coal Miners' Day observed?",
-    options: ["May 03", "May 02", "May 04", "May 05"],
-    answer: 2,
-  },
-  {
-    q: "Who secured first place in the 2026 Miami Grand Prix F1 car race?",
-    options: ["Lando Norris", "Oscar Piastri", "Lewis Hamilton", "Kimi Antonelli"],
-    answer: 1,
-  },
-  {
-    q: "When is African World Heritage Day observed?",
-    options: ["May 04", "May 05", "May 03", "May 08"],
-    answer: 1,
-  },
-  {
-    q: "Examine the statements:\nStatement 1: India has emerged as the country receiving the highest amount of remittances (money sent from abroad) in the world.\nStatement 2: In the year 2024, individuals who went to work in other countries from India sent ₹10.8 lakh crore back to their homeland.",
-    options: ["1 only is correct", "2 only is correct", "Both are correct", "Both are incorrect"],
-    answer: 2,
-  },
-  {
-    q: "When is World Portuguese Language Day observed?",
-    options: ["May 05", "May 06", "May 07", "May 02"],
-    answer: 0,
-  },
-  {
-    q: "Examine the statements:\nStatement 1: In the year 2024, Saudi Arabia stands as the top country globally in the list of countries sending the most money abroad, with ₹9.4 lakh crore.\nStatement 2: The next positions are held by the USA, Switzerland, and Germany.",
-    options: ["Both are correct", "1 only is correct", "Both are incorrect", "2 only is correct"],
-    answer: 0,
-  },
-  {
-    q: "When is World Hand Hygiene Day observed?",
-    options: ["May 02", "May 04", "May 05", "May 06"],
-    answer: 2,
-  },
-  {
-    q: "Examine the statements:\nStatement 1: The Union Cabinet has approved increasing the sanctioned strength of judges in the Supreme Court from 34 to 38.\nStatement 2: When the Supreme Court (Number of Judges) Act was enacted in 1956, the total number of judges in the Supreme Court, excluding the Chief Justice, was fixed at only 10.",
-    options: ["Both are incorrect", "Both are correct", "1 only is correct", "2 only is correct"],
-    answer: 1,
-  },
-  {
-    q: "When is International Day of the Midwife observed?",
-    options: ["May 02", "May 01", "May 05", "May 04"],
-    answer: 1,
-  },
-  {
-    q: "Examine the statements:\nStatement 1: The Union Cabinet has approved the creation of 2 more semiconductor manufacturing centers with an investment of ₹3936 crore.\nStatement 2: These 2 manufacturing centers are to be located in Uttar Pradesh.",
-    options: ["Both are correct", "Both are incorrect", "1 only is incorrect", "2 only is incorrect"],
-    answer: 3,
-  },
-  {
-    q: "On which day is International No Diet Day observed?",
-    options: ["May 04", "May 06", "May 08", "May 02"],
-    answer: 1,
-  },
-  {
-    q: "Statement 1: World Migratory Bird Day 2026 is celebrated on May 9.\nStatement 2: This day was celebrated on second Friday of May and October month.",
-    options: ["1 only correct", "2 only correct", "Both are correct", "Both are incorrect"],
-    answer: 1,
-  },
-  {
-    q: "World Fair Trade Day is celebrated on?",
-    options: ["May 06", "May 04", "May 09", "May 08"],
-    answer: 2,
-  },
-  {
-    q: "Statement 1: North Korea officially revised its constitution.\nStatement 2: According to this, President Kim Jong Un is now explicitly designated as the \"Head of State.\"",
-    options: ["Both are incorrect", "1 only correct", "2 only correct", "Both are correct"],
-    answer: 3,
-  },
-  {
-    q: "The Border Roads Organisation (BRO) celebrates its Raising Day on?",
-    options: ["May 08", "May 09", "May 06", "May 07"],
-    answer: 3,
-  },
-  {
-    q: "Statement 1: The 16th Tamil Nadu Legislative Assembly was officially dissolved by Governor R.N Ravi.\nStatement 2: The tenure of 16th Tamil Nadu Legislative Assembly was ended on May 10.",
-    options: ["Both are correct", "Both are incorrect", "2 only correct", "1 only correct"],
-    answer: 0,
-  },
-  {
-    q: "World Red Cross and Red Crescent Day is observed annually on?",
-    options: ["May 02", "May 08", "May 07", "May 09"],
-    answer: 1,
-  },
-  {
-    q: "Statement 1: Following the official visit of Bhutan's president To Lam to India, 13 agreements were signed.\nStatement 2: India and Bhutan have formalized a roadmap to increase bilateral trade to $25 billion by 2030.",
-    options: ["2 only correct", "Both are incorrect", "Both are correct", "1 only correct"],
-    answer: 2,
-  },
-  {
-    q: "Which is India's first space-tech unicorn?",
-    options: ["Skyroot Aerospace", "Agnikul Cosmos", "Mahindra Aerospace", "Dynamatic Technologies"],
-    answer: 0,
-  },
-  {
-    q: "World Thalassemia Day is observed annually on?",
-    options: ["May 09", "May 10", "May 06", "May 08"],
-    answer: 1,
-  },
-  {
-    q: "Hanta virus is primarily spread by?",
-    options: ["Mouse", "Bat", "Dog", "Cat"],
-    answer: 0,
-  },
-  {
-    q: "Bangladesh government requested ___________ involvement and support for the Teesta River restoration.",
-    options: ["India", "Nepal", "Pakistan", "China"],
-    answer: 3,
-  },
-  {
-    q: "India's first dedicated Government Special Child Care Institution (GSCCI) within a prison was launched in?",
-    options: ["Ahmadabad", "Bengaluru", "Chennai", "New Delhi"],
-    answer: 2,
-  },
-  {
-    q: "Statement 1: DRDO successfully conducted the maiden flight-trial of the TARA weapon system in Andaman.\nStatement 2: TARA means TACTICAL ADVANCED RANGE AUGMENTATION.",
-    options: ["Both are correct", "Both are incorrect", "2 only correct", "1 only correct"],
-    answer: 0,
-  },
-  {
-    q: "World Athletics Day was observed on?",
-    options: ["May 05", "May 04", "May 07", "May 08"],
-    answer: 0,
-  },
-  {
-    q: "Statement 1: The Association of Southeast Asian Nations (ASEAN) Summit 2026 held in Philippines.\nStatement 2: ASEAN organization established in 1987.",
-    options: ["2 only incorrect", "1 only incorrect", "Both are incorrect", "Both are correct"],
-    answer: 0,
-  },
-  {
-    q: "Which state has been declared India's first fully paperless judiciary?",
-    options: ["Rajasthan", "Sikkim", "Kerala", "Punjab"],
-    answer: 1,
-  },
-  {
-    q: "World Password Day, 2026 observed on?",
-    options: ["May 09", "May 10", "May 07", "May 08"],
-    answer: 2,
-  },
-  {
-    q: "Janani digital portal is related to?",
-    options: ["Third gender", "Senior citizen", "Maternal and child healthcare", "Persons with disabilities"],
-    answer: 2,
-  },
-  {
-    q: "In the recently concluded 2026 West Bengal Legislative Assembly election, voting was conducted for the ____ Assembly.",
-    options: ["20th", "16th", "22nd", "18th"],
-    answer: 3,
-  },
-  {
-    q: "The Border Roads Organisation (BRO) was formed in India on?",
-    options: ["May 07, 1960", "May 07, 1962", "May 07, 1950", "May 07, 1958"],
-    answer: 1,
-  },
-  {
-    q: "Statement 1: India observes National Technology Day on 11 May each year.\nStatement 2: The day commemorates India's successful nuclear tests Operation Shakti conducted on this date in 1999.",
-    options: ["Both are incorrect", "1 only correct", "2 only correct", "Both are correct"],
-    answer: 3,
-  },
-  {
-    q: "Who won the bronze medal in the men's individual compound event at the Archery World Cup 2026 in China?",
-    options: ["Sahil Jadhav", "Abhishek Verma", "Atanu Das", "Tarundeep Rai"],
-    answer: 1,
-  },
-  {
-    q: "Statement 1: Prime Minister Narendra Modi inaugurated India's first functional PM MITRA Park in Warangal, Karnataka, with total cost of ₹1,695 crore.\nStatement 2: The park has attracted over ₹6,000 crore expected investment in India's textile department development.",
-    options: ["2 only incorrect", "Both are incorrect", "Both are correct", "1 only incorrect"],
-    answer: 3,
-  },
-  {
-    q: "World Lupus Day is observed globally every year on?",
-    options: ["May 07", "May 11", "May 10", "May 09"],
-    answer: 1,
-  },
-  {
-    q: "Statement 1: India successfully flight-tested an advanced Agni missile equipped with MIRV technology from Odisha.\nStatement 2: MIRV allows one missile to deliver multiple warheads to different locations.",
-    options: ["2 only correct", "Both are correct", "Both are incorrect", "1 only correct"],
-    answer: 1,
-  },
-  {
-    q: "Statement 1: N.S. Raja Subramani has been appointed as India's 3rd Chief of Defence Staff.\nStatement 2: Anil Chauhan was India's first Chief of Defence Staff.",
-    options: ["Both are correct", "Both are incorrect", "1 only correct", "2 only correct"],
-    answer: 0,
-  },
-  {
-    q: "The International Day of Argania (or International Day of the Argan Tree) is celebrated annually on?",
-    options: ["May 10", "May 08", "May 05", "May 12"],
-    answer: 2,
-  },
-  {
-    q: "Who is appointed as the new Chief of the Naval Staff of India?",
-    options: ["Krishna Swaminathan", "Dinesh K Tripathi", "Raja Subramani", "Anil Chauhan"],
-    answer: 1,
-  },
-  {
-    q: "Suvendu Adhikari was sworn in as the first BJP's Chief Minister of which state?",
-    options: ["Assam", "Manipur", "Sikkim", "West Bengal"],
-    answer: 3,
-  },
-  {
-    q: "Consider the statements:\n1. C. Joseph Vijay becomes new Chief Minister of Tamil Nadu.\n2. He was sworn in by Governor Rajendra Vishwanath Arlekar.\n3. Article 164(3) of the Constitution of India mandates the oath of the Chief Minister.",
-    options: ["1, 3 correct, 2 incorrect", "All are correct", "2, 3 correct, 1 incorrect", "1, 2 correct, 3 incorrect"],
-    answer: 1,
-  },
-  {
-    q: "When was World Mother's Day observed in 2026?",
-    options: ["May 11", "May 08", "May 09", "May 10"],
-    answer: 3,
-  },
-  {
-    q: "Statement 1: International Nurses Day is observed annually on May 12.\nStatement 2: This day commemorates the birth anniversary of Mother Teresa.",
-    options: ["2 only is correct", "Both are correct", "Both are incorrect", "1 only is correct"],
-    answer: 3,
-  },
-  {
-    q: "When is International Day of Plant Health observed?",
-    options: ["May 10", "May 08", "May 12", "May 11"],
-    answer: 2,
-  },
-  {
-    q: "Who has won the bronze medal in the women's 48 kg category at the 2026 Asian Weightlifting Championships?",
-    options: ["Komal Kohar", "Vinesh Phogat", "Pooja Gehlot", "Geeta Phogat"],
-    answer: 0,
-  },
-  {
-    q: "Which team has won the La Liga football championship title for the 29th time in 2026?",
-    options: ["Girona FC", "Barcelona FC", "Real Madrid", "Celta"],
-    answer: 2,
-  },
-  {
-    q: "Statement 1: On May 11, 1951, the Somnath Temple was renovated and inaugurated by Sardar Vallabhbhai Patel.\nStatement 2: Prime Minister Narendra Modi released a commemorative postage stamp to mark the 75th anniversary of this temple.",
-    options: ["Both are incorrect", "Both are correct", "1 only is incorrect", "2 only is incorrect"],
-    answer: 1,
-  },
-  {
-    q: "Statement 1: The new Rural Employment Act (VB G Ram G) comes into effect from July 1, 2026.\nStatement 2: Under this scheme, the number of working days has been increased to 150.",
-    options: ["1 only is incorrect", "Both are incorrect", "Both are correct", "2 only is incorrect"],
-    answer: 2,
-  },
-  {
-    q: "Who served as the Pro-tem Speaker (Interim Speaker) of the 17th Legislative Assembly of Tamil Nadu?",
-    options: ["J.C.D. Prabhakar", "M.V. Karuppiah", "M. Ravishankar", "K.A. Sengottaiyan"],
-    answer: 3,
-  },
-  {
-    q: "In which state is the famous Somnath Temple located?",
-    options: ["Uttar Pradesh", "Uttarakhand", "Gujarat", "Maharashtra"],
-    answer: 2,
-  },
-  {
-    q: "In which year was the new Rural Employment Act (VB G Ram G) introduced?",
-    options: ["2025", "2026", "2024", "2022"],
-    answer: 1,
-  },
-  {
-    q: "Consider the following statements:\nStatement 1: Himanta Biswa Sarma has taken charge as the Chief Minister of Assam for the 2nd consecutive term.\nStatement 2: Ajanta Neog is the longest-serving female MLA of this state.",
-    options: ["Both are correct", "Both are incorrect", "1 only is correct", "2 only is correct"],
-    answer: 0,
-  },
-  {
-    q: "Who has been appointed as the new Director of the CBI?",
-    options: ["U.S. Misra", "Praveen Sood", "Anil Sinha", "Alok Verma"],
-    answer: 1,
-  },
-  {
-    q: "What is the name of India's first private orbital rocket?",
-    options: ["Kalam 11", "Vikram 11", "Vikram 1", "Kalam 1"],
-    answer: 2,
-  },
-  {
-    q: "Consider the following statements:\nStatement 1: Asra Garg has been appointed as the IG of Intelligence for the Tamil Nadu Police.\nStatement 2: P.S. Raman has been appointed as the Advocate General of the Government of Tamil Nadu.",
-    options: ["Both are correct", "Both are incorrect", "2 only is incorrect", "1 only is incorrect"],
-    answer: 0,
-  },
-  {
-    q: "Who from Tamil Nadu received the 2026 National Florence Nightingale Award?",
-    options: ["Anthony Raj", "Shankar Shanmugam", "Senthil Kumaran", "Ramesh Prabha"],
-    answer: 3,
-  },
-  {
-    q: "What was India's retail inflation in April 2026?",
-    options: ["4.20%", "3.21%", "3.48%", "2.75%"],
-    answer: 1,
-  },
-  {
-    q: "Who has taken charge as the new Chief Minister of the Union Territory of Puducherry?",
-    options: ["N. Rangasamy", "N. Narayanasamy", "K. Kailashnathan", "A. Namassivayam"],
-    answer: 0,
-  },
-  {
-    q: "Consider the following statements:\nStatement 1: The Union Cabinet has approved the implementation of a partial double railway line project between Ahmedabad and Dholera, capable of traveling at a speed of 280 km/h.\nStatement 2: This is the first partial high-speed railway project of Indian Railways planned with the help of indigenous technology.",
-    options: ["2 only is correct", "Both are correct", "Both are incorrect", "1 only is correct"],
-    answer: 1,
-  },
-  {
-    q: "Under whose chairmanship has the Supreme Court ordered the formation of a high-level committee to prepare draft rules related to the modernization of courts in the country?",
-    options: ["Naga Rathna", "Vikram Nath", "Sandeep Mehta", "Arvind Kumar"],
-    answer: 1,
-  },
-  {
-    q: "Examine the following statements:\n1) The Union Government has released the 2025 Logistics Ease Across Different States (LEADS) report.\n2) According to the report, Kerala is included in the category of coastal states that acted as role models.\n3) In that same category, Madhya Pradesh is included among the landlocked states.",
-    options: ["All are correct", "1 correct; 2, 3 are incorrect", "2 correct; 1, 3 are incorrect", "3 correct; 1, 2 are incorrect"],
-    answer: 0,
-  },
-  {
-    q: "When was the UN Global Road Safety Week 2026 observed?",
-    options: ["May 06 - 12", "May 10 - 16", "May 12 - 18", "May 08 - 14"],
-    answer: 1,
-  },
-  {
-    q: "Examine the following statements regarding the Drug Control Force:\n1) This force will function under the direct supervision of the Chief Minister.\n2) 65 Police stations are being created across the state for this force.\n3) A total of 720 officers and police personnel are being appointed for these 65 police stations.",
-    options: ["2, 3 are correct; 1 is incorrect", "All are correct", "1, 2 correct, 3 incorrect", "1, 3 are correct; 2 is incorrect"],
-    answer: 1,
-  },
-  {
-    q: "Where was the 2026 Asian Weightlifting Championships held?",
-    options: ["Gujarat", "Tamil Nadu", "Odisha", "Uttar Pradesh"],
-    answer: 1,
-  },
-  {
-    q: "Examine the following statements regarding the \"Singapen\" (Lioness) Special Action Force:\n1) This force will be created with prevention and security strategies as its primary and sole target to enhance the safety of women.\n2) The headquarters of this force will operate out of the DGP office. A high-ranking officer of IG rank will lead it.\n3) This force, with a total of 63 police personnel, will operate under the direct supervision of the Chief Minister.",
-    options: ["2, 3 are correct; 1 is incorrect", "1, 3 are correct; 2 is incorrect", "All are incorrect", "1, 2 are correct; 3 is incorrect"],
-    answer: 3,
-  },
-  {
-    q: "Where is the 2026 International Big Cats Alliance Summit being held?",
-    options: ["Japan", "India", "Russia", "Australia"],
-    answer: 1,
-  },
-  {
-    q: "When is International Day of Families observed?",
-    options: ["May 13", "May 19", "May 15", "May 17"],
-    answer: 2,
-  },
-  {
-    q: "Consider the following statements:\nStatement 1: Following the meeting between Prime Minister Modi and the President of the United Arab Emirates (UAE), 12 agreements were signed for cooperation in various sectors, including energy and security.\nStatement 2: Under investment sector cooperation, the UAE has committed to investments worth 500 crore dollars (₹47,870 crore) in India.",
-    options: ["1 only is correct", "Both are correct", "Both are incorrect", "2 only is correct"],
-    answer: 1,
-  },
-  {
-    q: "When is National Dengue Day observed in India?",
-    options: ["May 16", "May 14", "May 18", "May 15"],
-    answer: 3,
-  },
-  {
-    q: "Consider the following statements:\nStatement 1: India's Wholesale Price Index (WPI) inflation has increased to 8.3% in April 2026.\nStatement 2: This inflation, which stood at 3.88% in March 2026, has reached a 42-month high within a single month.",
-    options: ["2 only is correct", "Both are correct", "Both are incorrect", "1 only is correct"],
-    answer: 1,
-  },
-  {
-    q: "When is Sikkim Statehood Day observed?",
-    options: ["May 16, 1987", "May 16, 1975", "May 16, 1957", "May 16, 1965"],
-    answer: 1,
-  },
-  {
-    q: "Consider the following statements:\nStatement 1: India chairs the BRICS alliance for the year 2026.\nStatement 2: The 2026 BRICS Foreign Ministers' Meeting was held in Surat.",
-    options: ["1 only is correct", "2 only is correct", "Both are correct", "Both are incorrect"],
-    answer: 2,
-  },
-  {
-    q: "When is the International Day of Living Together in Peace observed?",
-    options: ["May 15", "May 14", "May 16", "May 17"],
-    answer: 2,
-  },
-  {
-    q: "Examine the following statements:\n1) The foundation stone has been laid in Andhra Pradesh for a factory to manufacture 5th-generation light combat aircraft.\n2) The Agnyashtra company is setting up a facility here to manufacture underwater-launched torpedoes.\n3) In Puttaparthi, 8 drone manufacturing companies are jointly setting up a 'Drone City' under the Make in India initiative.",
-    options: ["All are correct", "1 correct; 2, 3 are incorrect", "2 correct; 1, 3 are incorrect", "3 correct; 1, 2 are incorrect"],
-    answer: 0,
-  },
-  {
-    q: "When is International Day of Light observed?",
-    options: ["May 15", "May 14", "May 17", "May 16"],
-    answer: 2,
-  },
-  {
-    q: "In which year was the National Disaster Response Force (NDRF), which recently received the President's award, established?",
-    options: ["1998", "2010", "2001", "2006"],
-    answer: 2,
-  },
-  {
-    q: "Analyze the statements:\n1) The Leyden copper plates of Aanaimangalam, which were preserved at Leiden University in the Netherlands, have been handed back to India.\n2) The 21 copper plates, containing text in Tamil and Sanskrit, weigh approximately 30 kg and are bound together by a copper ring. The seal of Rajendra Chola is inscribed on that ring.\n3) The copper plates contain information about the grants made by Raja Raja Chola to a Jain monastery.",
-    options: ["1, 2 are correct; 3 is incorrect", "2, 3 are correct; 1 is incorrect", "1, 3 are correct; 2 is incorrect", "All are incorrect"],
-    answer: 0,
-  },
-  {
-    q: "When is World Hypertension Day observed?",
-    options: ["May 18", "May 15", "May 17", "May 19"],
-    answer: 2,
-  },
-  {
-    q: "Which state government has announced an incentive of ₹40,000 for couples having a fourth child?",
-    options: ["Kerala", "Andhra Pradesh", "Karnataka", "Telangana"],
-    answer: 1,
-  },
-  {
-    q: "When is World AIDS Vaccine Day observed?",
-    options: ["May 18", "May 19", "May 16", "May 15"],
-    answer: 1,
-  },
-  {
-    q: "Find the incorrect pair:\n1) Aadhav Arjuna - Public Works and Sports Department\n2) K.G. Arunraj - School Education, Tamil Development, Information and Publicity Department\n3) Rajmohan - Health, Medical Education and Family Welfare Department\n4) T.K. Prabhu - Natural Resources Department",
-    options: ["2 and 4", "2 and 3", "1 and 2", "1 and 4"],
-    answer: 0,
-  },
-  {
-    q: "When is the International Day for Women in Maritime observed?",
-    options: ["May 19", "May 17", "May 20", "May 18"],
-    answer: 3,
-  },
-  {
-    q: "What is 'Operation Raqeeb' associated with?",
-    options: ["Anti-narcotics operation (Drug control measure)", "Eradication of black money", "Anti-Naxalite operation", "Evacuation/Rescue of Indians from Iran"],
-    answer: 3,
-  },
-  {
-    q: "When is World Fair Play Day observed?",
-    options: ["May 18", "May 19", "May 20", "May 17"],
-    answer: 1,
-  },
-  {
-    q: "Which Indian has received 'The Royal Order of the Polar Star - Degree of Commander Grand Cross' award for the year 2026?",
-    options: ["Sonia Gandhi", "Narendra Modi", "Droupadi Murmu", "C. P. Radhakrishnan"],
-    answer: 2,
-  },
-  {
-    q: "When is World Inflammatory Bowel Disease (IBD) Day observed?",
-    options: ["May 19", "May 18", "May 17", "May 20"],
-    answer: 1,
-  },
-  {
-    q: "Where is the Afsluitdijk dam, a massive 32 km long flood protection dam visited by Prime Minister Narendra Modi, located?",
-    options: ["France", "Egypt", "Netherlands", "Sweden"],
-    answer: 2,
-  },
-  {
-    q: "Statement 1: Coco Gauff has won the women's singles title at the 2026 Italian Open tennis tournament.\nStatement 2: Jannik Sinner has won the men's singles title at the 2026 Italian Open tennis tournament.",
-    options: ["Statement 2 alone is incorrect", "Both are correct", "Both are incorrect", "Statement 1 alone is incorrect"],
-    answer: 1,
-  },
-  {
-    q: "Who has taken charge as the new Chief Minister of Kerala?",
-    options: ["Sunny Joseph", "K. Muraleedharan", "V. D. Satheesan", "Ramesh Chennithala"],
-    answer: 2,
-  },
-  {
-    q: "Statement 1: The 'Grand Cross of the Royal Norwegian Order of Merit' award for 2026 has been conferred upon Prime Minister Narendra Modi.\nStatement 2: This award marks the 35th international honor bestowed upon Prime Minister Modi.",
-    options: ["1 alone is correct", "2 alone is correct", "Both are correct", "Both are incorrect"],
-    answer: 2,
-  },
-  {
-    q: "In which state has the 'Annapurna Scheme' been launched to provide ₹3000 monthly to women?",
-    options: ["Tamil Nadu", "West Bengal", "Assam", "Kerala"],
-    answer: 1,
-  },
+const questions = [
+{q:"சர்வதேச தொழிலாளர் தினம் எப்போது அனுசரிக்கப்படுகிறது?", options:["ஏப்ரல் 01","ஆகஸ்ட் 01","மே 01","ஜூன் 01"], answer:2},
+{q:"பின்வரும் கூற்றுகளை ஆராயவும்:\n1) 2025-26 நிதியாண்டில் தமிழகம் 10.83% பொருளாதார வளர்ச்சியை பதிவு செய்துள்ளது.\n2) தமிழகத்தின் தனிநபர் வருமானம் தற்போது ரூ.5.08 லட்சமாக உயர்ந்துள்ளது.\n3) தமிழகத்தின் மொத்த மாநில உள்நாட்டு உற்பத்தி (GSDP) ரூ.35.29 லட்சம் கோடியாக உயர்ந்துள்ளது.", options:["அனைத்தும் சரி","1, 3 சரி; 2 தவறு","2, 3 சரி; 1 தவறு","1, 2 சரி; 3 தவறு"], answer:1},
+{q:"ஆயுஷ்மான் பாரத் மருத்துவ காப்பீட்டு திட்டம் எந்த ஆண்டு தொடங்கப்பட்டது?", options:["2018","2016","2014","2020"], answer:0},
+{q:"பின்வரும் கூற்றுகளை ஆராயவும்:\n1) 2025-ல் இந்தியாவின் கடல்வாழ் மீன் உற்பத்தி 35.7 லட்சம் டன்களாக உயர்ந்துள்ளது.\n2) கேரளாவை முந்தி தமிழகம் 6.85 லட்சம் டன் மீன் உற்பத்தியுடன் முதலிடம் பிடித்துள்ளது.\n3) குஜராத் 6.24 லட்சம் டன் மீன் உற்பத்தியுடன் 3வது இடத்தில் உள்ளது.", options:["3 சரி; 1, 2 தவறு","அனைத்தும் சரி","1 சரி; 2, 3 தவறு","2 சரி; 1, 3 தவறு"], answer:2},
+{q:"சர்வதேச ஜாஸ் தினம் (International Jazz Day) எப்போது அனுசரிக்கப்படுகிறது?", options:["ஏப்ரல் 28","ஏப்ரல் 27","ஏப்ரல் 30","ஏப்ரல் 29"], answer:3},
+{q:"₹133 கோடி மதிப்புள்ள, இந்தியாவில் இருந்து திருடப்பட்ட 657 பழங்கால தொல்பொருட்களை எந்த நாடு திருப்பி அளித்தது?", options:["பிரான்ஸ்","ரஷ்யா","பிரிட்டன்","அமெரிக்கா"], answer:2},
+{q:"ஆயுஷ்மான் பாரத் திவாஸ் எப்போது அனுசரிக்கப்படுகிறது?", options:["ஏப்ரல் 30","ஏப்ரல் 28","ஏப்ரல் 26","ஏப்ரல் 24"], answer:2},
+{q:"கூற்று 1: பிரதமர் நரேந்திர மோடி, ஜம்மு மற்றும் ஸ்ரீநகர் இடையே 20 பெட்டிகள் கொண்ட வந்தே பாரத் ரெயில் சேவையை தொடங்கி வைத்தார்.\nகூற்று 2: ஜம்மு காஷ்மீரின் இரட்டை தலைநகரங்களான ஜம்மு மற்றும் ஸ்ரீநகரை இணைக்கும் முதல் நேரடி ரெயில் சேவை இதுவாகும்.", options:["1 மட்டும் தவறு","2 மட்டும் தவறு","இரண்டும் சரி","இரண்டும் தவறு"], answer:2},
+{q:"23வது காமன்வெல்த் விளையாட்டுகள் 2026-ல் எங்கு நடைபெறும்?", options:["டாக்கா","கிளாஸ்கோ","டோக்கியோ","அகமதாபாத்"], answer:1},
+{q:"2026 IBSF உலக பில்லியர்ட்ஸ் சாம்பியன்ஷிப் பட்டத்தை யார் வென்றார்?", options:["ஜொஹான் சுவா","கார்லோ பியாடோ","சவுரவ் கோத்தாரி","பங்கஜ் அத்வானி"], answer:3},
+{q:"மகாராஷ்டிரா மாநில உருவாக்க தினம் எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 04","மே 01","மே 02","மே 03"], answer:2},
+{q:"கூற்று 1: பல மொழி செயற்கை நுண்ணறிவு (AI) அடிப்படையிலான போலீஸ் சேவைகள் நாட்டில் முதன்முறையாக பெங்களூருவில் அறிமுகப்படுத்தப்பட்டுள்ளது.\nகூற்று 2: இந்த திட்டம் 'நம்ம 112' திட்டம் என அழைக்கப்படுகிறது.", options:["2 மட்டும் சரி","இரண்டும் தவறு","1 மட்டும் சரி","இரண்டும் சரி"], answer:3},
+{q:"குஜராத் மாநில உருவாக்க தினம் எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 02","ஏப்ரல் 28","ஏப்ரல் 30","மே 01"], answer:3},
+{q:"இராஜதந்திர உறவுகள் சீராக உள்ள 20 ஆப்பிரிக்க நாடுகளில் இருந்து இறக்குமதி செய்யப்படும் பொருட்களுக்கு ஏப்ரல் 30, 2028 வரை முழு வரி விலக்கு வழங்கியுள்ள நாடு எது?", options:["ஆஸ்திரேலியா","சீனா","இந்தியா","அமெரிக்கா"], answer:1},
+{q:"மகாராஷ்டிரா மற்றும் குஜராத் மாநிலங்கள் எந்த ஆண்டு உருவாக்கப்பட்டன?", options:["1960","1956","1949","1953"], answer:0},
+{q:"'The Curious and the Classified' என்ற நூலின் ஆசிரியர் யார்?", options:["எம்.எம். நரவணே","உபேந்திரா த்விவேதி","அனில் சவகான்","கே. விஜய் குமார்"], answer:2},
+{q:"2027 மக்கள் தொகை கணக்கெடுப்புக்காக அறிமுகப்படுத்தப்பட்ட இலவச உதவி எண் என்ன?", options:["1558","1855","1955","1585"], answer:2},
+{q:"கூற்று 1: 'ஷேகா ஏரி' (Shekha Lake) இந்தியாவின் 99வது ராம்சார் சுற்றுச்சூழல் பகுதியாக தேர்வு செய்யப்பட்டுள்ளது.\nகூற்று 2: இந்த ஏரி ராஜஸ்தானில் அமைந்துள்ளது.", options:["இரண்டும் சரி","இரண்டும் தவறு","2 மட்டும் தவறு","1 மட்டும் தவறு"], answer:0},
+{q:"உலக டுனா மீன் தினம் (World Tuna Day) எப்போது அனுசரிக்கப்படுகிறது?", options:["ஏப்ரல் 02","ஜூலை 02","மே 02","ஜூன் 02"], answer:2},
+{q:"பின்வரும் கூற்றுகளை ஆராயவும்:\n1) ஏப்ரல் 2026-ல் GST வசூல் ரூ.2.43 லட்சம் கோடியை எட்டியது.\n2) இது ஒரு மாதத்தில் வசூலிக்கப்பட்ட அதிக GST தொகையாகும்.\n3) GST இந்தியாவில் ஏப்ரல் 1, 2017 அன்று அறிமுகப்படுத்தப்பட்டது.", options:["1 தவறு; 2, 3 சரி","2 தவறு; 1, 3 சரி","அனைத்தும் சரி","3 தவறு; 1, 2 சரி"], answer:2},
+{q:"கூற்று 1: இந்தியாவின் முதல் பல வழி இடையூறு இல்லா (multi-lane free-flow) டோல் முறை குஜராத்தில் தொடங்கப்பட்டுள்ளது.\nகூற்று 2: இந்த சோர்யாசி டோல் பிளாசா சூரத்-பருச் தேசிய நெடுஞ்சாலை 48-ல் அமைந்துள்ளது.", options:["2 மட்டும் சரி","இரண்டும் சரி","இரண்டும் தவறு","1 மட்டும் சரி"], answer:1},
+{q:"சர்வதேச ஸ்கர்வி விழிப்புணர்வு தினம் (International Scurvy Awareness Day) எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 03","ஏப்ரல் 04","மார்ச் 02","மே 02"], answer:3},
+{q:"இந்தியாவில் அதிக ராம்சார் சுற்றுச்சூழல் பகுதிகளை கொண்ட மாநிலம் எது?", options:["ராஜஸ்தான்","கேரளா","தமிழ்நாடு","உத்தரப் பிரதேசம்"], answer:3},
+{q:"ஷேகா ஏரி பறவைகள் சரணாலயம் எந்த மாநிலத்தில் அமைந்துள்ளது?", options:["மத்திய பிரதேசம்","உத்தராகண்ட்","சிக்கிம்","உத்தரப் பிரதேசம்"], answer:3},
+{q:"சர்வதேச ட்ரோன் தினம் 2026 எப்போது அனுசரிக்கப்பட்டது?", options:["மே 02","மே 03","மே 04","ஏப்ரல் 05"], answer:0},
+{q:"பேட்மிண்டன் தாமஸ் கோப்பை 2026-ல் இந்தியாவின் இடம் என்ன?", options:["4வது இடம்","3வது இடம்","2வது இடம்","1வது இடம்"], answer:0},
+{q:"2026 மியாமி ஓப்பன் ஆண்களுக்கான ஒற்றையர் பட்டத்தை யார் வென்றார்?", options:["யானிக் சின்னர்","கார்லோஸ் அல்காரஸ்","நோவாக் ஜொகோவிச்","அலெக்சாண்டர் ஸ்வெரெவ்"], answer:0},
+{q:"பின்வரும் கூற்றுகளை கருதுக:\n1. இஸ்ரோ உலகின் முதல் 'ஆப்டோசார்' (OptoSAR) செயற்கைக்கோளை வெளியிட்டது.\n2. இந்த செயற்கைக்கோளின் பெயர் விக்ரம்.\n3. இந்த செயற்கைக்கோள் பூமியின் தோற்றம் பற்றி அறிய ஏவப்பட்டது.", options:["1, 2 சரி 3 தவறு","2, 3 சரி 1 தவறு","1, 3 சரி 2 தவறு","அனைத்தும் சரி"], answer:1},
+{q:"உலக பத்திரிகை சுதந்திர தினம் (World Press Freedom Day) ஆண்டுதோறும் எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 05","மே 06","மே 03","மே 04"], answer:2},
+{q:"கூற்று 1: உலகின் முதல் 'ஆப்டோசார்' (OptoSAR) செயற்கைக்கோளின் பெயர் திருஷ்டி.\nகூற்று 2: இது பெங்களூரு தொடக்க நிறுவனம் Galax Eye ஆல் உருவாக்கப்பட்டது.", options:["1 மட்டும் சரி","2 மட்டும் சரி","இரண்டும் சரி","இரண்டும் தவறு"], answer:2},
+{q:"கூற்று 1: ரோகித் ஜெயின் இந்திய ரிசர்வ் வங்கியின் புதிய துணை கவர்னராக நியமிக்கப்பட்டுள்ளார்.\nகூற்று 2: இந்திய ரிசர்வ் வங்கி சட்டம் 1944-ன் படி, RBI-யில் ஐந்து துணை கவர்னர்கள் இருக்க வேண்டும்.", options:["2 மட்டும் தவறு","1 மட்டும் தவறு","இரண்டும் தவறு","இரண்டும் சரி"], answer:0},
+{q:"பிரசார் பாரதியின் புதிய தலைவராக நியமிக்கப்பட்டவர் யார்?", options:["ஜே. சுவாமிநாதன்","எஸ்.சி. முர்மு","ப்ரசூன் ஜோஷி","பூனம் குப்தா"], answer:2},
+{q:"கூற்று 1: கடல் சங்குகள், மணிகள், குழிவாழ் இடங்கள் கோயம்புத்தூர் மாவட்டம் மலம்பாலையத்தில் கண்டுபிடிக்கப்பட்டது.\nகூற்று 2: இவை கீழடியை விட பழமையானவை.", options:["2 மட்டும் சரி","இரண்டும் சரி","இரண்டும் தவறு","1 மட்டும் சரி"], answer:1},
+{q:"சர்வதேச சீட்டா தினம் (International Cheetah Day) ஆண்டுதோறும் எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 02","மே 06","மே 05","மே 03"], answer:2},
+{q:"கூற்று 1: இந்திய அரசு, இயற்கை பேரிடர் எச்சரிக்கைகளை நேரடியாக மொபைல் போன்களுக்கு அனுப்பும் சொந்த 'செல் ப்ராட்காஸ்ட் அலர்ட் சிஸ்டம்' (Cell Broadcast Alert System) ஐ அறிமுகப்படுத்தியது.\nகூற்று 2: இணையம் இல்லாமலும் மக்களுக்கு அலர்ட் கிடைக்கும்.", options:["இரண்டும் தவறு","1 மட்டும் சரி","2 மட்டும் சரி","இரண்டும் சரி"], answer:3},
+{q:"2026 மாட்ரிட் ஓப்பன் டென்னிஸ் போட்டியில் பெண்கள் பிரிவில் யார் வென்றார்?", options:["நவோமி ஒசாகா","மார்தா கொஸ்ட்யுக்","மிரா ஆண்ட்ரீவா","இகா ஸ்வியாடெக்"], answer:2},
+{q:"2026-ல் உலக ஆஸ்துமா தினம் எப்போது அனுசரிக்கப்பட்டது?", options:["மே 04","மே 03","மே 06","மே 05"], answer:3},
+{q:"பின்வரும் கூற்றுகளை ஆராயவும்:\n1) புலிட்சர் பரிசு ஆண்டுதோறும் அமெரிக்காவின் கொலம்பியா பல்கலைக்கழகத்தால் வழங்கப்படுகிறது.\n2) டிஜிட்டல் கைது மோசடிகள் தொடர்பாக 'Trapped' என்ற விழிப்புணர்வு கார்ட்டூன் தொடர் ஒரு முன்னணி ஊடகத்தில் வெளியிடப்பட்டது.\n3) ஆனந்த் ஆர்.கே., சுபர்ணா சர்மா, மற்றும் ஜப்பானின் நடாலி ஒபிகோ பியர்சன் ஆகியோர் இதற்காக புலிட்சர் பரிசு பெற்றோர் என அறிவிக்கப்பட்டுள்ளனர்.", options:["அனைத்தும் சரி","1, 2 சரி, 3 தவறு","2, 3 சரி, 1 தவறு","3, 1 சரி 2 தவறு"], answer:1},
+{q:"DIVEX 2026 என்பது எந்த இரண்டு நாடுகளுக்கு இடையேயான கூட்டு கடற்படை பயிற்சி?", options:["இந்தியா & பிரான்ஸ்","இந்தியா & ஆஸ்திரேலியா","இந்தியா & ஜப்பான்","இந்தியா & இலங்கை"], answer:3},
+{q:"2026-ல் உலக சிரிப்பு தினம் (World Laughter Day) எப்போது அனுசரிக்கப்பட்டது?", options:["மே 03","மே 04","மே 05","மே 02"], answer:0},
+{q:"DIVEX 2026 கூட்டு கடற்படை பயிற்சி எங்கு நடைபெற்றது?", options:["டோக்கியோ","பாரிஸ்","கொழும்பு","அந்தமான்"], answer:3},
+{q:"கூற்றுகளை கருதுக:\nகூற்று 1: 2025-26 முழு நிதியாண்டில், நாட்டில் ரூ.23.40 லட்சம் கோடி நேரடி வரி வசூலிக்கப்பட்டுள்ளது.\nகூற்று 2: முந்தைய நிதியாண்டுடன் (2024-25) ஒப்பிடும்போது நேரடி வரி வசூல் தற்போது 6.12% அதிகரித்துள்ளது.", options:["1 மட்டும் தவறு","2 மட்டும் தவறு","இரண்டும் தவறு","இரண்டும் சரி"], answer:3},
+{q:"சர்வதேச தீயணைப்பாளர் தினம் (International Firefighters' Day) எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 04","மே 02","மே 06","மே 05"], answer:3},
+{q:"2026 சுகுமார் அழிக்கோடு தேசிய விருது யாருக்கு வழங்கப்பட்டது?", options:["ரோமிலா தாப்பர் & மேதா பட்கர்","பெருமாள் முருகன் & அரவிந்த் அடிகா","ராமச்சந்திர குஹா & அரவிந்த் அடிகா","மேதா பட்கர் & பெருமாள் முருகன்"], answer:1},
+{q:"நிலக்கரி சுரங்க தொழிலாளர் தினம் (Coal Miners' Day) எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 03","மே 02","மே 04","மே 05"], answer:2},
+{q:"2026 மியாமி கிராண்ட் பிரி F1 கார் ரேஸில் முதலிடம் பெற்றவர் யார்?", options:["லாண்டோ நோரிஸ்","ஆஸ்கர் பியாஸ்ட்ரி","லூயிஸ் ஹாமில்டன்","கிமி ஆண்டோனெல்லி"], answer:2},
+{q:"ஆப்பிரிக்க உலக பாரம்பரிய தினம் (African World Heritage Day) எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 04","மே 05","மே 03","மே 08"], answer:0},
+{q:"கூற்றுகளை கருதுக:\nகூற்று 1: உலகில் அதிக அளவு வெளிநாட்டு பணம் (remittances) பெறும் நாடாக இந்தியா உருவெடுத்துள்ளது.\nகூற்று 2: 2024ஆம் ஆண்டில், இந்தியாவில் இருந்து வெளிநாடுகளில் பணிபுரிய சென்றவர்கள் ரூ.10.8 லட்சம் கோடியை தாயகத்திற்கு அனுப்பினர்.", options:["1 மட்டும் சரி","2 மட்டும் சரி","இரண்டும் சரி","இரண்டும் தவறு"], answer:2},
+{q:"உலக போர்த்துகீசிய மொழி தினம் (World Portuguese Language Day) எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 05","மே 06","மே 07","மே 02"], answer:0},
+{q:"கூற்றுகளை கருதுக:\nகூற்று 1: 2024ஆம் ஆண்டில், சவூதி அரேபியா ரூ.9.4 லட்சம் கோடியுடன் வெளிநாடுகளுக்கு அதிக பணம் அனுப்பும் நாடாக உலகளவில் முதலிடத்தில் உள்ளது.\nகூற்று 2: அடுத்த இடங்களில் அமெரிக்கா, சுவிட்சர்லாந்து, ஜெர்மனி உள்ளன.", options:["இரண்டும் சரி","1 மட்டும் சரி","இரண்டும் தவறு","2 மட்டும் சரி"], answer:0},
+{q:"உலக கை சுகாதார தினம் (World Hand Hygiene Day) எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 02","மே 04","மே 05","மே 06"], answer:2},
+{q:"கூற்றுகளை கருதுக:\nகூற்று 1: உச்ச நீதிமன்ற நீதிபதிகளின் அங்கீகரிக்கப்பட்ட எண்ணிக்கையை 34-ல் இருந்து 38ஆக அதிகரிக்க யூனியன் கேபினட் அங்கீகாரம் வழங்கியுள்ளது.\nகூற்று 2: 1956-ல் உச்ச நீதிமன்ற (நீதிபதிகளின் எண்ணிக்கை) சட்டம் இயற்றப்பட்டபோது, தலைமை நீதிபதி தவிர்த்து உச்ச நீதிமன்ற நீதிபதிகளின் எண்ணிக்கை 10 ஆக மட்டுமே நிர்ணயிக்கப்பட்டது.", options:["இரண்டும் தவறு","இரண்டும் சரி","1 மட்டும் சரி","2 மட்டும் சரி"], answer:1},
+{q:"சர்வதேச மருத்துவச்சி தினம் (International Day of the Midwife) எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 02","மே 01","மே 05","மே 04"], answer:0},
+{q:"கூற்றுகளை கருதுக:\nகூற்று 1: ரூ.3936 கோடி முதலீட்டில் மேலும் 2 செமிகண்டக்டர் தயாரிப்பு மையங்களை உருவாக்க யூனியன் கேபினட் அங்கீகாரம் வழங்கியுள்ளது.\nகூற்று 2: இந்த 2 தயாரிப்பு மையங்கள் உத்தரப் பிரதேசத்தில் அமைய உள்ளன.", options:["இரண்டும் சரி","இரண்டும் தவறு","1 மட்டும் தவறு","2 மட்டும் தவறு"], answer:0},
+{q:"சர்வதேச 'டயட் இல்லா தினம்' (International No Diet Day) எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 04","மே 06","மே 08","மே 02"], answer:0},
+{q:"கூற்று 1: உலக இடம்பெயர் பறவைகள் தினம் 2026, மே 9 அன்று கொண்டாடப்படுகிறது.\nகூற்று 2: இது மே மற்றும் அக்டோபர் மாதங்களில் இரண்டாவது வெள்ளிக்கிழமை கொண்டாடப்படுகிறது.", options:["1 மட்டும் சரி","2 மட்டும் சரி","இரண்டும் சரி","இரண்டும் தவறு"], answer:2},
+{q:"உலக நியாயமான வர்த்தக தினம் (World Fair Trade Day) எப்போது கொண்டாடப்படுகிறது?", options:["மே 06","மே 04","மே 09","மே 08"], answer:0},
+{q:"கூற்று 1: வட கொரியா தனது அரசியலமைப்பை அதிகாரப்பூர்வமாக திருத்தியுள்ளது.\nகூற்று 2: இதன்படி, ஜனாதிபதி கிம் ஜாங் உன், இப்போது 'நாட்டின் தலைவர்' (Head of State) என தெளிவாக அறிவிக்கப்பட்டுள்ளார்.", options:["இரண்டும் தவறு","1 மட்டும் சரி","2 மட்டும் சரி","இரண்டும் சரி"], answer:3},
+{q:"எல்லை சாலை அமைப்பு (BRO) தனது நிறுவன தினத்தை எப்போது கொண்டாடுகிறது?", options:["மே 08","மே 09","மே 06","மே 07"], answer:3},
+{q:"கூற்று 1: 16வது தமிழ்நாடு சட்டப்பேரவை ஆளுநர் ஆர்.என். ரவியால் அதிகாரப்பூர்வமாக கலைக்கப்பட்டது.\nகூற்று 2: 16வது தமிழ்நாடு சட்டப்பேரவையின் பதவிக்காலம் மே 10 அன்று முடிவடைந்தது.", options:["இரண்டும் சரி","இரண்டும் தவறு","2 மட்டும் சரி","1 மட்டும் சரி"], answer:0},
+{q:"உலக செம்சிலுவை (Red Cross) மற்றும் செம்பிறை தினம் ஆண்டுதோறும் எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 02","மே 08","மே 07","மே 09"], answer:3},
+{q:"கூற்று 1: பூட்டானின் ஜனாதிபதி டோ லாம் இந்தியாவுக்கு செய்த அதிகாரப்பூர்வ விஜயத்தை தொடர்ந்து, 13 ஒப்பந்தங்கள் கையெழுத்தானது.\nகூற்று 2: இந்தியா மற்றும் பூட்டான், 2030க்குள் இருதரப்பு வர்த்தகத்தை 25 பில்லியன் டாலராக அதிகரிக்க திட்டம் வகுத்துள்ளனர்.", options:["2 மட்டும் சரி","இரண்டும் தவறு","இரண்டும் சரி","1 மட்டும் சரி"], answer:0},
+{q:"இந்தியாவின் முதல் விண்வெளி தொழில்நுட்ப யூனிகார்ன் (space-tech unicorn) எது?", options:["ஸ்கைரூட் ஏரோஸ்பேஸ்","அக்னிகுல் காஸ்மாஸ்","மஹிந்திரா ஏரோஸ்பேஸ்","டைனமேடிக் டெக்னாலஜீஸ்"], answer:1},
+{q:"உலக தாலசீமியா தினம் (World Thalassemia Day) ஆண்டுதோறும் எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 09","மே 10","மே 06","மே 08"], answer:1},
+{q:"ஹந்தா வைரஸ் (Hanta virus) முதன்மையாக எதன் மூலம் பரவுகிறது?", options:["சுண்டெலி","வௌவால்","நாய்","பூனை"], answer:0},
+{q:"டீஸ்தா நதி மீட்பு பணிக்கு (Teesta River restoration) வங்கதேச அரசு எந்த நாட்டின் ஈடுபாடு மற்றும் ஆதரவை கேட்டுக்கொண்டது?", options:["இந்தியா","நேபாளம்","பாகிஸ்தான்","சீனா"], answer:0},
+{q:"சிறை வளாகத்தில் இந்தியாவின் முதல் அரசு சிறப்பு குழந்தைகள் பராமரிப்பு நிறுவனம் (GSCCI) எங்கு தொடங்கப்பட்டது?", options:["அகமதாபாத்","பெங்களூரு","சென்னை","புது தில்லி"], answer:1},
+{q:"கூற்று 1: DRDO, அந்தமானில் TARA ஆயுத அமைப்பின் முதல் சோதனை பறப்பை வெற்றிகரமாக நடத்தியது.\nகூற்று 2: TARA என்பது 'டாக்டிகல் அட்வான்ஸ்டு ரேஞ்ச் ஆக்மென்டேஷன்' (Tactical Advanced Range Augmentation) என்பதைக் குறிக்கும்.", options:["இரண்டும் சரி","இரண்டும் தவறு","2 மட்டும் சரி","1 மட்டும் சரி"], answer:0},
+{q:"உலக தடகள தினம் (World Athletics Day) எப்போது அனுசரிக்கப்பட்டது?", options:["மே 05","மே 04","மே 07","மே 08"], answer:0},
+{q:"கூற்று 1: ஆசியான் (ASEAN) உச்சிமாநாடு 2026, பிலிப்பைன்ஸில் நடைபெற்றது.\nகூற்று 2: ஆசியான் அமைப்பு 1987-ல் நிறுவப்பட்டது.", options:["2 மட்டும் தவறு","1 மட்டும் தவறு","இரண்டும் தவறு","இரண்டும் சரி"], answer:0},
+{q:"இந்தியாவின் முதல் முழுமையான காகித அற்ற (paperless) நீதித்துறையாக அறிவிக்கப்பட்ட மாநிலம் எது?", options:["ராஜஸ்தான்","சிக்கிம்","கேரளா","பஞ்சாப்"], answer:1},
+{q:"உலக கடவுச்சொல் தினம் (World Password Day) 2026 எப்போது அனுசரிக்கப்பட்டது?", options:["மே 09","மே 10","மே 07","மே 08"], answer:2},
+{q:"ஜனனி (Janani) டிஜிட்டல் போர்ட்டல் எதனுடன் தொடர்புடையது?", options:["திருநங்கைகள்","மூத்த குடிமக்கள்","தாய் மற்றும் சேய் சுகாதாரம்","மாற்றுத்திறனாளிகள்"], answer:2},
+{q:"சமீபத்தில் முடிவடைந்த 2026 மேற்கு வங்க சட்டப்பேரவை தேர்தல், எந்த சட்டப்பேரவைக்காக நடத்தப்பட்டது?", options:["20வது","16வது","22வது","18வது"], answer:1},
+{q:"எல்லை சாலை அமைப்பு (BRO) இந்தியாவில் எப்போது உருவாக்கப்பட்டது?", options:["மே 07, 1960","மே 07, 1962","மே 07, 1950","மே 07, 1958"], answer:1},
+{q:"கூற்று 1: இந்தியா ஆண்டுதோறும் மே 11 அன்று தேசிய தொழில்நுட்ப தினத்தை அனுசரிக்கிறது.\nகூற்று 2: 1999-ல் இந்த நாளில் இந்தியா மேற்கொண்ட வெற்றிகரமான அணுசக்தி சோதனைகளான ஆபரேஷன் சக்தியை இந்நாள் நினைவுகூருகிறது.", options:["இரண்டும் தவறு","1 மட்டும் சரி","2 மட்டும் சரி","இரண்டும் சரி"], answer:3},
+{q:"2026 சீனாவில் நடந்த ஆர்ச்சரி உலக கோப்பையில் ஆண்களுக்கான தனிநபர் காம்பவுண்ட் பிரிவில் வெண்கல மெடல் பெற்றவர் யார்?", options:["சாகில் ஜாதவ்","அபிஷேக் வெர்மா","அதனு தாஸ்","தருண்தீப் ராய்"], answer:1},
+{q:"கூற்று 1: பிரதமர் நரேந்திர மோடி, தெலங்காணாவின் (Warangal) வாரங்கல்லில் ரூ.1,695 கோடி மதிப்பில் இந்தியாவின் முதல் செயல்படும் PM MITRA பார்க்கை திறந்து வைத்தார்.\nகூற்று 2: இந்த பார்க், இந்தியாவின் ஜவுளி துறை மேம்பாட்டில் ரூ.6,000 கோடிக்கும் மேலான முதலீட்டை ஈர்த்துள்ளது.", options:["2 மட்டும் தவறு","இரண்டும் தவறு","இரண்டும் சரி","1 மட்டும் தவறு"], answer:3},
+{q:"உலக லூபஸ் தினம் (World Lupus Day) ஒவ்வொரு ஆண்டும் எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 07","மே 11","மே 10","மே 09"], answer:1},
+{q:"கூற்று 1: இந்தியா, MIRV தொழில்நுட்பத்துடன் கூடிய மேம்பட்ட அக்னி ஏவுகணையை ஒடிசாவில் இருந்து வெற்றிகரமாக சோதனை செய்தது.\nகூற்று 2: MIRV, ஒரு ஏவுகணை பல வெவ்வேறு இடங்களுக்கு பல வார்ஹெட்களை செலுத்த அனுமதிக்கிறது.", options:["2 மட்டும் சரி","இரண்டும் சரி","இரண்டும் தவறு","1 மட்டும் சரி"], answer:1},
+{q:"கூற்று 1: என்.எஸ். ராஜா சுப்பிரமணி இந்தியாவின் 3வது தலைமைத் தளபதியாக (Chief of Defence Staff) நியமிக்கப்பட்டுள்ளார்.\nகூற்று 2: அனில் சவகான் இந்தியாவின் முதல் தலைமைத் தளபதியாக இருந்தார்.", options:["இரண்டும் சரி","இரண்டும் தவறு","1 மட்டும் சரி","2 மட்டும் சரி"], answer:0},
+{q:"சர்வதேச ஆர்கானியா மர தினம் (International Day of Argania) ஆண்டுதோறும் எப்போது கொண்டாடப்படுகிறது?", options:["மே 10","மே 08","மே 05","மே 12"], answer:1},
+{q:"இந்தியாவின் புதிய கடற்படை தளபதியாக (Chief of the Naval Staff) நியமிக்கப்பட்டவர் யார்?", options:["கிருஷ்ணா சுவாமிநாதன்","தினேஷ் கே. திரிபதி","ராஜா சுப்பிரமணி","அனில் சவகான்"], answer:1},
+{q:"சுவேந்து அதிகாரி எந்த மாநிலத்தின் முதல் பாஜக முதலமைச்சராக பதவியேற்றார்?", options:["அசாம்","மணிப்பூர்","சிக்கிம்","மேற்கு வங்கம்"], answer:3},
+{q:"பின்வரும் கூற்றுகளை கருதுக:\n1. சி. ஜோசப் விஜய் தமிழ்நாட்டின் புதிய முதலமைச்சராக பதவியேற்கிறார்.\n2. அவருக்கு ஆளுநர் ரஜேந்திர விஸ்வநாத் ஆர்லேகர் பதவிப் பிரமாணம் செய்து வைத்தார்.\n3. முதலமைச்சரின் பதவிப் பிரமாணத்தை இந்திய அரசியலமைப்பின் பிரிவு 164(3) கட்டாயப்படுத்துகிறது.", options:["1, 3 சரி 2 தவறு","அனைத்தும் சரி","2, 3 சரி 1 தவறு","1, 2 சரி 3 தவறு"], answer:1},
+{q:"2026-ல் உலக தாய்மார் தினம் எப்போது அனுசரிக்கப்பட்டது?", options:["மே 11","மே 08","மே 09","மே 10"], answer:3},
+{q:"கூற்று 1: சர்வதேச செவிலியர் தினம் (International Nurses Day) ஆண்டுதோறும் மே 12 அன்று அனுசரிக்கப்படுகிறது.\nகூற்று 2: இந்நாள் அன்னை தெரசாவின் பிறந்த நாளை நினைவுகூருகிறது.", options:["2 மட்டும் சரி","இரண்டும் சரி","இரண்டும் தவறு","1 மட்டும் சரி"], answer:3},
+{q:"சர்வதேச தாவர சுகாதார தினம் (International Day of Plant Health) எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 10","மே 08","மே 12","மே 11"], answer:3},
+{q:"2026 ஆசிய எடைதூக்கு சாம்பியன்ஷிப்பில் பெண்களுக்கான 48 கிலோ பிரிவில் வெண்கல மெடல் வென்றவர் யார்?", options:["கோமல் கோஹர்","வினேஷ் போகாட்","பூஜா கெஹ்லாட்","கீதா போகாட்"], answer:0},
+{q:"2026-ல் லா லீகா கால்பந்து பட்டத்தை 29வது முறையாக வென்ற அணி எது?", options:["ஜிரோனா FC","பார்சிலோனா FC","ரியல் மாட்ரிட்","செல்டா"], answer:2},
+{q:"கூற்று 1: மே 11, 1951 அன்று, சோம்நாத் கோவில் சர்தார் வல்லபாய் படேலால் புதுப்பிக்கப்பட்டு திறந்து வைக்கப்பட்டது.\nகூற்று 2: பிரதமர் நரேந்திர மோடி, இந்த கோவிலின் 75வது ஆண்டு நிறைவையொட்டி ஞாபகார்த்த அஞ்சல் தலையை வெளியிட்டார்.", options:["இரண்டும் தவறு","இரண்டும் சரி","1 மட்டும் தவறு","2 மட்டும் தவறு"], answer:1},
+{q:"கூற்று 1: புதிய ஊரக வேலைவாய்ப்பு சட்டம் (VB G Ram G) ஜூலை 1, 2026 முதல் நடைமுறைக்கு வரும்.\nகூற்று 2: இந்த திட்டத்தின் கீழ் வேலை நாட்களின் எண்ணிக்கை 150 ஆக உயர்த்தப்பட்டுள்ளது.", options:["1 மட்டும் தவறு","இரண்டும் தவறு","இரண்டும் சரி","2 மட்டும் தவறு"], answer:2},
+{q:"தமிழ்நாட்டின் 17வது சட்டப்பேரவையின் தற்காலிக சபாநாயகராக (Pro-tem Speaker) பணியாற்றியவர் யார்?", options:["ஜே.சி.டி. பிரபாகர்","எம்.வி. கருப்பையா","எம். ரவிசங்கர்","கே.ஏ. செங்கோட்டையன்"], answer:1},
+{q:"புகழ்பெற்ற சோம்நாத் கோவில் எந்த மாநிலத்தில் அமைந்துள்ளது?", options:["உத்தரப் பிரதேசம்","உத்தராகண்ட்","குஜராத்","மகாராஷ்டிரா"], answer:2},
+{q:"புதிய ஊரக வேலைவாய்ப்பு சட்டம் (VB G Ram G) எந்த ஆண்டு அறிமுகப்படுத்தப்பட்டது?", options:["2025","2026","2024","2022"], answer:1},
+{q:"பின்வரும் கூற்றுகளை கருதுக:\nகூற்று 1: ஹிமந்தா பிஸ்வா சர்மா, அசாமின் முதலமைச்சராக தொடர்ந்து 2வது முறையாக பதவியேற்றுள்ளார்.\nகூற்று 2: அஜந்தா நியோக் இந்த மாநிலத்தின் அதிக காலம் பணியாற்றிய பெண் எம்.எல்.ஏ ஆவார்.", options:["இரண்டும் சரி","இரண்டும் தவறு","1 மட்டும் சரி","2 மட்டும் சரி"], answer:0},
+{q:"CBI-யின் புதிய இயக்குநராக நியமிக்கப்பட்டவர் யார்?", options:["யு.எஸ். மிஸ்ரா","பிரவீன் சூத்","அனில் சின்ஹா","ஆலோக் வர்மா"], answer:1},
+{q:"இந்தியாவின் முதல் தனியார் சுற்றுப்பாதை ராக்கெட்டின் (orbital rocket) பெயர் என்ன?", options:["கலாம் 11","விக்ரம் 11","விக்ரம் 1","கலாம் 1"], answer:2},
+{q:"பின்வரும் கூற்றுகளை கருதுக:\nகூற்று 1: அஸ்ரா கார்க் தமிழ்நாடு போலீஸின் புலனாய்வுத் துறை IG ஆக நியமிக்கப்பட்டுள்ளார்.\nகூற்று 2: பி.எஸ். ராமன் தமிழ்நாடு அரசின் அட்வகேட் ஜெனரலாக நியமிக்கப்பட்டுள்ளார்.", options:["இரண்டும் சரி","இரண்டும் தவறு","2 மட்டும் தவறு","1 மட்டும் தவறு"], answer:0},
+{q:"தமிழ்நாட்டிலிருந்து 2026 தேசிய ஃப்ளோரன்ஸ் நைட்டிங்கேல் விருது பெற்றவர் யார்?", options:["ஆண்டனி ராஜ்","சங்கர் சண்முகம்","செந்தில் குமரன்","ரமேஷ் பிரபா"], answer:3},
+{q:"ஏப்ரல் 2026-ல் இந்தியாவின் சில்லறை விலைவாசி உயர்வு (retail inflation) எவ்வளவாக இருந்தது?", options:["4.20%","3.21%","3.48%","2.75%"], answer:1},
+{q:"புதுச்சேரி யூனியன் பிரதேசத்தின் புதிய முதலமைச்சராக பதவியேற்றவர் யார்?", options:["என். ரங்கசாமி","என். நாராயணசாமி","கே. கைலாஷ்நாதன்","ஏ. நமச்சிவாயம்"], answer:3},
+{q:"பின்வரும் கூற்றுகளை கருதுக:\nகூற்று 1: அகமதாபாத் மற்றும் தோலேரா இடையே 280 கி.மீ வேகத்தில் பயணிக்கக்கூடிய பகுதி இரட்டை இரயில் பாதை திட்டத்திற்கு யூனியன் கேபினட் அங்கீகாரம் வழங்கியுள்ளது.\nகூற்று 2: இது சொந்த தொழில்நுட்பத்துடன் திட்டமிடப்பட்ட இந்திய ரெயில்வேயின் முதல் பகுதி அதிவிரைவு இரயில் திட்டமாகும்.", options:["2 மட்டும் சரி","இரண்டும் சரி","இரண்டும் தவறு","1 மட்டும் சரி"], answer:1},
+{q:"நாட்டின் நீதிமன்றங்களின் நவீனமயமாக்கல் தொடர்பான வரைவு விதிகளை தயாரிக்க உயர்மட்ட குழுவை அமைக்க உச்ச நீதிமன்றம் யாரின் தலைமையில் உத்தரவிட்டது?", options:["நாகரத்னா","விக்ரம் நாத்","சந்தீப் மேத்தா","அரவிந்த் குமார்"], answer:0},
+{q:"பின்வரும் கூற்றுகளை ஆராயவும்:\n1) யூனியன் அரசு 2025 'Logistics Ease Across Different States' (LEADS) அறிக்கையை வெளியிட்டுள்ளது.\n2) இந்த அறிக்கையின் படி, கேரளா, கடலோர மாநிலங்களில் முன்னுதாரண மாநிலமாக சேர்க்கப்பட்டுள்ளது.\n3) அதே பிரிவில், மத்தியப் பிரதேசம் உள்நாட்டு மாநிலங்களில் (landlocked) சேர்க்கப்பட்டுள்ளது.", options:["அனைத்தும் சரி","1 சரி; 2, 3 தவறு","2 சரி; 1, 3 தவறு","3 சரி; 1, 2 தவறு"], answer:0},
+{q:"UN உலகளாவிய சாலைப் பாதுகாப்பு வாரம் 2026 எப்போது அனுசரிக்கப்பட்டது?", options:["மே 06 - 12","மே 10 - 16","மே 12 - 18","மே 08 - 14"], answer:0},
+{q:"போதைப்பொருள் கட்டுப்பாட்டு படை (Drug Control Force) தொடர்பான கூற்றுகளை ஆராயவும்:\n1) இந்த படை முதலமைச்சரின் நேரடி கண்காணிப்பின் கீழ் இயங்கும்.\n2) இந்த படைக்காக மாநிலம் முழுவதும் 65 போலீஸ் நிலையங்கள் உருவாக்கப்படுகின்றன.\n3) இந்த 65 போலீஸ் நிலையங்களுக்கு மொத்தம் 720 அதிகாரிகள் மற்றும் போலீஸ் பணியாளர்கள் நியமிக்கப்படுகின்றனர்.", options:["2, 3 சரி; 1 தவறு","அனைத்தும் சரி","1, 2 சரி 3 தவறு","1, 3 சரி; 2 தவறு"], answer:1},
+{q:"2026 ஆசிய எடைதூக்கு சாம்பியன்ஷிப் எங்கு நடைபெற்றது?", options:["குஜராத்","தமிழ்நாடு","ஒடிசா","உத்தரப் பிரதேசம்"], answer:2},
+{q:"'சிங்கப்பெண்' (Lioness) சிறப்பு செயல் படை தொடர்பான கூற்றுகளை ஆராயவும்:\n1) இந்த படை, பெண்களின் பாதுகாப்பை மேம்படுத்த தடுப்பு மற்றும் பாதுகாப்பு உபாயங்களை மட்டுமே முதன்மை மற்றும் ஒரே குறிக்கோளாக கொண்டிருக்கும்.\n2) இந்த படையின் தலைமையகம் DGP அலுவலகத்தில் இருந்து இயங்கும். IG தரத்தில் ஒரு உயர் அதிகாரி தலைமை தாங்குவார்.\n3) இந்த படை, மொத்தம் 63 போலீஸ் பணியாளர்களுடன், முதலமைச்சரின் நேரடி கண்காணிப்பின் கீழ் இயங்கும்.", options:["2, 3 சரி; 1 தவறு","1, 3 சரி; 2 தவறு","அனைத்தும் தவறு","1, 2 சரி; 3 தவறு"], answer:0},
+{q:"2026 சர்வதேச பெருந்தாவளி கூட்டணி (International Big Cats Alliance) உச்சிமாநாடு எங்கு நடைபெறுகிறது?", options:["ஜப்பான்","இந்தியா","ரஷ்யா","ஆஸ்திரேலியா"], answer:1},
+{q:"சர்வதேச குடும்ப தினம் (International Day of Families) எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 13","மே 19","மே 15","மே 17"], answer:2},
+{q:"பின்வரும் கூற்றுகளை கருதுக:\nகூற்று 1: பிரதமர் மோடி மற்றும் ஐக்கிய அரபு அமீரகத்தின் (UAE) ஜனாதிபதி இடையேயான சந்திப்புக்கு பிறகு, ஆற்றல் மற்றும் பாதுகாப்பு உள்ளிட்ட பல்வேறு துறைகளில் ஒத்துழைப்புக்காக 12 ஒப்பந்தங்கள் கையெழுத்தாயின.\nகூற்று 2: முதலீட்டுத் துறை ஒத்துழைப்பின் கீழ், UAE இந்தியாவில் 500 கோடி டாலர் (ரூ.47,870 கோடி) முதலீடு செய்ய உறுதியளித்துள்ளது.", options:["1 மட்டும் சரி","இரண்டும் சரி","இரண்டும் தவறு","2 மட்டும் சரி"], answer:1},
+{q:"இந்தியாவில் தேசிய டெங்கு தினம் (National Dengue Day) எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 16","மே 14","மே 18","மே 15"], answer:3},
+{q:"கூற்றுகளை கருதுக:\nகூற்று 1: இந்தியாவின் மொத்த விலை குறியீட்டு (WPI) பணவீக்கம் ஏப்ரல் 2026-ல் 8.3% ஆக உயர்ந்துள்ளது.\nகூற்று 2: மார்ச் 2026-ல் 3.88% ஆக இருந்த இந்த பணவீக்கம், ஒரு மாதத்தில் 42 மாத உயர்வை எட்டியுள்ளது.", options:["2 மட்டும் சரி","இரண்டும் சரி","இரண்டும் தவறு","1 மட்டும் சரி"], answer:1},
+{q:"சிக்கிம் மாநில உருவாக்க தினம் (Sikkim Statehood Day) எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 16, 1987","மே 16, 1975","மே 16, 1957","மே 16, 1965"], answer:1},
+{q:"கூற்றுகளை கருதுக:\nகூற்று 1: 2026ஆம் ஆண்டுக்கான பிரிக்ஸ் (BRICS) கூட்டணியின் தலைவராக இந்தியா உள்ளது.\nகூற்று 2: 2026 பிரிக்ஸ் வெளியுறவு அமைச்சர்களின் கூட்டம் சூரத்தில் நடைபெற்றது.", options:["1 மட்டும் சரி","2 மட்டும் சரி","இரண்டும் சரி","இரண்டும் தவறு"], answer:3},
+{q:"அமைதியில் ஒன்றிணைந்து வாழும் சர்வதேச தினம் (International Day of Living Together in Peace) எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 15","மே 14","மே 16","மே 17"], answer:3},
+{q:"பின்வரும் கூற்றுகளை ஆராயவும்:\n1) ஆந்திரப் பிரதேசத்தில் 5வது தலைமுறை லைட் காம்பாட் ஏர்க்ராஃப்ட் தயாரிக்கும் தொழிற்சாலைக்கு அடிக்கல் நாட்டப்பட்டுள்ளது.\n2) அக்னியாஸ்த்ரா நிறுவனம், நீருக்கடியில் இருந்து ஏவப்படும் டார்பிடோக்களை தயாரிக்க இங்கு வசதியை அமைக்கிறது.\n3) புட்டபர்த்தியில், 'மேக் இன் இந்தியா' முயற்சியின் கீழ் 8 ட்ரோன் தயாரிப்பு நிறுவனங்கள் இணைந்து 'ட்ரோன் சிட்டி' அமைக்கின்றன.", options:["அனைத்தும் சரி","1 சரி; 2, 3 தவறு","2 சரி; 1, 3 தவறு","3 சரி; 1, 2 தவறு"], answer:0},
+{q:"சர்வதேச ஒளி தினம் (International Day of Light) எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 15","மே 14","மே 17","மே 16"], answer:3},
+{q:"சமீபத்தில் ஜனாதிபதி விருது பெற்ற தேசிய பேரிடர் மீட்பு படை (NDRF) எந்த ஆண்டு உருவாக்கப்பட்டது?", options:["1998","2010","2001","2006"], answer:2},
+{q:"கூற்றுகளை பகுப்பாய்வு செய்க:\n1) நெதர்லாந்தின் லைடன் பல்கலைக்கழகத்தில் பாதுகாக்கப்பட்டிருந்த அணைமங்கலத்தின் லைடன் செப்புத் தகடுகள் இந்தியாவுக்கு திருப்பி அளிக்கப்பட்டுள்ளன.\n2) தமிழ் மற்றும் சமஸ்கிருத எழுத்துக்களுடன் கூடிய 21 செப்புத் தகடுகள் சுமார் 30 கிலோ எடை கொண்டவை, மற்றும் ஒரு செப்பு வளையத்தால் இணைக்கப்பட்டுள்ளன. அந்த வளையத்தில் ராஜேந்திர சோழனின் முத்திரை பொறிக்கப்பட்டுள்ளது.\n3) இந்த செப்புத் தகடுகளில் ராஜராஜ சோழன் ஒரு ஜைன மடத்திற்கு வழங்கிய நிலக்கொடைகள் பற்றிய தகவல்கள் உள்ளன.", options:["1, 2 சரி; 3 தவறு","2, 3 சரி; 1 தவறு","1, 3 சரி; 2 தவறு","அனைத்தும் தவறு"], answer:0},
+{q:"உலக உயர் இரத்த அழுத்த தினம் (World Hypertension Day) எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 18","மே 15","மே 17","மே 19"], answer:2},
+{q:"நான்காவது குழந்தை பெறும் தம்பதிகளுக்கு ₹40,000 ஊக்கத்தொகை அறிவித்த மாநில அரசு எது?", options:["கேரளா","ஆந்திரப் பிரதேசம்","கர்நாடகா","தெலங்காணா"], answer:1},
+{q:"உலக எய்ட்ஸ் தடுப்பூசி தினம் (World AIDS Vaccine Day) எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 18","மே 19","மே 16","மே 15"], answer:1},
+{q:"தவறான இணையை கண்டறியவும்:\n1) ஆதவ் அர்ஜுனா - பொதுப் பணி மற்றும் விளையாட்டுத் துறை\n2) கே.ஜி. அருண்ராஜ் - பள்ளிக் கல்வி, தமிழ் வளர்ச்சி, தகவல் மற்றும் பொது தொடர்பு துறை\n3) ராஜ்மோகன் - சுகாதாரம், மருத்துவக் கல்வி மற்றும் குடும்ப நலத்துறை\n4) டி.கே. பிரபு - இயற்கை வளங்கள் துறை", options:["2 மற்றும் 4","2 மற்றும் 3","1 மற்றும் 2","1 மற்றும் 4"], answer:0},
+{q:"கடல்சார் பெண்கள் சர்வதேச தினம் (International Day for Women in Maritime) எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 19","மே 17","மே 20","மே 18"], answer:3},
+{q:"'ஆபரேஷன் ரகீப்' (Operation Raqeeb) எதனுடன் தொடர்புடையது?", options:["போதைப்பொருள் கட்டுப்பாடு நடவடிக்கை","கருப்பு பணம் ஒழிப்பு","நக்சல் எதிர்ப்பு நடவடிக்கை","ஈரானிலிருந்து இந்தியர்களை வெளியேற்றும் நடவடிக்கை"], answer:3},
+{q:"உலக நியாயமான விளையாட்டு தினம் (World Fair Play Day) எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 18","மே 19","மே 20","மே 17"], answer:2},
+{q:"2026 ஆம் ஆண்டுக்கான 'ரோயல் ஆர்டர் ஆஃப் தி போலார் ஸ்டார் - டிகிரி ஆஃப் கமாண்டர் கிராண்ட் க்ராஸ்' விருதைப் பெற்ற இந்தியர் யார்?", options:["சோனியா காந்தி","நரேந்திர மோடி","திரௌபதி முர்மு","சி.பி. ராதாகிருஷ்ணன்"], answer:1},
+{q:"உலக IBD (Inflammatory Bowel Disease) தினம் எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 19","மே 18","மே 17","மே 20"], answer:1},
+{q:"பிரதமர் நரேந்திர மோடி பார்வையிட்ட, 32 கிமீ நீளமுள்ள பெரிய வெள்ள தடுப்பு அணையான 'Afsluitdijk' அணை எங்கு அமைந்துள்ளது?", options:["பிரான்ஸ்","எகிப்து","நெதர்லாந்து","ஸ்வீடன்"], answer:2},
+{q:"கூற்று 1: 2026 இத்தாலியன் ஓப்பன் டென்னிஸ் போட்டியில் பெண்கள் ஒற்றையர் பட்டத்தை கோகோ காஃப் வென்றுள்ளார்.\nகூற்று 2: 2026 இத்தாலியன் ஓப்பன் டென்னிஸ் போட்டியில் ஆண்கள் ஒற்றையர் பட்டத்தை யானிக் சின்னர் வென்றுள்ளார்.", options:["கூற்று 2 மட்டும் தவறு","இரண்டும் சரி","இரண்டும் தவறு","கூற்று 1 மட்டும் தவறு"], answer:1},
+{q:"கேரளாவின் புதிய முதலமைச்சராக பதவியேற்றவர் யார்?", options:["சன்னி ஜோசப்","கே. முரளீதரன்","வி.டி. சதீசன்","ரமேஷ் சென்னிதலா"], answer:0},
+{q:"கூற்று 1: 2026ஆம் ஆண்டுக்கான 'கிராண்ட் க்ராஸ் ஆஃப் தி ராயல் நார்வீஜியன் ஆர்டர் ஆஃப் மெரிட்' விருது பிரதமர் நரேந்திர மோடிக்கு வழங்கப்பட்டுள்ளது.\nகூற்று 2: இந்த விருது, பிரதமர் மோடிக்கு வழங்கப்படும் 35வது சர்வதேச கௌரவமாகும்.", options:["1 மட்டும் சரி","2 மட்டும் சரி","இரண்டும் சரி","இரண்டும் தவறு"], answer:2},
+{q:"பெண்களுக்கு மாதம் ₹3000 வழங்க 'அன்னபூரணா திட்டம்' அறிமுகப்படுத்தப்பட்ட மாநிலம் எது?", options:["தமிழ்நாடு","மேற்கு வங்கம்","அசாம்","கேரளா"], answer:2},
+{q:"உலக தேனீ தினம் (World Bee Day) உலகளவில் எப்போது கொண்டாடப்படுகிறது?", options:["மே 21","மே 20","மே 19","மே 18"], answer:1},
+{q:"கூற்று 1: மாணவர்களின் மனநல நலனை பாதுகாக்க தமிழ்நாடு அரசு 'நட்புடன் உங்களோடு' (Natpudan Ungalodu) திட்டத்தை நடத்துகிறது.\nகூற்று 2: இந்த திட்டத்தின் கீழ் 14416, 104 என்ற இலவச எண்களின் மூலம் மனநல ஆதரவு மற்றும் ஆலோசனை வழங்கப்படுகிறது.", options:["இரண்டும் தவறு","1 மட்டும் சரி","2 மட்டும் சரி","இரண்டும் சரி"], answer:3},
+{q:"மதராஸ் பிரசிடென்சி அமைச்சரவையில் பணியாற்றிய முதல் பெண் யார்?", options:["ருக்மிணி லட்சுமிபதி","முத்துலட்சுமி ரெட்டி","ஜானகி ராமச்சந்திரன்","ஜெ. ஜெயலலிதா"], answer:0},
+{q:"அணுசக்தி உற்பத்தியை பெருமளவில் அதிகரிக்க, ரூ.6.5 லட்சம் கோடி மதிப்பில் நான்கு தொழில் நிறுவனங்களுடன் புரிந்துணர்வு ஒப்பந்தம் கையெழுத்திட்ட மாநிலம் எது?", options:["மகாராஷ்டிரா","தமிழ்நாடு","உத்தரப் பிரதேசம்","உத்தராகண்ட்"], answer:1},
+{q:"உலக தகவல் தொடர்பு மற்றும் தகவல் சமூக தினம் (World Telecommunication and Information Society Day) எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 15","மே 16","மே 18","மே 17"], answer:3},
+{q:"பின்வரும் கூற்றுகளை கருதுக:\n1. 3வது இந்தியா-நோர்டிக் உச்சிமாநாடு 2026, பின்லாந்தில் நடைபெற்றது.\n2. இந்த உச்சிமாநாடு பிரதமர் நரேந்திர மோடியின் பங்கேற்புடன் நடைபெற்றது.\n3. ஐந்து சுயாதீன நோர்டிக் நாடுகள்: டென்மார்க், பின்லாந்து, ஐஸ்லாந்து, நார்வே மற்றும் ஸ்வீடன்.", options:["3 தவறு 1, 2 சரி","அனைத்தும் தவறு","1 தவறு 2, 3 சரி","2 தவறு 1, 3 சரி"], answer:0},
+{q:"கூற்று 1: இந்திய உச்ச நீதிமன்றம், சில தெருநாய்களை கருணைக் கொலை செய்யவோ அல்லது அகற்றவோ அதிகாரிகளுக்கு அனுமதி அளித்துள்ளது.\nகூற்று 2: சட்டப்பிரிவு 23-ன் கீழ் கண்ணியமாக வாழும் உரிமை, நாய் கடிக்கும் அச்சம் இல்லாமல் பொது இடங்களில் நடமாடும் உரிமையை உள்ளடக்கியது.", options:["2 மட்டும் தவறு","1 மட்டும் தவறு","இரண்டும் சரி","இரண்டும் தவறு"], answer:0},
+{q:"உலக அளவீட்டியல் தினம் (World Metrology Day) ஆண்டுதோறும் எப்போது கொண்டாடப்படுகிறது?", options:["மே 19","மே 17","மே 20","மே 18"], answer:2},
+{q:"சமீபத்தில் காலமான பி.சி. கண்டூரி, எந்த மாநிலத்தின் முன்னாள் முதலமைச்சராக இருந்தார்?", options:["ஜார்க்கண்ட்","உத்தராகண்ட்","பீகார்","மேற்கு வங்கம்"], answer:1},
+{q:"மாநில சட்டப்பேரவைகளின் சபாநாயகர் மற்றும் துணை சபாநாயகர் எந்த சட்டப் பிரிவின் கீழ் நியமிக்கப்படுகிறார்கள்?", options:["பிரிவு 168","பிரிவு 187","பிரிவு 158","பிரிவு 178"], answer:1},
+{q:"பொருத்துக. (தமிழ்நாடு அமைச்சர்கள் பட்டியல்)\na) கமலி - 1) AI & தகவல் தொழில்நுட்பம்\nb) ஜெகதீஸ்வரி - 2) கால்நடை வளர்ப்பு\nc) சம்பத்குமார் - 3) சமூக நலம் மற்றும் பெண்கள் மேம்பாடு\nd) குமார் - 4) பிற்படுத்தப்பட்டோர் நலத்துறை", options:["3 2 1 4","2 3 4 1","3 2 4 1","4 3 2 1"], answer:2},
+{q:"கூற்று 1: தமிழ்நாட்டில், முதலமைச்சர் விஜய் உள்பட 35 பேர் அமைச்சர்களாக பதவியேற்றுள்ளனர்.\nகூற்று 2: இந்திய அரசியலமைப்பின் பிரிவு 146(1A) படி, சட்டப்பேரவையின் மொத்த எண்ணிக்கையில் 15% பேர் அமைச்சர்களாக பணியாற்ற முடியும்.", options:["இரண்டும் சரி","இரண்டும் தவறு","2 மட்டும் தவறு","1 மட்டும் தவறு"], answer:2},
+{q:"தமிழ்நாட்டின் புதிதாக உருவாக்கப்பட்ட 'சிங்கப்பெண்' (Lioness) சிறப்பு பணிப்படையின் முதல் IG ஆக நியமிக்கப்பட்டவர் யார்?", options:["கே. பவனீஸ்வரி","பி. பாலா நாகதேவி","சீமா அக்ரவால்","ஏ. ராதிகா"], answer:1},
+{q:"கூற்று 1: இந்தியாவின் முதல் நீருக்கடி அருங்காட்சியகம் மகாராஷ்டிராவில் அமைக்கப்படுகிறது.\nகூற்று 2: இந்த அருங்காட்சியகம் சிந்துதுர்க் கடலோர பகுதியில் அமைக்கப்படும்.", options:["இரண்டும் தவறு","1 மட்டும் சரி","2 மட்டும் சரி","இரண்டும் சரி"], answer:3},
+{q:"சர்வதேச தேயிலை தினம் (International Tea Day) எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 21","மே 22","மே 20","மே 19"], answer:2},
+{q:"UN பொருளாதார மற்றும் சமூக விவகாரங்கள் துறையின் அறிக்கையின் படி, நடப்பு நிதியாண்டில் இந்தியாவின் பொருளாதார வளர்ச்சி எவ்வளவு என கணிக்கப்பட்டுள்ளது? (மே 2026 நிலவரப்படி)", options:["6.4%","6.9%","7.2%","5.8%"], answer:0},
+{q:"கூற்று 1: இந்தியா 2026 'பிரகதி' (Pragati) சர்வதேச கூட்டு இராணுவ பயிற்சியை நடத்தியது.\nகூற்று 2: இந்த இராணுவ பயிற்சி விசாகப்பட்டினத்தில் நடைபெற்றது.", options:["2 மட்டும் சரி","இரண்டும் தவறு","1 மட்டும் சரி","இரண்டும் சரி"], answer:3},
+{q:"உலக கலாச்சார பன்முகத்தன்மை தினம் (World Day for Cultural Diversity) எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 20","மே 23","மே 18","மே 21"], answer:3},
+{q:"கூற்றுகளை ஆராயவும்:\n1) UN உணவு மற்றும் வேளாண்மை அமைப்பின் (FAO) சார்பாக, பிரதமர் நரேந்திர மோடிக்கு புகழ்பெற்ற 'அக்ரிகோலா மெடல்' வழங்கப்பட்டது.\n2) இந்த அமைப்பின் தலைமையகம் ரோமில் அமைந்துள்ளது.\n3) இந்த அமைப்பின் தற்போதைய இயக்குநர்-ஜெனரல் ஜியோர்ஜியா மெலோனி.", options:["அனைத்தும் சரி","1, 2 சரி; 3 தவறு","2, 3 சரி; 1 தவறு","1, 3 சரி; 2 தவறு"], answer:1},
+{q:"22 ஆண்டுகள் இடைவெளிக்குப் பிறகு 2026 பிரிமியர் லீக் கால்பந்து போட்டியை வென்ற அணி எது?", options:["ஆஸ்டன் வில்லா","ஃப்ரைபர்க்","மான்செஸ்டர் சிட்டி","ஆர்சனல்"], answer:2},
+{q:"சர்வதேச உயிரியல் பன்முகத்தன்மை தினம் (International Day for Biological Diversity) எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 16","மே 22","மே 20","மே 18"], answer:1},
+{q:"தமிழ்நாட்டின் முதல் செயற்கை நுண்ணறிவு (AI) அமைச்சர் யார்?", options:["ஆர். குமார்","கே. தென்னரசு","எம். விஜய் பாலாஜி","வி. காந்திராஜ்"], answer:1},
+{q:"இந்தியாவில் தேசிய பயங்கரவாத எதிர்ப்பு தினமாக (National Anti-Terrorism Day) யாருடைய நினைவு தினம் அனுசரிக்கப்படுகிறது?", options:["நேதாஜி","ராஜீவ் காந்தி","இந்திரா காந்தி","வல்லபாய் படேல்"], answer:1},
+{q:"தேசிய பயங்கரவாத எதிர்ப்பு தினம் எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 25","மே 23","மே 21","மே 20"], answer:3},
+{q:"இந்தியாவில் செயற்கை நுண்ணறிவு அமைச்சகத்தை அமைத்த முதல் மாநிலம் எது?", options:["அசாம்","மேற்கு வங்கம்","கேரளா","தமிழ்நாடு"], answer:3},
+{q:"கூற்று 1: DRDO சமீபத்தில் (மே 22) அந்தமானில் அக்னி-1 பாலிஸ்டிக் ஏவுகணை சோதனையை வெற்றிகரமாக நடத்தியது.\nகூற்று 2: இந்த ஏவுகணை 700 கி.மீ முதல் 1200 கி.மீ வரையிலான தூரத்தில் இலக்குகளை துல்லியமாக தாக்கும் திறன் கொண்டது.", options:["2 மட்டும் தவறு","இரண்டும் சரி","இரண்டும் தவறு","1 மட்டும் தவறு"], answer:1},
+{q:"பின்வரும் கூற்றுகளை ஆராயவும்:\n1) 10வது இந்தியப் பெருங்கடல் உரையாடல் (Indian Ocean Dialogue) கொழும்பில் நடைபெற்றது.\n2) இந்த உரையாடலின் கருப்பொருள் - 'மாறிவரும் உலகில் இந்தியப் பெருங்கடல் பிராந்தியம்'.\n3) இந்தியா 2025-27க்காக இந்தியப் பெருங்கடல் விளிம்பு சங்கத்தின் (IORA) தலைமைப் பொறுப்பில் உள்ளது.", options:["3 தவறு; 1, 2 சரி","அனைத்தும் சரி","1 தவறு; 2, 3 சரி","2 தவறு; 1, 3 சரி"], answer:1},
+{q:"சமீபத்தில் இந்தியாவுக்கு அதிகாரப்பூர்வ விஜயம் மேற்கொண்ட நிக்கோஸ் கிறிஸ்தோடூலிடிஸ் (Nikos Christodoulides), எந்த நாட்டின் ஜனாதிபதி ஆவார்?", options:["சைப்ரஸ்","கியூபா","நெதர்லாந்து","கனடா"], answer:0},
+{q:"கூற்று 1: இந்திய ரிசர்வ் வங்கி, யூனியன் அரசுக்கு ரூ.2.87 லட்சம் கோடி என்ற முன்னோடியில்லா மிகை வருவாயை வழங்கியுள்ளது.\nகூற்று 2: இது முந்தைய நிதியாண்டு (2024-25) வழங்கப்பட்ட ரூ.2.69 லட்சம் கோடியை விட 7.6% அதிகமாகும்.", options:["இரண்டும் தவறு","1 மட்டும் சரி","2 மட்டும் சரி","இரண்டும் சரி"], answer:3},
+{q:"மருத்துவ மகப்பேற்று கால சிக்கல் ஒழிப்பு சர்வதேச தினம் (International Day to End Obstetric Fistula) எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 25","மே 23","மே 24","மே 21"], answer:3},
+{q:"கூற்று 1: பாகிஸ்தான் மற்றும் சீனாவுடனான 6000 கி.மீ எல்லையில், அடுத்த ஆண்டு முழுமையாக ஊடுருவ முடியாதவாறு 'ஸ்மார்ட் போர்டர்' திட்டம் செயல்படுத்தப்படும்.\nகூற்று 2: எல்லைப் பாதுகாப்புப் படையின் (BSF) முதல் இயக்குநர்-ஜெனரல் கே.எஃப். ரஸ்தம்ஜி ஆவார்.", options:["இரண்டும் சரி","இரண்டும் தவறு","1 மட்டும் சரி","2 மட்டும் சரி"], answer:0},
+{q:"உள்நாட்டு கிரிக்கெட் மற்றும் IPL போட்டிகளில் இருந்து ஓய்வு அறிவித்த இந்திய கிரிக்கெட் வீரர் விஜய் சங்கர், எந்த மாநிலத்தைச் சேர்ந்தவர்?", options:["மத்திய பிரதேசம்","மகாராஷ்டிரா","தமிழ்நாடு","கர்நாடகா"], answer:2},
+{q:"கூற்று 1: ஏப்ரல் 2026-ல், இந்தியாவின் வணிகப் பொருட்களின் ஏற்றுமதி 13.78% அதிகரித்து 43.56 பில்லியன் டாலரை எட்டியது.\nகூற்று 2: அதே நேரத்தில், இறக்குமதியும் 10% அதிகரித்து 71.94 பில்லியன் டாலராக உயர்ந்து, நாட்டின் வர்த்தக பற்றாக்குறை 28.38 பில்லியன் டாலராக விரிவடைந்தது.", options:["இரண்டும் சரி","இரண்டும் தவறு","1 மட்டும் சரி","2 மட்டும் சரி"], answer:0},
+{q:"தமிழ்நாடு நகர்ப்புற வாழ்விட மேம்பாட்டு வாரியத்தின் (Tamil Nadu Urban Habitat Development Board) தலைவராக நியமிக்கப்பட்டவர் யார்?", options:["பிரசாத் செல்வம்","கே.பி. கிருஷ்ணன்","ஆர். சக்திவேல்","விஜயன் சுப்ரமணியன்"], answer:1},
+{q:"உலக ஆமை தினம் (World Turtle Day) எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 23","மே 24","மே 22","மே 20"], answer:2},
+{q:"2026 சர்வதேச புக்கர் பரிசு (International Booker Prize) எந்த நூலுக்கு வழங்கப்பட்டது?", options:["Taiwan Travelogue","The Nights Are Quiet in Tehran","She Who Remains","On Earth As it is Beneath"], answer:0},
+{q:"நாடு முழுவதும் இளைஞர்களுக்கு வேலைவாய்ப்பு வாய்ப்புகளை வழங்க, யூனியன் அரசு தொடங்கிய 'ரோஜ்கார் மேளா' முயற்சி எந்த ஆண்டு தொடங்கப்பட்டது?", options:["2018","2026","2020","2022"], answer:0},
+{q:"சர்வதேச மனப்பிளவு நோய் (Schizophrenia) தினம் எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 24","மே 25","மே 26","மே 23"], answer:3},
+{q:"பின்வரும் கூற்றுகளை ஆராயவும்:\n1) 2026 சர்வதேச புக்கர் பரிசு, ஆசிரியர் யாங் சுவாங்-சி மற்றும் மொழிபெயர்ப்பாளர் லின் கிங் ஆகியோருக்கு வழங்கப்பட்டுள்ளது.\n2) இந்த விருது அவர்களின் 'Taiwan Travelogue' நூலுக்காக வழங்கப்பட்டது.\n3) இது இந்த விருதைப் பெறும் முதல் மாண்டரின் சீன மொழியில் எழுதப்பட்ட நூலாகும்.", options:["3 சரி; 1, 2 தவறு","அனைத்தும் சரி","1 சரி 2, 3 தவறு","2 சரி; 1, 3 தவறு"], answer:1},
+{q:"ஆப்பிரிக்க தினம் (Africa Day) எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 27","மே 25","மே 24","மே 20"], answer:1},
+{q:"உலக தைராய்டு தினம் (World Thyroid Day) எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 27","மே 26","மே 24","மே 25"], answer:3},
+{q:"2026 உலக தமிழ் ஆராய்ச்சி மாநாடு (World Tamil Research Conference) எங்கு நடைபெற இருக்கிறது?", options:["கனடா","இலங்கை","சிங்கப்பூர்","மொரிஷியஸ்"], answer:3},
+{q:"உலக கால்பந்து தினம் (World Football Day) எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 23","மே 28","மே 25","மே 27"], answer:2},
+{q:"சட்டவிரோத குடியேறிகளை, அவர்களின் சொந்த நாட்டுக்கு நாடு கடத்தும் வரை தற்காலிகமாக தங்க வைக்க, ஒவ்வொரு மாவட்டத்திலும் மையங்களை அமைக்க உள்ள மாநிலம் எது?", options:["ஒடிசா","மணிப்பூர்","உத்தராகண்ட்","மேற்கு வங்கம்"], answer:3},
+{q:"சர்வதேச காணாமல் போன குழந்தைகள் தினம் (International Missing Children's Day) எப்போது அனுசரிக்கப்படுகிறது?", options:["மே 20","மே 25","மே 26","மே 27"], answer:2},
+{q:"சர்வதேச மார்க்கோர் (கொம்பு வடிவ வெள்ளாடு) தினம் எந்த தேதியில் அனுசரிக்கப்படுகிறது?", options:["மே 25","மே 22","மே 24","மே 23"], answer:2},
+{q:"2026 F1 கனடியன் கிராண்ட் பிரி கார் ரேஸில் சாம்பியன் பட்டத்தை யார் வென்றார்?", options:["கிமி ஆண்டோனெல்லி","லூயிஸ் ஹாமில்டன்","மேக்ஸ் வெர்ஸ்டாப்பன்","லாண்டோ நோரிஸ்"], answer:2},
+{q:"பின்வரும் கூற்றுகளை ஆராயவும்:\n1) பல்வேறு அம்சங்களுடன் கூடிய ஒரே சீரான சிவில் சட்டம் (UCC) மசோதா அசாம் மாநில சட்டப்பேரவையில் அறிமுகப்படுத்தப்பட்டுள்ளது.\n2) இந்த சட்டம் மாநிலத்தில் வாழும் பழங்குடி சமூகங்களுக்கு பொருந்தாது.\n3) அரசியலமைப்பின் பிரிவு 55-ன் கீழ், அனைத்து குடிமக்களுக்கும் ஒரே சீரான சிவில் சட்டத்தை வழங்க அரசு முயற்சிக்க வேண்டும்.", options:["அனைத்தும் சரி","1, 2 சரி, 3 தவறு","1, 3 சரி 2 தவறு","2, 3 சரி, 1 தவறு"], answer:1},
+{q:"சுதந்திரத்திற்குப் பிறகு ஒரே சீரான சிவில் சட்டத்தை (UCC) நடைமுறைப்படுத்திய 3வது இந்திய மாநிலம் எது?", options:["பீகார்","அசாம்","உத்தரப் பிரதேசம்","மகாராஷ்டிரா"], answer:1},
+{q:"கூற்று 1: ரஷ்யா, தனது தியாங்கோங் விண்வெளி நிலையத்திற்கு 3 விண்வெளி வீரர்களுடன் ஷென்சோ-23 விண்கலத்தை வெற்றிகரமாக ஏவியது.\nகூற்று 2: இந்த பணியின் சிறப்பு அம்சமாக, ஒரு விண்வெளி வீரர் ஒரு முழு ஆண்டு காலம் விண்வெளி நிலையத்தில் தங்கி சாதனை படைப்பார்.", options:["இரண்டும் தவறு","இரண்டும் சரி","2 மட்டும் சரி","1 மட்டும் சரி"], answer:0},
+{q:"ஆசிய சிங்கங்களின் 2வது இயற்கையான வாழிடமாக அறிவிக்கப்பட்ட சரணாலயம் எது?", options:["நல்சரோவர் வனவிலங்கு சரணாலயம்","கிஜாடியா வனவிலங்கு சரணாலயம்","வேலாவடார் வனவிலங்கு சரணாலயம்","பர்தா வனவிலங்கு சரணாலயம்"], answer:3},
+{q:"தவறான இணையை தேர்ந்தெடுக்கவும்:\n1) Catastrophe - Disaster\n2) Facile act - Superficiality\n3) Snail - Staggering\n4) Teeters - Ridicule", options:["1 மற்றும் 2","2 மற்றும் 3","1 மற்றும் 3","3 மற்றும் 4"], answer:3},
+{q:"ஆண்களுக்கான 100 மீட்டர் ஓட்டத்தில் 10.10 விநாடிகளுக்கும் குறைவாக ஓடி இலக்கை கடந்த முதல் இந்திய தடகள வீரர் யார்?", options:["அனிமேஷ் குஜூர்","முகமது அஜ்மல்","அவினாஷ் சேபல்","குரிந்தர்வீர் சிங்"], answer:0},
+{q:"கூற்று 1: முதலமைச்சர் எஸ். ஜோசப் விஜய், கூட்டுறவு வங்கிகளில் சிறு மற்றும் குறு விவசாயிகள் பெற்ற பயிர் கடன்களுக்கு, மே 1, 2025 முதல் பிப்ரவரி 28, 2026 வரை ₹50,000 வரை தள்ளுபடி செய்ய உத்தரவிட்டார்.\nகூற்று 2: இந்த பயிர் கடன் தள்ளுபடி திட்டத்தின் கீழ், கூட்டுறவு வங்கிகளில் பயிர் கடன் பெற்ற 14,22,555 விவசாயிகள் பயனடைவார்கள். இது அரசுக்கு கூடுதலாக ₹2,044.46 கோடி செலவை ஏற்படுத்தும்.", options:["இரண்டும் சரி","இரண்டும் தவறு","1 மட்டும் தவறு","2 மட்டும் தவறு"], answer:0},
+{q:"சுக்ரயான் (Shukrayaan) திட்டம் எந்த கிரகத்துடன் தொடர்புடையது?", options:["வியாழன்","புளூட்டோ","வீனஸ்","சனி"], answer:2}
 ];
+
 let current = 0;
-let selected = null;
 let score = 0;
-let answered = new Array(QUESTIONS.length).fill(null);
-let finished = false;
+let userAnswers = new Array(questions.length).fill(null);
 
-function render() {
-  const app = document.getElementById('app');
-  if (finished) {
-    app.innerHTML = `
-      <div class="result-title">Quiz Complete!</div>
-      <div class="result-sub">May Month Current Affairs 2026</div>
-      <div class="result-score">${score} / ${QUESTIONS.length}</div>
-      <div class="result-pct">${Math.round((score / QUESTIONS.length) * 100)}% correct</div>
-      <button class="restart-btn" onclick="restart()">Restart Quiz</button>
-    `;
-    return;
-  }
+document.getElementById('totalQ').textContent = questions.length;
 
-  const q = QUESTIONS[current];
-  const total = QUESTIONS.length;
+function renderQuestion() {
+  const q = questions[current];
+  document.getElementById('qNum').textContent = current + 1;
+  document.getElementById('progressBar').style.width = ((current+1)/questions.length*100) + '%';
 
-  let optionsHtml = '';
+  const container = document.getElementById('questionContainer');
+  let html = `<div class="question-card">
+    <div class="q-num">${current+1}</div>
+    <div class="q-text">${q.q}</div>
+    <div class="options">`;
+
   q.options.forEach((opt, idx) => {
-    let cls = 'option';
-    let mark = '';
-    if (selected !== null) {
-      cls += ' disabled';
-      if (idx === q.answer) {
-        cls += ' correct';
-        mark = '<span class="mark green">✓</span>';
-      } else if (idx === selected) {
-        cls += ' incorrect';
-        mark = '<span class="mark red">✗</span>';
-      } else {
-        cls += ' dimmed';
-      }
+    let cls = "option";
+    if (userAnswers[current] !== null) {
+      cls += " disabled";
+      if (idx === q.answer) cls += " correct";
+      else if (idx === userAnswers[current]) cls += " incorrect";
     }
-    optionsHtml += `
-      <button class="${cls}" onclick="selectOption(${idx})" ${selected !== null ? 'disabled' : ''}>
-        <span class="letter">${LETTERS[idx]})</span>
-        <span class="text">${escapeHtml(opt)}</span>
-        ${mark}
-      </button>
-    `;
+    html += `<div class="${cls}" onclick="selectOption(${idx})">${String.fromCharCode(65+idx)}) ${opt}</div>`;
   });
 
-  let feedbackHtml = '';
-  if (selected !== null) {
-    if (selected === q.answer) {
-      feedbackHtml = `<div class="feedback correct">Correct!</div>`;
-    } else {
-      feedbackHtml = `<div class="feedback incorrect">Incorrect. Correct answer: ${LETTERS[q.answer]}) ${escapeHtml(q.options[q.answer])}</div>`;
-    }
+  html += `</div>`;
+  if (userAnswers[current] !== null) {
+    html += `<div class="explain show">✅ சரியான விடை: <b>${String.fromCharCode(65+q.answer)}) ${q.options[q.answer]}</b></div>`;
   }
+  html += `</div>`;
+  container.innerHTML = html;
 
-  app.innerHTML = `
-    <div class="top-row">
-      <span class="qcount">Question ${current + 1} of ${total}</span>
-      <span class="score">Score: ${score}</span>
-    </div>
-    <div class="progress-bg">
-      <div class="progress-bar" style="width: ${((current + 1) / total) * 100}%"></div>
-    </div>
-    <div class="question">${escapeHtml(q.q)}</div>
-    <div class="options">${optionsHtml}</div>
-    ${feedbackHtml}
-    <div class="nav-row">
-      <button class="nav-btn" onclick="goPrev()" ${current === 0 ? 'disabled' : ''}>Previous</button>
-      <button class="nav-btn primary" onclick="goNext()" ${selected === null ? 'disabled' : ''}>${current === total - 1 ? 'Finish' : 'Next'}</button>
-    </div>
-  `;
-}
-
-function escapeHtml(str) {
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
+  document.getElementById('prevBtn').disabled = (current === 0);
+  document.getElementById('nextBtn').textContent = (current === questions.length - 1) ? "முடி" : "அடுத்தது";
+  document.getElementById('nextBtn').disabled = (userAnswers[current] === null);
+  document.getElementById('score').textContent = score;
 }
 
 function selectOption(idx) {
-  if (selected !== null) return;
-  selected = idx;
-  answered[current] = idx;
-  if (idx === QUESTIONS[current].answer) {
-    score++;
-  }
-  render();
+  if (userAnswers[current] !== null) return; // already answered, lock
+  userAnswers[current] = idx;
+  if (idx === questions[current].answer) score++;
+  renderQuestion();
 }
 
-function goNext() {
-  if (current < QUESTIONS.length - 1) {
+document.getElementById('nextBtn').addEventListener('click', () => {
+  if (userAnswers[current] === null) return; // cannot skip
+  if (current < questions.length - 1) {
     current++;
-    selected = answered[current];
-    render();
+    renderQuestion();
   } else {
-    finished = true;
-    render();
+    showFinal();
   }
-}
+});
 
-function goPrev() {
+document.getElementById('prevBtn').addEventListener('click', () => {
   if (current > 0) {
     current--;
-    selected = answered[current];
-    render();
+    renderQuestion();
   }
+});
+
+function showFinal() {
+  document.getElementById('quizScreen').classList.add('hidden');
+  document.getElementById('finalScreen').classList.remove('hidden');
+  document.getElementById('finalScore').textContent = score;
+  document.getElementById('finalTotal').textContent = questions.length;
+  const pct = ((score/questions.length)*100).toFixed(1);
+  document.getElementById('finalPercent').textContent = "சதவீதம்: " + pct + "%";
 }
 
-function restart() {
+function restartQuiz() {
   current = 0;
-  selected = null;
   score = 0;
-  answered = new Array(QUESTIONS.length).fill(null);
-  finished = false;
-  render();
+  userAnswers = new Array(questions.length).fill(null);
+  document.getElementById('quizScreen').classList.remove('hidden');
+  document.getElementById('finalScreen').classList.add('hidden');
+  renderQuestion();
 }
 
-render();
+renderQuestion();
 </script>
 </body>
 </html>
